@@ -49,7 +49,7 @@ class User(
     this.credit -= credit
   }
 
-  fun age(): Int = ageCalculator.calculate(this.birthday)
+  fun age(): Int = birthday.calculateAge()
 
   fun pay(price: Double) {
     if (!this.validateEnoughCredit(price)) {
