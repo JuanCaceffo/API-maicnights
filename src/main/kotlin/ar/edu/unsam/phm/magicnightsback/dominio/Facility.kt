@@ -4,7 +4,11 @@ abstract class Facility (
     val name: String,
     val location: Location
 ){
-    abstract fun fixedCos(): Float
+    abstract val fixedPrice: Float
+
+    open fun fixedCos(): Float = fixedPrice + fixedCostVariant()
+
+    open fun fixedCostVariant(): Float = 0F
 }
 
 class Stadium(
@@ -13,10 +17,8 @@ class Stadium(
     val upperLevelSeatingCapacity: Int, // Platea alta
     val fieldCapacity: Int, // Campo
     val boxCapacity: Int, // Palco
-    private val fixedCost: Float,
+    override val fixedPrice: Float,
 ): Facility(name, location) {
-
-    override fun fixedCos() = fixedCost
 
     fun upperLevelSeatingCost() = 10000
     fun fieldCost() = 15000
@@ -31,14 +33,8 @@ class Theater(
     val hasGoodAcoustics: Boolean = false
 ): Facility(name, location) {
 
-    override fun fixedCos(): Float {
-        var fixedCost = 100000.0F
+    override val fixedPrice: Float = 100000f
 
-        if(hasGoodAcoustics) {
-            fixedCost += 50000
-        }
-
-        return fixedCost
-    }
+    override fun fixedCostVariant(): Float = if (hasGoodAcoustics)  50000f else 0f
 }
 
