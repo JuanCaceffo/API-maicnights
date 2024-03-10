@@ -15,9 +15,9 @@ class Ticket (
 
 class SeatType
 
-class Show (
-  var price: Double,
-  var availableSeats: Double
-) {
+//class Show (
+  //var price: Double,
+  //var availableSeats: Double
+//) {
 
-}
+//}
