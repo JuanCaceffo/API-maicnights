@@ -49,6 +49,6 @@ class UserBoostrap(
   override fun afterPropertiesSet() {
     println("User creation process starts")
     this.createUsers()
-    println("User process process ends")
+    println("User creation process ends")
   }
 }
