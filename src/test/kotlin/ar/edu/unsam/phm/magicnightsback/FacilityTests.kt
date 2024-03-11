@@ -22,7 +22,7 @@ class FacilityTests : DescribeSpec({
         )
 
         it("El metodo fixedCost devuelve el costo fijo pasado como parametro en el contructor de Stadium") {
-            aStadium.fixedCos() shouldBe stadiumCost
+            aStadium.fixedCost() shouldBe stadiumCost
 
     }
     describe("Tests Theater")  {
@@ -34,7 +34,7 @@ class FacilityTests : DescribeSpec({
                 50
             )
 
-            aTheater.fixedCos() shouldBe 100000F
+            aTheater.fixedCost() shouldBe 100000F
         }
 
         it("Un teatro con buena acustica tiene un costo fijo de 150000") {
@@ -46,7 +46,7 @@ class FacilityTests : DescribeSpec({
                 true
             )
 
-            aTheater.fixedCos() shouldBe 150000F
+            aTheater.fixedCost() shouldBe 150000F
         }
     }
 }

@@ -6,7 +6,7 @@ abstract class Facility (
 ){
     abstract val fixedPrice: Float
 
-    open fun fixedCos(): Float = fixedPrice + fixedCostVariant()
+    open fun fixedCost(): Float = fixedPrice + fixedCostVariant()
 
     open fun fixedCostVariant(): Float = 0F
 }

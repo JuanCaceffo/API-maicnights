@@ -3,7 +3,7 @@ abstract class Show (val band : Band, val facility: Facility, val valueOfTimesCa
     abstract val nameOfEvent : String
     var rentabilty : rentabilityType = BasePrice()
     fun getBandName() = band.name
-    fun costOfTheShow() : Double = band.price + facility.fixedCos()
+    fun costOfTheShow() : Double = band.price + facility.fixedCost()
 }
 
 class Tour(val name: String, band: Band, facility: Facility, valueOfTimesCanBeRepeated: Int) : Show(band, facility,
