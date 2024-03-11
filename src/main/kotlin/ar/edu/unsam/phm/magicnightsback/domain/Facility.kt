@@ -1,4 +1,4 @@
-package ar.edu.unsam.phm.magicnightsback.dominio
+package ar.edu.unsam.phm.magicnightsback.domain
 
 abstract class Facility (
     val name: String,

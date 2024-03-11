@@ -1,8 +1,8 @@
 package ar.edu.unsam.phm.magicnightsback
 
-import ar.edu.unsam.phm.magicnightsback.dominio.Location
-import ar.edu.unsam.phm.magicnightsback.dominio.Stadium
-import ar.edu.unsam.phm.magicnightsback.dominio.Theater
+import ar.edu.unsam.phm.magicnightsback.domain.Location
+import ar.edu.unsam.phm.magicnightsback.domain.Stadium
+import ar.edu.unsam.phm.magicnightsback.domain.Theater
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
