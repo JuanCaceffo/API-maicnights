@@ -6,7 +6,6 @@ plugins {
 	kotlin("jvm") version "1.9.22"
 	kotlin("plugin.spring") version "1.9.22"
 	jacoco
-
 }
 
 group = "ar.edu.unsam.phm"
@@ -42,7 +41,6 @@ dependencies {
 	testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
 }
 
-
 tasks.withType<KotlinCompile> {
 	kotlinOptions {
 		freeCompilerArgs += "-Xjsr305=strict"
@@ -53,6 +51,7 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
 tasks.test {
 	finalizedBy(tasks.jacocoTestReport)
 }
