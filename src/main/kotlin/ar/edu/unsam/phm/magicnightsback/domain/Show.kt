@@ -1,9 +1,13 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 abstract class Show (val band : Band, val facility: Facility, val valueOfTimesCanBeRepeated : Int) {
     abstract val nameOfEvent : String
-    var rentabilty : rentabilityType = BasePrice()
+    var showStatus : rentabilityType = BasePrice()
     fun getBandName() = band.name
-    fun costOfTheShow() : Double = band.price + facility.fixedCos()
+    fun baseCost(): Double = band.price + facility.fixedCos()
+    fun cost() : Double = baseCost() * showStatus.getRentability()
+    fun changeRentability(newShowStatus:rentabilityType){
+        this.showStatus = newShowStatus
+    }
 }
 
 class Tour(val name: String, band: Band, facility: Facility, valueOfTimesCanBeRepeated: Int) : Show(band, facility,

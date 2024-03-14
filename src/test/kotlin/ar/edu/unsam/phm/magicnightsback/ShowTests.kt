@@ -14,7 +14,7 @@ class ShowTests : DescribeSpec({
             val facility = Theater("TheaterName", Location(0F, 0F), 100, 50, hasGoodAcoustics = true)
             val tour = Tour("TourName", band, facility, 2)
 
-            tour.costOfTheShow() shouldBe 150100.0
+            tour.cost() shouldBe 120080.0
         }
 
         it("nameOfEvent should return the correct name for Tour") {
@@ -32,7 +32,7 @@ class ShowTests : DescribeSpec({
             val facility = Stadium("StadiumName", Location(0F, 0F), 100, 50, 25, 250000F)
             val concert = Concert("ConcertName", band,facility , 1)
 
-            concert.costOfTheShow() shouldBe 250100.0
+            concert.cost() shouldBe 200080.0
         }
 
         it("nameOfEvent should return the correct name for Concert") {
