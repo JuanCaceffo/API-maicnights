@@ -1,36 +1,32 @@
 package ar.edu.unsam.phm.magicnightsback.domain
-
-abstract class Show(val band: Band, val facility: Facility, val valueOfTimesCanBeRepeated: Int) {
-    abstract val nameOfEvent: String
-    var rentabilty: rentabilityType = BasePrice()
+abstract class Show (val band : Band, val facility: Facility, val valueOfTimesCanBeRepeated : Int) {
+    abstract val nameOfEvent : String
+    var showStatus : RentabilityType = BasePrice()
     fun getBandName() = band.name
-    fun costOfTheShow(): Double = band.price + facility.fixedCost()
+    fun baseCost(): Double = band.cost + facility.fixedCost()
+    fun cost() : Double = baseCost() * showStatus.getRentability()
+    fun changeRentability(newShowStatus:RentabilityType){
+        this.showStatus = newShowStatus
+    }
 }
 
-class Tour(val name: String, band: Band, facility: Facility, valueOfTimesCanBeRepeated: Int) : Show(
-    band, facility,
-    valueOfTimesCanBeRepeated
-) {
+class Tour(val name: String, band: Band, facility: Facility, valueOfTimesCanBeRepeated: Int) : Show(band, facility,
+    valueOfTimesCanBeRepeated) {
     override val nameOfEvent = name
 }
 
-class Concert(val name: String, band: Band, facility: Facility, valueOfTimesCanBeRepeated: Int) :
-    Show(band, facility, valueOfTimesCanBeRepeated) {
+class Concert(val name: String, band: Band, facility: Facility, valueOfTimesCanBeRepeated: Int): Show(band, facility,valueOfTimesCanBeRepeated) {
     override val nameOfEvent = name
 }
-
-interface rentabilityType {
+interface RentabilityType{
     fun getRentability(): Double
 }
-
-class BasePrice : rentabilityType {
+class BasePrice : RentabilityType{
     override fun getRentability(): Double = 0.8
 }
-
-class FullSale : rentabilityType {
+class FullSale: RentabilityType{
     override fun getRentability(): Double = 1.0
 }
-
-class MegaShow : rentabilityType {
+class MegaShow: RentabilityType{
     override fun getRentability(): Double = 1.3
 }
