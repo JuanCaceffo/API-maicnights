@@ -3,7 +3,7 @@ abstract class Show (val band : Band, val facility: Facility, val valueOfTimesCa
     abstract val nameOfEvent : String
     var showStatus : rentabilityType = BasePrice()
     fun getBandName() = band.name
-    fun baseCost(): Double = band.price + facility.fixedCos()
+    fun baseCost(): Double = band.price + facility.fixedCost()
     fun cost() : Double = baseCost() * showStatus.getRentability()
     fun changeRentability(newShowStatus:rentabilityType){
         this.showStatus = newShowStatus
