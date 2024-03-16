@@ -11,7 +11,8 @@ class User(
     val username: String,
     val birthday: LocalDate,
     val dni: Int,
-    var password: String
+    var password: String,
+    val kart: Kart = Kart(),
 ) : RepositoryProps() {
     val friends = mutableListOf<User>()
     val tickets = mutableListOf<Ticket>()

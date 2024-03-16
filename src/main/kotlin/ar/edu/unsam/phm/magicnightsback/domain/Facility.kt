@@ -36,7 +36,6 @@ class Stadium(
 //    val boxCapacity: Int, // Palco
     override val fixedPrice: Double,
 ) : Facility(name, location, seatCapacity, seatPrice) {
-
 //    fun upperLevelSeatingCost() = 10000
 //    fun fieldCost() = 15000
 //    fun boxCost() = 20000
@@ -58,7 +57,6 @@ class Theater(
     override val fixedPrice: Double = 100000.0
     override fun fixedCostVariant(): Double = if (hasGoodAcoustics) 50000.0 else 0.0
 }
-class SeatType(quantity: Int, price: Int)
 enum class SeatTypes{
     UPPERLEVEL,
     LOWERLEVEL,

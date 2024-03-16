@@ -3,32 +3,32 @@ package ar.edu.unsam.phm.magicnightsback.domain
 abstract class Show(
     val band: Band,
     val facility: Facility,
-    val seats: MutableMap<SeatTypes, Int> = facility.seatCapacity,
     val valueOfTimesCanBeRepeated: Int
 ) {
     abstract val nameOfEvent: String
-
+    val seats: MutableMap<SeatTypes, Int> = facility.seatCapacity.toMutableMap()
     var rentabilty: rentabilityType = BasePrice()
+    private fun availability() = seats.values.sum()
+    private fun baseTicketPrice() = cost() / availability()
     fun getBandName() = band.name
     fun cost(): Double = band.price + facility.fixedCost()
-
-    private fun baseTicketPrice() = cost() / availability()
-
     fun fullTicketPrice(seatType: SeatTypes) = baseTicketPrice() + facility.seatPrice[seatType]!!
-
-    private fun availability() = seats.values.sum()
-
     fun availableSeatsOf(seatType: SeatTypes) = seats[seatType]
+    fun reserveSeat(seatType: SeatTypes) {
+        seats[seatType] = seats[seatType]!! - 1
+    }
+    fun releaseSeat(seatType: SeatTypes) {
+        seats[seatType] = seats[seatType]!! + 1
+    }
 }
 
 class Tour(
     name: String,
     band: Band,
     facility: Facility,
-    seats: MutableMap<SeatTypes, Int>,
     valueOfTimesCanBeRepeated: Int
 ) : Show(
-    band, facility, seats,
+    band, facility,
     valueOfTimesCanBeRepeated
 ) {
     override val nameOfEvent = name
@@ -38,10 +38,9 @@ class Concert(
     name: String,
     band: Band,
     facility: Facility,
-    seats: MutableMap<SeatTypes, Int>,
     valueOfTimesCanBeRepeated: Int
 ) : Show(
-    band, facility, seats,
+    band, facility,
     valueOfTimesCanBeRepeated
 ) {
     override val nameOfEvent = name

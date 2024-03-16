@@ -8,6 +8,15 @@ class Ticket(
     val seatType: SeatTypes,
     val date: LocalDate,
     val price: Double,
-    val show: Show
+    val show: Show,
+    var status: TicketStatus = TicketStatus.WISHLIST
 )
+
+enum class TicketStatus{
+    WISHLIST,
+    PURCHASED,
+    PENDING
+}
+
+
 
