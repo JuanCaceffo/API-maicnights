@@ -53,15 +53,10 @@ class User(
     fun age(): Int = birthday.calculateAge()
 
     fun pay(price: Double) {
-        if (!this.validateEnoughCredit(price)) {
-            throw BusinessException(UserError.MSG_NOT_ENOUGH_CREDIT)
-        }
         removeCredit(price)
-
     }
 
     ///// VALIDATORS ///////////////////////////////////////////
-    private fun validateEnoughCredit(price: Double) = this.credit >= price
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
     }

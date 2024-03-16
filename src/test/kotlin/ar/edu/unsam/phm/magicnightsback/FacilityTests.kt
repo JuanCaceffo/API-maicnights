@@ -1,6 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback
 
 import ar.edu.unsam.phm.magicnightsback.domain.Location
+import ar.edu.unsam.phm.magicnightsback.domain.SeatTypes
 import ar.edu.unsam.phm.magicnightsback.domain.Stadium
 import ar.edu.unsam.phm.magicnightsback.domain.Theater
 import io.kotest.core.spec.IsolationMode
@@ -15,9 +16,11 @@ class FacilityTests : DescribeSpec({
         val aStadium = Stadium(
             "a stadium",
             Location(0.0, 0.0),
-            100,
-            50,
-            25,
+            mutableMapOf(
+                SeatTypes.UPPERLEVEL to 25,
+                SeatTypes.FIELD to 50,
+                SeatTypes.BOX to 25
+            ),
             stadiumCost
         )
 
@@ -30,8 +33,10 @@ class FacilityTests : DescribeSpec({
             val aTheater = Theater(
                 "a theater",
                 Location(0.0,0.0),
-                100,
-                50
+                mutableMapOf(
+                    SeatTypes.LOWERLEVEL to 50,
+                    SeatTypes.PULLMAN to 50,
+                ),
             )
 
             aTheater.fixedCost() shouldBe 100000.0
@@ -41,8 +46,10 @@ class FacilityTests : DescribeSpec({
             val aTheater = Theater(
                 "a theater",
                 Location(0.0,0.0),
-                100,
-                50,
+                mutableMapOf(
+                    SeatTypes.LOWERLEVEL to 50,
+                    SeatTypes.PULLMAN to 50,
+                ),
                 true
             )
 

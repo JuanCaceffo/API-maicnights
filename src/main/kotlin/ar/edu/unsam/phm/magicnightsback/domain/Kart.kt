@@ -1,25 +1,26 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
+import ar.edu.unsam.phm.magicnightsback.error.BusinessException
+import ar.edu.unsam.phm.magicnightsback.error.UserError
+
 class Kart {
     private val tickets = mutableListOf<Ticket>()
 
-    fun addTicket(ticket: Ticket){
+    fun addTicket(ticket: Ticket) {
+        ticket.show.reserveSeat(ticket.seatType, ticket.quantity)
         tickets.add(ticket)
-        ticket.show.reserveSeat(ticket.seatType)
-        ticket.status = TicketStatus.WISHLIST
     }
 
-    fun removeTicket(ticket: Ticket){
-        ticket.show.releaseSeat(ticket.seatType)
+    fun removeTicket(ticket: Ticket) {
+        ticket.show.releaseSeat(ticket.seatType, ticket.quantity)
         tickets.remove(ticket)
     }
 
     fun removeAllTickets() {
-        tickets.forEach {  it.show.releaseSeat(it.seatType) }
-        tickets.clear()
+        tickets.forEach { removeTicket(it) }
     }
 
-    fun getTickets(): List<Ticket>{
+    fun getTickets(): List<Ticket> {
         return tickets
     }
 
@@ -28,7 +29,16 @@ class Kart {
     }
 
     fun buy(user: User) {
-
+        if (!validateEnoughCredit(user)) {
+            throw BusinessException(UserError.MSG_NOT_ENOUGH_CREDIT)
+        }
+        user.pay(getTotalPrice())
+        tickets.forEach {
+            user.addTicket(it)
+            it.show.addAttendee(user)
+        }
         tickets.clear()
     }
+
+    private fun validateEnoughCredit(user: User) = user.credit >= getTotalPrice()
 }
