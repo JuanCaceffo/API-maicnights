@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class MagicNightsBackApplication
 
 fun main(args: Array<String>) {
-	runApplication<MagicNightsBackApplication>(*args)
+    runApplication<MagicNightsBackApplication>(*args)
 }
