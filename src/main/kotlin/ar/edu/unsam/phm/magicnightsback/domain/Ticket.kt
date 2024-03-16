@@ -4,20 +4,10 @@ import java.time.LocalDate
 
 class Ticket(
     val number: Int,
-    val seatType: SeatType,
+    val quantity: Int,
+    val seatType: SeatTypes,
     val date: LocalDate,
+    val price: Double,
     val show: Show
-) {
+)
 
-    //fun price() = (show.price / show.availableSeats) + show.seattypeprice(seatType)
-
-}
-
-class SeatType
-
-//class Show (
-//var price: Double,
-//var availableSeats: Double
-//) {
-
-//}
