@@ -11,7 +11,7 @@ class ShowTests : DescribeSpec({
     describe("Tests Show with Tour") {
         it("costOfTheShow should calculate the correct cost for Tour") {
             val band = Band("BandName", 100.0)
-            val facility = Theater("TheaterName", Location(0.0, 0.0), 100, 50, hasGoodAcoustics = true)
+            val facility = Theater("TheaterName", Location(0.0, 0.0), setOf(LowerLevelSeating(100), Pullman(50)), hasGoodAcoustics = true)
             val tour = Tour("TourName", band, facility, 2)
 
             tour.cost() shouldBe 120080.0
@@ -19,7 +19,7 @@ class ShowTests : DescribeSpec({
 
         it("nameOfEvent should return the correct name for Tour") {
             val band = Band("BandName", 100.0)
-            val facility = Stadium("StadiumName", Location(0.0, 0.0), 100, 50, 25, 250000.0)
+            val facility = Stadium("StadiumName", Location(0.0, 0.0), setOf(UpperLevelSeating(100), Field(50), Box(25)), 250000.0)
             val tour = Tour("TourName", band, facility, 3)
 
             tour.nameOfEvent shouldBe "TourName"
@@ -29,7 +29,7 @@ class ShowTests : DescribeSpec({
     describe("Tests Show with Concert") {
         it("costOfTheShow should calculate the correct cost for Concert") {
             val band = Band("BandName", 100.0)
-            val facility = Stadium("StadiumName", Location(0.0, 0.0), 100, 50, 25, 250000.0)
+            val facility = Stadium("StadiumName", Location(0.0, 0.0),setOf(UpperLevelSeating(100), Field(50), Box(25)), 250000.0)
             val concert = Concert("ConcertName", band, facility, 1)
 
             concert.cost() shouldBe 200080.0
@@ -37,7 +37,7 @@ class ShowTests : DescribeSpec({
 
         it("nameOfEvent should return the correct name for Concert") {
             val band = Band("BandName", 100.0)
-            val facility = Stadium("StadiumName", Location(0.0, 0.0), 100, 50, 25, 250000.0)
+            val facility = Stadium("StadiumName", Location(0.0, 0.0),setOf(UpperLevelSeating(100), Field(50), Box(25)), 250000.0)
             val concert = Concert("ConcertName", band, facility, 0)
 
             concert.nameOfEvent shouldBe "ConcertName"
@@ -46,7 +46,7 @@ class ShowTests : DescribeSpec({
 
     describe("Rentability show test") {
         val band = Band(name = "ACDC", cost = 40000.0)
-        val facility = Theater("Grand Rex", Location(0.0, 0.0), 100, 50, hasGoodAcoustics = true)
+        val facility = Theater("Grand Rex", Location(0.0, 0.0), setOf(LowerLevelSeating(100), Pullman(50)), hasGoodAcoustics = true)
         val tour = Tour("TourName", band, facility, 2)
         it("Los shows inician en un precio base donde su rentabilidad es reducida") {
             //Arrage

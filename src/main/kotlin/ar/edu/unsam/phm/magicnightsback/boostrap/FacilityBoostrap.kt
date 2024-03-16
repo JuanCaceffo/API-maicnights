@@ -1,8 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.boostrap
 
-import ar.edu.unsam.phm.magicnightsback.domain.Location
-import ar.edu.unsam.phm.magicnightsback.domain.Stadium
-import ar.edu.unsam.phm.magicnightsback.domain.Theater
+import ar.edu.unsam.phm.magicnightsback.domain.*
 import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.stereotype.Component
@@ -15,21 +13,16 @@ class FacilityBoostrap(
     "GranRex" to Theater(
       name = "Gran Rex",
       location = Location(latitud = 0.1, longitud = 0.1),
-      lowerLevelSeatingCapacity = 10,
-      pullmanCapacity = 10
+      seats = setOf(LowerLevelSeating(10), Pullman(10)),
     ), "River" to Stadium(
       name = "River Plate",
       location = Location(latitud = 0.1, longitud = 0.1),
-      upperLevelSeatingCapacity = 10,
-      fieldCapacity = 10,
-      boxCapacity = 10,
+      seats = setOf(UpperLevelSeating(10), Field(10), Box(10)),
       fixedPrice = 10.0
     ), "Boca" to Stadium(
       name = "Boca Juniors",
       location = Location(latitud = 0.1, longitud = 0.1),
-      upperLevelSeatingCapacity = 10,
-      fieldCapacity = 10,
-      boxCapacity = 10,
+      seats = setOf(UpperLevelSeating(10), Field(10), Box(10)),
       fixedPrice = 10.0
     )
   )
