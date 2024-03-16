@@ -42,7 +42,7 @@ class UserController {
         userService.updateUser(userToUpdate)
     }
 
-    @PatchMapping("/update-user")
+    @GetMapping("/user-credit")
     fun getUserCredit(@RequestBody user: UserDTO): Double {
         return userService.getUserCredit(user)
     }

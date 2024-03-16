@@ -7,7 +7,5 @@ import org.springframework.boot.test.context.SpringBootTest
 class MagicNightsBackApplicationTests {
 
 	@Test
-	fun contextLoads() {
-	}
-
+	fun contextLoads() {}
 }

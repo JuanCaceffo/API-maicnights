@@ -37,7 +37,6 @@ class Concert(
     fun fullTicketPrice(seatType: SeatTypes) = baseTicketPrice() + seatType.price
     fun availableSeatsOf(seatType: SeatTypes) = availableSeats[seatType]
 
-
     fun reserveSeat(seatType: SeatTypes, quantity: Int) {
         availableSeats[seatType] = availableSeats[seatType]!! - quantity
     }
