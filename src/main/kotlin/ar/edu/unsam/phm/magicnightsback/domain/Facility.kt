@@ -6,7 +6,7 @@ import org.uqbar.geodds.Point
 abstract class Facility(
     val name: String,
     val location: Location,
-    val point:Point,
+    val point: Point,
     val seatCapacity: MutableMap<SeatTypes, Int>
 ) : RepositoryProps() {
     abstract val fixedPrice: Double
@@ -20,17 +20,19 @@ abstract class Facility(
 class Stadium(
     name: String,
     location: Location,
+    point: Point,
     seatCapacity: MutableMap<SeatTypes, Int>,
     override val fixedPrice: Double,
-) : Facility(name, location, seatCapacity) {
+) : Facility(name, location, point, seatCapacity) {
 }
 
 class Theater(
     name: String,
     location: Location,
+    point: Point,
     seatCapacity: MutableMap<SeatTypes, Int>,
     val hasGoodAcoustics: Boolean = false
-) : Facility(name, location, seatCapacity) {
+) : Facility(name, location, point, seatCapacity) {
 
     override val fixedPrice: Double = 100000.0
     override fun fixedCostVariant(): Double = if (hasGoodAcoustics) 50000.0 else 0.0
