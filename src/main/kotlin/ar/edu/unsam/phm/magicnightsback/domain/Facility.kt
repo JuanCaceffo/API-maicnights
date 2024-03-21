@@ -1,10 +1,12 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.repository.RepositoryProps
+import org.uqbar.geodds.Point
 
 abstract class Facility(
     val name: String,
     val location: Location,
+    val point:Point,
     val seatCapacity: MutableMap<SeatTypes, Int>
 ) : RepositoryProps() {
     abstract val fixedPrice: Double

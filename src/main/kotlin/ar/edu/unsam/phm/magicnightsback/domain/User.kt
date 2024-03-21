@@ -16,7 +16,7 @@ class User(
 ) : RepositoryProps() {
     val friends = mutableListOf<User>()
     val tickets = mutableListOf<Ticket>()
-    val comments = mutableListOf<Comment>()
+    val opinions = mutableListOf<Opinion>()
     var credit = 0.0
     fun addFriend(user: User) {
         friends.add(user)
@@ -26,12 +26,12 @@ class User(
         friends.remove(user)
     }
 
-    fun addComment(comment: Comment) {
-        comments.add(comment)
+    fun addOpinion(opinion: Opinion) {
+        opinions.add(opinion)
     }
 
-    fun removeComment(comment: Comment) {
-        comments.remove(comment)
+    fun removeOpinion(opinion: Opinion) {
+        opinions.remove(opinion)
     }
 
     fun addTicket(ticket: Ticket) {

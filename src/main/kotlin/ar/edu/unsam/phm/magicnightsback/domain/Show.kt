@@ -10,6 +10,8 @@ abstract class Show(
     var rentability: RentabilityType = BasePrice()
     abstract fun changeRentability(newShowStatus: RentabilityType)
     abstract fun cost(): Double
+    abstract fun opinions() : MutableList<Opinion>
+    fun totalRating(): Double = opinions().sumOf { it.rating.toDouble() } / opinions().size
 }
 
 class Concert(
@@ -52,6 +54,12 @@ class Concert(
     fun addPendingAttendee(user: User) {
         pendingAttendees.add(user)
     }
+
+    override fun opinions(): MutableList<Opinion> {
+        return attendees.flatMap { it.opinions }
+            .filter { it.band == this.band }
+            .toMutableList()
+    }
 }
 
 class Tour(
@@ -79,6 +87,7 @@ class Tour(
         concerts.remove(concert)
     }
 
+    override fun opinions(): MutableList<Opinion> = concerts.flatMap { it.opinions() }.toMutableList()
 }
 
 interface RentabilityType {
