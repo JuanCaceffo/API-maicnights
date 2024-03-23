@@ -5,27 +5,34 @@ import org.uqbar.geodds.Point
 
 //SE PUEDE AGREGAR VALIDADOR PARA AHORRAR CODIGO DUPLICADO CADA VEZ Q SE QUIERA NOMBRAR UN TIPO D ASIENTO
 
-//interface SeatType {
-//    val price: Double
-//}
-//
-//enum class TheaterSeatType(override val price: Double) : SeatType {
-//    LOWERLEVEL(15000.0),
-//    PULLMAN(10000.0)
-//}
-//
-//enum class StadiumSeatType(override val price: Double) : SeatType {
-//    UPPERLEVEL(10000.0),
-//    FIELD(15000.0),
-//    BOX(20000.0)
-//}
+interface SeatTypes {
+    val price: Double
+}
 
-enum class SeatType(val price: Double) {
+enum class TheaterSeatType(override val price: Double) : SeatTypes {
     LOWERLEVEL(15000.0),
-    PULLMAN(10000.0),
+    PULLMAN(10000.0)
+}
+
+enum class StadiumSeatType(override val price: Double) : SeatTypes {
     UPPERLEVEL(10000.0),
     FIELD(15000.0),
     BOX(20000.0)
+}
+
+//enum class SeatTypes {
+//    LOWERLEVEL,
+//    PULLMAN,
+//    UPPERLEVEL,
+//    FIELD,
+//    BOX
+//}
+
+class SeatType (
+    val seatType: SeatTypes,
+    val quantity: Int
+) {
+    fun price() = seatType.price
 }
 
 class Facility(
@@ -33,8 +40,10 @@ class Facility(
     val location: Point,
     val costStrategy: CostStrategy
 ) : RepositoryProps() {
-    val seatCapacity: MutableMap<SeatType, Int> = mutableMapOf()
+    val seats: MutableSet<SeatType> = mutableSetOf()
     fun cost() = costStrategy.totalCost()
+    fun addSeatType(type: SeatType) { seats.add(type) }
+    fun removeSeatType(type: SeatType) { seats.remove(type) }
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
     }
@@ -43,7 +52,7 @@ class Facility(
 interface CostStrategy {
     val fixedPrice: Double
 //    fun seatValidation(seatType: SeatType) : Boolean
-    fun seatPrice(seatType: SeatType) = seatType.price
+    fun seatPrice(seatType: SeatType) = seatType.price()
     fun totalCost(): Double = fixedPrice + fixedCostVariant()
     fun fixedCostVariant(): Double = 0.0
 }
