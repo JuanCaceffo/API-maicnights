@@ -1,67 +1,64 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.repository.RepositoryProps
+import org.uqbar.geodds.Point
 
-abstract class Facility(
+//SE PUEDE AGREGAR VALIDADOR PARA AHORRAR CODIGO DUPLICADO CADA VEZ Q SE QUIERA NOMBRAR UN TIPO D ASIENTO
+
+interface SeatType {
+    val price: Double
+}
+
+enum class TheaterSeatType(override val price: Double) : SeatType {
+    LOWERLEVEL(15000.0),
+    PULLMAN(10000.0)
+}
+
+enum class StadiumSeatType(override val price: Double) : SeatType {
+    UPPERLEVEL(10000.0),
+    FIELD(15000.0),
+    BOX(20000.0)
+}
+class Facility(
     val name: String,
-    val location: Location,
-    open val seats: Collection<ISeat>
+    val location: Point,
+    val costStrategy: CostStrategy
 ) : RepositoryProps() {
-    abstract val fixedPrice: Double
-
-    open fun fixedCost(): Double = fixedPrice + fixedCostVariant()
-
-    open fun fixedCostVariant(): Double = 0.0
-
-    fun getSeatPrice(seatType: String?  = null): Double {
-        var price: Double
-
-        if(seatType != null) {
-            price = seats.filter { it::class.simpleName == seatType }.first().price()
-        }
-        else {
-            price = seats.sumOf { it.price() }
-        }
-
-        return price
-    }
-
-    fun getSeatCapacity(seatType: String? = null): Int {
-        var capacity: Int
-
-        if(seatType != null) {
-            capacity = seats.filter { it::class.simpleName == seatType }.first().capacity
-        }
-        else {
-            capacity = seats.sumOf { it.capacity }
-        }
-
-        return capacity
-    }
-
+    fun cost() = costStrategy.totalCost()
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
     }
 }
 
-class Stadium(
-    name: String,
-    location: Location,
-    override val seats: Collection<SeatStadium>,
-    override val fixedPrice: Double,
-) : Facility(name, location, seats) {
-
+interface CostStrategy {
+    val fixedPrice: Double
+//    fun seatValidation(seatType: SeatType) : Boolean
+    fun seatPrice(seatType: SeatType) = seatType.price
+    fun totalCost(): Double = fixedPrice + fixedCostVariant()
+    fun fixedCostVariant(): Double = 0.0
 }
 
-class Theater(
-    name: String,
-    location: Location,
-    override val seats: Collection<SeatTheater>,
+class StadiumStrategy(
+    override val fixedPrice : Double,
+    val seatCapacity: MutableMap<StadiumSeatType,Int> = mutableMapOf(
+        StadiumSeatType.UPPERLEVEL to 0,
+        StadiumSeatType.FIELD to 0,
+        StadiumSeatType.BOX to 0
+    )
+) : CostStrategy {
+//    override fun seatValidation(seatType: SeatType) : Boolean {
+//        if StadiumSeatType.entries.containsKey(seatType)
+//    }
+}
+
+class TheaterStrategy(
     val hasGoodAcoustics: Boolean = false,
-) : Facility(name, location, seats) {
-
+    val seatCapacity: MutableMap<TheaterSeatType,Int> = mutableMapOf(
+        TheaterSeatType.LOWERLEVEL to 0,
+        TheaterSeatType.PULLMAN to 0
+    )
+) : CostStrategy {
     override val fixedPrice: Double = 100000.0
-
     override fun fixedCostVariant(): Double = if (hasGoodAcoustics) 50000.0 else 0.0
 }
 
