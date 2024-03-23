@@ -1,9 +1,9 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
+import ar.edu.unsam.phm.magicnightsback.error.BusinessException
+import ar.edu.unsam.phm.magicnightsback.error.FacilityError
 import ar.edu.unsam.phm.magicnightsback.repository.RepositoryProps
 import org.uqbar.geodds.Point
-
-//SE PUEDE AGREGAR VALIDADOR PARA AHORRAR CODIGO DUPLICADO CADA VEZ Q SE QUIERA NOMBRAR UN TIPO D ASIENTO
 
 interface SeatTypes {
     val price: Double
@@ -20,14 +20,6 @@ enum class StadiumSeatType(override val price: Double) : SeatTypes {
     BOX(20000.0)
 }
 
-//enum class SeatTypes {
-//    LOWERLEVEL,
-//    PULLMAN,
-//    UPPERLEVEL,
-//    FIELD,
-//    BOX
-//}
-
 class SeatType (
     val seatType: SeatTypes,
     val quantity: Int
@@ -38,20 +30,25 @@ class SeatType (
 class Facility(
     val name: String,
     val location: Point,
-    val costStrategy: CostStrategy
+    val seatStrategy: SeatStrategy
 ) : RepositoryProps() {
     val seats: MutableSet<SeatType> = mutableSetOf()
-    fun cost() = costStrategy.totalCost()
-    fun addSeatType(type: SeatType) { seats.add(type) }
+    fun cost() = seatStrategy.totalCost()
+    fun addSeatType(seat: SeatType) {
+        if (!seatStrategy.seatValidation(seat)) {
+            throw BusinessException(FacilityError.INVALID_SEAT_TYPE)
+        }
+        seats.add(seat)
+    }
     fun removeSeatType(type: SeatType) { seats.remove(type) }
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
     }
 }
 
-interface CostStrategy {
+interface SeatStrategy {
     val fixedPrice: Double
-//    fun seatValidation(seatType: SeatType) : Boolean
+    fun seatValidation(seat: SeatType) : Boolean
     fun seatPrice(seatType: SeatType) = seatType.price()
     fun totalCost(): Double = fixedPrice + fixedCostVariant()
     fun fixedCostVariant(): Double = 0.0
@@ -59,11 +56,14 @@ interface CostStrategy {
 
 class StadiumStrategy(
     override val fixedPrice : Double
-) : CostStrategy
+) : SeatStrategy {
+    override fun seatValidation(seat: SeatType) = StadiumSeatType.entries.any{ it == seat.seatType }
+}
 
 class TheaterStrategy(
     val hasGoodAcoustics: Boolean = false
-) : CostStrategy {
+) : SeatStrategy {
+    override fun seatValidation(seat: SeatType) = TheaterSeatType.entries.any{ it == seat.seatType }
     override val fixedPrice: Double = 100000.0
     override fun fixedCostVariant(): Double = if (hasGoodAcoustics) 50000.0 else 0.0
 }
