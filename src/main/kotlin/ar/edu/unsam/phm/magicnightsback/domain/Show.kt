@@ -10,7 +10,7 @@ class Show(
     var rentability: RentabilityType = BasePrice()
     val attendees = mutableListOf<User>()
     val pendingAttendees = mutableListOf<User>()
-    private val functions: MutableList<ShowFunction> = mutableListOf()
+    private val dates: MutableList<ShowDate> = mutableListOf()
 
     fun baseCost(): Double = band.cost + facility.fixedCost()
     fun changeRentability(newShowStatus: RentabilityType) {
@@ -31,11 +31,11 @@ class Show(
     de cada ubicación. */
     fun baseTicketPrice() = cost() / facility.fullCapacity()
     fun fullTicketPrice(seatType: SeatTypes) = baseTicketPrice() + seatType.price
-    fun addFunction(date: LocalDate) {
-        functions.add(ShowFunction(date,facility.seatCapacity.toMutableMap()))
+    fun addDate(date: LocalDate) {
+        dates.add(ShowDate(date,facility.seatCapacity.toMutableMap()))
     }
-    fun removeFunction(function: ShowFunction) {
-        functions.remove(function)
+    fun removeDate(date: ShowDate) {
+        dates.remove(date)
     }
     fun addAttendee(user: User) {
         attendees.add(user)
@@ -55,7 +55,7 @@ class Show(
 }
 
 //TODO: when the logic of facility will changed pass an instance of facility instead of a "avilableSeats"
-class ShowFunction(val date: LocalDate, val availableSeats: MutableMap<SeatTypes, Int>): RepositoryProps(){
+class ShowDate(val date: LocalDate, val availableSeats: MutableMap<SeatTypes, Int>): RepositoryProps(){
 
     //TODO: change te logic of the facility to allow add this methods
     fun reserveSeat(seatType: SeatTypes, quantity: Int) {
