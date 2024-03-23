@@ -65,5 +65,3 @@ class User(
         TODO("Not yet implemented")
     }
 }
-
-class Comment
