@@ -12,6 +12,7 @@ abstract class Facility(
     abstract val fixedPrice: Double
     open fun fixedCost(): Double = fixedPrice + fixedCostVariant()
     open fun fixedCostVariant(): Double = 0.0
+    fun fullCapacity() = seatCapacity.values.sum()
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
     }

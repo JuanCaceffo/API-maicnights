@@ -1,31 +1,19 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.repository.RepositoryProps
-
-abstract class Show(
+import java.time.LocalDate
+class Show(
+    val name: String,
     val band: Band,
     val facility: Facility,
-    val name: String
 ) : RepositoryProps() {
     var rentability: RentabilityType = BasePrice()
-    abstract fun changeRentability(newShowStatus: RentabilityType)
-    abstract fun cost(): Double
-    abstract fun opinions() : MutableList<Opinion>
-    fun totalRating(): Double = opinions().sumOf { it.rating.toDouble() } / opinions().size
-}
-
-class Concert(
-    name: String,
-    band: Band,
-    facility: Facility
-) : Show(
-    band, facility, name
-) {
-    val availableSeats: MutableMap<SeatTypes, Int> = facility.seatCapacity.toMutableMap()
     val attendees = mutableListOf<User>()
     val pendingAttendees = mutableListOf<User>()
+    private val functions: MutableList<ShowFunction> = mutableListOf()
+
     fun baseCost(): Double = band.cost + facility.fixedCost()
-    override fun changeRentability(newShowStatus: RentabilityType) {
+    fun changeRentability(newShowStatus: RentabilityType) {
         this.rentability = newShowStatus
     }
 
@@ -33,20 +21,22 @@ class Concert(
         TODO("Not yet implemented")
     }
 
-    override fun cost(): Double = baseCost() * rentability.getRentability()
-    fun baseTicketPrice() = cost() / availability()
-    fun availability() = availableSeats.values.sum()
+    fun cost(): Double = baseCost() * rentability.getRentability()
+
+    //TODO: Preguntar si el negocio pide que dividamos por la capcidad total o por los asientos disponibles por funcion
+    //Parte del enunciado:
+    /*Por una parte tenemos el costo de una entrada y el precio de la misma. El costo de cada entrada
+    se calcula como el costo fijo de la locación y de la banda (varía para cada show), todo esto dividido
+    la cantidad de plazas totales para acceder al concierto. Adicionalmente se suma más el costo diferencial
+    de cada ubicación. */
+    fun baseTicketPrice() = cost() / facility.fullCapacity()
     fun fullTicketPrice(seatType: SeatTypes) = baseTicketPrice() + seatType.price
-    fun availableSeatsOf(seatType: SeatTypes) = availableSeats[seatType]
-
-    fun reserveSeat(seatType: SeatTypes, quantity: Int) {
-        availableSeats[seatType] = availableSeats[seatType]!! - quantity
+    fun addFunction(date: LocalDate) {
+        functions.add(ShowFunction(date,facility.seatCapacity.toMutableMap()))
     }
-
-    fun releaseSeat(seatType: SeatTypes, quantity: Int) {
-        availableSeats[seatType] = availableSeats[seatType]!! + quantity
+    fun removeFunction(function: ShowFunction) {
+        functions.remove(function)
     }
-
     fun addAttendee(user: User) {
         attendees.add(user)
     }
@@ -55,39 +45,32 @@ class Concert(
         pendingAttendees.add(user)
     }
 
-    override fun opinions(): MutableList<Opinion> {
+    fun opinions(): MutableList<Opinion> {
         return attendees.flatMap { it.opinions }
             .filter { it.band == this.band }
             .toMutableList()
     }
+
+    fun totalRating(): Double = opinions().sumOf { it.rating.toDouble() } / opinions().size
 }
 
-class Tour(
-    name: String,
-    band: Band,
-    facility: Facility
-) : Show(
-    band, facility, name
-) {
-    private val concerts = mutableListOf<Concert>()
-    override fun cost(): Double = concerts.sumOf { it.cost() }
+//TODO: when the logic of facility will changed pass an instance of facility instead of a "avilableSeats"
+class ShowFunction(val date: LocalDate, val availableSeats: MutableMap<SeatTypes, Int>): RepositoryProps(){
+
+    //TODO: change te logic of the facility to allow add this methods
+    fun reserveSeat(seatType: SeatTypes, quantity: Int) {
+        availableSeats[seatType] = availableSeats[seatType]!! - quantity
+    }
+    fun releaseSeat(seatType: SeatTypes, quantity: Int) {
+        availableSeats[seatType] = availableSeats[seatType]!! + quantity
+    }
+    fun avilableSetsOf(seatType: SeatTypes) = availableSeats[seatType]
+
+    fun fullCapacity() = availableSeats.values.sum()
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
     }
 
-    override fun changeRentability(newShowStatus: RentabilityType) {
-        concerts.forEach { it.rentability = newShowStatus }
-    }
-
-    fun addConcert(concert: Concert) {
-        concerts.add(concert)
-    }
-
-    fun removeConcert(concert: Concert) {
-        concerts.remove(concert)
-    }
-
-    override fun opinions(): MutableList<Opinion> = concerts.flatMap { it.opinions() }.toMutableList()
 }
 
 interface RentabilityType {
