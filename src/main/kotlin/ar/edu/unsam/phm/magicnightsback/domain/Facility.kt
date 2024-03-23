@@ -26,7 +26,7 @@ class SeatType (
 ) {
     fun price() = seatType.price
 }
-
+// POSIBLE REFACTOR: Se puede usar un builder, pero no da el tiempo
 class Facility(
     val name: String,
     val location: Point,
