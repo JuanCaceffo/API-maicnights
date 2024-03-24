@@ -1,52 +1,36 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
+import ar.edu.unsam.phm.magicnightsback.error.BusinessException
+import ar.edu.unsam.phm.magicnightsback.error.showError
 import ar.edu.unsam.phm.magicnightsback.repository.RepositoryProps
-
-abstract class Show(
+import java.time.LocalDate
+class Show(
+    val name: String,
     val band: Band,
     val facility: Facility,
-    val name: String
 ) : RepositoryProps() {
     var rentability: RentabilityType = BasePrice()
-    abstract fun changeRentability(newShowStatus: RentabilityType)
-    abstract fun cost(): Double
-    abstract fun opinions() : MutableList<Opinion>
-    fun totalRating(): Double = opinions().sumOf { it.rating.toDouble() } / opinions().size
-}
-
-class Concert(
-    name: String,
-    band: Band,
-    facility: Facility
-) : Show(
-    band, facility, name
-) {
-    val availableSeats: MutableMap<SeatTypes, Int> = facility.seatCapacity.toMutableMap()
     val attendees = mutableListOf<User>()
     val pendingAttendees = mutableListOf<User>()
+    val dates: MutableList<ShowDate> = mutableListOf()
+
     fun baseCost(): Double = band.cost + facility.fixedCost()
-    override fun changeRentability(newShowStatus: RentabilityType) {
+    fun changeRentability(newShowStatus: RentabilityType) {
         this.rentability = newShowStatus
     }
-
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
     }
+    fun cost(): Double = baseCost() * rentability.getRentability()
 
-    override fun cost(): Double = baseCost() * rentability.getRentability()
-    fun baseTicketPrice() = cost() / availability()
-    fun availability() = availableSeats.values.sum()
+    fun baseTicketPrice() = cost() / facility.totalCapacity()
     fun fullTicketPrice(seatType: SeatTypes) = baseTicketPrice() + seatType.price
-    fun availableSeatsOf(seatType: SeatTypes) = availableSeats[seatType]
-
-    fun reserveSeat(seatType: SeatTypes, quantity: Int) {
-        availableSeats[seatType] = availableSeats[seatType]!! - quantity
+    fun addDate(date: LocalDate) {
+        dates.add(ShowDate(date,facility.seatCapacity.toMutableMap()))
     }
-
-    fun releaseSeat(seatType: SeatTypes, quantity: Int) {
-        availableSeats[seatType] = availableSeats[seatType]!! + quantity
+    fun removeDate(date: ShowDate) {
+        dates.remove(date)
     }
-
     fun addAttendee(user: User) {
         attendees.add(user)
     }
@@ -55,39 +39,32 @@ class Concert(
         pendingAttendees.add(user)
     }
 
-    override fun opinions(): MutableList<Opinion> {
+    fun opinions(): MutableList<Opinion> {
         return attendees.flatMap { it.opinions }
             .filter { it.band == this.band }
             .toMutableList()
     }
+
+    fun totalRating(): Double = opinions().sumOf { it.rating.toDouble() } / opinions().size
 }
 
-class Tour(
-    name: String,
-    band: Band,
-    facility: Facility
-) : Show(
-    band, facility, name
-) {
-    private val concerts = mutableListOf<Concert>()
-    override fun cost(): Double = concerts.sumOf { it.cost() }
+//TODO: when the logic of facility will changed pass an instance of facility instead of a "avilableSeats"
+class ShowDate(val date: LocalDate, val availableSeats: MutableMap<SeatTypes, Int>): RepositoryProps(){
+
+    //TODO: change te logic of the facility to allow add this methods
+    fun reserveSeat(seatType: SeatTypes, quantity: Int) {
+        availableSeats[seatType] = (availableSeats[seatType]!! - quantity).throwErrorIfNegative(BusinessException(showError.MSG_SETS_UNAVILABLES))
+    }
+    fun releaseSeat(seatType: SeatTypes, quantity: Int) {
+        availableSeats[seatType] = (availableSeats[seatType]!! + quantity)
+    }
+    fun avilableSetsOf(seatType: SeatTypes) = availableSeats[seatType]
+
+    fun totalCapacity() = availableSeats.values.sum()
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
     }
 
-    override fun changeRentability(newShowStatus: RentabilityType) {
-        concerts.forEach { it.rentability = newShowStatus }
-    }
-
-    fun addConcert(concert: Concert) {
-        concerts.add(concert)
-    }
-
-    fun removeConcert(concert: Concert) {
-        concerts.remove(concert)
-    }
-
-    override fun opinions(): MutableList<Opinion> = concerts.flatMap { it.opinions() }.toMutableList()
 }
 
 interface RentabilityType {

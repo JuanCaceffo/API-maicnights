@@ -7,12 +7,12 @@ class Kart {
     private val tickets = mutableListOf<Ticket>()
 
     fun addTicket(ticket: Ticket) {
-        ticket.show.reserveSeat(ticket.seatType, ticket.quantity)
+        ticket.date.reserveSeat(ticket.seatType, ticket.quantity)
         tickets.add(ticket)
     }
 
     fun removeTicket(ticket: Ticket) {
-        ticket.show.releaseSeat(ticket.seatType, ticket.quantity)
+        ticket.date .releaseSeat(ticket.seatType, ticket.quantity)
         tickets.remove(ticket)
     }
 
