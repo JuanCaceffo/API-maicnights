@@ -7,10 +7,7 @@ name: build
 # events but only for the master branch
 on: [push, pull_request]
 # Nota: Reemplazar "main, master" con las branches principales que se manejen (ej.: "main, develop")
-push:
-  branches: [ main, dev ]
-pull_request:
-  branches: [ main, dev ]
+branches: [ main, dev ]
 jobs:
   gradle:
     runs-on: ubuntu-latest
