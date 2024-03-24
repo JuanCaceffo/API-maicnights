@@ -5,14 +5,13 @@ import org.uqbar.geodds.Point
 
 abstract class Facility(
     val name: String,
-    val location: Location,
     val point: Point,
     val seatCapacity: MutableMap<SeatTypes, Int>
 ) : RepositoryProps() {
     abstract val fixedPrice: Double
     open fun fixedCost(): Double = fixedPrice + fixedCostVariant()
     open fun fixedCostVariant(): Double = 0.0
-    fun fullCapacity() = seatCapacity.values.sum()
+    fun totalCapacity() = seatCapacity.values.sum()
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
     }
@@ -20,20 +19,18 @@ abstract class Facility(
 
 class Stadium(
     name: String,
-    location: Location,
     point: Point,
     seatCapacity: MutableMap<SeatTypes, Int>,
     override val fixedPrice: Double,
-) : Facility(name, location, point, seatCapacity) {
+) : Facility(name, point, seatCapacity) {
 }
 
 class Theater(
     name: String,
-    location: Location,
     point: Point,
     seatCapacity: MutableMap<SeatTypes, Int>,
     val hasGoodAcoustics: Boolean = false
-) : Facility(name, location, point, seatCapacity) {
+) : Facility(name, point, seatCapacity) {
 
     override val fixedPrice: Double = 100000.0
     override fun fixedCostVariant(): Double = if (hasGoodAcoustics) 50000.0 else 0.0

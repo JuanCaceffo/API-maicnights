@@ -10,7 +10,7 @@ class Show(
     var rentability: RentabilityType = BasePrice()
     val attendees = mutableListOf<User>()
     val pendingAttendees = mutableListOf<User>()
-    private val dates: MutableList<ShowDate> = mutableListOf()
+    val dates: MutableList<ShowDate> = mutableListOf()
 
     fun baseCost(): Double = band.cost + facility.fixedCost()
     fun changeRentability(newShowStatus: RentabilityType) {
@@ -29,7 +29,7 @@ class Show(
     se calcula como el costo fijo de la locación y de la banda (varía para cada show), todo esto dividido
     la cantidad de plazas totales para acceder al concierto. Adicionalmente se suma más el costo diferencial
     de cada ubicación. */
-    fun baseTicketPrice() = cost() / facility.fullCapacity()
+    fun baseTicketPrice() = cost() / facility.totalCapacity()
     fun fullTicketPrice(seatType: SeatTypes) = baseTicketPrice() + seatType.price
     fun addDate(date: LocalDate) {
         dates.add(ShowDate(date,facility.seatCapacity.toMutableMap()))
@@ -66,7 +66,7 @@ class ShowDate(val date: LocalDate, val availableSeats: MutableMap<SeatTypes, In
     }
     fun avilableSetsOf(seatType: SeatTypes) = availableSeats[seatType]
 
-    fun fullCapacity() = availableSeats.values.sum()
+    fun totalCapacity() = availableSeats.values.sum()
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
     }

@@ -8,7 +8,9 @@ import io.kotest.matchers.shouldBe
 class ShowTests : DescribeSpec({
     isolationMode = IsolationMode.InstancePerTest
 
-    describe("Tests Show with Tour") {}
+    describe("Tests Show with Tour") {
+        
+    }
 
     describe("Tests Show with Concert") {}
 })
