@@ -4,6 +4,7 @@ import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.service.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import javax.naming.AuthenticationException
 
 @RestController
 @CrossOrigin(origins = ["*"])
@@ -33,12 +34,13 @@ class UserController {
     }
 
     @PostMapping("/login")
-    fun loginUser(@RequestBody userToLogin: LoginDTO): Long {
+    fun loginUser(@RequestBody userToLogin: LoginDTO): Int {
         return userService.loginUser(userToLogin)
     }
 
     @PatchMapping("/update-user")
     fun updateUser(@RequestBody userToUpdate: UserDTO) {
+        throw AuthenticationException("El usuario y la contrasenia no son validos")
         userService.updateUser(userToUpdate)
     }
 

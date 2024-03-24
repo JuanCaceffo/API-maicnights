@@ -6,6 +6,6 @@ class UserDTO {
 class FriendDTO {
 }
 
-class LoginDTO{
-
-}
+class LoginDTO (
+    var username: String = "",
+    var password: String = "") {}
