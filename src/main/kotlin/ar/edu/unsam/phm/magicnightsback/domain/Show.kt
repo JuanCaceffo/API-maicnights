@@ -14,7 +14,7 @@ class Show(
     val pendingAttendees = mutableListOf<User>()
     val dates: MutableList<ShowDate> = mutableListOf()
 
-    fun baseCost(): Double = band.cost + facility.fixedCost()
+    fun baseCost(): Double = band.cost + facility.cost()
     fun changeRentability(newShowStatus: RentabilityType) {
         this.rentability = newShowStatus
     }
@@ -23,10 +23,11 @@ class Show(
     }
     fun cost(): Double = baseCost() * rentability.getRentability()
 
-    fun baseTicketPrice() = cost() / facility.totalCapacity()
+    fun baseTicketPrice() = cost() / facility.getTotalSeatCapacity()
     fun fullTicketPrice(seatType: SeatTypes) = baseTicketPrice() + seatType.price
     fun addDate(date: LocalDate) {
-        dates.add(ShowDate(date,facility.seatCapacity.toMutableMap()))
+//        dates.add(ShowDate(date,facility.seats.toMutableMap()))
+        TODO ("Implementar nueva logica de facility")
     }
     fun removeDate(date: ShowDate) {
         dates.remove(date)
@@ -39,13 +40,13 @@ class Show(
         pendingAttendees.add(user)
     }
 
-    fun opinions(): MutableList<Opinion> {
-        return attendees.flatMap { it.opinions }
+    fun comments(): MutableList<Comment> {
+        return attendees.flatMap { it.comments }
             .filter { it.band == this.band }
             .toMutableList()
     }
 
-    fun totalRating(): Double = opinions().sumOf { it.rating.toDouble() } / opinions().size
+    fun totalRating(): Double = comments().sumOf { it.rating.toDouble() } / comments().size
 }
 
 //TODO: when the logic of facility will changed pass an instance of facility instead of a "avilableSeats"
