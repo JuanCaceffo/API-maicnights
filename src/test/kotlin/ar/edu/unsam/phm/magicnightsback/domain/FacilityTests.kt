@@ -1,4 +1,4 @@
-package ar.edu.unsam.phm.magicnightsback
+package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.domain.*
 import io.kotest.core.spec.IsolationMode

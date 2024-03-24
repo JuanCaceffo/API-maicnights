@@ -36,7 +36,6 @@ class Facility(
     fun cost() = seatStrategy.totalCost()
     fun getSeat(seat: SeatTypes) = seats.find{ it.seatType == seat }
     fun getSeatCapacity(seat: SeatTypes) = getSeat(seat)?.quantity
-
     fun getTotalSeatCapacity() = seats.sumOf { it.quantity }
     fun addSeatType(seat: SeatType) {
         if (!seatStrategy.seatValidation(seat)) {

@@ -5,13 +5,13 @@ import org.springframework.stereotype.Service
 
 @Service
 class UserService {
-    fun getUserPurchased(id: Long): List<PurchasedTicketDTO> {
-        TODO("Not yet implemented")
-    }
-
-    fun getUserPending(id: Long): List<PendingTicketDTO> {
-        TODO("Not yet implemented")
-    }
+//    fun getUserPurchased(id: Long): List<PurchasedTicketDTO> {
+//        TODO("Not yet implemented")
+//    }
+//
+//    fun getUserPending(id: Long): List<PendingTicketDTO> {
+//        TODO("Not yet implemented")
+//    }
 
     fun getUserFriends(id: Long): List<FriendDTO> {
         TODO("Not yet implemented")

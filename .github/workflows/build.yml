@@ -5,12 +5,12 @@ name: build
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
-on: [push, pull_request]
+on:
 # Nota: Reemplazar "main, master" con las branches principales que se manejen (ej.: "main, develop")
-push:
-  branches: [ main, dev ]
-pull_request:
-  branches: [ main, dev ]
+  push:
+    branches:
+      - 'main'
+      - 'dev'
 jobs:
   gradle:
     runs-on: ubuntu-latest
