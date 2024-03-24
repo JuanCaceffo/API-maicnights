@@ -1,43 +1,36 @@
 package ar.edu.unsam.phm.magicnightsback.boostrap
 
-import ar.edu.unsam.phm.magicnightsback.domain.Location
-import ar.edu.unsam.phm.magicnightsback.domain.SeatTypes
-import ar.edu.unsam.phm.magicnightsback.domain.Stadium
-import ar.edu.unsam.phm.magicnightsback.domain.Theater
+
+import ar.edu.unsam.phm.magicnightsback.domain.*
 import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.stereotype.Component
+import org.uqbar.geodds.Point
 
 @Component
 class FacilityBoostrap(
   val facilityRepository: FacilityRepository
 ) : InitializingBean {
+
+  private val seatStrategy = mapOf(
+    "stadiumStrategyExpensive" to StadiumStrategy(20000.0),
+    "stadiumStrategyCheap" to StadiumStrategy(10000.0),
+    "theaterStrategyWithAccustics" to TheaterStrategy(true)
+  )
+
   private val facilities = mapOf(
-    "GranRex" to Theater(
+    "GranRex" to Facility(
       name = "Gran Rex",
-      location = Location(latitud = 0.1, longitud = 0.1),
-      mutableMapOf(
-        SeatTypes.LOWERLEVEL to 10,
-        SeatTypes.PULLMAN to 10
-      )
-    ), "River" to Stadium(
+      location = Point(-34.60356,-58.38013),
+      seatStrategy = seatStrategy["theaterStrategyWithAccustics"]!!
+    ), "River" to Facility(
       name = "River Plate",
-      location = Location(latitud = 0.1, longitud = 0.1),
-      mutableMapOf(
-        SeatTypes.UPPERLEVEL to 10,
-        SeatTypes.FIELD to 10,
-        SeatTypes.BOX to 10
-      ),
-      fixedPrice = 10.0
-    ), "Boca" to Stadium(
+      location = Point(-34.54612, -58.45004),
+      seatStrategy = seatStrategy["stadiumStrategyCheap"]!!,
+    ), "Boca" to Facility(
       name = "Boca Juniors",
-      location = Location(latitud = 0.1, longitud = 0.1),
-      mutableMapOf(
-        SeatTypes.UPPERLEVEL to 10,
-        SeatTypes.FIELD to 10,
-        SeatTypes.BOX to 10
-      ),
-      fixedPrice = 10.0
+      location = Point(-34.63579, -58.36527),
+      seatStrategy = seatStrategy["stadiumStrategyExpensive"]!!,
     )
   )
 
