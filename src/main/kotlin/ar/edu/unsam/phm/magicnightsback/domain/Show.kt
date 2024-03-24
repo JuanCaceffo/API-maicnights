@@ -18,19 +18,11 @@ class Show(
     fun changeRentability(newShowStatus: RentabilityType) {
         this.rentability = newShowStatus
     }
-
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
     }
-
     fun cost(): Double = baseCost() * rentability.getRentability()
 
-    //TODO: Preguntar si el negocio pide que dividamos por la capcidad total o por los asientos disponibles por funcion
-    //Parte del enunciado:
-    /*Por una parte tenemos el costo de una entrada y el precio de la misma. El costo de cada entrada
-    se calcula como el costo fijo de la locación y de la banda (varía para cada show), todo esto dividido
-    la cantidad de plazas totales para acceder al concierto. Adicionalmente se suma más el costo diferencial
-    de cada ubicación. */
     fun baseTicketPrice() = cost() / facility.totalCapacity()
     fun fullTicketPrice(seatType: SeatTypes) = baseTicketPrice() + seatType.price
     fun addDate(date: LocalDate) {
