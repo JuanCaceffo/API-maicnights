@@ -1,5 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
+import ar.edu.unsam.phm.magicnightsback.error.BusinessException
+import ar.edu.unsam.phm.magicnightsback.error.showError
 import ar.edu.unsam.phm.magicnightsback.repository.RepositoryProps
 import java.time.LocalDate
 class Show(
@@ -59,10 +61,10 @@ class ShowDate(val date: LocalDate, val availableSeats: MutableMap<SeatTypes, In
 
     //TODO: change te logic of the facility to allow add this methods
     fun reserveSeat(seatType: SeatTypes, quantity: Int) {
-        availableSeats[seatType] = availableSeats[seatType]!! - quantity
+        availableSeats[seatType] = (availableSeats[seatType]!! - quantity).throwErrorIfNegative(BusinessException(showError.MSG_SETS_UNAVILABLES))
     }
     fun releaseSeat(seatType: SeatTypes, quantity: Int) {
-        availableSeats[seatType] = availableSeats[seatType]!! + quantity
+        availableSeats[seatType] = (availableSeats[seatType]!! + quantity)
     }
     fun avilableSetsOf(seatType: SeatTypes) = availableSeats[seatType]
 

@@ -1,7 +1,12 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
+import ar.edu.unsam.phm.magicnightsback.error.BusinessException
+import ar.edu.unsam.phm.magicnightsback.error.showError
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.assertions.throwables.shouldThrowWithMessage
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.matchers.shouldBe
 import org.uqbar.geodds.Point
 import java.time.LocalDate
 
@@ -54,5 +59,13 @@ class ShowTests : DescribeSpec({
             showDate.totalCapacity().equals(12)
         }
 
+        it("Un show cualquiera con una sola funcion al intentar reservar en dicha funcion mas asientos de los que hay disponibles en caulquier ubicacion falla") {
+            //ARRANGE
+            val showDate = showBase.dates.first()
+            //ASSERT
+            shouldThrow<BusinessException> {
+                showDate.reserveSeat(SeatTypes.LOWERLEVEL, 11)
+            }.message shouldBe showError.MSG_SETS_UNAVILABLES
+        }
     }
 })
