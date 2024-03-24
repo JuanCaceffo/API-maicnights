@@ -7,6 +7,10 @@ object UserError {
     const val MSG_NOT_ENOUGH_CREDIT = "No tiene saldo suficiente"
 }
 
+object showError {
+    const val MSG_SETS_UNAVILABLES = "Excedio la cantidad de asientos disponibles"
+}
+
 object RepositoryError {
     const val ID_NOT_FOUND = "El ID no corresponde con ningún elemento del repositorio"
 }

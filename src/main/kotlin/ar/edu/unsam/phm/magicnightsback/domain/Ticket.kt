@@ -1,23 +1,33 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
+import ar.edu.unsam.phm.magicnightsback.repository.RepositoryProps
 import java.time.LocalDate
 
-class Ticket(
+abstract class TicketProps(
     val number: Int,
-    val seatType: SeatType,
-    val date: LocalDate,
-    val show: Show
-) {
+    val show: Show,
+    val seatType: SeatTypes
+) : RepositoryProps()
 
-    //fun price() = (show.price / show.availableSeats) + show.seattypeprice(seatType)
-
+class Ticket(
+    number: Int,
+    show: Show,
+    val date: ShowDate,
+    seatType: SeatTypes,
+    val quantity: Int,
+    val price: Double
+) : TicketProps(number, show, seatType) {
+    override fun validSearchCondition(value: String): Boolean {
+        TODO("Not yet implemented")
+    }
 }
 
-class SeatType
-
-//class Show (
-//var price: Double,
-//var availableSeats: Double
-//) {
-
-//}
+class PendingTicket(
+    number: Int,
+    show: Show,
+    seatType: SeatTypes
+) : TicketProps(number, show, seatType) {
+    override fun validSearchCondition(value: String): Boolean {
+        TODO("Not yet implemented")
+    }
+}

@@ -12,10 +12,11 @@ class User(
     val birthday: LocalDate,
     val dni: Int,
     var password: String,
+    val kart: Kart = Kart(),
 ) : RepositoryProps() {
     val friends = mutableListOf<User>()
     val tickets = mutableListOf<Ticket>()
-    val comments = mutableListOf<Comment>()
+    val opinions = mutableListOf<Opinion>()
     var credit = 0.0
     fun addFriend(user: User) {
         friends.add(user)
@@ -25,12 +26,12 @@ class User(
         friends.remove(user)
     }
 
-    fun addComment(comment: Comment) {
-        comments.add(comment)
+    fun addOpinion(opinion: Opinion) {
+        opinions.add(opinion)
     }
 
-    fun removeComment(comment: Comment) {
-        comments.remove(comment)
+    fun removeOpinion(opinion: Opinion) {
+        opinions.remove(opinion)
     }
 
     fun addTicket(ticket: Ticket) {
@@ -52,15 +53,10 @@ class User(
     fun age(): Int = birthday.calculateAge()
 
     fun pay(price: Double) {
-        if (!this.validateEnoughCredit(price)) {
-            throw BusinessException(UserError.MSG_NOT_ENOUGH_CREDIT)
-        }
         removeCredit(price)
-
     }
 
     ///// VALIDATORS ///////////////////////////////////////////
-    private fun validateEnoughCredit(price: Double) = this.credit >= price
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
     }
