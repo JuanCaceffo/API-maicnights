@@ -28,7 +28,7 @@ class UserService {
     }
 
     fun loginUser(loginUser: LoginDTO): Int {
-        return this.userRepository.getLoginUser(loginUser) ?: throw AuthenticationException("El usuario y la contrasenia no son validos")
+        return this.userRepository.getLoginUser(loginUser) ?: throw AuthenticationException("El usuario y la contraseña no son validos")
     }
 
     fun updateUser(loginUser: UserDTO): UserDTO {

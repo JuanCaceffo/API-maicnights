@@ -40,7 +40,6 @@ class UserController {
 
     @PatchMapping("/update-user")
     fun updateUser(@RequestBody userToUpdate: UserDTO) {
-        throw AuthenticationException("El usuario y la contrasenia no son validos")
         userService.updateUser(userToUpdate)
     }
 
