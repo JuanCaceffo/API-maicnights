@@ -66,6 +66,9 @@ class ShowTests : DescribeSpec({
             shouldThrow<BusinessException> {
                 showDate.reserveSeat(SeatTypes.LOWERLEVEL, 11)
             }.message shouldBe showError.MSG_SETS_UNAVILABLES
+            shouldThrow<BusinessException> {
+                showDate.reserveSeat(SeatTypes.PULLMAN, 11)
+            }.message shouldBe showError.MSG_SETS_UNAVILABLES
         }
     }
 })
