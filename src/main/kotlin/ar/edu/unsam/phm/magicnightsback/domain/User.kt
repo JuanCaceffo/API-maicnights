@@ -13,7 +13,7 @@ class User(
     val dni: Int,
     var password: String,
     //TODO: analizar la posibilidad de un strategy de roles
-    var isAdmin: Boolean
+    var isAdmin: Boolean = false
 ) : RepositoryProps() {
     val friends = mutableListOf<User>()
 //    val tickets = mutableListOf<Show>()
