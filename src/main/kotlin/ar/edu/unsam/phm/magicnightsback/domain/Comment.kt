@@ -3,7 +3,7 @@ package ar.edu.unsam.phm.magicnightsback.domain
 import ar.edu.unsam.phm.magicnightsback.repository.RepositoryProps
 import java.time.LocalDateTime
 
-class Opinion (
+class Comment (
     val user: User,
     val band: Band,
     val text: String,

@@ -11,14 +11,13 @@ import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 class UserService {
     @Autowired
     lateinit var userRepository: UserRepository
-
-    fun getUserPurchased(id: Long): List<PurchasedTicketDTO> {
-        TODO("Not yet implemented")
-    }
-
-    fun getUserPending(id: Long): List<PendingTicketDTO> {
-        TODO("Not yet implemented")
-    }
+//    fun getUserPurchased(id: Long): List<PurchasedTicketDTO> {
+//        TODO("Not yet implemented")
+//    }
+//
+//    fun getUserPending(id: Long): List<PendingTicketDTO> {
+//        TODO("Not yet implemented")
+//    }
 
     fun getUserFriends(id: Long): List<FriendDTO> {
         TODO("Not yet implemented")

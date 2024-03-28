@@ -13,15 +13,15 @@ class UserController {
     @Autowired
     lateinit var userService: UserService
 
-    @GetMapping("/user/{id}/purchased-tickets")
-    fun getUserPurchased(@PathVariable id: Long): List<PurchasedTicketDTO> {
-        return userService.getUserPurchased(id)
-    }
-
-    @GetMapping("/user/{id}/pending-tickets")
-    fun getUserPending(@PathVariable id: Long): List<PendingTicketDTO> {
-        return userService.getUserPending(id)
-    }
+//    @GetMapping("/user/{id}/purchased-tickets")
+//    fun getUserPurchased(@PathVariable id: Long): List<PurchasedTicketDTO> {
+//        return userService.getUserPurchased(id)
+//    }
+//
+//    @GetMapping("/user/{id}/pending-tickets")
+//    fun getUserPending(@PathVariable id: Long): List<PendingTicketDTO> {
+//        return userService.getUserPending(id)
+//    }
 
     @GetMapping("/user/{id}/friends")
     fun getUserFriends(@PathVariable id: Long): List<FriendDTO> {

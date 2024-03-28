@@ -15,6 +15,9 @@ object RepositoryError {
     const val ID_NOT_FOUND = "El ID no corresponde con ningún elemento del repositorio"
 }
 
+object FacilityError {
+    const val INVALID_SEAT_TYPE = "El tipo de asiento ingresado no es valido para este tipo de instalacion"
+}
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 class BusinessException(msg: String) : RuntimeException(msg)

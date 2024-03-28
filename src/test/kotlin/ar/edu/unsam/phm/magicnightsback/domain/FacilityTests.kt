@@ -1,5 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
+import ar.edu.unsam.phm.magicnightsback.domain.*
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -8,50 +9,53 @@ import org.uqbar.geodds.Point
 class FacilityTests : DescribeSpec({
     isolationMode = IsolationMode.InstancePerTest
     describe("Tests Stadium") {
-        val stadiumCost = 250000.0
+        val upperLevel = SeatType(StadiumSeatType.UPPERLEVEL,300)
+        val field = SeatType(StadiumSeatType.FIELD,1000)
+        val box = SeatType(StadiumSeatType.BOX,200)
+        val lowerLevel = SeatType(TheaterSeatType.LOWERLEVEL,500)
+        val pullman = SeatType(TheaterSeatType.PULLMAN,300)
 
-        val aStadium = Stadium(
-            "a stadium",
-            Point(0.0, 0.0),
-            mutableMapOf(
-                SeatTypes.UPPERLEVEL to 25,
-                SeatTypes.FIELD to 50,
-                SeatTypes.BOX to 25
-            ),
-            stadiumCost
-        )
+        val stadium = Facility(
+            name = "River Plate",
+            location = Point(-34.54612, -58.45004),
+            seatStrategy = StadiumStrategy(10000.0)).apply{
+                addSeatType(upperLevel)
+                addSeatType(field)
+                addSeatType(box)
+        }
 
         it("El metodo fixedCost devuelve el costo fijo pasado como parametro en el contructor de Stadium") {
-            aStadium.fixedCost() shouldBe stadiumCost
+            stadium.cost() shouldBe 10000.0
 
+        }
+
+        it("El metodo getSeatCapacity devuelve la capacidad del tipo de asiento que recibe como parametro") {
+            stadium.getSeatCapacity(StadiumSeatType.FIELD) shouldBe 1000
+        }
+
+        it("El metodo getSeatCapacity devuelve la suma de capacidades de todos los tipos de asientos") {
+            stadium.getTotalSeatCapacity() shouldBe 1500
+        }
     }
     describe("Tests Theater")  {
-        it("Un teatro con mala acustica tiene un costo fijo de 100000") {
-            val aTheater = Theater(
-                "a theater",
-                Point(0.0,0.0),
-                mutableMapOf(
-                    SeatTypes.LOWERLEVEL to 50,
-                    SeatTypes.PULLMAN to 50,
-                ),
-            )
 
-            aTheater.fixedCost() shouldBe 100000.0
+
+        it("Un teatro con mala acustica tiene un costo fijo de 100000") {
+            val theater = Facility (
+                "GranRex",
+                Point(-34.54612, -58.45004),
+                TheaterStrategy()
+            )
+            theater.seatStrategy.totalCost() shouldBe 100000.0
         }
 
         it("Un teatro con buena acustica tiene un costo fijo de 150000") {
-            val aTheater = Theater(
-                "a theater",
-                Point(0.0,0.0),
-                mutableMapOf(
-                    SeatTypes.LOWERLEVEL to 50,
-                    SeatTypes.PULLMAN to 50,
-                ),
-                true
+            val theater = Facility (
+                "GranRex",
+                Point(-34.54612, -58.45004),
+                TheaterStrategy(hasGoodAcoustics = true)
             )
-
-            aTheater.fixedCost() shouldBe 150000.0
+            theater.seatStrategy.totalCost() shouldBe 150000.0
         }
     }
-}
 })

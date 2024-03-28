@@ -12,11 +12,10 @@ class User(
     val birthday: LocalDate,
     val dni: Int,
     var password: String,
-    val kart: Kart = Kart(),
 ) : RepositoryProps() {
     val friends = mutableListOf<User>()
-    val tickets = mutableListOf<Ticket>()
-    val opinions = mutableListOf<Opinion>()
+//    val tickets = mutableListOf<Show>()
+    val comments = mutableListOf<Comment>()
     var credit = 0.0
     fun addFriend(user: User) {
         friends.add(user)
@@ -26,21 +25,21 @@ class User(
         friends.remove(user)
     }
 
-    fun addOpinion(opinion: Opinion) {
-        opinions.add(opinion)
+    fun addComment(comment: Comment) {
+        comments.add(comment)
     }
 
-    fun removeOpinion(opinion: Opinion) {
-        opinions.remove(opinion)
+    fun removeComment(comment: Comment) {
+        comments.remove(comment)
     }
 
-    fun addTicket(ticket: Ticket) {
-        tickets.add(ticket)
-    }
-
-    fun removeTicket(ticket: Ticket) {
-        tickets.remove(ticket)
-    }
+//    fun addTicket(ticket: Ticket) {
+//        tickets.add(ticket)
+//    }
+//
+//    fun removeTicket(ticket: Ticket) {
+//        tickets.remove(ticket)
+//    }
 
     fun addCredit(credit: Double) {
         this.credit += credit
@@ -61,5 +60,3 @@ class User(
         TODO("Not yet implemented")
     }
 }
-
-class Comment
