@@ -1,8 +1,13 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
 import ar.edu.unsam.phm.magicnightsback.domain.User
+import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.serializers.*
 import ar.edu.unsam.phm.magicnightsback.service.*
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
@@ -34,6 +39,11 @@ class UserController {
     }
 
     @PostMapping("/login")
+    @Operation(summary = "Permite logear un usuario registrado en el sistema")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Ok"),
+        ApiResponse(responseCode = "400", description = UserError.BAD_CREDENTIALS, content = arrayOf(Content()) ),
+    ])
     fun loginUser(@RequestBody userToLogin: LoginUserDTO): Int {
         return userService.loginUser(userToLogin)
     }

@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 
 object UserError {
     const val MSG_NOT_ENOUGH_CREDIT = "No tiene saldo suficiente"
+    const val BAD_CREDENTIALS = "El usuario o la contraseña no son validos"
 }
 
 object showError {

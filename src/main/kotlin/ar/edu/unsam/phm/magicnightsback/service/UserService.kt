@@ -2,6 +2,7 @@ package ar.edu.unsam.phm.magicnightsback.service
 
 import ar.edu.unsam.phm.magicnightsback.serializers.*
 import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
+import ar.edu.unsam.phm.magicnightsback.error.UserError
 import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Autowired
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
@@ -27,7 +28,7 @@ class UserService {
     }
 
     fun loginUser(loginUser: LoginUserDTO): Int {
-        return this.userRepository.getLoginUser(loginUser) ?: throw AuthenticationException("El usuario y la contraseña no son validos")
+        return this.userRepository.getLoginUser(loginUser) ?: throw AuthenticationException(UserError.BAD_CREDENTIALS)
     }
 
     /*fun updateUser(loginUser: UserDTO): UserDTO {
