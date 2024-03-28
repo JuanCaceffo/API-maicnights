@@ -1,7 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import ar.edu.unsam.phm.magicnightsback.error.BusinessException
-import ar.edu.unsam.phm.magicnightsback.error.UserError
+import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
 import ar.edu.unsam.phm.magicnightsback.repository.RepositoryProps
 import java.time.LocalDate
 
@@ -64,6 +63,6 @@ class User(
 
     fun throwIfNotAdmin(msg: String){
         //TODO: cambiar a autenthicationException
-        if (!isAdmin) throw BusinessException(msg)
+        if (!isAdmin) throw AuthenticationException(msg)
     }
 }
