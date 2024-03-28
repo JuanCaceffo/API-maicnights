@@ -1,10 +1,16 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
-import ar.edu.unsam.phm.magicnightsback.dto.*
+import ar.edu.unsam.phm.magicnightsback.serializers.*
+import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
+import ar.edu.unsam.phm.magicnightsback.error.UserError
 import org.springframework.stereotype.Service
+import org.springframework.beans.factory.annotation.Autowired
+import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 
 @Service
 class UserService {
+    @Autowired
+    lateinit var userRepository: UserRepository
 //    fun getUserPurchased(id: Long): List<PurchasedTicketDTO> {
 //        TODO("Not yet implemented")
 //    }
@@ -13,23 +19,23 @@ class UserService {
 //        TODO("Not yet implemented")
 //    }
 
-    fun getUserFriends(id: Long): List<FriendDTO> {
+    /*fun getUserFriends(id: Long): List<FriendDTO> {
         TODO("Not yet implemented")
-    }
+    }*/
 
     fun getUserComments(id: Long): List<CommentDTO> {
         TODO("Not yet implemented")
     }
 
-    fun loginUser(loginUser: LoginDTO): Long {
-        TODO("Not yet implemented")
+    fun loginUser(loginUser: LoginUserDTO): Int {
+        return this.userRepository.getLoginUser(loginUser) ?: throw AuthenticationException(UserError.BAD_CREDENTIALS)
     }
 
-    fun updateUser(loginUser: UserDTO): UserDTO {
+    /*fun updateUser(loginUser: UserDTO): UserDTO {
         TODO("Not yet implemented")
     }
 
     fun getUserCredit(user: UserDTO): Double {
         TODO("Not yet implemented")
-    }
+    }*/
 }
