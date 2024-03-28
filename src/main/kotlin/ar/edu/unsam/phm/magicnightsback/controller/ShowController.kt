@@ -1,6 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
-import ar.edu.unsam.phm.magicnightsback.error.UserErrors
+import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.service.ShowService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -25,7 +25,7 @@ class ShowController(
     @Operation(summary = "Permite agregar un show si el usuario es administrador")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Ok"),
-        ApiResponse(responseCode = "400", description = UserErrors.USER_NOT_AUTHORIZED_CREATE_DATE),
+        ApiResponse(responseCode = "400", description = UserError.USER_NOT_AUTHORIZED_CREATE_DATE),
     ])
     fun createShowDate(@PathVariable showId: Int, @PathVariable userId: Int, @RequestBody date: LocalDate){
         showService.createShowDate(showId, userId, date)
