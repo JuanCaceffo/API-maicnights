@@ -1,7 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
-import ar.edu.unsam.phm.magicnightsback.dto.*
-import ar.edu.unsam.phm.magicnightsback.jsonsViews.LoginUser
+import ar.edu.unsam.phm.magicnightsback.domain.User
+import ar.edu.unsam.phm.magicnightsback.serializers.*
 import ar.edu.unsam.phm.magicnightsback.service.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -23,10 +23,10 @@ class UserController {
 //        return userService.getUserPending(id)
 //    }
 
-    @GetMapping("/user/{id}/friends")
-    fun getUserFriends(@PathVariable id: Long): List<FriendDTO> {
+    /*@GetMapping("/user/{id}/friends")
+    fun getUserFriends(@PathVariable id: Long): List<User> {
         return userService.getUserFriends(id)
-    }
+    }*/
 
     @GetMapping("/user/{id}/comments")
     fun getUserComments(@PathVariable id: Long): List<CommentDTO> {
@@ -34,11 +34,11 @@ class UserController {
     }
 
     @PostMapping("/login")
-    fun loginUser(@RequestBody userToLogin: LoginUser): Int {
+    fun loginUser(@RequestBody userToLogin: LoginUserDTO): Int {
         return userService.loginUser(userToLogin)
     }
 
-    @PatchMapping("/update-user")
+    /*@PatchMapping("/update-user")
     fun updateUser(@RequestBody userToUpdate: UserDTO) {
         userService.updateUser(userToUpdate)
     }
@@ -46,5 +46,5 @@ class UserController {
     @GetMapping("/user-credit")
     fun getUserCredit(@RequestBody user: UserDTO): Double {
         return userService.getUserCredit(user)
-    }
+    }*/
 }
