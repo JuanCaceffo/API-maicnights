@@ -1,10 +1,11 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
 import ar.edu.unsam.phm.magicnightsback.dto.*
+import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
+import ar.edu.unsam.phm.magicnightsback.jsonsViews.LoginUser
 import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Autowired
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
-import javax.naming.AuthenticationException
 
 @Service
 class UserService {
@@ -27,7 +28,7 @@ class UserService {
         TODO("Not yet implemented")
     }
 
-    fun loginUser(loginUser: LoginDTO): Int {
+    fun loginUser(loginUser: LoginUser): Int {
         return this.userRepository.getLoginUser(loginUser) ?: throw AuthenticationException("El usuario y la contraseña no son validos")
     }
 

@@ -1,10 +1,10 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
 import ar.edu.unsam.phm.magicnightsback.dto.*
+import ar.edu.unsam.phm.magicnightsback.jsonsViews.LoginUser
 import ar.edu.unsam.phm.magicnightsback.service.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
-import javax.naming.AuthenticationException
 
 @RestController
 @CrossOrigin(origins = ["*"])
@@ -34,7 +34,7 @@ class UserController {
     }
 
     @PostMapping("/login")
-    fun loginUser(@RequestBody userToLogin: LoginDTO): Int {
+    fun loginUser(@RequestBody userToLogin: LoginUser): Int {
         return userService.loginUser(userToLogin)
     }
 

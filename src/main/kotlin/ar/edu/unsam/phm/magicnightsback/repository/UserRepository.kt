@@ -1,12 +1,12 @@
 package ar.edu.unsam.phm.magicnightsback.repository
 
 import ar.edu.unsam.phm.magicnightsback.domain.User
-import ar.edu.unsam.phm.magicnightsback.dto.LoginDTO
+import ar.edu.unsam.phm.magicnightsback.jsonsViews.LoginUser
 import org.springframework.stereotype.Repository
 
 @Repository
 class UserRepository : CustomRepository<User>() {
-    fun getLoginUser(loginUser: LoginDTO): Int? {
+    fun getLoginUser(loginUser: LoginUser): Int? {
         // Dado un usuario de tipo LoginDTO, devuelve el usuario encontrado en el repositorio que con el
         // nommbre de usuario y contraseña si existe.
         return this.elements.entries.find {

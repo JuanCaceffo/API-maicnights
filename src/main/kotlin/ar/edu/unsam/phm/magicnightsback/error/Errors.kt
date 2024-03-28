@@ -27,3 +27,6 @@ class IllegalArgumentException(msg: String) : RuntimeException(msg)
 
 @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
 class NotImplementedError(msg: String) : RuntimeException(msg)
+
+@ResponseStatus(HttpStatus.UNAUTHORIZED)
+class AuthenticationException(msg: String) : RuntimeException(msg)
