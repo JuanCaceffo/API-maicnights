@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonView
 import org.springframework.stereotype.Repository
 
 abstract class Iterable {
-    @JsonView(View.Iterable::class)
+    @JsonView(View.Iterable.Show.Plain::class)
     var id: Long? = null
     fun id(newId: Long) {
         id = newId

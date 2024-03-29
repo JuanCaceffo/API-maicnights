@@ -69,7 +69,11 @@ class Show(
     fun hasAvailableDates() = dates.any{ it.date >= LocalDateTime.now() }
 }
 
-class ShowDate(val date: LocalDateTime, seats: List<SeatTypes>): Iterable(){
+class ShowDate(
+    @JsonView(View.Iterable.Show.Plain::class)
+    val date: LocalDateTime,
+    seats: List<SeatTypes>
+): Iterable(){
     val reservedSeats = seats.associateWith { 0 }.toMutableMap()
     fun reserveSeat(seatType: SeatTypes, quantity: Int) {
         reservedSeats[seatType] = (reservedSeats[seatType]!! + quantity)
