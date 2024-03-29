@@ -5,6 +5,7 @@ import ar.edu.unsam.phm.magicnightsback.repository.Iterable
 import java.time.LocalDate
 
 class User(
+    val img: String,
     val name: String,
     val surname: String,
     val username: String,

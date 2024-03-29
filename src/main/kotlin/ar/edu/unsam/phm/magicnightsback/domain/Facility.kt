@@ -32,9 +32,7 @@ class SeatType(
     }
 }
 
-// POSIBLE REFACTOR: Se puede usar un builder, pero no da el tiempo
 class Facility(
-    @JsonView(View.Iterable.Show.Plain::class)
     val name: String,
     val location: Point,
     val seatStrategy: SeatStrategy
@@ -55,12 +53,8 @@ class Facility(
     fun removeSeatType(type: SeatType) {
         seats.remove(type)
     }
-
-    @JsonView(View.Iterable.Show.Plain::class)
-    fun cheapestSeat() = seats.minOf { it.price() }
-
-    @JsonView(View.Iterable.Show.Plain::class)
-    fun expensiveSeat() = seats.maxOf { it.price() }
+    fun cheapestSeat() = seats.minBy { it.price() }.seatType
+    fun expensiveSeat() = seats.maxBy { it.price() }.seatType
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
     }
