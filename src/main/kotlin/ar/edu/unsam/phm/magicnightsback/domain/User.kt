@@ -1,8 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import ar.edu.unsam.phm.magicnightsback.error.BusinessException
-import ar.edu.unsam.phm.magicnightsback.error.UserError
-import ar.edu.unsam.phm.magicnightsback.repository.RepositoryProps
+import ar.edu.unsam.phm.magicnightsback.repository.Iterable
 import java.time.LocalDate
 
 class User(
@@ -12,7 +10,7 @@ class User(
     val birthday: LocalDate,
     val dni: Int,
     var password: String,
-) : RepositoryProps() {
+) : Iterable() {
     val friends = mutableListOf<User>()
 //    val tickets = mutableListOf<Show>()
     val comments = mutableListOf<Comment>()

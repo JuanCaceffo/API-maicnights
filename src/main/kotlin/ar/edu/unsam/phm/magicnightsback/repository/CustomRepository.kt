@@ -2,11 +2,14 @@ package ar.edu.unsam.phm.magicnightsback.repository
 
 import ar.edu.unsam.phm.magicnightsback.error.NotFoundException
 import ar.edu.unsam.phm.magicnightsback.error.RepositoryError
+import ar.edu.unsam.phm.magicnightsback.serializers.View
+import com.fasterxml.jackson.annotation.JsonView
 import org.springframework.stereotype.Repository
 
-abstract class RepositoryProps {
-    var id: Int = 0
-    fun id(newId: Int) {
+abstract class Iterable {
+    @JsonView(View.Iterable::class)
+    var id: Long? = null
+    fun id(newId: Long) {
         id = newId
     }
 
@@ -14,9 +17,9 @@ abstract class RepositoryProps {
 }
 
 @Repository
-class CustomRepository<T : RepositoryProps> {
-    var elements = mutableMapOf<Int, T>()
-    var idCounter = 0
+class CustomRepository<T : Iterable> {
+    var elements = mutableMapOf<Long?, T>()
+    var idCounter : Long = 0
 
     fun clear() {
         elements.clear()
@@ -46,7 +49,7 @@ class CustomRepository<T : RepositoryProps> {
         elements[updatedElement.id] = updatedElement
     }
 
-    fun getById(id: Int): T {
+    fun getById(id: Long): T {
         return elements[id] ?: throw NotFoundException(RepositoryError.ID_NOT_FOUND)
     }
 

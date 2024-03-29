@@ -1,12 +1,13 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import ar.edu.unsam.phm.magicnightsback.repository.RepositoryProps
+import ar.edu.unsam.phm.magicnightsback.repository.Iterable
 import java.time.LocalDate
+
 class Show(
     val name: String,
     val band: Band,
     val facility: Facility,
-) : RepositoryProps() {
+) : Iterable() {
     var rentability: RentabilityType = BasePrice()
     val attendees = mutableListOf<User>()
     val pendingAttendees = mutableListOf<User>()
@@ -54,7 +55,7 @@ class Show(
     fun totalRating(): Double = comments().sumOf { it.rating.toDouble() } / comments().size
 }
 
-class ShowDate(val date: LocalDate, seats: List<SeatTypes>): RepositoryProps(){
+class ShowDate(val date: LocalDate, seats: List<SeatTypes>): Iterable(){
     val reservedSeats = seats.associateWith { 0 }.toMutableMap()
     fun reserveSeat(seatType: SeatTypes, quantity: Int) {
         reservedSeats[seatType] = (reservedSeats[seatType]!! + quantity)

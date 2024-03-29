@@ -2,7 +2,7 @@ package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.FacilityError
-import ar.edu.unsam.phm.magicnightsback.repository.RepositoryProps
+import ar.edu.unsam.phm.magicnightsback.repository.Iterable
 import org.uqbar.geodds.Point
 
 interface SeatTypes {
@@ -31,7 +31,7 @@ class Facility(
     val name: String,
     val location: Point,
     val seatStrategy: SeatStrategy
-) : RepositoryProps() {
+) : Iterable() {
     val seats: MutableSet<SeatType> = mutableSetOf()
     fun cost() = seatStrategy.totalCost()
     fun getSeat(seat: SeatTypes) = seats.find{ it.seatType == seat }
