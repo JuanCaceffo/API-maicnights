@@ -1,16 +1,25 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.repository.Iterable
-import java.time.LocalDate
+import ar.edu.unsam.phm.magicnightsback.serializers.View
+import com.fasterxml.jackson.annotation.JsonView
+import java.time.LocalDateTime
 
 class Show(
+    @JsonView(View.Iterable.Show.Plain::class, View.Iterable.Show.Purchased::class)
     val name: String,
     val band: Band,
     val facility: Facility,
 ) : Iterable() {
+
+    @JsonView(View.Iterable.Show.Plain::class, View.Iterable.Show.Purchased::class)
+    var showImg = "$name.jpg"
+
     var rentability: RentabilityType = BasePrice()
     val attendees = mutableListOf<User>()
     val pendingAttendees = mutableListOf<User>()
+
+    @JsonView(View.Iterable.Show.Plain::class, View.Iterable.Show.Purchased::class)
     val dates: MutableList<ShowDate> = mutableListOf()
 
     fun baseCost(): Double = band.cost + facility.cost()
@@ -24,16 +33,16 @@ class Show(
 
     fun baseTicketPrice() = cost() / facility.getTotalSeatCapacity()
     fun fullTicketPrice(seatType: SeatTypes) = baseTicketPrice() + seatType.price
-    fun addDate(date: LocalDate) {
+    fun addDate(date: LocalDateTime) {
         dates.add(ShowDate(date, facility.getAllSeatTypes()))
     }
-    fun availableSeatsOf(date: LocalDate, seatType: SeatTypes): Int {
+    fun availableSeatsOf(date: LocalDateTime, seatType: SeatTypes): Int {
         return facility.getSeatCapacity(seatType) - (getShowDate(date)?.getReservedSeatsOf(seatType) ?: 0)
     }
-    fun totalAvailableDateSeatsOf(date: LocalDate): Int {
+    fun totalAvailableDateSeatsOf(date: LocalDateTime): Int {
         return facility.getTotalSeatCapacity() - (getShowDate(date)?.getAllReservedSeats() ?: 0)
     }
-    fun getShowDate(date: LocalDate) = dates.find{ it.date == date}
+    fun getShowDate(date: LocalDateTime) = dates.find{ it.date == date}
     fun getAllShowDates() = dates.map{it.date}
     fun removeDate(date: ShowDate) {
         dates.remove(date)
@@ -45,6 +54,8 @@ class Show(
     fun addPendingAttendee(user: User) {
         pendingAttendees.add(user)
     }
+    @JsonView(View.Iterable.Show.Plain::class, View.Iterable.Show.Purchased::class)
+    fun totalComments() = comments().size
 
     fun comments(): MutableList<Comment> {
         return attendees.flatMap { it.comments }
@@ -52,10 +63,13 @@ class Show(
             .toMutableList()
     }
 
+    @JsonView(View.Iterable.Show.Plain::class, View.Iterable.Show.Purchased::class)
     fun totalRating(): Double = comments().sumOf { it.rating.toDouble() } / comments().size
+
+    fun hasAvailableDates() = dates.any{ it.date >= LocalDateTime.now() }
 }
 
-class ShowDate(val date: LocalDate, seats: List<SeatTypes>): Iterable(){
+class ShowDate(val date: LocalDateTime, seats: List<SeatTypes>): Iterable(){
     val reservedSeats = seats.associateWith { 0 }.toMutableMap()
     fun reserveSeat(seatType: SeatTypes, quantity: Int) {
         reservedSeats[seatType] = (reservedSeats[seatType]!! + quantity)

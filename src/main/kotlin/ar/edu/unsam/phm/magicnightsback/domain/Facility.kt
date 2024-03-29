@@ -3,6 +3,8 @@ package ar.edu.unsam.phm.magicnightsback.domain
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.FacilityError
 import ar.edu.unsam.phm.magicnightsback.repository.Iterable
+import ar.edu.unsam.phm.magicnightsback.serializers.View
+import com.fasterxml.jackson.annotation.JsonView
 import org.uqbar.geodds.Point
 
 interface SeatTypes {
@@ -23,11 +25,15 @@ enum class StadiumSeatType(override val price: Double) : SeatTypes {
 class SeatType (
     val seatType: SeatTypes,
     val quantity: Int
-) {
+) : Iterable() {
     fun price() = seatType.price
+    override fun validSearchCondition(value: String): Boolean {
+        TODO("Not yet implemented")
+    }
 }
 // POSIBLE REFACTOR: Se puede usar un builder, pero no da el tiempo
 class Facility(
+    @JsonView(View.Iterable.Show.Plain::class)
     val name: String,
     val location: Point,
     val seatStrategy: SeatStrategy
@@ -45,6 +51,10 @@ class Facility(
     }
     fun getAllSeatTypes() = seats.map { it.seatType }
     fun removeSeatType(type: SeatType) { seats.remove(type) }
+    @JsonView(View.Iterable.Show.Plain::class)
+    fun cheapestSeat() = seats.minOf { it.price() }
+    @JsonView(View.Iterable.Show.Plain::class)
+    fun expensiveSeat() = seats.maxOf { it.price() }
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
     }

@@ -12,7 +12,7 @@ class User(
     var password: String,
 ) : Iterable() {
     val friends = mutableListOf<User>()
-//    val tickets = mutableListOf<Show>()
+    val tickets = mutableListOf<Ticket>()
     val comments = mutableListOf<Comment>()
     var credit = 0.0
     fun addFriend(user: User) {
@@ -31,13 +31,13 @@ class User(
         comments.remove(comment)
     }
 
-//    fun addTicket(ticket: Ticket) {
-//        tickets.add(ticket)
-//    }
-//
-//    fun removeTicket(ticket: Ticket) {
-//        tickets.remove(ticket)
-//    }
+    fun addTicket(ticket: Ticket) {
+        tickets.add(ticket)
+    }
+
+    fun removeTicket(ticket: Ticket) {
+        tickets.remove(ticket)
+    }
 
     fun addCredit(credit: Double) {
         this.credit += credit

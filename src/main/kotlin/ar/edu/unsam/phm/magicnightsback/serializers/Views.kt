@@ -5,6 +5,7 @@ internal class View {
     internal interface Iterable{
         interface Show {
             interface Plain
+            interface Purchased
         }
     }
 
