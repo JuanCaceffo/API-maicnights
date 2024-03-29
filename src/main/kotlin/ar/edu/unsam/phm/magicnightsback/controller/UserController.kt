@@ -40,10 +40,12 @@ class UserController {
 
     @PostMapping("/login")
     @Operation(summary = "Permite logear un usuario registrado en el sistema")
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "Ok"),
-        ApiResponse(responseCode = "400", description = UserError.BAD_CREDENTIALS, content = arrayOf(Content()) ),
-    ])
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Ok"),
+            ApiResponse(responseCode = "400", description = UserError.BAD_CREDENTIALS, content = arrayOf(Content())),
+        ]
+    )
     fun loginUser(@RequestBody userToLogin: LoginUserDTO): Long {
         return userService.loginUser(userToLogin)
     }

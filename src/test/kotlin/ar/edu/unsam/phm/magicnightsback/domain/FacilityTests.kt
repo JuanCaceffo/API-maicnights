@@ -9,19 +9,20 @@ import org.uqbar.geodds.Point
 class FacilityTests : DescribeSpec({
     isolationMode = IsolationMode.InstancePerTest
     describe("Tests Stadium") {
-        val upperLevel = SeatType(StadiumSeatType.UPPERLEVEL,300)
-        val field = SeatType(StadiumSeatType.FIELD,1000)
-        val box = SeatType(StadiumSeatType.BOX,200)
-        val lowerLevel = SeatType(TheaterSeatType.LOWERLEVEL,500)
-        val pullman = SeatType(TheaterSeatType.PULLMAN,300)
+        val upperLevel = SeatType(StadiumSeatType.UPPERLEVEL, 300)
+        val field = SeatType(StadiumSeatType.FIELD, 1000)
+        val box = SeatType(StadiumSeatType.BOX, 200)
+        val lowerLevel = SeatType(TheaterSeatType.LOWERLEVEL, 500)
+        val pullman = SeatType(TheaterSeatType.PULLMAN, 300)
 
         val stadium = Facility(
             name = "River Plate",
             location = Point(-34.54612, -58.45004),
-            seatStrategy = StadiumStrategy(10000.0)).apply{
-                addSeatType(upperLevel)
-                addSeatType(field)
-                addSeatType(box)
+            seatStrategy = StadiumStrategy(10000.0)
+        ).apply {
+            addSeatType(upperLevel)
+            addSeatType(field)
+            addSeatType(box)
         }
 
         it("El metodo fixedCost devuelve el costo fijo pasado como parametro en el contructor de Stadium") {
@@ -37,11 +38,11 @@ class FacilityTests : DescribeSpec({
             stadium.getTotalSeatCapacity() shouldBe 1500
         }
     }
-    describe("Tests Theater")  {
+    describe("Tests Theater") {
 
 
         it("Un teatro con mala acustica tiene un costo fijo de 100000") {
-            val theater = Facility (
+            val theater = Facility(
                 "GranRex",
                 Point(-34.54612, -58.45004),
                 TheaterStrategy()
@@ -50,7 +51,7 @@ class FacilityTests : DescribeSpec({
         }
 
         it("Un teatro con buena acustica tiene un costo fijo de 150000") {
-            val theater = Facility (
+            val theater = Facility(
                 "GranRex",
                 Point(-34.54612, -58.45004),
                 TheaterStrategy(hasGoodAcoustics = true)

@@ -67,17 +67,19 @@ class ShowControllerTest(
         showsRepository.create(baseShow)
         facilityRepository.create(baseFacility)
     }
+
     @BeforeAll
-    fun end(){
+    fun end() {
         userBoostrap.afterPropertiesSet()
         facilityBoostrap.afterPropertiesSet()
         showBoostrap.afterPropertiesSet()
     }
-    val mapper= ObjectMapper()
+
+    val mapper = ObjectMapper()
 
     //TODO: agregar caso feliz cuando este implementado
     @Test
-    fun `llamada al metodo post para crear una funcion por un usuario que no es admin falla`(){
+    fun `llamada al metodo post para crear una funcion por un usuario que no es admin falla`() {
         mockMvc.perform(
             MockMvcRequestBuilders
                 .post("/show/0/create-date/user/0")

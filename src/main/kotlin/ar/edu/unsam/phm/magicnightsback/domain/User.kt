@@ -61,7 +61,7 @@ class User(
         TODO("Not yet implemented")
     }
 
-    fun throwIfNotAdmin(msg: String){
+    fun throwIfNotAdmin(msg: String) {
         //TODO: cambiar a autenthicationException
         if (!isAdmin) throw AuthenticationException(msg)
     }

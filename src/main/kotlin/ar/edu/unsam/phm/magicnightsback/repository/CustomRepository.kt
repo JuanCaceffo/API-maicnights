@@ -19,7 +19,7 @@ abstract class Iterable {
 @Repository
 class CustomRepository<T : Iterable> {
     var elements = mutableMapOf<Long?, T>()
-    var idCounter : Long = 0
+    var idCounter: Long = 0
 
     fun clear() {
         elements.clear()

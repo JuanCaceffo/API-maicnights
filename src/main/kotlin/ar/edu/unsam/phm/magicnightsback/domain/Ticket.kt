@@ -5,7 +5,7 @@ import ar.edu.unsam.phm.magicnightsback.serializers.View
 import com.fasterxml.jackson.annotation.JsonView
 import java.time.LocalDate
 
-data class Ticket (
+data class Ticket(
     val showId: Long,
     val date: LocalDate,
     @JsonView(View.Iterable.Show.Purchased::class)
