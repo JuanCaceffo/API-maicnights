@@ -4,16 +4,18 @@ package ar.edu.unsam.phm.magicnightsback.boostrap
 import ar.edu.unsam.phm.magicnightsback.domain.*
 import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
 import org.springframework.beans.factory.InitializingBean
+import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import org.uqbar.geodds.Point
 
 @Component
+@Order(1)
 class FacilityBoostrap(
   val facilityRepository: FacilityRepository
 ) : InitializingBean {
 
   private val seatStrategy = mapOf(
-    "stadiumStrategyExpensive" to StadiumStrategy(20000.0),
+    "theaterStrategyWithBadAccustics" to TheaterStrategy(),
     "stadiumStrategyCheap" to StadiumStrategy(10000.0),
     "theaterStrategyWithAccustics" to TheaterStrategy(true)
   )
@@ -30,7 +32,7 @@ class FacilityBoostrap(
     ), "Boca" to Facility(
       name = "Boca Juniors",
       location = Point(-34.63579, -58.36527),
-      seatStrategy = seatStrategy["stadiumStrategyExpensive"]!!,
+      seatStrategy = seatStrategy["theaterStrategyWithBadAccustics"]!!,
     )
   )
 
