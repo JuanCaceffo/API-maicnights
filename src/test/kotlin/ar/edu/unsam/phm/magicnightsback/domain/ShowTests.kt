@@ -1,11 +1,10 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import org.uqbar.geodds.Point
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 val upperLevel = SeatType(StadiumSeatType.UPPERLEVEL,300)
 val field = SeatType(StadiumSeatType.FIELD,1000)
@@ -27,7 +26,7 @@ class ShowTests : DescribeSpec({
     isolationMode = IsolationMode.InstancePerTest
 
     describe("Tests Shows") {
-        showBase.addDate(LocalDate.of(2023,2,10))
+        showBase.addDate(LocalDateTime.of(2023,2,10,19,0,0))
 
         it("Un show en estado base con un teatro chico con acustica mala y una sola funcion tiene un precio bajo para cada entrada en las diferentes ubicaciones") {
             showBase.fullTicketPrice(TheaterSeatType.PULLMAN) shouldBe 14400.0

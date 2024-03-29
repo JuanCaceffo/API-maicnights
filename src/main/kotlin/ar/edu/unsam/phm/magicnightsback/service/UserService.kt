@@ -27,7 +27,7 @@ class UserService {
         TODO("Not yet implemented")
     }
 
-    fun loginUser(loginUser: LoginUserDTO): Int {
+    fun loginUser(loginUser: LoginUserDTO): Long {
         return this.userRepository.getLoginUser(loginUser) ?: throw AuthenticationException(UserError.BAD_CREDENTIALS)
     }
 
