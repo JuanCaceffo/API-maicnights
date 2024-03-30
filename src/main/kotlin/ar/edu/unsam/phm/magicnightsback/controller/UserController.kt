@@ -1,6 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
 import ar.edu.unsam.phm.magicnightsback.domain.User
+import ar.edu.unsam.phm.magicnightsback.dto.UserDTO
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.serializers.*
 import ar.edu.unsam.phm.magicnightsback.service.*
@@ -46,6 +47,11 @@ class UserController {
     ])
     fun loginUser(@RequestBody userToLogin: LoginUserDTO): Int {
         return userService.loginUser(userToLogin)
+    }
+
+    @GetMapping("/user_profile/{id}")
+    fun getUserFriends(@PathVariable id: Int): UserDTO{
+        return userService.getUser(id)
     }
 
     /*@PatchMapping("/update-user")

@@ -1,5 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
+import ar.edu.unsam.phm.magicnightsback.dto.UserDTO
+import ar.edu.unsam.phm.magicnightsback.dto.toDTO
 import ar.edu.unsam.phm.magicnightsback.serializers.*
 import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
 import ar.edu.unsam.phm.magicnightsback.error.UserError
@@ -29,6 +31,10 @@ class UserService {
 
     fun loginUser(loginUser: LoginUserDTO): Int {
         return this.userRepository.getLoginUser(loginUser) ?: throw AuthenticationException(UserError.BAD_CREDENTIALS)
+    }
+
+    fun getUser(id: Int): UserDTO {
+        return this.userRepository.getById(id).toDTO()
     }
 
     /*fun updateUser(loginUser: UserDTO): UserDTO {
