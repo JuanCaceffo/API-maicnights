@@ -26,6 +26,10 @@ class User(
         friends.remove(user)
     }
 
+    fun removeFriendById(id: Int) {
+        friends.removeIf { friend -> friend.id == id }
+    }
+
     fun addComment(comment: Comment) {
         comments.add(comment)
     }

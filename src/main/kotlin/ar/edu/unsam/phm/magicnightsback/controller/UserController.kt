@@ -34,6 +34,12 @@ class UserController {
         return userService.getUserFriends(id)
     }
 
+    @DeleteMapping("/user_profile/{userId}/friends/{friendId}")
+    fun deleteUserFriend(@PathVariable userId: Int, @PathVariable friendId: Int) {
+        userService.deleteUserFriend(userId, friendId)
+    }
+
+
     @GetMapping("/user_profile/{id}/comments")
     fun getUserComments(@PathVariable id: Long): List<CommentDTO> {
         return userService.getUserComments(id)

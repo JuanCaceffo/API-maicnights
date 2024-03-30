@@ -35,6 +35,10 @@ class UserService {
         return this.userRepository.getLoginUser(loginUser) ?: throw AuthenticationException(UserError.BAD_CREDENTIALS)
     }
 
+    fun deleteUserFriend(userId: Int, friendId: Int) {
+        this.userRepository.getById(userId).removeFriendById(friendId)
+    }
+
     /*fun updateUser(loginUser: UserDTO): UserDTO {
         TODO("Not yet implemented")
     }
