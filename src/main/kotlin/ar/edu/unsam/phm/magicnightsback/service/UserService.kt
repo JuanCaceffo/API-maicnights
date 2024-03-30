@@ -1,5 +1,8 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
+import ar.edu.unsam.phm.magicnightsback.domain.User
+import ar.edu.unsam.phm.magicnightsback.dto.FriendDTO
+import ar.edu.unsam.phm.magicnightsback.dto.toFriendDTO
 import ar.edu.unsam.phm.magicnightsback.serializers.*
 import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
 import ar.edu.unsam.phm.magicnightsback.error.UserError
@@ -19,9 +22,10 @@ class UserService {
 //        TODO("Not yet implemented")
 //    }
 
-    /*fun getUserFriends(id: Long): List<FriendDTO> {
-        TODO("Not yet implemented")
-    }*/
+    fun getUserFriends(id: Int): List<FriendDTO> {
+        val friends = this.userRepository.getFriends(id)
+        return friends.map { userFriend -> userFriend.toFriendDTO() }
+    }
 
     fun getUserComments(id: Long): List<CommentDTO> {
         TODO("Not yet implemented")

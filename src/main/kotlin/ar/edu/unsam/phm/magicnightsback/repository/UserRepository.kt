@@ -13,4 +13,8 @@ class UserRepository : CustomRepository<User>() {
             it.value.username == loginUser.username && it.value.password == loginUser.password
         }?.key
     }
+
+    fun getFriends(userId: Int): MutableList<User> {
+        return this.getById(userId).friends
+    }
 }

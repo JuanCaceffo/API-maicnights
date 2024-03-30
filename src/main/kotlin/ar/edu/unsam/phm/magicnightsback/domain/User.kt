@@ -12,6 +12,7 @@ class User(
     val birthday: LocalDate,
     val dni: Int,
     var password: String,
+    var img: String = ""
 ) : RepositoryProps() {
     val friends = mutableListOf<User>()
 //    val tickets = mutableListOf<Show>()
