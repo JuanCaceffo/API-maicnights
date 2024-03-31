@@ -1,6 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.repository.Iterable
+import java.time.LocalDateTime
 
 class Show(
     val name: String,
@@ -22,6 +23,9 @@ class Show(
     }
     fun removePendingAttendee(user: User) {
         pendingAttendees.remove(user)
+    }
+    fun addDate(date: LocalDateTime) {
+        dates.add(ShowDate(date, facility))
     }
     fun cost(): Double = baseCost() * rentability.getRentability()
     fun baseTicketPrice() = cost() / facility.getTotalSeatCapacity()
