@@ -19,6 +19,7 @@ class User(
     val tickets = mutableListOf<Ticket>()
     val comments = mutableListOf<Comment>()
     var credit = 0.0
+
     fun addFriend(user: User) {
         friends.add(user)
     }
@@ -34,6 +35,12 @@ class User(
     fun addComment(comment: Comment) {
         comments.add(comment)
     }
+
+    fun attendingToShow(showid: Long) = tickets.any { it.showId == showid }
+
+    fun friendsAttendingToShow(showid: Long) = friends.filter { it.attendingToShow(showid) }
+
+    fun attendingFriendsPhotos(showid: Long) = friendsAttendingToShow(showid).map { it.img }
 
     fun removeComment(comment: Comment) {
         comments.remove(comment)

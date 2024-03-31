@@ -21,6 +21,11 @@ class UserService {
 //        TODO("Not yet implemented")
 //    }
 
+    fun getById(userid: Long) = userRepository.getById(userid)
+
+    fun getFriendsPhotos(userid: Long, showid: Long): List<String> =
+        if (userid < 0) listOf() else getById(userid).attendingFriendsPhotos(showid)
+
     fun getUserFriends(id: Long): List<FriendDTO> {
         val friends = this.userRepository.getFriends(id)
         return friends.map { userFriend -> userFriend.toFriendDTO() }

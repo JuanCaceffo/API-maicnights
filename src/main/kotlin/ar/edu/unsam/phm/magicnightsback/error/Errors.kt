@@ -10,6 +10,11 @@ object UserError {
 
 }
 
+object ShowCommentError {
+    const val INVALID_RATTING = "El rating debe estar entre 1 y 5"
+    const val SHOWDATE_NOT_PASSED = "No se puede agregar una opinion a un showdate si este no ocurrió"
+}
+
 object showError {
     const val MSG_DATE_NOT_PASSED = "La fecha del Show todavia no paso"
     const val MSG_SETS_UNAVILABLES = "Excedio la cantidad de asientos disponibles"
