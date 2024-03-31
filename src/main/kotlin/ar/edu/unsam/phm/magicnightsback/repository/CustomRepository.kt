@@ -4,7 +4,7 @@ import ar.edu.unsam.phm.magicnightsback.error.NotFoundException
 import ar.edu.unsam.phm.magicnightsback.error.RepositoryError
 import org.springframework.stereotype.Repository
 
-abstract class RepositoryProps {
+abstract class Iterable {
     var id: Int = 0
     fun id(newId: Int) {
         id = newId
@@ -14,7 +14,7 @@ abstract class RepositoryProps {
 }
 
 @Repository
-class CustomRepository<T : RepositoryProps> {
+class CustomRepository<T : Iterable> {
     var elements = mutableMapOf<Int, T>()
     var idCounter = 0
 

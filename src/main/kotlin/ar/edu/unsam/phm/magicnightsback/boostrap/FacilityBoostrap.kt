@@ -20,7 +20,7 @@ class FacilityBoostrap(
     "theaterStrategyWithAccustics" to TheaterStrategy(true)
   )
 
-  private val facilities = mapOf(
+  val facilities = mapOf(
     "GranRex" to Facility(
       name = "Gran Rex",
       location = Point(-34.60356,-58.38013),

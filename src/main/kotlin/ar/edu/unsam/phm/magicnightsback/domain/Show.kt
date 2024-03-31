@@ -1,61 +1,43 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import ar.edu.unsam.phm.magicnightsback.repository.RepositoryProps
+import ar.edu.unsam.phm.magicnightsback.repository.Iterable
+import ar.edu.unsam.phm.magicnightsback.service.ShowDateService
 import java.time.LocalDateTime
 class Show(
     val name: String,
     val band: Band,
     val facility: Facility,
-) : RepositoryProps() {
-    var rentability: RentabilityType = BasePrice()
+) : Iterable() {
+    private lateinit var showDateService: ShowDateService
 
+    val dates = mutableListOf<ShowDate>()
+    var showImg = "$name.jpg"
+    var rentability: RentabilityType = BasePrice()
+    val pendingAttendees = mutableListOf<User>()
+
+    fun allComments() = dates.flatMap { it.comments }
     fun baseCost(): Double = band.cost + facility.cost()
     fun changeRentability(newShowStatus: RentabilityType) {
         this.rentability = newShowStatus
     }
-    fun cost(): Double = baseCost() * rentability.getRentability()
-    fun baseTicketPrice() = cost() / facility.getTotalSeatCapacity()
-    fun fullTicketPrice(seatType: SeatTypes) = baseTicketPrice() + seatType.price
-    override fun validSearchCondition(value: String): Boolean {
-        TODO("Not yet implemented")
-    }
-
-//    fun comments(): MutableList<Comment> {
-//        return attendees.flatMap { it.comments }
-//            .filter { it.band == this.band }
-//            .toMutableList()
-//    }
-//
-//    fun totalRating(): Double = comments().sumOf { it.rating.toDouble() } / comments().size
-}
-
-class ShowDate(val date: LocalDateTime, val show: Show): RepositoryProps(){
-
-    val attendees = mutableListOf<User>()
-    val pendingAttendees = mutableListOf<User>()
-    val reservedSeats = show.facility.getAllSeatTypes().associateWith { 0 }.toMutableMap()
-
-    fun addAttendee(user: User) {
-        attendees.add(user)
-    }
     fun addPendingAttendee(user: User) {
         pendingAttendees.add(user)
     }
-    fun reserveSeat(seatType: SeatTypes, quantity: Int) {
-        reservedSeats[seatType] = (reservedSeats[seatType]!! + quantity)
+    fun removePendingAttendee(user: User) {
+        pendingAttendees.remove(user)
     }
-    fun releaseSeat(seatType: SeatTypes, quantity: Int) {
-        reservedSeats[seatType] = (reservedSeats[seatType]!! - quantity)
+    fun addDate(date: LocalDateTime) {
+        showDateService.addShowDate(date, facility)
     }
-    fun getReservedSeatsOf(seatType: SeatTypes) = reservedSeats[seatType] ?: 0
-
-    fun getAllReservedSeats() = reservedSeats.map { it.value }.sum()
-    fun availableSeatsOf(date: LocalDateTime, seatType: SeatTypes): Int {
-        return show.facility.getSeatCapacity(seatType) - getReservedSeatsOf(seatType)
-    }
-    fun totalAvailableDateSeatsOf(date: LocalDateTime): Int {
-        return show.facility.getTotalSeatCapacity() - getAllReservedSeats()
-    }
+    fun cost(): Double = baseCost() * rentability.getRentability()
+    fun baseTicketPrice() = cost() / facility.getTotalSeatCapacity()
+    fun fullTicketPrice(seatType: SeatTypes) = baseTicketPrice() + seatType.price
+    fun allTicketPrices() = facility.getAllSeatTypes().map { fullTicketPrice(it) }
+    fun allDates() = dates.map{ it.date }
+    fun soldOutDates() = dates.filter{ it.isSoldOut() }.size
+    fun ticketsSoldOfSeatType(seatType: SeatTypes) = dates.sumOf { it.getReservedSeatsOf(seatType) }
+    fun totalTicketsSold() = facility.getAllSeatTypes().sumOf { ticketsSoldOfSeatType(it) }
+    fun totalSales() = facility.getAllSeatTypes().sumOf { fullTicketPrice(it) * ticketsSoldOfSeatType(it) }
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
     }

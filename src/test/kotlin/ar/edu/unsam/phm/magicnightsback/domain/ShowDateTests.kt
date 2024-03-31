@@ -20,20 +20,18 @@ class ShowDateTests : DescribeSpec({
         addSeatType(lowerLevel)
         addSeatType(pullman)
     }
-
-    val showBase = Show("La vela puerca",Band("La vela puerca",10000.0), theterWithFullAvailability)
     describe("Tests ShowDates") {
 
         it("Un show cualquiera con una sola funcion y todos los asinetos disponibles permite reservar asientos de cualquier ubicacion y los asientos disponibles para dicha fecha en dicha ubicacion y en total se veran disminuidos") {
             //ARRANGE
-            val showDate = ShowDate(LocalDateTime.now().plusDays(10), showBase)
+            val showDate = ShowDate(LocalDateTime.now().plusDays(10), theterWithFullAvailability)
             //ACT
             showDate.reserveSeat(TheaterSeatType.LOWERLEVEL, 5)
             showDate.reserveSeat(TheaterSeatType.PULLMAN, 3)
             //ASSERT
-            showDate.availableSeatsOf(showDate.date, TheaterSeatType.LOWERLEVEL) shouldBe  5
-            showDate.availableSeatsOf(showDate.date, TheaterSeatType.PULLMAN) shouldBe 7
-            showDate.totalAvailableDateSeatsOf(showDate.date) shouldBe 12
+            showDate.availableSeatsOf(TheaterSeatType.LOWERLEVEL) shouldBe  5
+            showDate.availableSeatsOf(TheaterSeatType.PULLMAN) shouldBe 7
+            showDate.totalAvailableSeatsOf() shouldBe 12
         }
     }
 })
