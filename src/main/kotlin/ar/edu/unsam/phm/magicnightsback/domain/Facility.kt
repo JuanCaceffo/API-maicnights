@@ -53,8 +53,6 @@ class Facility(
     fun removeSeatType(type: SeatType) {
         seats.remove(type)
     }
-    fun cheapestSeat() = seats.minBy { it.price() }.seatType
-    fun expensiveSeat() = seats.maxBy { it.price() }.seatType
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
     }

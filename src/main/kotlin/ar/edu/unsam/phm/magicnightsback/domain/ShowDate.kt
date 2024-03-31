@@ -7,11 +7,10 @@ import java.time.LocalDateTime
 
 class ShowDate(
     val date: LocalDateTime,
-    val show: Show) : Iterable() {
-
+    val facility: Facility
+) : Iterable() {
     val attendees = mutableListOf<User>()
-    val pendingAttendees = mutableListOf<User>()
-    val reservedSeats = show.facility.getAllSeatTypes().associateWith { 0 }.toMutableMap()
+    val reservedSeats = facility.getAllSeatTypes().associateWith { 0 }.toMutableMap()
     val comments = mutableListOf<Comment>()
 
     fun totalRating() = comments.sumOf { it.rating } / comments.size
@@ -31,10 +30,6 @@ class ShowDate(
         attendees.add(user)
     }
 
-    fun addPendingAttendee(user: User) {
-        pendingAttendees.add(user)
-    }
-
     fun friendsAttending(user: User) = user.friends.filter{ attendees.contains(it) }
 
     fun reserveSeat(seatType: SeatTypes, quantity: Int) {
@@ -49,14 +44,15 @@ class ShowDate(
 
     fun getAllReservedSeats() = reservedSeats.map { it.value }.sum()
     fun availableSeatsOf(seatType: SeatTypes): Int {
-        return show.facility.getSeatCapacity(seatType) - getReservedSeatsOf(seatType)
+        return facility.getSeatCapacity(seatType) - getReservedSeatsOf(seatType)
     }
 
-    fun totalAvailableDateSeatsOf(): Int {
-        return show.facility.getTotalSeatCapacity() - getAllReservedSeats()
+    fun totalAvailableSeatsOf(): Int {
+        return facility.getTotalSeatCapacity() - getAllReservedSeats()
     }
 
     fun datePassed() = date < LocalDateTime.now()
+    fun isSoldOut() = totalAvailableSeatsOf() == 0
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
     }

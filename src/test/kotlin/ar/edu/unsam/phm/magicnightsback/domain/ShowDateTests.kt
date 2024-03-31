@@ -33,7 +33,7 @@ class ShowDateTests : DescribeSpec({
             //ASSERT
             showDate.availableSeatsOf(showDate.date, TheaterSeatType.LOWERLEVEL) shouldBe 5
             showDate.availableSeatsOf(showDate.date, TheaterSeatType.PULLMAN) shouldBe 7
-            showDate.totalAvailableDateSeatsOf(showDate.date) shouldBe 12
+            showDate.totalAvailableSeatsOf(showDate.date) shouldBe 12
         }
     }
 })
