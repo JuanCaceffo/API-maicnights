@@ -11,6 +11,7 @@ class User(
     val birthday: LocalDate,
     val dni: Int,
     var password: String,
+    var img: String = ""
     //TODO: analizar la posibilidad de un strategy de roles
     var isAdmin: Boolean = false
 ) : Iterable() {
@@ -24,6 +25,10 @@ class User(
 
     fun removeFriend(user: User) {
         friends.remove(user)
+    }
+
+    fun removeFriendById(id: Int) {
+        friends.removeIf { friend -> friend.id == id }
     }
 
     fun addComment(comment: Comment) {
