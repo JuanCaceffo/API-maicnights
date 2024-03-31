@@ -16,7 +16,8 @@ class Show(
     val pendingAttendees = mutableListOf<User>()
     val comments = mutableListOf<Comment>()
 
-    fun totalRating() = comments.sumOf { it.rating } / comments.size
+    fun totalRating() = if (comments.size > 0) comments.sumOf { it.rating } / comments.size else 0
+
 
     fun addComments(comment: Comment, showDate: ShowDate){
         validateComment(showDate)

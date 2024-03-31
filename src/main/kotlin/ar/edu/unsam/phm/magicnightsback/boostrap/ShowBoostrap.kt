@@ -20,7 +20,7 @@ class ShowBoostrap(
     val shows = mapOf(
         "SmallShow" to Show("SmallShow",bandBoostrap.bands["LaVelaPuerca"]!!,facilityBoostrap.facilities["GranRex"]!!),
         "BigShow" to Show("BigShow",bandBoostrap.bands["PearlJam"]!!,facilityBoostrap.facilities["River"]!!),
-        "BestSmallShow" to Show("BestSmallShow",bandBoostrap.bands["AcDc"]!!,facilityBoostrap.facilities["Boca"]!!),
+        "BestSmallShow" to Show("BestSmallShow",bandBoostrap.bands["AcDc"]!!,facilityBoostrap.facilities["MovistarArena"]!!),
     )
 
     fun createShows() {
