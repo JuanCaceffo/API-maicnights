@@ -12,6 +12,7 @@ object UserError {
 
 object showError {
     const val MSG_SETS_UNAVILABLES = "Excedio la cantidad de asientos disponibles"
+    const val MSG_DATE_NOT_PASSED = "La fecha del Show todavia no paso"
 }
 
 object RepositoryError {
