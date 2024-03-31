@@ -3,8 +3,6 @@ package ar.edu.unsam.phm.magicnightsback.domain
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.FacilityError
 import ar.edu.unsam.phm.magicnightsback.repository.Iterable
-import ar.edu.unsam.phm.magicnightsback.serializers.View
-import com.fasterxml.jackson.annotation.JsonView
 import org.uqbar.geodds.Point
 
 interface SeatTypes {

@@ -7,14 +7,15 @@ data class ShowDTO(
     val img: String,
     val name: String,
     val location: String,
-    val lowestPrice: Double,
-    val highestPrice: Double)
+//    val lowestPrice: Double,
+//    val highestPrice: Double
+    )
 
 fun Show.toShowDTO() = ShowDTO(
-    id = this.id!!,
+    id = this.id,
     img = this.showImg,
     name = this.name,
-    location = this.facility.name,
-    lowestPrice = this.lowestPrice(),
-    highestPrice = this.highestPrice()
+    location = this.facility.name
+//    lowestPrice = this.lowestPrice(),
+//    highestPrice = this.highestPrice()
 )

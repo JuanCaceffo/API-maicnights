@@ -1,5 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
+import ar.edu.unsam.phm.magicnightsback.domain.Show
 import ar.edu.unsam.phm.magicnightsback.domain.ShowDate
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.repository.ShowDateRepository
@@ -12,20 +13,23 @@ import java.time.LocalDateTime
 @Service
 class ShowDateService {
     @Autowired
-    lateinit var userRepository: UserRepository
-
+    lateinit var showDateRepository: ShowDateRepository
     @Autowired
     lateinit var showRepository: ShowRepository
-
     @Autowired
-    lateinit var showDateRepository: ShowDateRepository
+    lateinit var userRepository: UserRepository
 
-    fun getAvailable() = showDateRepository.getAll().filter { !it.datePassed() }
+    fun allShowDatesOf(showid: Long) = showDateRepository.getAll().filter { it.show.id == showid }
 
-    fun createShowDate(showId: Long, userId: Long, date: LocalDateTime) {
-        val user = userRepository.getById(userId)
-        user.throwIfNotAdmin(UserError.USER_NOT_AUTHORIZED_CREATE_DATE)
-        val show = showRepository.getById(showId)
+    fun addShowDate(date: LocalDateTime, show: Show){
         showDateRepository.create(ShowDate(date, show))
+    }
+
+    fun createShowDate(showId: Long, userId: Long, date:LocalDateTime) {
+        userRepository.getById(userId).throwIfNotAdmin(UserError.USER_NOT_AUTHORIZED_CREATE_DATE)
+        val show = showRepository.getById(showId)
+        val showDate = ShowDate(date,show)
+        showDateRepository.create(showDate)
+        show.addDate(showDate.id)
     }
 }

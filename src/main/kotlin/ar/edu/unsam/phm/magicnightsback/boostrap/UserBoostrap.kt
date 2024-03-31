@@ -25,7 +25,8 @@ class UserBoostrap(
             username = "juanceto01",
             dni = 1,
             birthday = LocalDate.of(2003, 2, 1),
-            password = "asdf"
+            password = "asdf",
+            img = ""
         ), "Sol" to User(
             name = "Sol",
             surname = "Lopez",
@@ -47,9 +48,21 @@ class UserBoostrap(
         users.values.forEach { user -> userRepository.apply { create(user) } }
     }
 
-    override fun afterPropertiesSet() {
-        println("User creation process starts")
-        this.createUsers()
-        println("User creation process ends")
+  fun addFriends() {
+    users.values.forEach { user ->
+      val availableFriends = users.values.filter { it != user && !user.friends.contains(it) }
+      val selectedFriends = availableFriends.shuffled().take(2)
+      user.friends.addAll(selectedFriends)
     }
+
+    // Actualizar los usuarios en el repositorio
+    users.values.forEach { userRepository.update(it) }
+  }
+
+  override fun afterPropertiesSet() {
+    println("User creation process starts")
+    this.createUsers()
+    this.addFriends()
+    println("User creation process ends")
+  }
 }

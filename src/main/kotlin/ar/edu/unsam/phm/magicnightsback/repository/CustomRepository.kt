@@ -2,13 +2,10 @@ package ar.edu.unsam.phm.magicnightsback.repository
 
 import ar.edu.unsam.phm.magicnightsback.error.NotFoundException
 import ar.edu.unsam.phm.magicnightsback.error.RepositoryError
-import ar.edu.unsam.phm.magicnightsback.serializers.View
-import com.fasterxml.jackson.annotation.JsonView
 import org.springframework.stereotype.Repository
 
 abstract class Iterable {
-    @JsonView(View.Iterable.Show.Plain::class)
-    var id: Long? = null
+    var id: Long = 0
     fun id(newId: Long) {
         id = newId
     }
@@ -18,8 +15,8 @@ abstract class Iterable {
 
 @Repository
 class CustomRepository<T : Iterable> {
-    var elements = mutableMapOf<Long?, T>()
-    var idCounter: Long = 0
+    var elements = mutableMapOf<Long, T>()
+    var idCounter : Long = 0
 
     fun clear() {
         elements.clear()

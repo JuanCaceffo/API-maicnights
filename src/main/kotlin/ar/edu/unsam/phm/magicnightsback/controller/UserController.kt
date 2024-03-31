@@ -1,6 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
-import ar.edu.unsam.phm.magicnightsback.domain.User
+import ar.edu.unsam.phm.magicnightsback.dto.FriendDTO
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.serializers.*
 import ar.edu.unsam.phm.magicnightsback.service.*
@@ -28,24 +28,28 @@ class UserController {
 //        return userService.getUserPending(id)
 //    }
 
-    /*@GetMapping("/user/{id}/friends")
-    fun getUserFriends(@PathVariable id: Long): List<User> {
+    @GetMapping("/user_profile/{id}/friends")
+    fun getUserFriends(@PathVariable id: Long): List<FriendDTO> {
         return userService.getUserFriends(id)
-    }*/
+    }
 
-    @GetMapping("/user/{id}/comments")
+    @DeleteMapping("/user_profile/{userId}/friends/{friendId}")
+    fun deleteUserFriend(@PathVariable userId: Long, @PathVariable friendId: Long) {
+        userService.deleteUserFriend(userId, friendId)
+    }
+
+
+    @GetMapping("/user_profile/{id}/comments")
     fun getUserComments(@PathVariable id: Long): List<CommentDTO> {
         return userService.getUserComments(id)
     }
 
     @PostMapping("/login")
     @Operation(summary = "Permite logear un usuario registrado en el sistema")
-    @ApiResponses(
-        value = [
-            ApiResponse(responseCode = "200", description = "Ok"),
-            ApiResponse(responseCode = "400", description = UserError.BAD_CREDENTIALS, content = arrayOf(Content())),
-        ]
-    )
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Ok"),
+        ApiResponse(responseCode = "400", description = UserError.BAD_CREDENTIALS, content = arrayOf(Content()) ),
+    ])
     fun loginUser(@RequestBody userToLogin: LoginUserDTO): Long {
         return userService.loginUser(userToLogin)
     }

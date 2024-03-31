@@ -5,7 +5,6 @@ import ar.edu.unsam.phm.magicnightsback.repository.Iterable
 import java.time.LocalDate
 
 class User(
-    val img: String,
     val name: String,
     val surname: String,
     val username: String,
@@ -13,7 +12,8 @@ class User(
     val dni: Int,
     var password: String,
     //TODO: analizar la posibilidad de un strategy de roles
-    var isAdmin: Boolean = false
+    var isAdmin: Boolean = false,
+    val img: String = ""
 ) : Iterable() {
     val friends = mutableListOf<User>()
     val tickets = mutableListOf<Ticket>()
@@ -25,6 +25,10 @@ class User(
 
     fun removeFriend(user: User) {
         friends.remove(user)
+    }
+
+    fun removeFriendById(id: Long) {
+        friends.removeIf { friend -> friend.id == id }
     }
 
     fun addComment(comment: Comment) {
