@@ -13,7 +13,7 @@ class Show(
     var showImg = "$band.jpg"
     val comments = mutableListOf<Comment>()
     private val pendingAttendees = mutableListOf<User>()
-    private val dates = mutableSetOf<ShowDate>()
+    val dates = mutableSetOf<ShowDate>()
     private var rentability: RentabilityType = BasePrice()
 
     fun totalRating() = if (comments.size > 0) comments.sumOf { it.rating } / comments.size else 0.0

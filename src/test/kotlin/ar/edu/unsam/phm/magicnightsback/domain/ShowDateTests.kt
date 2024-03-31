@@ -28,7 +28,7 @@ class ShowDateTests : DescribeSpec({
             //ARRANGE
             val date = LocalDateTime.now().plusDays(10)
             showBase.addDate(date)
-            val showDate = showBase.allDates().first()
+            val showDate = showBase.dates.first()
             //ACT
             showDate.reserveSeat(TheaterSeatType.LOWERLEVEL, 5)
             showDate.reserveSeat(TheaterSeatType.PULLMAN, 3)
