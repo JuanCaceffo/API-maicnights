@@ -37,11 +37,18 @@ class UserService {
         return this.userRepository.getById(id).toDTO()
     }
 
-    /*fun updateUser(loginUser: UserDTO): UserDTO {
-        TODO("Not yet implemented")
+    fun getUserCredit(id: Int): Double {
+        return this.userRepository.getById(id).credit
     }
 
-    fun getUserCredit(user: UserDTO): Double {
+    fun addCreditToUser(id: Int, creditToAdd: Double): Double {
+        this.userRepository.addCredit(id, creditToAdd)
+
+        return userRepository.getById(id).credit
+    }
+
+    /*fun updateUser(loginUser: UserDTO): UserDTO {
         TODO("Not yet implemented")
     }*/
+
 }

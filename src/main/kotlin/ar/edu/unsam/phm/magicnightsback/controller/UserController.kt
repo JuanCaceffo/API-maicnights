@@ -57,10 +57,17 @@ class UserController {
     /*@PatchMapping("/update-user")
     fun updateUser(@RequestBody userToUpdate: UserDTO) {
         userService.updateUser(userToUpdate)
+    }*/
+
+    @GetMapping("/user_profile/{id}/credit")
+    fun getUserCredit(@PathVariable id: Int): Double {
+        return userService.getUserCredit(id)
     }
 
-    @GetMapping("/user-credit")
-    fun getUserCredit(@RequestBody user: UserDTO): Double {
-        return userService.getUserCredit(user)
-    }*/
+    @PutMapping("/user_profile/{id}/add_credit")
+    fun addUserCredit(@PathVariable id: Int, @RequestBody creditToAdd: Map<String, Double>): Double {
+        val credit = creditToAdd["credit"]!!
+        return userService.addCreditToUser(id, credit)
+    }
+
 }
