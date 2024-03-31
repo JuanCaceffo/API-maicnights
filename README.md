@@ -9,3 +9,6 @@ Repositorio donde se encuentra la logica de negocio del proyecto Noches Magicas 
 - Pablo Foglia
 - Sol Lopez
 - Denise Deutsch
+
+#### Diagrama de clases V1:
+![Diagrama](img/Diagrama de clases Noches Magicas V1.jpg)
