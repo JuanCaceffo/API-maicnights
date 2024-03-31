@@ -4,10 +4,12 @@ package ar.edu.unsam.phm.magicnightsback.boostrap
 import ar.edu.unsam.phm.magicnightsback.domain.*
 import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
 import org.springframework.beans.factory.InitializingBean
+import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import org.uqbar.geodds.Point
 
 @Component
+@Order(0)
 class FacilityBoostrap(
   val facilityRepository: FacilityRepository
 ) : InitializingBean {

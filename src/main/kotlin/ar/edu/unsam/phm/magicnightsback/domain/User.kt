@@ -1,7 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import ar.edu.unsam.phm.magicnightsback.error.BusinessException
-import ar.edu.unsam.phm.magicnightsback.error.UserError
+import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
 import ar.edu.unsam.phm.magicnightsback.repository.RepositoryProps
 import java.time.LocalDate
 
@@ -12,6 +11,8 @@ class User(
     val birthday: LocalDate,
     val dni: Int,
     var password: String,
+    //TODO: analizar la posibilidad de un strategy de roles
+    var isAdmin: Boolean = false
 ) : RepositoryProps() {
     val friends = mutableListOf<User>()
 //    val tickets = mutableListOf<Show>()
@@ -58,5 +59,10 @@ class User(
     ///// VALIDATORS ///////////////////////////////////////////
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
+    }
+
+    fun throwIfNotAdmin(msg: String){
+        //TODO: cambiar a autenthicationException
+        if (!isAdmin) throw AuthenticationException(msg)
     }
 }
