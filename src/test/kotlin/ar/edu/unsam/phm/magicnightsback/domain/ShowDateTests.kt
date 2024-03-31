@@ -9,19 +9,19 @@ import java.time.LocalDateTime
 class ShowDateTests : DescribeSpec({
     isolationMode = IsolationMode.InstancePerTest
 
-    val lowerLevel = SeatType(TheaterSeatType.LOWERLEVEL,10)
-    val pullman = SeatType(TheaterSeatType.PULLMAN,10)
+    val lowerLevel = SeatType(TheaterSeatType.LOWERLEVEL, 10)
+    val pullman = SeatType(TheaterSeatType.PULLMAN, 10)
 
-    val theterWithFullAvailability = Facility (
+    val theterWithFullAvailability = Facility(
         "Teatro GrandRex",
         Point(-34.54612, -58.45004),
         TheaterStrategy()
-    ).apply{
+    ).apply {
         addSeatType(lowerLevel)
         addSeatType(pullman)
     }
-    val showBase = Show("La vela puerca",Band("La vela puerca",10000.0), theterWithFullAvailability)
 
+    val showBase = Show("La vela puerca",Band("La vela puerca", 10000.0), theterWithFullAvailability)
     describe("Tests ShowDates") {
 
         it("Un show cualquiera con una sola funcion y todos los asinetos disponibles permite reservar asientos de cualquier ubicacion y los asientos disponibles para dicha fecha en dicha ubicacion y en total se veran disminuidos") {

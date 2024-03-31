@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 @Component
 @Order(0)
 class BandBoostrap(
-    val bandRepository : BandRepository,
+    val bandRepository: BandRepository,
 ) : InitializingBean {
     val bands = mapOf(
         "LaVelaPuerca" to Band("La Vela Puerca",

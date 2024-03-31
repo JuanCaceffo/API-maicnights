@@ -1,6 +1,5 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
-import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.dto.FriendDTO
 import ar.edu.unsam.phm.magicnightsback.dto.toFriendDTO
 import ar.edu.unsam.phm.magicnightsback.serializers.*
@@ -22,7 +21,7 @@ class UserService {
 //        TODO("Not yet implemented")
 //    }
 
-    fun getUserFriends(id: Int): List<FriendDTO> {
+    fun getUserFriends(id: Long): List<FriendDTO> {
         val friends = this.userRepository.getFriends(id)
         return friends.map { userFriend -> userFriend.toFriendDTO() }
     }
@@ -35,7 +34,7 @@ class UserService {
         return this.userRepository.getLoginUser(loginUser) ?: throw AuthenticationException(UserError.BAD_CREDENTIALS)
     }
 
-    fun deleteUserFriend(userId: Int, friendId: Int) {
+    fun deleteUserFriend(userId: Long, friendId: Long) {
         this.userRepository.getById(userId).removeFriendById(friendId)
     }
 

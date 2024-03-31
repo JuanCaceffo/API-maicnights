@@ -7,7 +7,7 @@ data class FriendDTO(
     val name: String,
     val surname: String,
     val img: String,
-    val id: Int
+    val id: Long
 )
 
 fun User.toFriendDTO(): FriendDTO {

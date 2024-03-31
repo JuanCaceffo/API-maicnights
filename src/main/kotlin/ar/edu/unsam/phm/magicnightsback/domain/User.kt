@@ -11,12 +11,12 @@ class User(
     val birthday: LocalDate,
     val dni: Int,
     var password: String,
-    var img: String = ""
     //TODO: analizar la posibilidad de un strategy de roles
-    var isAdmin: Boolean = false
+    var isAdmin: Boolean = false,
+    val img: String = ""
 ) : Iterable() {
     val friends = mutableListOf<User>()
-//    val tickets = mutableListOf<Show>()
+    val tickets = mutableListOf<Ticket>()
     val comments = mutableListOf<Comment>()
     var credit = 0.0
     fun addFriend(user: User) {
@@ -27,7 +27,7 @@ class User(
         friends.remove(user)
     }
 
-    fun removeFriendById(id: Int) {
+    fun removeFriendById(id: Long) {
         friends.removeIf { friend -> friend.id == id }
     }
 
@@ -39,13 +39,13 @@ class User(
         comments.remove(comment)
     }
 
-//    fun addTicket(ticket: Ticket) {
-//        tickets.add(ticket)
-//    }
-//
-//    fun removeTicket(ticket: Ticket) {
-//        tickets.remove(ticket)
-//    }
+    fun addTicket(ticket: Ticket) {
+        tickets.add(ticket)
+    }
+
+    fun removeTicket(ticket: Ticket) {
+        tickets.remove(ticket)
+    }
 
     fun addCredit(credit: Double) {
         this.credit += credit
@@ -66,7 +66,7 @@ class User(
         TODO("Not yet implemented")
     }
 
-    fun throwIfNotAdmin(msg: String){
+    fun throwIfNotAdmin(msg: String) {
         //TODO: cambiar a autenthicationException
         if (!isAdmin) throw AuthenticationException(msg)
     }

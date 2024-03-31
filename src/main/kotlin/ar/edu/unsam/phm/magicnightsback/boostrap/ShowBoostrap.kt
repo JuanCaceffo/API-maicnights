@@ -6,12 +6,12 @@ import org.springframework.beans.factory.InitializingBean
 import org.springframework.context.annotation.DependsOn
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
-import java.time.LocalDateTime
 
 @Component
 @Order(2)
-@DependsOn("bandBoostrap","facilityBoostrap")
-class ShowBoostrap (
+@DependsOn("facilityBoostrap", "bandBoostrap")
+
+class ShowBoostrap(
     val showRepository: ShowRepository,
     bandBoostrap: BandBoostrap,
     facilityBoostrap: FacilityBoostrap
@@ -20,7 +20,7 @@ class ShowBoostrap (
     val shows = mapOf(
         "SmallShow" to Show("SmallShow",bandBoostrap.bands["LaVelaPuerca"]!!,facilityBoostrap.facilities["GranRex"]!!),
         "BigShow" to Show("BigShow",bandBoostrap.bands["PearlJam"]!!,facilityBoostrap.facilities["River"]!!),
-        "BestSmallShow" to Show("BestSmallShow",bandBoostrap.bands["AcDc"]!!,facilityBoostrap.facilities["Boca"]!!),
+        "BestSmallShow" to Show("BestSmallShow",bandBoostrap.bands["AcDc"]!!,facilityBoostrap.facilities["MovistarArena"]!!),
     )
 
     fun createShows() {

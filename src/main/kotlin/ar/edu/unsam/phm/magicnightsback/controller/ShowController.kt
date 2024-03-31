@@ -1,19 +1,22 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
-import ar.edu.unsam.phm.magicnightsback.error.UserError
+import ar.edu.unsam.phm.magicnightsback.dto.ShowDTO
+import ar.edu.unsam.phm.magicnightsback.dto.toShowDTO
 import ar.edu.unsam.phm.magicnightsback.service.ShowService
 import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.responses.ApiResponse
-import io.swagger.v3.oas.annotations.responses.ApiResponses
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
 
-@RestController()
+@RestController
 @CrossOrigin(origins = ["*"])
-@RequestMapping("show")
-class ShowController(
-    val showService: ShowService
-) {
+class ShowController {
+    @Autowired
+    lateinit var showService: ShowService
+
+    @GetMapping("/shows")
+    @Operation(summary = "Devuelve todos los disponibles")
+    fun getAll(): List<ShowDTO> = showService.getAll().map{ it.toShowDTO() }
+
 }

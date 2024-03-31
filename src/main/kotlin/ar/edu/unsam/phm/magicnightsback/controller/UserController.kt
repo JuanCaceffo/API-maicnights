@@ -1,6 +1,5 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
-import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.dto.FriendDTO
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.serializers.*
@@ -30,12 +29,12 @@ class UserController {
 //    }
 
     @GetMapping("/user_profile/{id}/friends")
-    fun getUserFriends(@PathVariable id: Int): List<FriendDTO> {
+    fun getUserFriends(@PathVariable id: Long): List<FriendDTO> {
         return userService.getUserFriends(id)
     }
 
     @DeleteMapping("/user_profile/{userId}/friends/{friendId}")
-    fun deleteUserFriend(@PathVariable userId: Int, @PathVariable friendId: Int) {
+    fun deleteUserFriend(@PathVariable userId: Long, @PathVariable friendId: Long) {
         userService.deleteUserFriend(userId, friendId)
     }
 
