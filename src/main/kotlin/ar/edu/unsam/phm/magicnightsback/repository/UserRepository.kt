@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class UserRepository : CustomRepository<User>() {
-    fun getLoginUser(loginUser: LoginUserDTO): Int? {
+    fun getLoginUser(loginUser: LoginUserDTO): Long? {
         // Dado un usuario de tipo LoginDTO, devuelve el usuario encontrado en el repositorio que con el
         // nommbre de usuario y contraseña si existe.
         return this.elements.entries.find {

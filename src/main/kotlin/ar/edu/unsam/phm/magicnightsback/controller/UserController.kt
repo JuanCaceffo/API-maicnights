@@ -51,7 +51,7 @@ class UserController {
         ApiResponse(responseCode = "200", description = "Ok"),
         ApiResponse(responseCode = "400", description = UserError.BAD_CREDENTIALS, content = arrayOf(Content()) ),
     ])
-    fun loginUser(@RequestBody userToLogin: LoginUserDTO): Int {
+    fun loginUser(@RequestBody userToLogin: LoginUserDTO): Long {
         return userService.loginUser(userToLogin)
     }
 

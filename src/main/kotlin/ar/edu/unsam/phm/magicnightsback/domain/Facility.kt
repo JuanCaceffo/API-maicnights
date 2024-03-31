@@ -2,7 +2,7 @@ package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.FacilityError
-import ar.edu.unsam.phm.magicnightsback.repository.RepositoryProps
+import ar.edu.unsam.phm.magicnightsback.repository.Iterable
 import org.uqbar.geodds.Point
 
 interface SeatTypes {
@@ -31,11 +31,11 @@ class Facility(
     val name: String,
     val location: Point,
     val seatStrategy: SeatStrategy
-) : RepositoryProps() {
+) : Iterable() {
     val seats: MutableSet<SeatType> = mutableSetOf()
     fun cost() = seatStrategy.totalCost()
     fun getSeat(seat: SeatTypes) = seats.find{ it.seatType == seat }
-    fun getSeatCapacity(seat: SeatTypes) = getSeat(seat)?.quantity
+    fun getSeatCapacity(seat: SeatTypes) = getSeat(seat)?.quantity ?: 0
     fun getTotalSeatCapacity() = seats.sumOf { it.quantity }
     fun addSeatType(seat: SeatType) {
         if (!seatStrategy.seatValidation(seat)) {
@@ -43,6 +43,7 @@ class Facility(
         }
         seats.add(seat)
     }
+    fun getAllSeatTypes() = seats.map { it.seatType }
     fun removeSeatType(type: SeatType) { seats.remove(type) }
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
