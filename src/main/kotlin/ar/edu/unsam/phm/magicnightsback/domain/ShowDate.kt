@@ -7,24 +7,11 @@ import java.time.LocalDateTime
 
 class ShowDate(
     val date: LocalDateTime,
-    val facility: Facility
+    val show: Show
 ) : Iterable() {
+    val facility = show.facility
     val attendees = mutableListOf<User>()
     val reservedSeats = facility.getAllSeatTypes().associateWith { 0 }.toMutableMap()
-    val comments = mutableListOf<Comment>()
-
-    fun totalRating() = comments.sumOf { it.rating } / comments.size
-
-    fun addComments(comment: Comment){
-        validateComment()
-        comments.add(comment)
-    }
-
-    fun validateComment() {
-        if(!datePassed()){
-            throw BusinessException(showError.MSG_DATE_NOT_PASSED)
-        }
-    }
 
     fun addAttendee(user: User) {
         attendees.add(user)

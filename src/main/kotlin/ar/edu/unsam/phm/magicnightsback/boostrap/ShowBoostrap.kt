@@ -6,6 +6,7 @@ import org.springframework.beans.factory.InitializingBean
 import org.springframework.context.annotation.DependsOn
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
 
 @Component
 @Order(2)
@@ -15,6 +16,7 @@ class ShowBoostrap (
     bandBoostrap: BandBoostrap,
     facilityBoostrap: FacilityBoostrap
 ) : InitializingBean {
+
     val shows = mapOf(
         "SmallShow" to Show("SmallShow",bandBoostrap.bands["LaVelaPuerca"]!!,facilityBoostrap.facilities["GranRex"]!!),
         "BigShow" to Show("BigShow",bandBoostrap.bands["PearlJam"]!!,facilityBoostrap.facilities["River"]!!),

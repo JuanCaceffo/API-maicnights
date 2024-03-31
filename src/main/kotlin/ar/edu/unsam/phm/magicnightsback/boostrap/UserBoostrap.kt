@@ -17,7 +17,8 @@ class UserBoostrap(
       username = "MadEscoces",
       dni = 26765114,
       birthday = LocalDate.of(1978, 10, 20),
-      password = "asdf"
+      password = "asdf",
+      isAdmin = true
     ), "Juan" to User(
       name = "Juan",
       surname = "Caccefo",

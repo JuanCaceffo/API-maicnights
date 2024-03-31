@@ -12,16 +12,17 @@ import java.time.LocalDateTime
 @Order(3)
 @DependsOn("showBoostrap")
 class ShowDateBoostrap(
-    val showDateRepository: ShowDateRepository,
-    showBoostrap : ShowBoostrap
+    showBoostrap: ShowBoostrap,
+    val showDateRepository: ShowDateRepository
 ) : InitializingBean {
-    private val showDates = mapOf(
-        "SmallShowDate1" to ShowDate(LocalDateTime.now().plusDays(12),showBoostrap.shows["SmallShow"]!!.facility),
-        "SmallShowDate2" to ShowDate(LocalDateTime.now().plusDays(13),showBoostrap.shows["SmallShow"]!!.facility),
-        "SmallShowDate3" to ShowDate(LocalDateTime.now().plusDays(14),showBoostrap.shows["SmallShow"]!!.facility),
-        "BigShowDate1" to ShowDate(LocalDateTime.now().plusDays(20),showBoostrap.shows["BigShow"]!!.facility),
-        "BigShowDate2" to ShowDate(LocalDateTime.of(2024,1,1,19,0,0),showBoostrap.shows["BigShow"]!!.facility),
-        "BestSmallShow1" to ShowDate(LocalDateTime.now().plusDays(35),showBoostrap.shows["BestSmallShow"]!!.facility)
+
+    val showDates = mapOf(
+        "SmallShow1" to ShowDate(LocalDateTime.now().plusDays(12), showBoostrap.shows["SmallShow"]!!),
+        "SmallShow2" to ShowDate(LocalDateTime.now().plusDays(13), showBoostrap.shows["SmallShow"]!!),
+        "SmallShow3" to ShowDate(LocalDateTime.now().plusDays(14), showBoostrap.shows["SmallShow"]!!),
+        "BigShow1" to ShowDate(LocalDateTime.now().plusDays(20), showBoostrap.shows["BigShow"]!!),
+        "BigShow2" to ShowDate(LocalDateTime.of(2024,1,1,19,0,0), showBoostrap.shows["BigShow"]!!),
+        "BestSmallShow1" to ShowDate(LocalDateTime.now().plusDays(35), showBoostrap.shows["BestSmallShow"]!!)
     )
 
     fun createShowDates() {
@@ -29,9 +30,8 @@ class ShowDateBoostrap(
     }
 
     override fun afterPropertiesSet() {
-        println("ShowDate creation process starts")
+        println("Show Date creation process starts")
         createShowDates()
-        println("ShowDate creation process ends")
+        println("Show Date creation process ends")
     }
-
 }
