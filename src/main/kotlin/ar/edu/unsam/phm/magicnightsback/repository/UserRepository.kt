@@ -14,7 +14,14 @@ class UserRepository : CustomRepository<User>() {
         }?.key
     }
 
-    fun getFriends(userId: Long): MutableList<User> {
+    fun addCredit(id: Long, creditToAdd: Double) {
+        val user = this.getById(id)
+        user.credit += creditToAdd
+
+        this.update(user)
+    }
+
+    fun getFriends(userId: Long): MutableSet<User> {
         return this.getById(userId).friends
     }
 }
