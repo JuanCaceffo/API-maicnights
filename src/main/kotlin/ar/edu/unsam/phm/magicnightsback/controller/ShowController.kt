@@ -29,7 +29,7 @@ class ShowController {
             .map { it.toShowDTO(userService.getFriendsPhotos(userId, it.id)) }
     }
 
-    @PostMapping("show/{showId}/create-date/user/{userId}")
+    @PostMapping("/show/{showId}/create-date/user/{userId}")
     @Operation(summary = "Permite agregar un show si el usuario es administrador")
     @ApiResponses(
         value = [
