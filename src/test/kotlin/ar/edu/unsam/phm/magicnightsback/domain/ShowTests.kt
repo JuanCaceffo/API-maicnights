@@ -4,7 +4,6 @@ import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import org.uqbar.geodds.Point
-import java.time.LocalDateTime
 
 class ShowTests : DescribeSpec({
     isolationMode = IsolationMode.InstancePerTest

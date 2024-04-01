@@ -23,6 +23,8 @@ class UserService {
 //        TODO("Not yet implemented")
 //    }
 
+    fun getById(userid: Long) = userRepository.getById(userid)
+
     fun getUserFriends(id: Long): List<FriendDTO> {
         val friends = this.userRepository.getFriends(id)
         return friends.map { userFriend -> userFriend.toFriendDTO() }
