@@ -1,5 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
+import ar.edu.unsam.phm.magicnightsback.dto.UserDTO
+import ar.edu.unsam.phm.magicnightsback.dto.toDTO
 import ar.edu.unsam.phm.magicnightsback.dto.FriendDTO
 import ar.edu.unsam.phm.magicnightsback.dto.toFriendDTO
 import ar.edu.unsam.phm.magicnightsback.serializers.*
@@ -36,15 +38,25 @@ class UserService {
         return this.userRepository.getLoginUser(loginUser) ?: throw AuthenticationException(UserError.BAD_CREDENTIALS)
     }
 
+    fun getUser(id: Long): UserDTO {
+        return this.userRepository.getById(id).toDTO()
+    }
+
     fun deleteUserFriend(userId: Long, friendId: Long) {
         this.userRepository.getById(userId).removeFriendById(friendId)
     }
 
-    /*fun updateUser(loginUser: UserDTO): UserDTO {
-        TODO("Not yet implemented")
+    fun getUserCredit(id: Long): Double {
+        return this.userRepository.getById(id).credit
     }
 
-    fun getUserCredit(user: UserDTO): Double {
+    fun addCreditToUser(id: Long, creditToAdd: Double): Double {
+        this.userRepository.addCredit(id, creditToAdd)
+
+        return userRepository.getById(id).credit
+    }
+
+    fun updateUser(loginUser: UserDTO): UserDTO {
         TODO("Not yet implemented")
-    }*/
+    }
 }
