@@ -22,7 +22,7 @@ class ShowController {
     @Autowired
     lateinit var userService: UserService
 
-    @GetMapping("/shows/")
+    @GetMapping("/shows")
     @Operation(summary = "Devuelve todos los disponibles")
     fun getAll(@RequestParam(required = false, defaultValue = "-1") userId: Long): List<ShowDTO> {
         return showService.getAll()
