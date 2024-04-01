@@ -29,6 +29,11 @@ class UserController {
 //        return userService.getUserPending(id)
 //    }
 
+    @GetMapping("/user_profile/{id}/friends")
+    fun getUserFriends(@PathVariable id: Long): List<FriendDTO> {
+        return userService.getUserFriends(id)
+    }
+
     @DeleteMapping("/user_profile/{userId}/friends/{friendId}")
     fun deleteUserFriend(@PathVariable userId: Long, @PathVariable friendId: Long) {
         userService.deleteUserFriend(userId, friendId)
@@ -51,7 +56,7 @@ class UserController {
     }
 
     @GetMapping("/user_profile/{id}")
-    fun getUserFriends(@PathVariable id: Long): UserDTO{
+    fun getUser(@PathVariable id: Long): UserDTO{
         return userService.getUser(id)
     }
 
