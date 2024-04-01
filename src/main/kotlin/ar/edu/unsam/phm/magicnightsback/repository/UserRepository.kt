@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class UserRepository : CustomRepository<User>() {
-    fun getLoginUser(loginUser: LoginUserDTO): Int? {
+    fun getLoginUser(loginUser: LoginUserDTO): Long? {
         // Dado un usuario de tipo LoginDTO, devuelve el usuario encontrado en el repositorio que con el
         // nommbre de usuario y contraseña si existe.
         return this.elements.entries.find {
@@ -14,10 +14,14 @@ class UserRepository : CustomRepository<User>() {
         }?.key
     }
 
-    fun addCredit(id: Int, creditToAdd: Double) {
+    fun addCredit(id: Long, creditToAdd: Double) {
         val user = this.getById(id)
         user.credit += creditToAdd
 
         this.update(user)
+    }
+
+    fun getFriends(userId: Long): MutableList<User> {
+        return this.getById(userId).friends
     }
 }

@@ -2,6 +2,8 @@ package ar.edu.unsam.phm.magicnightsback.service
 
 import ar.edu.unsam.phm.magicnightsback.dto.UserDTO
 import ar.edu.unsam.phm.magicnightsback.dto.toDTO
+import ar.edu.unsam.phm.magicnightsback.dto.FriendDTO
+import ar.edu.unsam.phm.magicnightsback.dto.toFriendDTO
 import ar.edu.unsam.phm.magicnightsback.serializers.*
 import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
 import ar.edu.unsam.phm.magicnightsback.error.UserError
@@ -21,34 +23,38 @@ class UserService {
 //        TODO("Not yet implemented")
 //    }
 
-    /*fun getUserFriends(id: Long): List<FriendDTO> {
-        TODO("Not yet implemented")
-    }*/
+    fun getUserFriends(id: Long): List<FriendDTO> {
+        val friends = this.userRepository.getFriends(id)
+        return friends.map { userFriend -> userFriend.toFriendDTO() }
+    }
 
     fun getUserComments(id: Long): List<CommentDTO> {
         TODO("Not yet implemented")
     }
 
-    fun loginUser(loginUser: LoginUserDTO): Int {
+    fun loginUser(loginUser: LoginUserDTO): Long {
         return this.userRepository.getLoginUser(loginUser) ?: throw AuthenticationException(UserError.BAD_CREDENTIALS)
     }
 
-    fun getUser(id: Int): UserDTO {
+    fun getUser(id: Long): UserDTO {
         return this.userRepository.getById(id).toDTO()
     }
 
-    fun getUserCredit(id: Int): Double {
+    fun deleteUserFriend(userId: Long, friendId: Long) {
+        this.userRepository.getById(userId).removeFriendById(friendId)
+    }
+
+    fun getUserCredit(id: Long): Double {
         return this.userRepository.getById(id).credit
     }
 
-    fun addCreditToUser(id: Int, creditToAdd: Double): Double {
+    fun addCreditToUser(id: Long, creditToAdd: Double): Double {
         this.userRepository.addCredit(id, creditToAdd)
 
         return userRepository.getById(id).credit
     }
 
-    /*fun updateUser(loginUser: UserDTO): UserDTO {
+    fun updateUser(loginUser: UserDTO): UserDTO {
         TODO("Not yet implemented")
-    }*/
-
+    }
 }

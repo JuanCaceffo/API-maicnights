@@ -2,7 +2,7 @@ package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.FacilityError
-import ar.edu.unsam.phm.magicnightsback.repository.RepositoryProps
+import ar.edu.unsam.phm.magicnightsback.repository.Iterable
 import org.uqbar.geodds.Point
 
 interface SeatTypes {
@@ -20,22 +20,25 @@ enum class StadiumSeatType(override val price: Double) : SeatTypes {
     BOX(20000.0)
 }
 
-class SeatType (
+class SeatType(
     val seatType: SeatTypes,
     val quantity: Int
-) {
+) : Iterable() {
     fun price() = seatType.price
+    override fun validSearchCondition(value: String): Boolean {
+        TODO("Not yet implemented")
+    }
 }
-// POSIBLE REFACTOR: Se puede usar un builder, pero no da el tiempo
+
 class Facility(
     val name: String,
     val location: Point,
     val seatStrategy: SeatStrategy
-) : RepositoryProps() {
+) : Iterable() {
     val seats: MutableSet<SeatType> = mutableSetOf()
     fun cost() = seatStrategy.totalCost()
-    fun getSeat(seat: SeatTypes) = seats.find{ it.seatType == seat }
-    fun getSeatCapacity(seat: SeatTypes) = getSeat(seat)?.quantity
+    fun getSeat(seat: SeatTypes) = seats.find { it.seatType == seat }
+    fun getSeatCapacity(seat: SeatTypes) = getSeat(seat)?.quantity ?: 0
     fun getTotalSeatCapacity() = seats.sumOf { it.quantity }
     fun addSeatType(seat: SeatType) {
         if (!seatStrategy.seatValidation(seat)) {
@@ -43,7 +46,10 @@ class Facility(
         }
         seats.add(seat)
     }
-    fun removeSeatType(type: SeatType) { seats.remove(type) }
+    fun getAllSeatTypes() = seats.map { it.seatType }
+    fun removeSeatType(type: SeatType) {
+        seats.remove(type)
+    }
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
     }
@@ -51,16 +57,16 @@ class Facility(
 
 interface SeatStrategy {
     val fixedPrice: Double
-    fun seatValidation(seat: SeatType) : Boolean
+    fun seatValidation(seat: SeatType): Boolean
     fun seatPrice(seatType: SeatType) = seatType.price()
     fun totalCost(): Double = fixedPrice + fixedCostVariant()
     fun fixedCostVariant(): Double = 0.0
 }
 
 class StadiumStrategy(
-    override val fixedPrice : Double
+    override val fixedPrice: Double
 ) : SeatStrategy {
-    override fun seatValidation(seat: SeatType) = StadiumSeatType.entries.any{ it == seat.seatType }
+    override fun seatValidation(seat: SeatType) = StadiumSeatType.entries.any { it == seat.seatType }
 }
 
 class TheaterStrategy(

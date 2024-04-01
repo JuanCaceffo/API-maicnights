@@ -1,7 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
-import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.dto.UserDTO
+import ar.edu.unsam.phm.magicnightsback.dto.FriendDTO
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.serializers.*
 import ar.edu.unsam.phm.magicnightsback.service.*
@@ -29,12 +29,13 @@ class UserController {
 //        return userService.getUserPending(id)
 //    }
 
-    /*@GetMapping("/user/{id}/friends")
-    fun getUserFriends(@PathVariable id: Long): List<User> {
-        return userService.getUserFriends(id)
-    }*/
+    @DeleteMapping("/user_profile/{userId}/friends/{friendId}")
+    fun deleteUserFriend(@PathVariable userId: Long, @PathVariable friendId: Long) {
+        userService.deleteUserFriend(userId, friendId)
+    }
 
-    @GetMapping("/user/{id}/comments")
+
+    @GetMapping("/user_profile/{id}/comments")
     fun getUserComments(@PathVariable id: Long): List<CommentDTO> {
         return userService.getUserComments(id)
     }
@@ -45,12 +46,12 @@ class UserController {
         ApiResponse(responseCode = "200", description = "Ok"),
         ApiResponse(responseCode = "400", description = UserError.BAD_CREDENTIALS, content = arrayOf(Content()) ),
     ])
-    fun loginUser(@RequestBody userToLogin: LoginUserDTO): Int {
+    fun loginUser(@RequestBody userToLogin: LoginUserDTO): Long {
         return userService.loginUser(userToLogin)
     }
 
     @GetMapping("/user_profile/{id}")
-    fun getUserFriends(@PathVariable id: Int): UserDTO{
+    fun getUserFriends(@PathVariable id: Long): UserDTO{
         return userService.getUser(id)
     }
 
@@ -60,12 +61,12 @@ class UserController {
     }*/
 
     @GetMapping("/user_profile/{id}/credit")
-    fun getUserCredit(@PathVariable id: Int): Double {
+    fun getUserCredit(@PathVariable id: Long): Double {
         return userService.getUserCredit(id)
     }
 
     @PutMapping("/user_profile/{id}/add_credit")
-    fun addUserCredit(@PathVariable id: Int, @RequestBody creditToAdd: Map<String, Double>): Double {
+    fun addUserCredit(@PathVariable id: Long, @RequestBody creditToAdd: Map<String, Double>): Double {
         val credit = creditToAdd["credit"]!!
         return userService.addCreditToUser(id, credit)
     }
