@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonView
 import java.time.LocalDate
 
 data class Ticket(
-    val showId: Long,
-    val date: LocalDate,
+    val show: Show,
+    val date: ShowDate,
     @JsonView(View.Iterable.Show.Purchased::class)
     val price: Double
 ) : Iterable() {
