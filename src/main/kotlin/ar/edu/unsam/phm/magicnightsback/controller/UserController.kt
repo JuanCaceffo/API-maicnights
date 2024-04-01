@@ -39,7 +39,6 @@ class UserController {
         userService.deleteUserFriend(userId, friendId)
     }
 
-
     @GetMapping("/user_profile/{id}/comments")
     fun getUserComments(@PathVariable id: Long): List<CommentDTO> {
         return userService.getUserComments(id)
@@ -58,6 +57,11 @@ class UserController {
     @GetMapping("/user_profile/{id}")
     fun getUser(@PathVariable id: Long): UserDTO{
         return userService.getUser(id)
+    }
+
+    @PutMapping("/user_profile/{id}")
+    fun updateUser(@PathVariable id: Long, @RequestBody user: UserDTO) {
+        return userService.updateUser(id, user)
     }
 
     /*@PatchMapping("/update-user")

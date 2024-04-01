@@ -56,7 +56,12 @@ class UserService {
         return userRepository.getById(id).credit
     }
 
-    fun updateUser(loginUser: UserDTO): UserDTO {
-        TODO("Not yet implemented")
+    fun updateUser(id:Long, loginUser: UserDTO) {
+        val userToUpdate = this.userRepository.getById(id)
+
+        userToUpdate.name = loginUser.name
+        userToUpdate.surname = loginUser.surname
+
+        this.userRepository.update(userToUpdate)
     }
 }
