@@ -12,12 +12,13 @@ data class ShowDTO(
     val prices: List<Double>
 )
 
-fun Show.toShowDTO() = ShowDTO(
-    id = this.id,
-    img = this.showImg,
-    name = this.name,
-    location = this.facility.name,
-    rating = this.totalRating(),
-    totalComments = this.comments.size,
-    prices = this.allTicketPrices()
-)
+fun Show.toShowDTO() =
+    ShowDTO(
+        this.id,
+        this.showImg,
+        this.name,
+        this.facility.name,
+        this.totalRating(),
+        this.comments.size,
+        this.allTicketPrices()
+    )

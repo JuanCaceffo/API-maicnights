@@ -1,5 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
+import ar.edu.unsam.phm.magicnightsback.dto.UserDTO
 import ar.edu.unsam.phm.magicnightsback.dto.FriendDTO
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.serializers.*
@@ -28,11 +29,6 @@ class UserController {
 //        return userService.getUserPending(id)
 //    }
 
-    @GetMapping("/user_profile/{id}/friends")
-    fun getUserFriends(@PathVariable id: Long): List<FriendDTO> {
-        return userService.getUserFriends(id)
-    }
-
     @DeleteMapping("/user_profile/{userId}/friends/{friendId}")
     fun deleteUserFriend(@PathVariable userId: Long, @PathVariable friendId: Long) {
         userService.deleteUserFriend(userId, friendId)
@@ -54,13 +50,25 @@ class UserController {
         return userService.loginUser(userToLogin)
     }
 
+    @GetMapping("/user_profile/{id}")
+    fun getUserFriends(@PathVariable id: Long): UserDTO{
+        return userService.getUser(id)
+    }
+
     /*@PatchMapping("/update-user")
     fun updateUser(@RequestBody userToUpdate: UserDTO) {
         userService.updateUser(userToUpdate)
+    }*/
+
+    @GetMapping("/user_profile/{id}/credit")
+    fun getUserCredit(@PathVariable id: Long): Double {
+        return userService.getUserCredit(id)
     }
 
-    @GetMapping("/user-credit")
-    fun getUserCredit(@RequestBody user: UserDTO): Double {
-        return userService.getUserCredit(user)
-    }*/
+    @PutMapping("/user_profile/{id}/add_credit")
+    fun addUserCredit(@PathVariable id: Long, @RequestBody creditToAdd: Map<String, Double>): Double {
+        val credit = creditToAdd["credit"]!!
+        return userService.addCreditToUser(id, credit)
+    }
+
 }
