@@ -2,6 +2,8 @@ package ar.edu.unsam.phm.magicnightsback.service
 
 import ar.edu.unsam.phm.magicnightsback.domain.Show
 import ar.edu.unsam.phm.magicnightsback.domain.ShowDate
+import ar.edu.unsam.phm.magicnightsback.error.NotFoundException
+import ar.edu.unsam.phm.magicnightsback.error.RepositoryError
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
@@ -23,5 +25,7 @@ class ShowService {
         userRepository.getById(userId).throwIfNotAdmin(UserError.USER_NOT_AUTHORIZED_CREATE_DATE)
         showRepository.getById(showId).addDate(date)
     }
+
+    fun getById(id: Long) = showRepository.getById(id)
 }
 

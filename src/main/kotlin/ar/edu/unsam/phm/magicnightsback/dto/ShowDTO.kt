@@ -15,6 +15,18 @@ data class ShowDTO(
     val userImageNames: List<String>,
 )
 
+data class ShowDetailsDTO (
+    val id: Long,
+    val img: String,
+    val name: String,
+    val location: String,
+    val rating: Double,
+    val totalComments: Int,
+    val prices: List<Double>,
+    val dates: List<LocalDateTime>,
+)
+
+
 fun Show.toShowDTO(userId: Long) =
     ShowDTO(
         this.id,
@@ -27,3 +39,16 @@ fun Show.toShowDTO(userId: Long) =
         this.allDates(),
         this.friendsAttendeesProfileImages(userId)
     )
+
+fun Show.toShowDetailsDTO() =
+    ShowDetailsDTO(
+        this.id,
+        this.showImg,
+        this.name,
+        this.facility.name,
+        this.totalRating(),
+        this.comments.size,
+        this.allTicketPrices(),
+        this.allDates(),
+    )
+

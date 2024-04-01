@@ -1,7 +1,9 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
 import ar.edu.unsam.phm.magicnightsback.dto.ShowDTO
+import ar.edu.unsam.phm.magicnightsback.dto.ShowDetailsDTO
 import ar.edu.unsam.phm.magicnightsback.dto.toShowDTO
+import ar.edu.unsam.phm.magicnightsback.dto.toShowDetailsDTO
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.service.ShowService
 import ar.edu.unsam.phm.magicnightsback.service.UserService
@@ -23,10 +25,17 @@ class ShowController {
     lateinit var userService: UserService
 
     @GetMapping("/shows")
-    @Operation(summary = "Devuelve todos los disponibles")
+    @Operation(summary = "Devuelve todos shows los disponibles")
     fun getAll(@RequestParam(required = false, defaultValue = "-1") userId: Long): List<ShowDTO> {
         return showService.getAll()
             .map { it.toShowDTO(userId) }
+    }
+
+    @GetMapping("/show/{id}")
+    @Operation(summary = "Devuelve un show según su id")
+    fun getById(@PathVariable id: Long): ShowDetailsDTO {
+        return showService.getById(id).toShowDetailsDTO()
+
     }
 
     @PostMapping("/show/{showId}/create-date/user/{userId}")
