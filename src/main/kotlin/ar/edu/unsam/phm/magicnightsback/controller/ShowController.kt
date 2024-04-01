@@ -22,14 +22,14 @@ class ShowController {
     @Autowired
     lateinit var userService: UserService
 
-    @GetMapping("/shows/")
+    @GetMapping("/shows")
     @Operation(summary = "Devuelve todos los disponibles")
     fun getAll(@RequestParam(required = false, defaultValue = "-1") userId: Long): List<ShowDTO> {
         return showService.getAll()
             .map { it.toShowDTO(userId) }
     }
 
-    @PostMapping("/{showId}/create-date/user/{userId}")
+    @PostMapping("/show/{showId}/create-date/user/{userId}")
     @Operation(summary = "Permite agregar un show si el usuario es administrador")
     @ApiResponses(
         value = [
