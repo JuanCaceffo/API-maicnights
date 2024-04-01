@@ -2,6 +2,7 @@ package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.showError
+import ar.edu.unsam.phm.magicnightsback.helpers.removeSpaces
 import ar.edu.unsam.phm.magicnightsback.repository.Iterable
 import java.time.LocalDateTime
 
@@ -10,7 +11,7 @@ class Show(
     val band: Band,
     val facility: Facility
 ) : Iterable() {
-    var showImg = "$band.jpg"
+    var showImg = "${band.name.removeSpaces().lowercase()}.jpg"
     val comments = mutableListOf<Comment>()
     private val pendingAttendees = mutableListOf<User>()
     val dates = mutableSetOf<ShowDate>()
