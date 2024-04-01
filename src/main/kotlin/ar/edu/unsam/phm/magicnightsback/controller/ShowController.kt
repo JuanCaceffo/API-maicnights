@@ -26,7 +26,7 @@ class ShowController {
     @Operation(summary = "Devuelve todos los disponibles")
     fun getAll(@RequestParam(required = false, defaultValue = "-1") userId: Long): List<ShowDTO> {
         return showService.getAll()
-            .map { it.toShowDTO(userService.getFriendsPhotos(userId, it.id)) }
+            .map { it.toShowDTO(userId) }
     }
 
     @PostMapping("/{showId}/create-date/user/{userId}")

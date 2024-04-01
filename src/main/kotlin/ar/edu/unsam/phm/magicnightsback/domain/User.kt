@@ -13,7 +13,7 @@ class User(
     var password: String,
     //TODO: analizar la posibilidad de un strategy de roles
     var isAdmin: Boolean = false,
-    val img: String = ""
+    val profileImage: String = ""
 ) : Iterable() {
     val friends = mutableListOf<User>()
     val tickets = mutableListOf<Ticket>()
@@ -36,11 +36,7 @@ class User(
         comments.add(comment)
     }
 
-    fun attendingToShow(showid: Long) = tickets.any { it.showId == showid }
-
-    fun friendsAttendingToShow(showid: Long) = friends.filter { it.attendingToShow(showid) }
-
-    fun attendingFriendsPhotos(showid: Long) = friendsAttendingToShow(showid).map { it.img }
+    fun isMyFriend(userId: Long) = friends.any { it.id == userId }
 
     fun removeComment(comment: Comment) {
         comments.remove(comment)

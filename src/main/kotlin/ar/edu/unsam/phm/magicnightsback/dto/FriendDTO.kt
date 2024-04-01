@@ -14,7 +14,7 @@ fun User.toFriendDTO(): FriendDTO {
     return FriendDTO(
         this.name,
         this.username,
-        this.img,
+        this.profileImage,
         this.id
     )
 }

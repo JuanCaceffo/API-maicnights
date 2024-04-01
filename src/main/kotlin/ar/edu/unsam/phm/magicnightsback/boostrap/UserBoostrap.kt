@@ -26,7 +26,7 @@ class UserBoostrap(
             dni = 1,
             birthday = LocalDate.of(2003, 2, 1),
             password = "asdf",
-            img = ""
+            profileImage = ""
         ), "Sol" to User(
             name = "Sol",
             surname = "Lopez",
@@ -63,7 +63,6 @@ class UserBoostrap(
         println("User creation process starts")
         this.createUsers()
         this.addFriends()
-        users.values.forEach { println(it.friends) }
         println("User creation process ends")
     }
 }
