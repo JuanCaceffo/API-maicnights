@@ -22,7 +22,7 @@ class UserController {
 
     //TODO: Cambiar el path de user-profile a user y ponerlo en la etiqueta requestMapping
     @GetMapping("/user-profile/{userId}/tickets-cart")
-    @Operation(summary = "Permite obtener todos los tickets que el usuario tiene reservados en el carrito")
+    @Operation(summary = "Permite obtener los tickets por show que el usuario tiene reservados en el carrito")
     fun getUserTicketsCart(@PathVariable userId:Long): List<TicketCartDTO> {
         return userService.getTicketsCart(userId)
     }
