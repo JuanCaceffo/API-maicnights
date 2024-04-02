@@ -15,7 +15,8 @@ class User(
     var isAdmin: Boolean = false,
     val profileImage: String = "default.jpg"
 ) : Iterable() {
-    val friends = mutableSetOf<User>()
+    val friends = mutableListOf<User>()
+    val cart = mutableListOf<Ticket>()
     val tickets = mutableListOf<Ticket>()
     val comments = mutableListOf<Comment>()
     var credit = 0.0

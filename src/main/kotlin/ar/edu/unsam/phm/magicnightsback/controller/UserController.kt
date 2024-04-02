@@ -2,6 +2,7 @@ package ar.edu.unsam.phm.magicnightsback.controller
 
 import ar.edu.unsam.phm.magicnightsback.dto.UserDTO
 import ar.edu.unsam.phm.magicnightsback.dto.FriendDTO
+import ar.edu.unsam.phm.magicnightsback.dto.TicketCartDTO
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.serializers.*
 import ar.edu.unsam.phm.magicnightsback.service.*
@@ -19,16 +20,11 @@ class UserController {
     @Autowired
     lateinit var userService: UserService
 
-//    @GetMapping("/user/{id}/purchased-tickets")
-//    fun getUserPurchased(@PathVariable id: Long): List<PurchasedTicketDTO> {
-//        return userService.getUserPurchased(id)
-//    }
-//
-//    @GetMapping("/user/{id}/pending-tickets")
-//    fun getUserPending(@PathVariable id: Long): List<PendingTicketDTO> {
-//        return userService.getUserPending(id)
-//    }
-
+    //TODO: Cambiar el path de user-profile a user y ponerlo en la etiqueta requestMapping
+    @GetMapping("/user-profile/{userId}/tickets-cart")
+    fun getUserTicketsCart(@PathVariable userId:Long): List<TicketCartDTO> {
+        return userService.getTicketsCart(userId)
+    }
     @GetMapping("/user_profile/{id}/friends")
     fun getUserFriends(@PathVariable id: Long): List<FriendDTO> {
         return userService.getUserFriends(id)

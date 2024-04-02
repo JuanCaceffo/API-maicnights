@@ -21,7 +21,7 @@ class UserRepository : CustomRepository<User>() {
         this.update(user)
     }
 
-    fun getFriends(userId: Long): MutableSet<User> {
+    fun getFriends(userId: Long): MutableList<User> {
         return this.getById(userId).friends
     }
 }

@@ -1,9 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
-import ar.edu.unsam.phm.magicnightsback.dto.UserDTO
-import ar.edu.unsam.phm.magicnightsback.dto.toDTO
-import ar.edu.unsam.phm.magicnightsback.dto.FriendDTO
-import ar.edu.unsam.phm.magicnightsback.dto.toFriendDTO
+import ar.edu.unsam.phm.magicnightsback.domain.Ticket
+import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.serializers.*
 import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
 import ar.edu.unsam.phm.magicnightsback.error.UserError
@@ -15,16 +13,11 @@ import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 class UserService {
     @Autowired
     lateinit var userRepository: UserRepository
-//    fun getUserPurchased(id: Long): List<PurchasedTicketDTO> {
-//        TODO("Not yet implemented")
-//    }
-//
-//    fun getUserPending(id: Long): List<PendingTicketDTO> {
-//        TODO("Not yet implemented")
-//    }
 
-    fun getById(userid: Long) = userRepository.getById(userid)
-
+    fun getTicketsCart(userId: Long): List<TicketCartDTO>{
+        val user = userRepository.getById(userId)
+        return user.cart.map { ticket -> (ticket.toCartDTO(userId)) }
+    }
     fun getUserFriends(id: Long): List<FriendDTO> {
         val friends = this.userRepository.getFriends(id)
         return friends.map { userFriend -> userFriend.toFriendDTO() }
