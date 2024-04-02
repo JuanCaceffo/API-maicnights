@@ -9,6 +9,12 @@ interface SeatTypes {
     val price: Double
 }
 
+
+/*
+TODO: podria llegar a hacerse un refactor en como esta pensado esto ya que UPPERLEVEL Y FIELD tienen
+el mismo precio que PULLMAN Y LOWERLEVEL
+*/
+
 enum class TheaterSeatType(override val price: Double) : SeatTypes {
     LOWERLEVEL(15000.0),
     PULLMAN(10000.0)
@@ -20,6 +26,14 @@ enum class StadiumSeatType(override val price: Double) : SeatTypes {
     BOX(20000.0)
 }
 
+//TODO: clase para salir del paso con el endpoint para reservar un ticket y guardarlo en el cart
+enum class AllSetType(override val price: Double) : SeatTypes {
+    LOWERLEVEL(15000.0),
+    PULLMAN(10000.0),
+    UPPERLEVEL(10000.0),
+    FIELD(15000.0),
+    BOX(20000.0)
+}
 class SeatType(
     val seatType: SeatTypes,
     val quantity: Int
@@ -41,15 +55,21 @@ class Facility(
     fun getSeatCapacity(seat: SeatTypes) = getSeat(seat)?.quantity ?: 0
     fun getTotalSeatCapacity() = seats.sumOf { it.quantity }
     fun addSeatType(seat: SeatType) {
-        if (!seatStrategy.seatValidation(seat)) {
-            throw BusinessException(FacilityError.INVALID_SEAT_TYPE)
-        }
+        thorwInvalidSeatType(seat.seatType,BusinessException(FacilityError.INVALID_SEAT_TYPE))
         seats.add(seat)
     }
 
     fun getAllSeatTypes() = seats.map { it.seatType }
     fun removeSeatType(type: SeatType) {
         seats.remove(type)
+    }
+
+    //VALIDATIONS
+
+    fun thorwInvalidSeatType(seatType: SeatTypes, ex: RuntimeException){
+        if (!seatStrategy.seatValidation(seatType)) {
+            throw ex
+        }
     }
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
@@ -58,7 +78,7 @@ class Facility(
 
 interface SeatStrategy {
     val fixedPrice: Double
-    fun seatValidation(seat: SeatType): Boolean
+    fun seatValidation(seat: SeatTypes): Boolean
     fun seatPrice(seatType: SeatType) = seatType.price()
     fun totalCost(): Double = fixedPrice + fixedCostVariant()
     fun fixedCostVariant(): Double = 0.0
@@ -67,13 +87,13 @@ interface SeatStrategy {
 class StadiumStrategy(
     override val fixedPrice: Double
 ) : SeatStrategy {
-    override fun seatValidation(seat: SeatType) = StadiumSeatType.entries.any { it == seat.seatType }
+    override fun seatValidation(seatType: SeatTypes) = StadiumSeatType.entries.any { it == seatType }
 }
 
 class TheaterStrategy(
     var hasGoodAcoustics: Boolean = false
 ) : SeatStrategy {
-    override fun seatValidation(seat: SeatType) = TheaterSeatType.entries.any { it == seat.seatType }
+    override fun seatValidation(seatType: SeatTypes) = TheaterSeatType.entries.any { it == seatType }
     override val fixedPrice: Double = 100000.0
     override fun fixedCostVariant(): Double = if (hasGoodAcoustics) 50000.0 else 0.0
 
