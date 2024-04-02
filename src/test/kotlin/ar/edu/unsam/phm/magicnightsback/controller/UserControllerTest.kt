@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -70,7 +71,8 @@ class UserControllerTest(
         showBoostrap.afterPropertiesSet()
     }
 
-    val generalDateTime = LocalDateTime.parse("2024-03-30T16:57:04.074472231")
+    val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
+    val generalDateTime: LocalDateTime = LocalDateTime.parse("2024-03-30T16:57:04.074472231",formatter)
 
     @Test
     fun `Dado un endpoint para obtener los tickets del carrito de un usuario con un ticket reservado funciona bien`() {
