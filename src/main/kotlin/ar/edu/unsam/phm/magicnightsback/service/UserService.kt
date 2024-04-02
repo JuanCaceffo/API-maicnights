@@ -14,13 +14,20 @@ class UserService {
     @Autowired
     lateinit var userRepository: UserRepository
 
-    fun getTicketsCart(userId: Long): List<TicketCartDTO>{
+    fun getTicketsCart(userId: Long): List<TicketCartDTO> {
         val user = userRepository.getById(userId)
-        //TODO: ver si se puede mapear las fechas y el precio en una sola card por show
-        val distinctTickets = user.cart.distinctBy { it.show }
 
-        return user.cart.map { ticket -> (ticket.toCartDTO(userId)) }
+        /*Mapeo todos los tickets en uno solo por show juntando el precio total, las fechas y
+        la cantidad de tickets para ese show*/
+        val distinctTickets = user.cart.distinctBy { it.show }
+        return distinctTickets.map { uniqueTicket ->
+            val ticketsSameShow = user.cart.filter { ticket -> ticket.show == uniqueTicket.show }
+            val totalPrice = ticketsSameShow.sumOf { ticket -> ticket.price }
+            val allDates = ticketsSameShow.map { ticket -> ticket.showDate.date }.distinct()
+            uniqueTicket.toCartDTO(userId, allDates, totalPrice, ticketsSameShow.size)
+        }
     }
+
     fun getUserFriends(id: Long): List<FriendDTO> {
         val friends = this.userRepository.getFriends(id)
         return friends.map { userFriend -> userFriend.toFriendDTO() }
