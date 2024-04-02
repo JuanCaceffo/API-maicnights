@@ -16,6 +16,9 @@ class UserService {
 
     fun getTicketsCart(userId: Long): List<TicketCartDTO>{
         val user = userRepository.getById(userId)
+        //TODO: ver si se puede mapear las fechas y el precio en una sola card por show
+        val distinctTickets = user.cart.distinctBy { it.show }
+
         return user.cart.map { ticket -> (ticket.toCartDTO(userId)) }
     }
     fun getUserFriends(id: Long): List<FriendDTO> {
