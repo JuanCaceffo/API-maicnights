@@ -7,7 +7,6 @@ object UserError {
     const val MSG_NOT_ENOUGH_CREDIT = "No tiene saldo suficiente"
     const val BAD_CREDENTIALS = "El usuario o la contraseña no son validos"
     const val USER_NOT_AUTHORIZED_CREATE_DATE = "El usuario debe ser administrador para crear una nueva funcion"
-
 }
 
 object ShowCommentError {
@@ -18,6 +17,7 @@ object ShowCommentError {
 object showError {
     const val MSG_DATE_NOT_PASSED = "La fecha del Show todavia no paso"
     const val MSG_SETS_UNAVILABLES = "Excedio la cantidad de asientos disponibles"
+    const val TICKET_CART_NOT_FOUND = "No se encontró el ticket en el show especificado"
 }
 
 object RepositoryError {

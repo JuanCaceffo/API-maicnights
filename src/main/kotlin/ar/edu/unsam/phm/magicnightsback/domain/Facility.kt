@@ -46,6 +46,7 @@ class Facility(
         }
         seats.add(seat)
     }
+
     fun getAllSeatTypes() = seats.map { it.seatType }
     fun removeSeatType(type: SeatType) {
         seats.remove(type)

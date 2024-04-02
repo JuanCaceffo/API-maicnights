@@ -3,7 +3,9 @@ package ar.edu.unsam.phm.magicnightsback.controller
 import ar.edu.unsam.phm.magicnightsback.dto.UserDTO
 import ar.edu.unsam.phm.magicnightsback.dto.FriendDTO
 import ar.edu.unsam.phm.magicnightsback.dto.TicketCartDTO
+import ar.edu.unsam.phm.magicnightsback.dto.TicketCreateDTO
 import ar.edu.unsam.phm.magicnightsback.error.UserError
+import ar.edu.unsam.phm.magicnightsback.error.showError
 import ar.edu.unsam.phm.magicnightsback.serializers.*
 import ar.edu.unsam.phm.magicnightsback.service.*
 import io.swagger.v3.oas.annotations.Operation
@@ -15,16 +17,29 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @CrossOrigin(origins = ["*"])
+//TODO: Cambiar el path de user-profile a user y ponerlo en la etiqueta requestMapping
 class UserController {
 
     @Autowired
     lateinit var userService: UserService
 
-    //TODO: Cambiar el path de user-profile a user y ponerlo en la etiqueta requestMapping
     @GetMapping("/user-profile/{userId}/tickets-cart")
     fun getUserTicketsCart(@PathVariable userId:Long): List<TicketCartDTO> {
         return userService.getTicketsCart(userId)
     }
+
+    @PutMapping("/user-profile/{userId}/reserve-ticket")
+    @Operation(summary = "Permite reservar x cantidad de tiquets de un show para una funcion de ese show y para un tipo de asiento")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Ok"),
+            ApiResponse(responseCode = "404", description = showError.TICKET_CART_NOT_FOUND),
+        ]
+    )
+    fun addTicket(@PathVariable userId: Long, @RequestBody ticketData: TicketCreateDTO){
+        userService.reserveTicket(userId, ticketData)
+    }
+
     @GetMapping("/user_profile/{id}/friends")
     fun getUserFriends(@PathVariable id: Long): List<FriendDTO> {
         return userService.getUserFriends(id)
