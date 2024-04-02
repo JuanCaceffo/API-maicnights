@@ -18,9 +18,9 @@ class UserService {
 
         /*Mapeo todos los tickets en uno solo por show juntando el precio total, las fechas y
         la cantidad de tickets para ese show*/
-        val distinctTickets = user.cart.distinctBy { it.show }
+        val distinctTickets = user.pendingTickets.distinctBy { it.show }
         return distinctTickets.map { uniqueTicket ->
-            val ticketsSameShow = user.cart.filter { ticket -> ticket.show == uniqueTicket.show }
+            val ticketsSameShow = user.pendingTickets.filter { ticket -> ticket.show == uniqueTicket.show }
             val totalPrice = ticketsSameShow.sumOf { ticket -> ticket.price }
             val allDates = ticketsSameShow.map { ticket -> ticket.showDate.date }.distinct()
             uniqueTicket.toCartDTO(userId, allDates, totalPrice, ticketsSameShow.size)
