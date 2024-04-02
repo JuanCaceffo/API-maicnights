@@ -62,7 +62,7 @@ class UserControllerTest(
         //assert
         mockMvc.perform(
             MockMvcRequestBuilders
-                .get("/user-profile/1/tickets-cart")
+                .get("/user-profile/1/pending-tickets")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -87,7 +87,7 @@ class UserControllerTest(
         //assert
         mockMvc.perform(
             MockMvcRequestBuilders
-                .get("/user-profile/1/tickets-cart")
+                .get("/user-profile/1/pending-tickets")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(MockMvcResultMatchers.status().isOk)

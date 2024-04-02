@@ -25,13 +25,13 @@ class UserController {
     @Autowired
     lateinit var userService: UserService
 
-    @GetMapping("/user-profile/{userId}/tickets-cart")
+    @GetMapping("/user-profile/{userId}/pending-tickets")
     @Operation(summary = "Permite obtener los tickets por show que el usuario tiene reservados en el carrito")
     fun getUserTicketsCart(@PathVariable userId: Long): List<TicketCartDTO> {
         return userService.getTicketsCart(userId)
     }
 
-    @PutMapping("/user-profile/{userId}/reserve-ticket")
+    @PutMapping("/user-profile/{userId}/reserve-tickets")
     @Operation(summary = "Permite reservar x cantidad de tiquets de un show para una funcion de ese show y para un tipo de asiento")
     @ApiResponses(
         value = [
