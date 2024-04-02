@@ -2,6 +2,7 @@ package ar.edu.unsam.phm.magicnightsback.controller
 
 import ar.edu.unsam.phm.magicnightsback.dto.UserDTO
 import ar.edu.unsam.phm.magicnightsback.dto.FriendDTO
+import ar.edu.unsam.phm.magicnightsback.dto.PurchsedTicketDTO
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.serializers.*
 import ar.edu.unsam.phm.magicnightsback.service.*
@@ -19,15 +20,11 @@ class UserController {
     @Autowired
     lateinit var userService: UserService
 
-//    @GetMapping("/user/{id}/purchased-tickets")
-//    fun getUserPurchased(@PathVariable id: Long): List<PurchasedTicketDTO> {
-//        return userService.getUserPurchased(id)
-//    }
-//
-//    @GetMapping("/user/{id}/pending-tickets")
-//    fun getUserPending(@PathVariable id: Long): List<PendingTicketDTO> {
-//        return userService.getUserPending(id)
-//    }
+    //TODO: Cambiar el path de user-profile a user y ponerlo en la etiqueta requestMapping
+    @GetMapping("/user_profile/{userId}/purchased_tickets")
+    fun getUserPurchasedTickets(@PathVariable userId:Long): List<PurchsedTicketDTO> {
+        return userService.getUserPurchasedTickets(userId)
+    }
 
     @GetMapping("/user_profile/{id}/friends")
     fun getUserFriends(@PathVariable id: Long): List<FriendDTO> {
@@ -38,7 +35,6 @@ class UserController {
     fun deleteUserFriend(@PathVariable userId: Long, @PathVariable friendId: Long) {
         userService.deleteUserFriend(userId, friendId)
     }
-
 
     @GetMapping("/user_profile/{id}/comments")
     fun getUserComments(@PathVariable id: Long): List<CommentDTO> {
@@ -58,6 +54,11 @@ class UserController {
     @GetMapping("/user_profile/{id}")
     fun getUser(@PathVariable id: Long): UserDTO{
         return userService.getUser(id)
+    }
+
+    @PutMapping("/user_profile/{id}")
+    fun updateUser(@PathVariable id: Long, @RequestBody user: UserDTO) {
+        return userService.updateUser(id, user)
     }
 
     /*@PatchMapping("/update-user")

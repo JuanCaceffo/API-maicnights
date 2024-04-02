@@ -1,9 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
-import ar.edu.unsam.phm.magicnightsback.dto.UserDTO
-import ar.edu.unsam.phm.magicnightsback.dto.toDTO
-import ar.edu.unsam.phm.magicnightsback.dto.FriendDTO
-import ar.edu.unsam.phm.magicnightsback.dto.toFriendDTO
+import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.serializers.*
 import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
 import ar.edu.unsam.phm.magicnightsback.error.UserError
@@ -15,16 +12,11 @@ import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 class UserService {
     @Autowired
     lateinit var userRepository: UserRepository
-//    fun getUserPurchased(id: Long): List<PurchasedTicketDTO> {
-//        TODO("Not yet implemented")
-//    }
-//
-//    fun getUserPending(id: Long): List<PendingTicketDTO> {
-//        TODO("Not yet implemented")
-//    }
 
-    fun getById(userid: Long) = userRepository.getById(userid)
-
+    fun getUserPurchasedTickets(userId: Long): List<PurchsedTicketDTO>{
+        val user = userRepository.getById(userId)
+        return user.tickets.map { ticket -> (ticket.toPurchasedTicketDTO(userId)) }
+    }
     fun getUserFriends(id: Long): List<FriendDTO> {
         val friends = this.userRepository.getFriends(id)
         return friends.map { userFriend -> userFriend.toFriendDTO() }
@@ -56,7 +48,12 @@ class UserService {
         return userRepository.getById(id).credit
     }
 
-    fun updateUser(loginUser: UserDTO): UserDTO {
-        TODO("Not yet implemented")
+    fun updateUser(id:Long, loginUser: UserDTO) {
+        val userToUpdate = this.userRepository.getById(id)
+
+        userToUpdate.name = loginUser.name
+        userToUpdate.surname = loginUser.surname
+
+        this.userRepository.update(userToUpdate)
     }
 }
