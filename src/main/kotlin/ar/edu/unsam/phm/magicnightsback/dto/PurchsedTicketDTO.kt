@@ -3,19 +3,19 @@ package ar.edu.unsam.phm.magicnightsback.dto
 import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import java.time.LocalDateTime
 
-data class TicketCartDTO(
+data class PurchsedTicketDTO(
     val id: Long,
-    val img: String,
+    val showImg: String,
     val name: String,
-    val location: String,
-    val rating: Double,
-    val totalComments: Int,
+    val ubication: String,
+    val valoration: Double,
+    val valorationSize: Int,
     val price: Double,
-    val date: LocalDateTime,
-    val userImageNames: List<String>,
+    val dates: MutableList<LocalDateTime>,
+    val userImgs: List<String>,
 )
 
-fun Ticket.toCartDTO(userId: Long) = TicketCartDTO(
+fun Ticket.toPurchasedTicketDTO(userId: Long) = PurchsedTicketDTO(
     this.id,
     this.show.showImg,
     this.show.name,
@@ -23,6 +23,6 @@ fun Ticket.toCartDTO(userId: Long) = TicketCartDTO(
     this.show.totalRating(),
     this.show.comments.size,
     this.price,
-    this.showDate.date,
+    mutableListOf(this.showDate.date),
     this.show.friendsAttendeesProfileImages(userId)
 )

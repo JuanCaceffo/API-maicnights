@@ -1,6 +1,5 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
-import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.serializers.*
 import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
@@ -14,9 +13,9 @@ class UserService {
     @Autowired
     lateinit var userRepository: UserRepository
 
-    fun getTicketsCart(userId: Long): List<TicketCartDTO>{
+    fun getUserPurchasedTickets(userId: Long): List<PurchsedTicketDTO>{
         val user = userRepository.getById(userId)
-        return user.cart.map { ticket -> (ticket.toCartDTO(userId)) }
+        return user.tickets.map { ticket -> (ticket.toPurchasedTicketDTO(userId)) }
     }
     fun getUserFriends(id: Long): List<FriendDTO> {
         val friends = this.userRepository.getFriends(id)

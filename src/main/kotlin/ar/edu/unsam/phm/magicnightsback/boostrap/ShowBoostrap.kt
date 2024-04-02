@@ -24,7 +24,11 @@ class ShowBoostrap(
             bandBoostrap.bands["LaVelaPuerca"]!!,
             facilityBoostrap.facilities["GranRex"]!!
         ),
-        "BigShow" to Show("4 You", bandBoostrap.bands["PearlJam"]!!, facilityBoostrap.facilities["River"]!!),
+        "BigShow" to Show(
+            "4 You",
+            bandBoostrap.bands["PearlJam"]!!,
+            facilityBoostrap.facilities["River"]!!
+        ),
         "BestSmallShow" to Show(
             "Demon of Hell Rise Tour",
             bandBoostrap.bands["AcDc"]!!,
