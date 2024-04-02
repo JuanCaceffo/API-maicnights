@@ -13,6 +13,7 @@ import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 class UserService {
     @Autowired
     lateinit var userRepository: UserRepository
+
     @Autowired
     lateinit var showRepository: ShowRepository
 
@@ -30,6 +31,11 @@ class UserService {
         }
     }
 
+    fun getUserPurchasedTickets(userId: Long): List<PurchsedTicketDTO> {
+        val user = userRepository.getById(userId)
+        return user.tickets.map { ticket -> (ticket.toPurchasedTicketDTO(userId)) }
+    }
+
     fun getUserFriends(id: Long): List<FriendDTO> {
         val friends = this.userRepository.getFriends(id)
         return friends.map { userFriend -> userFriend.toFriendDTO() }
@@ -40,7 +46,8 @@ class UserService {
     }
 
     fun loginUser(loginUser: LoginUserDTO): Long {
-        return this.userRepository.getLoginUser(loginUser) ?: throw AuthenticationException(UserError.BAD_CREDENTIALS)
+        return this.userRepository.getLoginUser(loginUser)
+            ?: throw AuthenticationException(UserError.BAD_CREDENTIALS)
     }
 
     fun getUser(id: Long): UserDTO {
@@ -61,20 +68,30 @@ class UserService {
         return userRepository.getById(id).credit
     }
 
-    fun updateUser(loginUser: UserDTO): UserDTO {
-        TODO("Not yet implemented")
+    fun updateUser(id: Long, loginUser: UserDTO) {
+        val userToUpdate = this.userRepository.getById(id)
+
+        userToUpdate.name = loginUser.name
+        userToUpdate.surname = loginUser.surname
+
+        this.userRepository.update(userToUpdate)
     }
 
     fun reserveTicket(userId: Long, ticketData: TicketCreateDTO) {
         val user = userRepository.getById(userId)
         val show = showRepository.getById(ticketData.showId)
-        val showDate = show.dates.elementAtOrNull(ticketData.showDateId.toInt()) ?: throw NotFoundException(showError.TICKET_CART_NOT_FOUND)
+        val showDate = show.dates.elementAtOrNull(ticketData.showDateId.toInt()) ?: throw NotFoundException(
+            showError.TICKET_CART_NOT_FOUND
+        )
 
-        show.facility.thorwInvalidSeatType(ticketData.seatType, InternalServerError(FacilityError.INVALID_SEAT_TYPE))
+        show.facility.thorwInvalidSeatType(
+            ticketData.seatType,
+            InternalServerError(FacilityError.INVALID_SEAT_TYPE)
+        )
 
-        showDate.reserveSeat(ticketData.seatType,ticketData.quantity)
+        showDate.reserveSeat(ticketData.seatType, ticketData.quantity)
         repeat(ticketData.quantity) {
-            user.cart.add(Ticket(show, showDate, ticketData.seatType,ticketData.price))
+            user.cart.add(Ticket(show, showDate, ticketData.seatType, ticketData.price))
         }
     }
 }

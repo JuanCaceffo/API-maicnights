@@ -55,7 +55,7 @@ class UserControllerTest(
         //arrange
         val user = userRepository.getById(1)
         val show = showRepository.getById(1)
-        val ticket = Ticket(show, show.dates.first(), StadiumSeatType.UPPERLEVEL)
+        val ticket = Ticket(show, show.dates.first(), StadiumSeatType.UPPERLEVEL, show.fullTicketPrice(StadiumSeatType.UPPERLEVEL))
         //active
         user.cart.add(ticket)
 
@@ -76,8 +76,8 @@ class UserControllerTest(
         //arrange
         val user = userRepository.getById(1)
         val show = showRepository.getById(1)
-        val ticket = Ticket(show, show.dates.first(), StadiumSeatType.UPPERLEVEL)
-        val ticketDifferentDate = Ticket(show, show.dates.last(), StadiumSeatType.UPPERLEVEL)
+        val ticket = Ticket(show, show.dates.first(), StadiumSeatType.UPPERLEVEL, show.fullTicketPrice(StadiumSeatType.UPPERLEVEL))
+        val ticketDifferentDate = Ticket(show, show.dates.last(), StadiumSeatType.UPPERLEVEL, show.fullTicketPrice(StadiumSeatType.UPPERLEVEL))
 
         //active
         user.cart.add(ticket)

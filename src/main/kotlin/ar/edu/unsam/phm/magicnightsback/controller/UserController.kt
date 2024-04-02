@@ -5,6 +5,7 @@ import ar.edu.unsam.phm.magicnightsback.dto.FriendDTO
 import ar.edu.unsam.phm.magicnightsback.dto.TicketCartDTO
 import ar.edu.unsam.phm.magicnightsback.dto.TicketCreateDTO
 import ar.edu.unsam.phm.magicnightsback.error.FacilityError
+import ar.edu.unsam.phm.magicnightsback.dto.PurchsedTicketDTO
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.error.showError
 import ar.edu.unsam.phm.magicnightsback.serializers.*
@@ -43,6 +44,10 @@ class UserController {
         userService.reserveTicket(userId, ticketData)
     }
 
+    @GetMapping("/user_profile/{userId}/purchased_tickets")
+    fun getUserPurchasedTickets(@PathVariable userId:Long): List<PurchsedTicketDTO> {
+        return userService.getUserPurchasedTickets(userId)
+    }
     @GetMapping("/user_profile/{id}/friends")
     fun getUserFriends(@PathVariable id: Long): List<FriendDTO> {
         return userService.getUserFriends(id)
@@ -52,7 +57,6 @@ class UserController {
     fun deleteUserFriend(@PathVariable userId: Long, @PathVariable friendId: Long) {
         userService.deleteUserFriend(userId, friendId)
     }
-
 
     @GetMapping("/user_profile/{id}/comments")
     fun getUserComments(@PathVariable id: Long): List<CommentDTO> {
@@ -72,6 +76,11 @@ class UserController {
     @GetMapping("/user_profile/{id}")
     fun getUser(@PathVariable id: Long): UserDTO{
         return userService.getUser(id)
+    }
+
+    @PutMapping("/user_profile/{id}")
+    fun updateUser(@PathVariable id: Long, @RequestBody user: UserDTO) {
+        return userService.updateUser(id, user)
     }
 
     /*@PatchMapping("/update-user")

@@ -5,8 +5,8 @@ import ar.edu.unsam.phm.magicnightsback.repository.Iterable
 import java.time.LocalDate
 
 class User(
-    val name: String,
-    val surname: String,
+    var name: String,
+    var surname: String,
     val username: String,
     val birthday: LocalDate,
     val dni: Int,
