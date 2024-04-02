@@ -27,6 +27,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import java.time.LocalDateTime
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -59,6 +60,7 @@ class UserControllerTest(
         val ticket = Ticket(show, show.dates.first(), StadiumSeatType.UPPERLEVEL)
         //active
         user.cart.add(ticket)
+
         //assert
         mockMvc.perform(
             MockMvcRequestBuilders
@@ -67,7 +69,7 @@ class UserControllerTest(
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(
-                MockMvcResultMatchers.content().json(mapper.writeValueAsString(mutableListOf(ticket.toCartDTO(1))))
+                MockMvcResultMatchers.content().json(mapper.writeValueAsString(mutableListOf(ticket.toCartDTO(1, listOf(LocalDateTime.parse("2024-03-30T16:57:04.074472231").minusDays(3)), 10016.0,1))))
             )
     }
 }
