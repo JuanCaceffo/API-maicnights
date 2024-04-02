@@ -13,6 +13,7 @@ class ShowDate(
         attendees.add(user)
     }
 
+    //TODO: validar que pueda reservar la cantidad de asientos
     fun reserveSeat(seatType: SeatTypes, quantity: Int) {
         reservedSeats[seatType] = (reservedSeats[seatType]!! + quantity)
     }
