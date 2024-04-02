@@ -1,7 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.dto
 
-import ar.edu.unsam.phm.magicnightsback.domain.SeatTypes
-import ar.edu.unsam.phm.magicnightsback.domain.Ticket
+import ar.edu.unsam.phm.magicnightsback.domain.*
 import java.time.LocalDateTime
 
 data class TicketCartDTO(
@@ -31,6 +30,7 @@ fun Ticket.toCartDTO(userId: Long) = TicketCartDTO(
 data class TicketCreateDTO(
     val showId: Long,
     val showDateId: Long,
-    val seatType: SeatTypes,
-    val amount: Int
+    val price: Double,
+    val seatType: AllSetType,
+    val quantity: Int
 )

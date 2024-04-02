@@ -2,11 +2,8 @@ package ar.edu.unsam.phm.magicnightsback.service
 
 import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.dto.*
+import ar.edu.unsam.phm.magicnightsback.error.*
 import ar.edu.unsam.phm.magicnightsback.serializers.*
-import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
-import ar.edu.unsam.phm.magicnightsback.error.NotFoundException
-import ar.edu.unsam.phm.magicnightsback.error.UserError
-import ar.edu.unsam.phm.magicnightsback.error.showError
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Autowired
@@ -63,11 +60,11 @@ class UserService {
         val show = showRepository.getById(ticketData.showId)
         val showDate = show.dates.elementAtOrNull(ticketData.showDateId.toInt()) ?: throw NotFoundException(showError.TICKET_CART_NOT_FOUND)
 
-        //TODO: validar tipo de asiento que nos da el usuario, y preguntar a los chicos como lo tienen pensado
+        show.facility.thorwInvalidSeatType(ticketData.seatType, InternalServerError(FacilityError.INVALID_SEAT_TYPE))
 
-        showDate.reserveSeat(ticketData.seatType,ticketData.amount)
-        repeat(ticketData.amount) {
-            user.cart.add(Ticket(show, showDate, ticketData.seatType))
+        showDate.reserveSeat(ticketData.seatType,ticketData.quantity)
+        repeat(ticketData.quantity) {
+            user.cart.add(Ticket(show, showDate, ticketData.seatType,ticketData.price))
         }
     }
 }

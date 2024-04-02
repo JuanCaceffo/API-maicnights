@@ -4,6 +4,7 @@ import ar.edu.unsam.phm.magicnightsback.dto.UserDTO
 import ar.edu.unsam.phm.magicnightsback.dto.FriendDTO
 import ar.edu.unsam.phm.magicnightsback.dto.TicketCartDTO
 import ar.edu.unsam.phm.magicnightsback.dto.TicketCreateDTO
+import ar.edu.unsam.phm.magicnightsback.error.FacilityError
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.error.showError
 import ar.edu.unsam.phm.magicnightsback.serializers.*
@@ -34,6 +35,7 @@ class UserController {
         value = [
             ApiResponse(responseCode = "200", description = "Ok"),
             ApiResponse(responseCode = "404", description = showError.TICKET_CART_NOT_FOUND),
+            ApiResponse(responseCode = "500", description = FacilityError.INVALID_SEAT_TYPE),
         ]
     )
     fun addTicket(@PathVariable userId: Long, @RequestBody ticketData: TicketCreateDTO){

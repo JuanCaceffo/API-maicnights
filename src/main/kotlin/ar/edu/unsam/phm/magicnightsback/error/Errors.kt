@@ -17,7 +17,7 @@ object ShowCommentError {
 object showError {
     const val MSG_DATE_NOT_PASSED = "La fecha del Show todavia no paso"
     const val MSG_SETS_UNAVILABLES = "Excedio la cantidad de asientos disponibles"
-    const val TICKET_CART_NOT_FOUND = "No se encontró el ticket en el show especificado"
+    const val TICKET_CART_NOT_FOUND = "No se encontró la fecha en el show especificado"
 }
 
 object RepositoryError {
@@ -41,3 +41,6 @@ class IllegalArgumentException(msg: String) : RuntimeException(msg)
 class NotImplementedError(msg: String) : RuntimeException(msg)
 @ResponseStatus(HttpStatus.UNAUTHORIZED)
 class AuthenticationException(msg: String) : RuntimeException(msg)
+
+@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+class InternalServerError(msg: String) : RuntimeException(msg)
