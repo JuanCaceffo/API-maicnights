@@ -31,27 +31,59 @@ class ShowController {
 
     @GetMapping("/show/{id}")
     @Operation(summary = "Devuelve un show según su id")
-    fun getById(@PathVariable id: Long, @RequestParam(required = false) date: LocalDate?): ShowDetailsDTO {
+    fun getShowById(@PathVariable id: Long, @RequestParam(required = false, defaultValue = "-1") userId: Long): ShowDTO {
         val show = showService.getById(id)
-        val seats = show.facility.seats.map{
-            SeatDTO(
-                it.seatType.toString(),
-                show.fullTicketPrice(it.seatType),
-                date?.let {d -> show.getShowDate(d)?.availableSeatsOf(it.seatType) } ?: 0
-            )
-        }
 
         val comments = show.comments.map{
             CommentDTO(
                 it.user.profileImage,
                 it.user.username,
-                show.showImg,
-                it.band.name,
                 it.text,
-                it.rating
+                it.rating,
+                it.date
             )
         }
-        return show.toShowDetailsDTO(seats,comments)
+        return show.toShowDTO(userId,comments)
+    }
+
+//    @GetMapping("/showDates/{id}/")
+//    @Operation(summary = "Devuelve los datos por cada fecha de un show según su id")
+//    fun getShowDatesById(@PathVariable id: Long): ShowDateDetailsDTO {
+//        val show = showService.getById(id)
+//        val dateSeats = show.dates.map{d ->
+//            DateSeatsDTO(
+//                d.date,
+//                show.facility.seats.map{seat ->
+//                    SeatsDTO(
+//                        seat.seatType.toString(),
+//                        show.fullTicketPrice(seat.seatType),
+//                        show.getShowDate(d.date.toLocalDate())?.availableSeatsOf(seat.seatType) ?: 0
+//                    )
+//                }
+//            )
+//        }
+//        return show.toShowDateDetailsDTO(dateSeats)
+//    }
+
+    @GetMapping("/showDates/{id}/")
+    @Operation(summary = "Devuelve los datos por cada fecha de un show según su id")
+    fun getShowDatesById(@PathVariable id: Long, @RequestParam date: LocalDate): ShowDateDetailsDTO {
+        val show = showService.getById(id)
+        val showDate = show.dates.find { it.date.toLocalDate() == date }
+            ?: throw NotFoundException("No hay datos disponibles para la fecha proporcionada.")
+
+        val dateSeats = DateSeatsDTO(
+            showDate.date,
+            show.facility.seats.map { seat ->
+                SeatsDTO(
+                    seat.seatType.toString(),
+                    show.fullTicketPrice(seat.seatType),
+                    show.getShowDate(showDate.date.toLocalDate())?.availableSeatsOf(seat.seatType) ?: 0
+                )
+            }
+        )
+
+        return show.toShowDateDetailsDTO(listOf(dateSeats))
     }
 
     @PostMapping("/show/{showId}/create-date/user/{userId}")
