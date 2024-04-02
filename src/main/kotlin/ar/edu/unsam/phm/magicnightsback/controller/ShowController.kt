@@ -1,9 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
-import ar.edu.unsam.phm.magicnightsback.dto.ShowDTO
-import ar.edu.unsam.phm.magicnightsback.dto.ShowDetailsDTO
-import ar.edu.unsam.phm.magicnightsback.dto.toShowDTO
-import ar.edu.unsam.phm.magicnightsback.dto.toShowDetailsDTO
+import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.service.ShowService
 import ar.edu.unsam.phm.magicnightsback.service.UserService
@@ -13,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.bind.annotation.CrossOrigin
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @RestController
@@ -33,9 +31,27 @@ class ShowController {
 
     @GetMapping("/show/{id}")
     @Operation(summary = "Devuelve un show según su id")
-    fun getById(@PathVariable id: Long): ShowDetailsDTO {
-        return showService.getById(id).toShowDetailsDTO()
+    fun getById(@PathVariable id: Long, @RequestParam(required = false) date: LocalDate?): ShowDetailsDTO {
+        val show = showService.getById(id)
+        val seats = show.facility.seats.map{
+            SeatDTO(
+                it.seatType.toString(),
+                show.fullTicketPrice(it.seatType),
+                date?.let {d -> show.getShowDate(d)?.availableSeatsOf(it.seatType) } ?: 0
+            )
+        }
 
+        val comments = show.comments.map{
+            CommentDTO(
+                it.user.profileImage,
+                it.user.username,
+                show.showImg,
+                it.band.name,
+                it.text,
+                it.rating
+            )
+        }
+        return show.toShowDetailsDTO(seats,comments)
     }
 
     @PostMapping("/show/{showId}/create-date/user/{userId}")
