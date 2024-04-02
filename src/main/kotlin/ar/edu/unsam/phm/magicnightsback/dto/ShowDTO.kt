@@ -50,7 +50,7 @@ fun Show.toShowDTO(userId: Long, comments: List<CommentDTO> = emptyList(), price
         this.band.name,
         this.facility.name,
         this.totalRating(),
-        this.comments.size,
+        this.comments().size,
         price,
         this.allTicketPrices(),
         this.allDates(),

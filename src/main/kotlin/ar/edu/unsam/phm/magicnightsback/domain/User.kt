@@ -1,6 +1,8 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
+import ar.edu.unsam.phm.magicnightsback.error.BusinessException
+import ar.edu.unsam.phm.magicnightsback.error.showError
 import ar.edu.unsam.phm.magicnightsback.repository.Iterable
 import java.time.LocalDate
 
@@ -34,10 +36,14 @@ class User(
         friends.removeIf { friend -> friend.id == id }
     }
 
-    fun addComment(comment: Comment) {
+    fun addComment(comment: Comment, ticket: Ticket) {
+        validComment(ticket)
         comments.add(comment)
     }
 
+    private fun validComment(ticket: Ticket){
+        if (!ticket.showDate.datePassed()) throw BusinessException(showError.MSG_DATE_NOT_PASSED)
+    }
     fun isMyFriend(userId: Long) = friends.any { it.id == userId }
 
     fun removeComment(comment: Comment) {

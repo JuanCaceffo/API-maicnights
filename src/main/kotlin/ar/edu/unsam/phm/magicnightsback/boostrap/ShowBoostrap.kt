@@ -1,11 +1,13 @@
 package ar.edu.unsam.phm.magicnightsback.boostrap
 
+import ar.edu.unsam.phm.magicnightsback.domain.Comment
 import ar.edu.unsam.phm.magicnightsback.domain.Show
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.context.annotation.DependsOn
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Component
@@ -15,7 +17,7 @@ import java.time.LocalDateTime
 class ShowBoostrap(
     val showRepository: ShowRepository,
     bandBoostrap: BandBoostrap,
-    facilityBoostrap: FacilityBoostrap
+    facilityBoostrap: FacilityBoostrap,
 ) : InitializingBean {
 
     val shows = mapOf(
@@ -24,7 +26,11 @@ class ShowBoostrap(
             bandBoostrap.bands["LaVelaPuerca"]!!,
             facilityBoostrap.facilities["GranRex"]!!
         ),
-        "BigShow" to Show("4 You", bandBoostrap.bands["PearlJam"]!!, facilityBoostrap.facilities["River"]!!),
+        "BigShow" to Show(
+            "4 You",
+            bandBoostrap.bands["PearlJam"]!!,
+            facilityBoostrap.facilities["River"]!!
+        ),
         "BestSmallShow" to Show(
             "Demon of Hell Rise Tour",
             bandBoostrap.bands["AcDc"]!!,

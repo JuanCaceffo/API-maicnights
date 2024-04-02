@@ -1,5 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
+import ar.edu.unsam.phm.magicnightsback.dto.CommentDTO
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.showError
 import ar.edu.unsam.phm.magicnightsback.helpers.removeSpaces
@@ -13,17 +14,26 @@ class Show(
     val facility: Facility
 ) : Iterable() {
     var showImg = "${band.name.removeSpaces().lowercase()}.jpg"
-    val comments = mutableListOf<Comment>()
     private val pendingAttendees = mutableListOf<User>()
     val dates = mutableSetOf<ShowDate>()
     private var rentability: RentabilityType = BasePrice()
 
-    fun totalRating() = if (comments.size > 0) comments.sumOf { it.rating } / comments.size else 0.0
-
-    fun addComments(comment: Comment, showDate: ShowDate){
-        validateComment(showDate)
-        comments.add(comment)
+    fun allCommentsDTO(): List<CommentDTO> {
+        return allAttendees().flatMap {user ->
+            user.comments.filter{ it.show == this }.map {
+                CommentDTO(
+                    user.profileImage,
+                    user.username,
+                    it.text,
+                    it.rating,
+                    it.date
+                )
+            }
+        }
     }
+
+    fun comments() = allAttendees().flatMap { it.comments }.filter{ it.show == this }
+    fun totalRating() = if (comments().size > 0) comments().sumOf { it.rating } / comments().size else 0.0
 
     fun changeRentability(newShowStatus: RentabilityType) {
         this.rentability = newShowStatus
