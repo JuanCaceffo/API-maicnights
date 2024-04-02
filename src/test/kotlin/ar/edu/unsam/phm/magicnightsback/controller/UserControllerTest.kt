@@ -57,7 +57,7 @@ class UserControllerTest(
         val show = showRepository.getById(1)
         val ticket = Ticket(show, show.dates.first(), StadiumSeatType.UPPERLEVEL, show.fullTicketPrice(StadiumSeatType.UPPERLEVEL))
         //active
-        user.cart.add(ticket)
+        user.pendingTickets.add(ticket)
 
         //assert
         mockMvc.perform(
@@ -69,7 +69,7 @@ class UserControllerTest(
             .andExpect(
                 MockMvcResultMatchers.content().json(mapper.writeValueAsString(mutableListOf(ticket.toCartDTO(1, listOf(LocalDateTime.parse("2024-03-30T16:57:04.074472231").minusDays(3)), 10016.0,1))))
             )
-        user.cart.clear()
+        user.pendingTickets.clear()
     }
     @Test
     fun `Dado un endpoint para obtener los tickets del carrito de un mismo show con funciones diferentes de un usuario funciona bien`() {
@@ -79,9 +79,10 @@ class UserControllerTest(
         val ticket = Ticket(show, show.dates.first(), StadiumSeatType.UPPERLEVEL, show.fullTicketPrice(StadiumSeatType.UPPERLEVEL))
         val ticketDifferentDate = Ticket(show, show.dates.last(), StadiumSeatType.UPPERLEVEL, show.fullTicketPrice(StadiumSeatType.UPPERLEVEL))
 
+
         //active
-        user.cart.add(ticket)
-        user.cart.add(ticketDifferentDate)
+        user.pendingTickets.add(ticket)
+        user.pendingTickets.add(ticketDifferentDate)
 
         //assert
         mockMvc.perform(
@@ -93,6 +94,6 @@ class UserControllerTest(
             .andExpect(
                 MockMvcResultMatchers.content().json(mapper.writeValueAsString(mutableListOf(ticket.toCartDTO(1, listOf(generalDateTime.minusDays(3), generalDateTime.plusDays(11 + 2.toLong())), 20032.0,2))))
             )
-        user.cart.clear()
+        user.pendingTickets.clear()
     }
 }

@@ -27,7 +27,7 @@ class UserController {
 
     @GetMapping("/user-profile/{userId}/tickets-cart")
     @Operation(summary = "Permite obtener los tickets por show que el usuario tiene reservados en el carrito")
-    fun getUserTicketsCart(@PathVariable userId:Long): List<TicketCartDTO> {
+    fun getUserTicketsCart(@PathVariable userId: Long): List<TicketCartDTO> {
         return userService.getTicketsCart(userId)
     }
 
@@ -45,7 +45,7 @@ class UserController {
     }
 
     @GetMapping("/user_profile/{userId}/purchased_tickets")
-    fun getUserPurchasedTickets(@PathVariable userId:Long): List<PurchsedTicketDTO> {
+    fun getUserPurchasedTickets(@PathVariable userId: Long): List<PurchsedTicketDTO> {
         return userService.getUserPurchasedTickets(userId)
     }
     @GetMapping("/user_profile/{id}/friends")
@@ -65,16 +65,18 @@ class UserController {
 
     @PostMapping("/login")
     @Operation(summary = "Permite logear un usuario registrado en el sistema")
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "Ok"),
-        ApiResponse(responseCode = "400", description = UserError.BAD_CREDENTIALS, content = arrayOf(Content()) ),
-    ])
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Ok"),
+            ApiResponse(responseCode = "400", description = UserError.BAD_CREDENTIALS, content = arrayOf(Content())),
+        ]
+    )
     fun loginUser(@RequestBody userToLogin: LoginUserDTO): Long {
         return userService.loginUser(userToLogin)
     }
 
     @GetMapping("/user_profile/{id}")
-    fun getUser(@PathVariable id: Long): UserDTO{
+    fun getUser(@PathVariable id: Long): UserDTO {
         return userService.getUser(id)
     }
 
