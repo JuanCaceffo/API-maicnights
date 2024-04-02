@@ -5,8 +5,8 @@ import ar.edu.unsam.phm.magicnightsback.repository.Iterable
 import java.time.LocalDate
 
 class User(
-    val name: String,
-    val surname: String,
+    var name: String,
+    var surname: String,
     val username: String,
     val birthday: LocalDate,
     val dni: Int,
@@ -16,7 +16,7 @@ class User(
     val profileImage: String = "default.jpg"
 ) : Iterable() {
     val friends = mutableListOf<User>()
-    val cart = mutableListOf<Ticket>()
+    val pendingTickets = mutableListOf<Ticket>()
     val tickets = mutableListOf<Ticket>()
     val comments = mutableListOf<Comment>()
     var credit = 0.0

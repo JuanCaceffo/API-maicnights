@@ -2,6 +2,7 @@ package ar.edu.unsam.phm.magicnightsback.controller
 
 import ar.edu.unsam.phm.magicnightsback.dto.UserDTO
 import ar.edu.unsam.phm.magicnightsback.dto.FriendDTO
+import ar.edu.unsam.phm.magicnightsback.dto.PurchsedTicketDTO
 import ar.edu.unsam.phm.magicnightsback.dto.TicketCartDTO
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.serializers.*
@@ -20,12 +21,17 @@ class UserController {
     @Autowired
     lateinit var userService: UserService
 
-    //TODO: Cambiar el path de user-profile a user y ponerlo en la etiqueta requestMapping
     @GetMapping("/user-profile/{userId}/tickets-cart")
     @Operation(summary = "Permite obtener los tickets por show que el usuario tiene reservados en el carrito")
-    fun getUserTicketsCart(@PathVariable userId:Long): List<TicketCartDTO> {
+    fun getUserTicketsCart(@PathVariable userId: Long): List<TicketCartDTO> {
         return userService.getTicketsCart(userId)
     }
+
+    @GetMapping("/user_profile/{userId}/purchased_tickets")
+    fun getUserPurchasedTickets(@PathVariable userId: Long): List<PurchsedTicketDTO> {
+        return userService.getUserPurchasedTickets(userId)
+    }
+
     @GetMapping("/user_profile/{id}/friends")
     fun getUserFriends(@PathVariable id: Long): List<FriendDTO> {
         return userService.getUserFriends(id)
@@ -36,7 +42,6 @@ class UserController {
         userService.deleteUserFriend(userId, friendId)
     }
 
-
     @GetMapping("/user_profile/{id}/comments")
     fun getUserComments(@PathVariable id: Long): List<CommentDTO> {
         return userService.getUserComments(id)
@@ -44,17 +49,24 @@ class UserController {
 
     @PostMapping("/login")
     @Operation(summary = "Permite logear un usuario registrado en el sistema")
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "Ok"),
-        ApiResponse(responseCode = "400", description = UserError.BAD_CREDENTIALS, content = arrayOf(Content()) ),
-    ])
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Ok"),
+            ApiResponse(responseCode = "400", description = UserError.BAD_CREDENTIALS, content = arrayOf(Content())),
+        ]
+    )
     fun loginUser(@RequestBody userToLogin: LoginUserDTO): Long {
         return userService.loginUser(userToLogin)
     }
 
     @GetMapping("/user_profile/{id}")
-    fun getUser(@PathVariable id: Long): UserDTO{
+    fun getUser(@PathVariable id: Long): UserDTO {
         return userService.getUser(id)
+    }
+
+    @PutMapping("/user_profile/{id}")
+    fun updateUser(@PathVariable id: Long, @RequestBody user: UserDTO) {
+        return userService.updateUser(id, user)
     }
 
     /*@PatchMapping("/update-user")

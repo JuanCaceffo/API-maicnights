@@ -1,6 +1,5 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
-import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.serializers.*
 import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
@@ -26,6 +25,11 @@ class UserService {
             val allDates = ticketsSameShow.map { ticket -> ticket.showDate.date }.distinct()
             uniqueTicket.toCartDTO(userId, allDates, totalPrice, ticketsSameShow.size)
         }
+    }
+
+    fun getUserPurchasedTickets(userId: Long): List<PurchsedTicketDTO>{
+        val user = userRepository.getById(userId)
+        return user.tickets.map { ticket -> (ticket.toPurchasedTicketDTO(userId)) }
     }
 
     fun getUserFriends(id: Long): List<FriendDTO> {
@@ -59,7 +63,12 @@ class UserService {
         return userRepository.getById(id).credit
     }
 
-    fun updateUser(loginUser: UserDTO): UserDTO {
-        TODO("Not yet implemented")
+    fun updateUser(id:Long, loginUser: UserDTO) {
+        val userToUpdate = this.userRepository.getById(id)
+
+        userToUpdate.name = loginUser.name
+        userToUpdate.surname = loginUser.surname
+
+        this.userRepository.update(userToUpdate)
     }
 }
