@@ -6,19 +6,21 @@ import java.time.LocalDateTime
 data class PurchsedTicketDTO(
     val id: Long,
     val showImg: String,
-    val name: String,
-    val ubication: String,
-    val valoration: Double,
-    val valorationSize: Int,
-    val price: Double,
+    val showName: String,
+    val bandName: String,
+    val facilityName: String,
+    val rating: Double?,
+    val totalComments: Int?,
+    val price: Double?,
     val dates: MutableList<LocalDateTime>,
-    val userImgs: List<String>,
+    val userImageNames: List<String>,
 )
 
 fun Ticket.toPurchasedTicketDTO(userId: Long) = PurchsedTicketDTO(
     this.id,
     this.show.showImg,
     this.show.name,
+    this.show.band.name,
     this.show.facility.name,
     this.show.totalRating(),
     this.show.comments.size,
