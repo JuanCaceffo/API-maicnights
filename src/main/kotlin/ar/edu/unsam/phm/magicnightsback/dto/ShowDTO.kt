@@ -5,9 +5,10 @@ import java.time.LocalDateTime
 
 data class ShowDTO(
     val id: Long,
-    val img: String,
-    val name: String,
-    val location: String,
+    val showImg: String,
+    val showName: String,
+    val bandName: String,
+    val facilityName: String,
     val rating: Double,
     val totalComments: Int,
     val prices: List<Double>,
@@ -20,6 +21,7 @@ fun Show.toShowDTO(userId: Long) =
         this.id,
         this.showImg,
         this.name,
+        this.band.name,
         this.facility.name,
         this.totalRating(),
         this.comments.size,
