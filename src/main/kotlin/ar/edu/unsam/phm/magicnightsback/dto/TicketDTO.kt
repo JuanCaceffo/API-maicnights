@@ -5,26 +5,30 @@ import java.time.LocalDateTime
 
 data class TicketCartDTO(
     val id: Long,
-    val img: String,
-    val name: String,
-    val location: String,
+    val showImg: String,
+    val showName: String,
+    val bandName: String,
+    val facilityName: String,
     val rating: Double,
     val totalComments: Int,
     val price: Double,
-    val date: LocalDateTime,
+    val dates: List<LocalDateTime>,
     val userImageNames: List<String>,
+    val quantity: Int
 )
 
-fun Ticket.toCartDTO(userId: Long) = TicketCartDTO(
+fun Ticket.toCartDTO(userId: Long, showDates: List<LocalDateTime>, price: Double, quantity: Int) = TicketCartDTO(
     this.id,
     this.show.showImg,
     this.show.name,
+    this.show.band.name,
     this.show.facility.name,
     this.show.totalRating(),
     this.show.comments.size,
-    this.price,
-    this.showDate.date,
-    this.show.friendsAttendeesProfileImages(userId)
+    price,
+    showDates,
+    this.show.friendsAttendeesProfileImages(userId),
+    quantity
 )
 
 data class TicketCreateDTO(

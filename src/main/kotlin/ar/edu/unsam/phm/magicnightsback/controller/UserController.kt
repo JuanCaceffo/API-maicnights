@@ -25,6 +25,7 @@ class UserController {
     lateinit var userService: UserService
 
     @GetMapping("/user-profile/{userId}/tickets-cart")
+    @Operation(summary = "Permite obtener los tickets por show que el usuario tiene reservados en el carrito")
     fun getUserTicketsCart(@PathVariable userId:Long): List<TicketCartDTO> {
         return userService.getTicketsCart(userId)
     }
