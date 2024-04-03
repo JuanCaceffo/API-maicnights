@@ -46,8 +46,8 @@ class UserControllerTest(
     val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
     val generalDateTime: LocalDateTime = LocalDateTime.parse("2024-03-30T16:57:04.074472231", formatter)
 
-    val lowerLevel = SeatType(TheaterSeatType.LOWERLEVEL, AllSetTypeNames.valueOf(TheaterSeatType.LOWERLEVEL.name), 500)
-    val pullman = SeatType(TheaterSeatType.PULLMAN, AllSetTypeNames.valueOf(TheaterSeatType.PULLMAN.name), 300)
+    val lowerLevel = SeatType(TheaterSeatType.LOWERLEVEL, 500)
+    val pullman = SeatType(TheaterSeatType.PULLMAN, 300)
 
     @BeforeAll
     fun init() {

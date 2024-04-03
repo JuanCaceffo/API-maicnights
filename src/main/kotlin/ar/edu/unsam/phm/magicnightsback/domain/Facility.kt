@@ -9,6 +9,7 @@ import kotlin.enums.EnumEntries
 
 interface SeatTypes {
     val price: Double
+    val name: String
 }
 
 
@@ -17,7 +18,7 @@ TODO: podria llegar a hacerse un refactor en como esta pensado esto ya que UPPER
 el mismo precio que PULLMAN Y LOWERLEVEL
 */
 
-enum class TheaterSeatType(override val price: Double) : SeatTypes {
+enum class TheaterSeatType(override val price: Double,) : SeatTypes {
     LOWERLEVEL(15000.0),
     PULLMAN(10000.0)
 }
@@ -39,10 +40,9 @@ enum class AllSetTypeNames {
 
 class SeatType(
     val seatType: SeatTypes,
-    private val enumAllSeatType: AllSetTypeNames,
     val quantity: Int
 ) : Iterable() {
-    val name = enumAllSeatType.name
+    val name = seatType.name
     fun price() = seatType.price
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
@@ -59,20 +59,18 @@ class Facility(
     fun getSeat(seatTypeName: AllSetTypeNames): SeatType =
         seats.find { it.name == seatTypeName.name } ?: throw BusinessException(FacilityError.INVALID_SEAT_TYPE)
 
-    fun getSeatCapacity(seat: AllSetTypeNames) = getSeat(seat).quantity
+    fun getSeatCapacity(seatType: SeatTypes) = getSeat(AllSetTypeNames.valueOf(seatType.name)).quantity
     fun getTotalSeatCapacity() = seats.sumOf { it.quantity }
     fun addSeatType(seat: SeatType) {
         thorwInvalidSeatType(seat.name, BusinessException(FacilityError.INVALID_SEAT_TYPE))
         seats.add(seat)
     }
 
-    fun getAllSeatTypesNames() = seats.map { it.name }
     fun removeSeatType(type: SeatType) {
         seats.remove(type)
     }
 
     //VALIDATIONS
-
     fun thorwInvalidSeatType(seatTypeName: String, ex: RuntimeException) {
         if (!seatStrategy.allowedSeat(seatTypeName)) {
             throw ex

@@ -41,8 +41,14 @@ class UserController {
             ApiResponse(responseCode = "400", description = showDateError.EXCEEDED_CAPACITY + "<br>"+ FacilityError.INVALID_SEAT_TYPE),
         ]
     )
-    fun addTicket(@PathVariable userId: Long, @RequestBody ticketData: TicketCreateDTO){
+    fun addReservedTicket(@PathVariable userId: Long, @RequestBody ticketData: TicketCreateDTO){
         userService.reserveTicket(userId, ticketData)
+    }
+
+    @PutMapping("/user-profile/{userId}/remove-reserve-tickets")
+    @Operation(summary = "Permite eliminar todos los tiquets reservados")
+    fun removeReservedTickets(@PathVariable userId: Long){
+        userService.removeReserveTickets(userId)
     }
 
     @GetMapping("/user_profile/{userId}/purchased_tickets")

@@ -1,5 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
+import ar.edu.unsam.phm.magicnightsback.domain.AllSetTypeNames
 import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.error.*
@@ -76,6 +77,7 @@ class UserService {
         this.userRepository.update(userToUpdate)
     }
 
+    //TODO: posible extrapolacion de orquetado de logica de reserva en una entidad cart
     fun reserveTicket(userId: Long, ticketData: TicketCreateDTO) {
         val user = userRepository.getById(userId)
         val show = showRepository.getById(ticketData.showId)
@@ -84,9 +86,20 @@ class UserService {
         )
         val seatType = show.facility.getSeat(ticketData.seatTypeName).seatType
 
-        showDate.reserveSeat(ticketData.seatTypeName, ticketData.quantity)
+        showDate.reserveSeat(seatType, ticketData.quantity)
         repeat(ticketData.quantity) {
             user.pendingTickets.add(Ticket(show, showDate, seatType, ticketData.price))
         }
+    }
+
+    //TODO: posible extrapolacion de orquetado de logica de elimindo en una entidad cart
+    fun removeReserveTickets(userId: Long) {
+        val user = userRepository.getById(userId)
+
+        user.pendingTickets.forEach {
+            ticket -> ticket.showDate.releaseSeat(ticket.seatType,1)
+            println(ticket.showDate.getAllReservedSeats())
+        }
+        user.pendingTickets.clear()
     }
 }

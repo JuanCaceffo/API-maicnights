@@ -15,20 +15,20 @@ class ShowDate(
     }
 
     //TODO: validar que pueda reservar la cantidad de asientos
-    fun reserveSeat(seatTypeName: AllSetTypeNames, quantity: Int) {
-        reservedSeats[seatTypeName.name] = (reservedSeats[seatTypeName.name]!! + quantity).throwIfGreaterThan(availableSeatsOf(seatTypeName),showDateError.EXCEEDED_CAPACITY)
+    fun reserveSeat(seatType: SeatTypes, quantity: Int) {
+        reservedSeats[seatType.name] = (reservedSeats[seatType.name]!! + quantity).throwIfGreaterThan(availableSeatsOf(seatType),showDateError.EXCEEDED_CAPACITY)
     }
 
-    fun releaseSeat(seatTypeName: AllSetTypeNames, quantity: Int) {
-        reservedSeats[seatTypeName.name] = (reservedSeats[seatTypeName.name]!! - quantity)
+    fun releaseSeat(SeatType: SeatTypes, quantity: Int) {
+        reservedSeats[SeatType.name] = (reservedSeats[SeatType.name]!! - quantity)
     }
 
-    fun getReservedSeatsOf(seatTypeName: AllSetTypeNames) = reservedSeats[seatTypeName.name] ?: 0
+    fun getReservedSeatsOf(seatType: SeatTypes) = reservedSeats[seatType.name] ?: 0
 
     fun getAllReservedSeats() = reservedSeats.map { it.value }.sum()
 
-    fun availableSeatsOf(seatTypeName: AllSetTypeNames): Int {
-        return facility.getSeatCapacity(seatTypeName) - getReservedSeatsOf(seatTypeName)
+    fun availableSeatsOf(seatType: SeatTypes): Int {
+        return facility.getSeatCapacity(seatType) - getReservedSeatsOf(seatType)
     }
 
     fun totalAvailableSeatsOf(): Int {
