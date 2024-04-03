@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.bind.annotation.CrossOrigin
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @RestController
 @CrossOrigin(origins = ["*"])
@@ -31,10 +32,13 @@ class ShowController {
 
     @GetMapping("/show/{id}")
     @Operation(summary = "Devuelve un show según su id")
-    fun getShowById(@PathVariable id: Long, @RequestParam(required = false, defaultValue = "-1") userId: Long): ShowDTO {
+    fun getShowById(
+        @PathVariable id: Long,
+        @RequestParam(required = false, defaultValue = "-1") userId: Long
+    ): ShowDTO {
         val show = showService.getById(id)
 
-        val comments = show.comments.map{
+        val comments = show.comments.map {
             CommentDTO(
                 it.user.profileImage,
                 it.user.username,
@@ -43,27 +47,31 @@ class ShowController {
                 it.date
             )
         }
-        return show.toShowDTO(userId,comments)
+        return show.toShowDTO(userId, comments)
     }
 
-    @GetMapping("/showDates/{id}/")
+    @GetMapping("/show_dates/{id}")
     @Operation(summary = "Devuelve los datos por cada fecha de un show según su id")
-    fun getShowDatesById(@PathVariable id: Long): ShowDateDetailsDTO {
+    fun getShowDatesById(@PathVariable id: Long, @RequestParam date: String): List<SeatDTO> {
         val show = showService.getById(id)
-        val dateSeats = show.dates.map{d ->
-            DateSeatsDTO(
-                d.date,
-                show.facility.seats.map{seat ->
-                    SeatsDTO(
-                        seat.seatType.toString(),
-                        show.fullTicketPrice(seat.seatType),
-                        show.getShowDate(d.date.toLocalDate())?.availableSeatsOf(seat.seatType) ?: 0
-                    )
-                }
+        val seats = show.getSeatTypes()
+        val showDate = show.getShowDate(parseLocalDate(date))
+
+        val toSeatsDto = seats.map {
+            SeatDTO(
+                it.toString(),
+                show.fullTicketPrice(it),
+                showDate!!.availableSeatsOf(it)
             )
         }
-        return show.toShowDateDetailsDTO(dateSeats)
+        return toSeatsDto
     }
+
+    fun parseLocalDate(dateString: String): LocalDate {
+        val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+        return LocalDate.parse(dateString, formatter)
+    }
+
 
 //    @GetMapping("/showDates/{id}/")
 //    @Operation(summary = "Devuelve los datos por cada fecha de un show según su id")
