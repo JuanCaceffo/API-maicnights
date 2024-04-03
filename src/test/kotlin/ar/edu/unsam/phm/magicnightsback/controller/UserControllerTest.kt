@@ -214,4 +214,62 @@ class UserControllerTest(
             MockMvcResultMatchers.status().isOk
         )
     }
+
+    //TODO: hacer este test bien, sin when
+    /*
+    @Test
+    fun `Un usuario se puede logear con las credenciales correctas`() {
+        // Arrange
+        val userToLogin = LoginUserDTO("Nombre", "password")
+        val userId = 0L
+
+        `when`(userRepository.getLoginUser(userToLogin)).thenReturn(userId)
+
+        // Act & Assert
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(ObjectMapper().writeValueAsString(userToLogin))
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.content().string(userId.toString()))
+    }
+
+    @Test
+    fun `deleteUserFriend elimina un amigo del usuario`() {
+        val user = User(
+            "Nombre",
+            "Apellido",
+            "usuario",
+            LocalDate.now(),
+            123,
+            "password"
+        )
+
+        val friend = User(
+            "Nombre",
+            "Apellido",
+            "usuario",
+            LocalDate.now(),
+            123,
+            "password"
+        )
+
+        user.id = 0L
+        friend.id = 1L
+
+        user.addFriend(friend)
+
+        `when`(userRepository.getById(user.id)).thenReturn(user)
+
+        // Act & Assert
+        mockMvc.perform(
+            MockMvcRequestBuilders.delete("/user_profile/${user.id}/friends/${friend.id}")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+
+        user.friends shouldNotContain  friend
+    }
+    */
 }
