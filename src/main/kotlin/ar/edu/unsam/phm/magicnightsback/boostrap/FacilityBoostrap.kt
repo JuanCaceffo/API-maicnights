@@ -13,12 +13,11 @@ import org.uqbar.geodds.Point
 class FacilityBoostrap(
     val facilityRepository: FacilityRepository
 ) : InitializingBean {
-
-    val upperLevel = SeatType(StadiumSeatType.UPPERLEVEL, 300)
-    val field = SeatType(StadiumSeatType.FIELD, 1000)
-    val box = SeatType(StadiumSeatType.BOX, 200)
-    val lowerLevel = SeatType(TheaterSeatType.LOWERLEVEL, 500)
-    val pullman = SeatType(TheaterSeatType.PULLMAN, 300)
+    val upperLevel = SeatType(StadiumSeatType.UPPERLEVEL,AllSetTypeNames.valueOf(StadiumSeatType.UPPERLEVEL.name), 300)
+    val field = SeatType(StadiumSeatType.FIELD,AllSetTypeNames.valueOf(StadiumSeatType.FIELD.name) , 1000)
+    val box = SeatType(StadiumSeatType.BOX,AllSetTypeNames.valueOf(StadiumSeatType.BOX.name) ,200)
+    val lowerLevel = SeatType(TheaterSeatType.LOWERLEVEL,AllSetTypeNames.valueOf(TheaterSeatType.LOWERLEVEL.name), 500)
+    val pullman = SeatType(TheaterSeatType.PULLMAN, AllSetTypeNames.valueOf(TheaterSeatType.PULLMAN.name),300)
 
     private val seatStrategy = mapOf(
         "theaterStrategyWithBadAccustics" to TheaterStrategy(),
