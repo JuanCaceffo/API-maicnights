@@ -66,7 +66,6 @@ class UserControllerTest(
     }
 
     @AfterAll
-    @BeforeEach
     fun end() {
         userBoostrap.afterPropertiesSet()
         showBoostrap.afterPropertiesSet()
