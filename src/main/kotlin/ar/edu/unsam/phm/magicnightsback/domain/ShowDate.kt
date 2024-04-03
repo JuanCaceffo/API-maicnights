@@ -29,11 +29,11 @@ class ShowDate(
         return facility.getSeatCapacity(seatType) - getReservedSeatsOf(seatType)
     }
 
-    fun totalAvailableSeatsOf(): Int {
+    fun totalAvailableSeats(): Int {
         return facility.getTotalSeatCapacity() - getAllReservedSeats()
     }
 
     fun datePassed() = date < LocalDateTime.now()
 
-    fun isSoldOut() = totalAvailableSeatsOf() == 0
+    fun isSoldOut() = totalAvailableSeats() == 0
 }

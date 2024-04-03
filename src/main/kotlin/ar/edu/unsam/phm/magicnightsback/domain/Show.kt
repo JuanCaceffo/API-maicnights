@@ -67,11 +67,11 @@ class Show(
 
     fun getShowDate(date: LocalDate) = dates.find { it.date.toLocalDate() == date }
 
-    private fun allAttendees() = dates.flatMap { it.attendees }
-//    fun soldOutDates() = dates.filter{ it.isSoldOut() }.size
-//    fun ticketsSoldOfSeatType(seatType: SeatTypes) = dates.sumOf { it.getReservedSeatsOf(seatType) }
-//    fun totalTicketsSold() = facility.getAllSeatTypes().sumOf { ticketsSoldOfSeatType(it) }
-//    fun totalSales() = facility.getAllSeatTypes().sumOf { fullTicketPrice(it) * ticketsSoldOfSeatType(it) }
+    fun allAttendees() = dates.flatMap { it.attendees }
+    fun soldOutDates() = dates.filter{ it.isSoldOut() }.size
+    fun ticketsSoldOfSeatType(seatType: SeatTypes) = dates.sumOf { it.getReservedSeatsOf(seatType) }
+    fun totalTicketsSold() = facility.getAllSeatTypes().sumOf { ticketsSoldOfSeatType(it) }
+    fun totalSales() = facility.getAllSeatTypes().sumOf { fullTicketPrice(it) * ticketsSoldOfSeatType(it) }
 
     //Validations
     private fun validateComment(showDate: ShowDate) {
