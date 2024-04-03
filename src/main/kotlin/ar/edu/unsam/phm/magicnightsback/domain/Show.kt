@@ -51,6 +51,8 @@ class Show(
         dates.add(ShowDate(date, facility))
     }
 
+    fun getSeatTypes() = facility.seats.map{ it.seatType }
+
     fun friendsAttendeesProfileImages(userId: Long?) = userId?.let{allAttendees().filter { it.isMyFriend(userId) }.map{ it.profileImage }} ?: listOf()
 
     private fun baseCost(): Double = band.cost + facility.cost()

@@ -43,16 +43,17 @@ class ShowBoostrap(
     }
 
     fun createShowDates() {
+        val generalDateTime = LocalDateTime.parse("2024-03-30T16:57:04.074472231")
         shows["SmallShow"]!!.apply {
-            repeat(5) { addDate(LocalDateTime.now().plusDays(11 + it.toLong())) }
+            repeat(5) { addDate(generalDateTime.plusDays(11 + it.toLong())) }
         }
         shows["BigShow"]!!.apply {
-            addDate(LocalDateTime.now().minusDays(3))
-            repeat(3) { addDate(LocalDateTime.now().plusDays(11 + it.toLong())) }
+            addDate(generalDateTime.minusDays(3))
+            repeat(3) { addDate(generalDateTime.plusDays(11 + it.toLong())) }
         }
         shows["BestSmallShow"]!!.apply {
-            repeat(2) { addDate(LocalDateTime.now().minusDays(3 + it.toLong())) }
-            repeat(3) { addDate(LocalDateTime.now().plusDays(11 + it.toLong())) }
+            repeat(2) { addDate(generalDateTime.minusDays(3 + it.toLong())) }
+            repeat(3) { addDate(generalDateTime.plusDays(11 + it.toLong())) }
         }
     }
 

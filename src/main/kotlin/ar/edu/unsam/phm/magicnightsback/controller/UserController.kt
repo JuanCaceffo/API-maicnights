@@ -17,15 +17,16 @@ class UserController {
     @Autowired
     lateinit var userService: UserService
 
-//    @GetMapping("/user/{id}/purchased-tickets")
-//    fun getUserPurchased(@PathVariable id: Long): List<PurchasedTicketDTO> {
-//        return userService.getUserPurchased(id)
-//    }
-//
-//    @GetMapping("/user/{id}/pending-tickets")
-//    fun getUserPending(@PathVariable id: Long): List<PendingTicketDTO> {
-//        return userService.getUserPending(id)
-//    }
+    @GetMapping("/user-profile/{userId}/tickets-cart")
+    @Operation(summary = "Permite obtener los tickets por show que el usuario tiene reservados en el carrito")
+    fun getUserTicketsCart(@PathVariable userId: Long): List<TicketCartDTO> {
+        return userService.getTicketsCart(userId)
+    }
+
+    @GetMapping("/user_profile/{userId}/purchased_tickets")
+    fun getUserPurchasedTickets(@PathVariable userId: Long): List<PurchsedTicketDTO> {
+        return userService.getUserPurchasedTickets(userId)
+    }
 
     @GetMapping("/user_profile/{id}/friends")
     fun getUserFriends(@PathVariable id: Long): List<FriendDTO> {
@@ -37,7 +38,6 @@ class UserController {
         userService.deleteUserFriend(userId, friendId)
     }
 
-
     @GetMapping("/user_profile/{id}/comments")
     fun getUserComments(@PathVariable id: Long): List<CommentDTO> {
         return userService.getUserComments(id)
@@ -45,17 +45,24 @@ class UserController {
 
     @PostMapping("/login")
     @Operation(summary = "Permite logear un usuario registrado en el sistema")
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "Ok"),
-        ApiResponse(responseCode = "400", description = UserError.BAD_CREDENTIALS, content = arrayOf(Content()) ),
-    ])
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Ok"),
+            ApiResponse(responseCode = "400", description = UserError.BAD_CREDENTIALS, content = arrayOf(Content())),
+        ]
+    )
     fun loginUser(@RequestBody userToLogin: LoginUserDTO): Long {
         return userService.loginUser(userToLogin)
     }
 
     @GetMapping("/user_profile/{id}")
-    fun getUser(@PathVariable id: Long): UserDTO{
+    fun getUser(@PathVariable id: Long): UserDTO {
         return userService.getUser(id)
+    }
+
+    @PutMapping("/user_profile/{id}")
+    fun updateUser(@PathVariable id: Long, @RequestBody user: UserDTO) {
+        return userService.updateUser(id, user)
     }
 
     /*@PatchMapping("/update-user")

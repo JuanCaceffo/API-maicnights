@@ -170,15 +170,14 @@ class UserBoostrap(
                     pullman
                 )
             )
-            repeat(4) {
-                addTicket(
-                    Ticket(
-                        bigShow,
-                        bigShow.dates.elementAt(2),
-                        field
-                    )
+
+            addTicket(
+                Ticket(
+                    bigShow,
+                    bigShow.dates.elementAt(2),
+                    field
                 )
-            }
+            )
             addTicket(
                 Ticket(
                     bigShow,

@@ -8,7 +8,6 @@ import org.springframework.context.annotation.DependsOn
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 @Component
 @Order(4)
@@ -18,7 +17,7 @@ class CommentBoostrap(
     userBoostrap: UserBoostrap,
 ) : InitializingBean {
 
-    val ticket = Ticket(showBoostrap.shows["BigShow"]!!, showBoostrap.shows["BigShow"]!!.getShowDate(LocalDate.now().minusDays(3))!! ,StadiumSeatType.UPPERLEVEL)
+    val ticket = Ticket(showBoostrap.shows["BigShow"]!!, showBoostrap.shows["BigShow"]!!.dates.first() ,StadiumSeatType.UPPERLEVEL)
 
     val sol = userBoostrap.users["Sol"]!!
     val pablo = userBoostrap.users["Pablo"]!!
