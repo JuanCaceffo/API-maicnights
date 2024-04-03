@@ -1,5 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.dto
 
+import ar.edu.unsam.phm.magicnightsback.domain.SeatType
 import ar.edu.unsam.phm.magicnightsback.domain.Show
 import org.uqbar.geodds.Point
 import java.time.LocalDateTime
@@ -22,8 +23,8 @@ data class ShowDTO(
 )
 
 fun pointToDMS(point: Point): String {
-    val latitude = point.getX()
-    val longitude = point.getY()
+    val latitude = point.x
+    val longitude = point.y
 
     val latitudeDirection = if (latitude >= 0) "N" else "S"
     val longitudeDirection = if (longitude >= 0) "E" else "W"
@@ -40,18 +41,7 @@ fun decimalToDMS(decimal: Double): String {
 
     return "$degrees° $minutes' $seconds''"
 }
-
-data class ShowDateDetailsDTO (
-    val showId: Long,
-    val dateSeats: List<DateSeatsDTO>
-)
-
-data class DateSeatsDTO(
-    val date: LocalDateTime,
-    val seats: List<SeatsDTO>
-)
-
-data class SeatsDTO(
+data class SeatDTO(
     val seatType: String,
     val price: Double,
     val maxToSell: Int,
@@ -81,10 +71,3 @@ fun Show.toShowDTO(userId: Long, comments: List<CommentDTO> = emptyList(), price
         comments,
         pointToDMS(this.facility.location)
     )
-
-fun Show.toShowDateDetailsDTO(dateSeats: List<DateSeatsDTO>) =
-    ShowDateDetailsDTO(
-        this.id,
-        dateSeats
-    )
-
