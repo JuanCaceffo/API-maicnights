@@ -1,7 +1,9 @@
 package ar.edu.unsam.phm.magicnightsback.dto
 
 import ar.edu.unsam.phm.magicnightsback.domain.Show
+import org.uqbar.geodds.Point
 import java.time.LocalDateTime
+import kotlin.math.ceil
 
 data class ShowDTO(
     val id: Long,
@@ -18,6 +20,26 @@ data class ShowDTO(
     val comments: List<CommentDTO>,
     val geolocation: String
 )
+
+fun pointToDMS(point: Point): String {
+    val latitude = point.getX()
+    val longitude = point.getY()
+
+    val latitudeDirection = if (latitude >= 0) "N" else "S"
+    val longitudeDirection = if (longitude >= 0) "E" else "W"
+
+    return "Latitude: ${decimalToDMS(latitude)} $latitudeDirection, Longitude: ${decimalToDMS(longitude)} $longitudeDirection"
+}
+
+fun decimalToDMS(decimal: Double): String {
+    val degrees = decimal.toInt()
+    val minutesDouble = (decimal - degrees) * 60
+    val minutes = minutesDouble.toInt()
+    val secondsDouble = (minutesDouble - minutes) * 60
+    val seconds = ceil(secondsDouble).toInt()
+
+    return "$degrees° $minutes' $seconds''"
+}
 
 data class ShowDateDetailsDTO (
     val showId: Long,
@@ -57,7 +79,7 @@ fun Show.toShowDTO(userId: Long, comments: List<CommentDTO> = emptyList(), price
         this.allDates(),
         this.friendsAttendeesProfileImages(userId),
         comments,
-        this.facility.location.toString()
+        pointToDMS(this.facility.location)
     )
 
 fun Show.toShowDateDetailsDTO(dateSeats: List<DateSeatsDTO>) =
