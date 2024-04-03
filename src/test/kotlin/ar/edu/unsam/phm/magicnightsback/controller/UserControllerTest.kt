@@ -116,5 +116,7 @@ import java.time.format.DateTimeFormatter
 //        )
 //            .andExpect(MockMvcResultMatchers.status().isOk)
 //            .andExpect(MockMvcResultMatchers.content().string("[{\"id\":0,\"showImg\":\"pearljam.jpg\",\"showName\":\"4 You\",\"bandName\":\"Pearl Jam\",\"facilityName\":\"River Plate\",\"rating\":0.0,\"totalComments\":0,\"price\":20032.0,\"dates\":[\"2024-03-27T16:57:04.074472231\",\"2024-04-12T16:57:04.074472231\"],\"userImageNames\":[],\"quantity\":2}]"))
+
 ////    }
 //}
+
