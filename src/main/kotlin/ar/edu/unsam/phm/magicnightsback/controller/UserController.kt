@@ -38,8 +38,7 @@ class UserController {
         value = [
             ApiResponse(responseCode = "200", description = "Ok"),
             ApiResponse(responseCode = "404", description = showError.TICKET_CART_NOT_FOUND),
-            ApiResponse(responseCode = "500", description = FacilityError.INVALID_SEAT_TYPE),
-            ApiResponse(responseCode = "400", description = showDateError.EXCEEDED_CAPACITY),
+            ApiResponse(responseCode = "400", description = showDateError.EXCEEDED_CAPACITY + "<br>"+ FacilityError.INVALID_SEAT_TYPE),
         ]
     )
     fun addTicket(@PathVariable userId: Long, @RequestBody ticketData: TicketCreateDTO){

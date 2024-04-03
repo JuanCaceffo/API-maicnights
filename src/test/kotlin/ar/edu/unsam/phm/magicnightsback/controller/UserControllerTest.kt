@@ -3,9 +3,8 @@ package ar.edu.unsam.phm.magicnightsback.controller;
 
 import ar.edu.unsam.phm.magicnightsback.boostrap.ShowBoostrap
 import ar.edu.unsam.phm.magicnightsback.boostrap.UserBoostrap
-import ar.edu.unsam.phm.magicnightsback.domain.StadiumSeatType
-import ar.edu.unsam.phm.magicnightsback.domain.Ticket
-import ar.edu.unsam.phm.magicnightsback.domain.User
+import ar.edu.unsam.phm.magicnightsback.domain.*
+import ar.edu.unsam.phm.magicnightsback.dto.TicketCreateDTO
 import ar.edu.unsam.phm.magicnightsback.dto.toCartDTO
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
@@ -26,6 +25,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.uqbar.geodds.Point
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -43,6 +43,12 @@ class UserControllerTest(
 ) {
     val mapper = ObjectMapper()
 
+    val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
+    val generalDateTime: LocalDateTime = LocalDateTime.parse("2024-03-30T16:57:04.074472231", formatter)
+
+    val lowerLevel = SeatType(TheaterSeatType.LOWERLEVEL, AllSetTypeNames.valueOf(TheaterSeatType.LOWERLEVEL.name), 500)
+    val pullman = SeatType(TheaterSeatType.PULLMAN, AllSetTypeNames.valueOf(TheaterSeatType.PULLMAN.name), 300)
+
     @BeforeAll
     fun init() {
         mapper.registerModules(JavaTimeModule())
@@ -52,6 +58,7 @@ class UserControllerTest(
     @BeforeEach
     fun start() {
         userRepository.clear()
+        showRepository.clear()
         userRepository.create(
             User(
                 name = "Juan",
@@ -63,6 +70,25 @@ class UserControllerTest(
                 profileImage = ""
             )
         )
+        showRepository.create(
+            Show(
+                "Cachenged!!",
+                Band(
+                    "La Vela Puerca",
+                    10000.0
+                ),
+                Facility(
+                    name = "Gran Rex",
+                    location = Point(-34.60356, -58.38013),
+                    seatStrategy = TheaterStrategy()
+                ).apply {
+                    addSeatType(pullman)
+                    addSeatType(lowerLevel)
+                }
+            ).apply {
+                repeat(5) { addDate(generalDateTime.plusDays(11 + it.toLong())) }
+            }
+        )
     }
 
     @AfterAll
@@ -71,15 +97,13 @@ class UserControllerTest(
         showBoostrap.afterPropertiesSet()
     }
 
-    val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
-    val generalDateTime: LocalDateTime = LocalDateTime.parse("2024-03-30T16:57:04.074472231", formatter)
 
-    /*@Test
+    @Test
     fun `Dado un endpoint para obtener los tickets del carrito de un usuario con un ticket reservado funciona bien`() {
         //arrange
         val user = userRepository.getById(0)
-        val show = showRepository.getById(1)
-        val ticket = Ticket(show, show.dates.first(), StadiumSeatType.UPPERLEVEL, show.fullTicketPrice(StadiumSeatType.UPPERLEVEL))
+        val show = showRepository.getById(0)
+        val ticket = Ticket(show, show.dates.first(), TheaterSeatType.PULLMAN, show.ticketPrice(TheaterSeatType.PULLMAN))
         //active
         user.pendingTickets.add(ticket)
 
@@ -96,8 +120,8 @@ class UserControllerTest(
                         mutableListOf(
                             ticket.toCartDTO(
                                 0,
-                                listOf(LocalDateTime.parse("2024-03-30T16:57:04.074472231").minusDays(3)),
-                                10016.0,
+                                listOf(LocalDateTime.parse("2024-03-30T16:57:04.074472231").plusDays(11)),
+                                8110.0,
                                 1
                             )
                         )
@@ -110,9 +134,9 @@ class UserControllerTest(
     fun `Dado un endpoint para obtener los tickets del carrito de un mismo show con funciones diferentes de un usuario funciona bien`() {
         //arrange
         val user = userRepository.getById(0)
-        val show = showRepository.getById(1)
-        val ticket = Ticket(show, show.dates.first(), StadiumSeatType.UPPERLEVEL, show.fullTicketPrice(StadiumSeatType.UPPERLEVEL))
-        val ticketDifferentDate = Ticket(show, show.dates.last(), StadiumSeatType.UPPERLEVEL, show.fullTicketPrice(StadiumSeatType.UPPERLEVEL))
+        val show = showRepository.getById(0)
+        val ticket = Ticket(show, show.dates.first(), TheaterSeatType.LOWERLEVEL, show.ticketPrice(TheaterSeatType.LOWERLEVEL))
+        val ticketDifferentDate = Ticket(show, show.dates.last(), TheaterSeatType.LOWERLEVEL, show.ticketPrice(TheaterSeatType.LOWERLEVEL))
 
 
         //active
@@ -132,13 +156,56 @@ class UserControllerTest(
                         mutableListOf(
                             ticket.toCartDTO(
                                 0,
-                                listOf(generalDateTime.minusDays(3), generalDateTime.plusDays(11 + 2.toLong())),
-                                20032.0,
+                                listOf(generalDateTime.plusDays(11), generalDateTime.plusDays(11 + 4.toLong())),
+                                24220.0,
                                 2
                             )
                         )
                     )
                 )
             )
-    }*/
+    }
+
+    @Test
+    fun `Un usuario reserva 1 ticket para un show de forma exitosa`(){
+        val show = showRepository.getById(0)
+        val data = TicketCreateDTO(0,0,show.ticketPrice(TheaterSeatType.PULLMAN),AllSetTypeNames.PULLMAN,1)
+
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .put("/user-profile/0/reserve-tickets")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(data))
+        ).andExpect(
+            MockMvcResultMatchers.status().isOk
+        )
+    }
+    @Test
+    fun `Un usuario reserva una cantidad no permitida de tickets para un show y falla`(){
+        val show = showRepository.getById(0)
+        val data = TicketCreateDTO(0,0,show.ticketPrice(TheaterSeatType.PULLMAN),AllSetTypeNames.PULLMAN,1000)
+
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .put("/user-profile/0/reserve-tickets")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(data))
+        ).andExpect(
+            MockMvcResultMatchers.status().is4xxClientError
+        )
+    }
+    @Test
+    fun `Un usuario reserva un ticket con un asiento no disponible para ese show y falla`(){
+        val show = showRepository.getById(0)
+        val data = TicketCreateDTO(0,0,show.ticketPrice(TheaterSeatType.PULLMAN),AllSetTypeNames.UPPERLEVEL,1000)
+
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .put("/user-profile/0/reserve-tickets")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(data))
+        ).andExpect(
+            MockMvcResultMatchers.status().is4xxClientError
+        )
+    }
 }

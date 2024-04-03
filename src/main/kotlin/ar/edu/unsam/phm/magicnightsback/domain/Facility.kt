@@ -57,7 +57,7 @@ class Facility(
     val seats: MutableSet<SeatType> = mutableSetOf()
     fun cost() = seatStrategy.totalCost()
     fun getSeat(seatTypeName: AllSetTypeNames): SeatType =
-        seats.find { it.name == seatTypeName.name } ?: throw InternalServerError(FacilityError.INVALID_SEAT_TYPE)
+        seats.find { it.name == seatTypeName.name } ?: throw BusinessException(FacilityError.INVALID_SEAT_TYPE)
 
     fun getSeatCapacity(seat: AllSetTypeNames) = getSeat(seat).quantity
     fun getTotalSeatCapacity() = seats.sumOf { it.quantity }
