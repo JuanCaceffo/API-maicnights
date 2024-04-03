@@ -93,18 +93,20 @@ class UserControllerTest(
         userBoostrap.afterPropertiesSet()
         showBoostrap.afterPropertiesSet()
     }
-    @Test
-    fun `Dado un endpoint para obtener los tickets del carrito de un usuario con un ticket reservado funciona bien`() {
-        //arrange
+    fun setUserWithTicket(): Ticket {
         val user = userRepository.getById(0)
         val show = showRepository.getById(0)
         val ticket = Ticket(show, show.dates.first(), TheaterSeatType.PULLMAN, show.ticketPrice(TheaterSeatType.PULLMAN))
-        //active
         user.reservedTickets.add(ticket)
+        return ticket
+    }
+    @Test
+    fun `Dado un endpoint para obtener los tickets del carrito de un usuario con un ticket reservado funciona bien`() {
+        val ticket = setUserWithTicket()
         //assert
         mockMvc.perform(
             MockMvcRequestBuilders
-                .get("/user-profile/0/pending-tickets")
+                .get("/user-profile/0/reserved-tickets")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -123,6 +125,8 @@ class UserControllerTest(
                 )
             )
     }
+
+
     @Test
     fun `Dado un endpoint para obtener los tickets del carrito de un mismo show con funciones diferentes de un usuario funciona bien`() {
         //arrange
@@ -136,7 +140,7 @@ class UserControllerTest(
         //assert
         mockMvc.perform(
             MockMvcRequestBuilders
-                .get("/user-profile/0/pending-tickets")
+                .get("/user-profile/0/reserved-tickets")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -198,23 +202,42 @@ class UserControllerTest(
 
 
     @Test
-    fun `Un usaurio puede eliminar todos los tickets que tiene reservados`() {
-        //arrange
-        val user = userRepository.getById(0)
-        val show = showRepository.getById(0)
-        val ticket = Ticket(show, show.dates.first(), TheaterSeatType.PULLMAN, show.ticketPrice(TheaterSeatType.PULLMAN))
-        //active
-        user.reservedTickets.add(ticket)
+    fun `Un usaurio puede eliminar todos los tickets que tiene reservados llamando a el endpoint put`() {
+        setUserWithTicket()
 
         mockMvc.perform(
             MockMvcRequestBuilders
-                .put("/user-profile/0/remove-reserve-tickets")
+                .put("/user-profile/0/remove-reserved-tickets")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(
             MockMvcResultMatchers.status().isOk
         )
     }
+    @Test
+    fun `Al ejecutar el endpoint para comprar todos los tiquetes reservados de un usuario con credio suficiente sale bien`(){
+        setUserWithTicket()
+        val user = userRepository.getById(0)
 
+        user.addCredit(100000.0)
+
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .put("/user-profile/0/purchase-reserved-tickets")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+    }
+    @Test
+    fun `Al ejecutar el endpoint para comprar todos los tiquetes reservados de un usuario con crediotos insuficientes lanza una exepcion`(){
+        setUserWithTicket()
+
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .put("/user-profile/0/purchase-reserved-tickets")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(MockMvcResultMatchers.status().is4xxClientError)
+    }
     //TODO: hacer este test bien, sin when
     /*
     @Test
