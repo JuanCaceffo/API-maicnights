@@ -51,7 +51,7 @@ class Facility(
         seats.remove(type)
     }
     override fun validSearchCondition(value: String): Boolean {
-        TODO("Not yet implemented")
+        return Comparar.parcial(value, listOf(this.name))
     }
 }
 

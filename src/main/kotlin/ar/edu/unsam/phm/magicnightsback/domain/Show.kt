@@ -64,8 +64,7 @@ class Show(
         }
     }
 
-    override fun validSearchCondition(value: String) =
-        Comparar.parcial(value, listOf(this.band.name)) ||
-        Comparar.parcial(value, listOf(this.facility.name)) ||
-        Comparar.parcial(value, listOf(this.name))
+    override fun validSearchCondition(value: String): Boolean {
+        TODO ("not implemented yet")
+    }
 }

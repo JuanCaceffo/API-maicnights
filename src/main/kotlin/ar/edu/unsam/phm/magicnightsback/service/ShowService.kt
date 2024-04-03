@@ -1,9 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
 import ar.edu.unsam.phm.magicnightsback.controller.BaseFilterParams
-import ar.edu.unsam.phm.magicnightsback.domain.Filter
-import ar.edu.unsam.phm.magicnightsback.domain.Show
-import ar.edu.unsam.phm.magicnightsback.domain.WordFilter
+import ar.edu.unsam.phm.magicnightsback.domain.*
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
@@ -36,7 +34,9 @@ class ShowService {
 
     fun createFilter(params: BaseFilterParams): Filter<Show>{
         return Filter<Show>().apply {
-            addFilterCondition(WordFilter(params.keyword, showRepository))
+            addFilterCondition(BandFilter(params.bandKeyword, showRepository))
+            addFilterCondition(FacilityFilter(params.facilityKeyword, showRepository))
+            addFilterCondition(WithFriends(params.withFriends, params.userId))
         }
     }
 }
