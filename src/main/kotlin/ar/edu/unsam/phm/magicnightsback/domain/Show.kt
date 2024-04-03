@@ -14,9 +14,11 @@ class Show(
     val facility: Facility
 ) : Iterable() {
     var showImg = "${band.name.removeSpaces().lowercase()}.jpg"
-    private val pendingAttendees = mutableListOf<User>()
+    val pendingAttendees = mutableListOf<User>()
     val dates = mutableSetOf<ShowDate>()
-    private var rentability: RentabilityType = BasePrice()
+    var rentabilityType: RentabilityType = BasePrice()
+
+    fun rentability() = (totalSales()-baseCost())/totalSales()*100
 
     fun allCommentsDTO(): List<CommentDTO> {
         return allAttendees().flatMap {user ->
@@ -36,7 +38,7 @@ class Show(
     fun totalRating() = if (comments().size > 0) comments().sumOf { it.rating } / comments().size else 0.0
 
     fun changeRentability(newShowStatus: RentabilityType) {
-        this.rentability = newShowStatus
+        this.rentabilityType = newShowStatus
     }
 
     fun addPendingAttendee(user: User) {
@@ -55,7 +57,7 @@ class Show(
 
     private fun baseCost(): Double = band.cost + facility.cost()
 
-    private fun cost(): Double = baseCost() * rentability.getRentability()
+    private fun cost(): Double = baseCost() * rentabilityType.getRentability()
 
     private fun baseTicketPrice() = cost() / facility.getTotalSeatCapacity()
 

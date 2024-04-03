@@ -35,7 +35,7 @@ class ShowController {
         return show.toShowDTO(userId,comments)
     }
 
-    @GetMapping("/showDates/{id}/")
+    @GetMapping("/show_dates/{id}")
     @Operation(summary = "Devuelve los datos por cada fecha de un show según su id")
     fun getShowDatesById(@PathVariable id: Long): ShowDateDetailsDTO {
         val show = showService.getById(id)
@@ -64,5 +64,12 @@ class ShowController {
     )
     fun createShowDate(@PathVariable showId: Long, @PathVariable userId: Long, @RequestBody date: LocalDateTime) {
         showService.createShowDate(showId, userId, date)
+    }
+
+    @GetMapping("/admin_dashboard/shows/{id}")
+    @Operation(summary = "Devuelve los stats de un show según su id")
+    fun getAdminShowById(@PathVariable id: Long): ShowAdminDTO {
+        val show = showService.getById(id)
+        return show.toShowAdminDTO()
     }
 }
