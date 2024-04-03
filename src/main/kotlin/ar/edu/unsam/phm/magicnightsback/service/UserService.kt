@@ -84,7 +84,7 @@ class UserService {
         )
         val seatType = show.facility.getSeat(ticketData.seatTypeName).seatType
 
-        showDate.reserveSeat(seatType, ticketData.quantity)
+        showDate.reserveSeat(ticketData.seatTypeName, ticketData.quantity)
         repeat(ticketData.quantity) {
             user.pendingTickets.add(Ticket(show, showDate, seatType, ticketData.price))
         }

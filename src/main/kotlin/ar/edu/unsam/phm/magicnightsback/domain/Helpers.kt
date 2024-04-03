@@ -12,3 +12,14 @@ fun Int.throwErrorIfNegative(error: RuntimeException): Int {
     }
     return this
 }
+
+fun String.removeSpaces(): String {
+    return this.trim().replace("\\s+".toRegex(), "")
+}
+
+fun Int.throwIfGreaterThan(number: Int,msg: String): Int {
+    if (this > number){
+        throw BusinessException(msg)
+    }
+    return this
+}

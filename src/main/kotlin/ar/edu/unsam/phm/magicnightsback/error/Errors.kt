@@ -19,7 +19,9 @@ object showError {
     const val MSG_SETS_UNAVILABLES = "Excedio la cantidad de asientos disponibles"
     const val TICKET_CART_NOT_FOUND = "No se encontró la fecha en el show especificado"
 }
-
+object showDateError{
+    const val EXCEEDED_CAPACITY = "Excedio la capacidad maxima de asientos para esta ubicacion"
+}
 object RepositoryError {
     const val ID_NOT_FOUND = "El ID no corresponde con ningún elemento del repositorio"
 }

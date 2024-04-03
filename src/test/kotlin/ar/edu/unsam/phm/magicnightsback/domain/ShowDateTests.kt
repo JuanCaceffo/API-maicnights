@@ -9,8 +9,8 @@ import java.time.LocalDateTime
 class ShowDateTests : DescribeSpec({
     isolationMode = IsolationMode.InstancePerTest
 
-    val lowerLevel = SeatType(TheaterSeatType.LOWERLEVEL, 10)
-    val pullman = SeatType(TheaterSeatType.PULLMAN, 10)
+    val lowerLevel = SeatType(TheaterSeatType.LOWERLEVEL, AllSetTypeNames.valueOf(TheaterSeatType.LOWERLEVEL.name), 10)
+    val pullman = SeatType(TheaterSeatType.PULLMAN, AllSetTypeNames.valueOf(TheaterSeatType.PULLMAN.name),10)
 
     val theterWithFullAvailability = Facility(
         "Teatro GrandRex",
@@ -30,11 +30,11 @@ class ShowDateTests : DescribeSpec({
             showBase.addDate(date)
             val showDate = showBase.dates.first()
             //ACT
-            showDate.reserveSeat(TheaterSeatType.LOWERLEVEL, 5)
-            showDate.reserveSeat(TheaterSeatType.PULLMAN, 3)
+            showDate.reserveSeat(AllSetTypeNames.valueOf(TheaterSeatType.LOWERLEVEL.name), 5)
+            showDate.reserveSeat(AllSetTypeNames.valueOf(TheaterSeatType.PULLMAN.name), 3)
             //ASSERT
-            showDate.availableSeatsOf(TheaterSeatType.LOWERLEVEL) shouldBe 5
-            showDate.availableSeatsOf(TheaterSeatType.PULLMAN) shouldBe 7
+            showDate.availableSeatsOf(AllSetTypeNames.valueOf(TheaterSeatType.LOWERLEVEL.name)) shouldBe 5
+            showDate.availableSeatsOf(AllSetTypeNames.valueOf(TheaterSeatType.PULLMAN.name)) shouldBe 7
             showDate.totalAvailableSeatsOf() shouldBe 12
         }
     }

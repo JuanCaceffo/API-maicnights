@@ -8,11 +8,11 @@ import org.uqbar.geodds.Point
 class FacilityTests : DescribeSpec({
     isolationMode = IsolationMode.InstancePerTest
     describe("Tests Stadium") {
-        val upperLevel = SeatType(StadiumSeatType.UPPERLEVEL, 300)
-        val field = SeatType(StadiumSeatType.FIELD, 1000)
-        val box = SeatType(StadiumSeatType.BOX, 200)
-        val lowerLevel = SeatType(TheaterSeatType.LOWERLEVEL, 500)
-        val pullman = SeatType(TheaterSeatType.PULLMAN, 300)
+        val upperLevel = SeatType(StadiumSeatType.UPPERLEVEL,AllSetTypeNames.valueOf(StadiumSeatType.UPPERLEVEL.name), 300)
+        val field = SeatType(StadiumSeatType.FIELD,AllSetTypeNames.valueOf(StadiumSeatType.FIELD.name) , 1000)
+        val box = SeatType(StadiumSeatType.BOX,AllSetTypeNames.valueOf(StadiumSeatType.BOX.name) ,200)
+        val lowerLevel = SeatType(TheaterSeatType.LOWERLEVEL,AllSetTypeNames.valueOf(TheaterSeatType.LOWERLEVEL.name), 500)
+        val pullman = SeatType(TheaterSeatType.PULLMAN, AllSetTypeNames.valueOf(TheaterSeatType.PULLMAN.name),300)
 
         val stadium = Facility(
             name = "River Plate",
@@ -30,7 +30,7 @@ class FacilityTests : DescribeSpec({
         }
 
         it("El metodo getSeatCapacity devuelve la capacidad del tipo de asiento que recibe como parametro") {
-            stadium.getSeatCapacity(StadiumSeatType.FIELD) shouldBe 1000
+            stadium.getSeatCapacity(AllSetTypeNames.valueOf(StadiumSeatType.FIELD.name)) shouldBe 1000
         }
 
         it("El metodo getSeatCapacity devuelve la suma de capacidades de todos los tipos de asientos") {

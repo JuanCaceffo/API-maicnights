@@ -5,6 +5,7 @@ import ar.edu.unsam.phm.magicnightsback.error.FacilityError
 import ar.edu.unsam.phm.magicnightsback.error.InternalServerError
 import ar.edu.unsam.phm.magicnightsback.repository.Iterable
 import org.uqbar.geodds.Point
+import kotlin.enums.EnumEntries
 
 interface SeatTypes {
     val price: Double
@@ -65,7 +66,7 @@ class Facility(
         seats.add(seat)
     }
 
-    fun getAllSeatTypes() = seats.map { it.seatType }
+    fun getAllSeatTypesNames() = seats.map { it.name }
     fun removeSeatType(type: SeatType) {
         seats.remove(type)
     }
@@ -87,6 +88,7 @@ interface SeatStrategy {
     val fixedPrice: Double
     fun allowedSeat(seatTypeName: String): Boolean
 
+    fun allowedSeatsNames(): List<String>
     fun seatPrice(seatType: SeatType) = seatType.price()
     fun totalCost(): Double = fixedPrice + fixedCostVariant()
     fun fixedCostVariant(): Double = 0.0
@@ -96,12 +98,16 @@ class StadiumStrategy(
     override val fixedPrice: Double
 ) : SeatStrategy {
     override fun allowedSeat(seatTypeName: String) = StadiumSeatType.entries.any { it.name == seatTypeName }
+    override fun allowedSeatsNames(): List<String> = StadiumSeatType.entries.map { it.name }
+
 }
 
 class TheaterStrategy(
     var hasGoodAcoustics: Boolean = false
 ) : SeatStrategy {
     override fun allowedSeat(seatTypeName: String) = TheaterSeatType.entries.any { it.name == seatTypeName }
+
+    override fun allowedSeatsNames(): List<String> = TheaterSeatType.entries.map { it.name }
 
     override val fixedPrice: Double = 100000.0
     override fun fixedCostVariant(): Double = if (hasGoodAcoustics) 50000.0 else 0.0

@@ -95,7 +95,7 @@ class UserBoostrap(
                     smallShow,
                     smallShow.dates.elementAt(0),
                     pullman,
-                    smallShow.fullTicketPrice(pullman)
+                    smallShow.ticketPrice(pullman)
                 )
             )
             repeat(3) {
@@ -104,7 +104,7 @@ class UserBoostrap(
                         bigShow,
                         bigShow.dates.elementAt(1),
                         box,
-                        bigShow.fullTicketPrice(box)
+                        bigShow.ticketPrice(box)
                     )
                 )
             }
@@ -117,7 +117,7 @@ class UserBoostrap(
                         smallShow,
                         smallShow.dates.elementAt(1),
                         lowerlevel,
-                        smallShow.fullTicketPrice(lowerlevel)
+                        smallShow.ticketPrice(lowerlevel)
                     )
                 )
             }
@@ -126,7 +126,7 @@ class UserBoostrap(
                     bigShow,
                     bigShow.dates.elementAt(2),
                     box,
-                    bigShow.fullTicketPrice(box)
+                    bigShow.ticketPrice(box)
                 )
             )
         }
@@ -138,7 +138,7 @@ class UserBoostrap(
                         bestSmallShow,
                         bestSmallShow.dates.elementAt(3),
                         pullman,
-                        bestSmallShow.fullTicketPrice(pullman)
+                        bestSmallShow.ticketPrice(pullman)
                     )
                 )
             }
@@ -147,7 +147,7 @@ class UserBoostrap(
                     bigShow,
                     bigShow.dates.elementAt(0),
                     upperlevel,
-                    bigShow.fullTicketPrice(upperlevel)
+                    bigShow.ticketPrice(upperlevel)
                 )
             )
         }
@@ -158,7 +158,7 @@ class UserBoostrap(
                     smallShow,
                     smallShow.dates.elementAt(4),
                     pullman,
-                    smallShow.fullTicketPrice(pullman)
+                    smallShow.ticketPrice(pullman)
                 )
             )
             addTicket(
@@ -166,7 +166,7 @@ class UserBoostrap(
                     bigShow,
                     bigShow.dates.elementAt(2),
                     field,
-                    bigShow.fullTicketPrice(field)
+                    bigShow.ticketPrice(field)
 
                 )
             )
@@ -175,7 +175,7 @@ class UserBoostrap(
                     bestSmallShow,
                     bestSmallShow.dates.elementAt(3),
                     pullman,
-                    bestSmallShow.fullTicketPrice(pullman)
+                    bestSmallShow.ticketPrice(pullman)
                 )
             )
 
