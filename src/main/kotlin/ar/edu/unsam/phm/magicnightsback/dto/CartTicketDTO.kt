@@ -35,6 +35,6 @@ data class TicketCreateDTO(
     val showId: Long,
     val showDateId: Long,
     val price: Double,
-    val seatType: AllSetType,
+    val seatTypeName: AllSetTypeNames,
     val quantity: Int
 )

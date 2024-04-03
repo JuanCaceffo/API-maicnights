@@ -82,15 +82,11 @@ class UserService {
         val showDate = show.dates.elementAtOrNull(ticketData.showDateId.toInt()) ?: throw NotFoundException(
             showError.TICKET_CART_NOT_FOUND
         )
+        val seatType = show.facility.getSeat(ticketData.seatTypeName).seatType
 
-        show.facility.thorwInvalidSeatType(
-            ticketData.seatType,
-            InternalServerError(FacilityError.INVALID_SEAT_TYPE)
-        )
-
-        showDate.reserveSeat(ticketData.seatType, ticketData.quantity)
+        showDate.reserveSeat(seatType, ticketData.quantity)
         repeat(ticketData.quantity) {
-            user.pendingTickets.add(Ticket(show, showDate, ticketData.seatType, ticketData.price))
+            user.pendingTickets.add(Ticket(show, showDate, seatType, ticketData.price))
         }
     }
 }

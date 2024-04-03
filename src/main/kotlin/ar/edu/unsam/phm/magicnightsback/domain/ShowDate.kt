@@ -26,8 +26,8 @@ class ShowDate(
 
     fun getAllReservedSeats() = reservedSeats.map { it.value }.sum()
 
-    fun availableSeatsOf(seatType: SeatTypes): Int {
-        return facility.getSeatCapacity(seatType) - getReservedSeatsOf(seatType)
+    fun availableSeatsOf(seatTypeName: AllSetTypeNames): Int {
+        return facility.getSeatCapacity(seatTypeName) - getReservedSeatsOf(facility.getSeat(seatTypeName).seatType)
     }
 
     fun totalAvailableSeatsOf(): Int {
