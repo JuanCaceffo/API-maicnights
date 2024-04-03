@@ -40,8 +40,9 @@ class Show(
         dates.add(ShowDate(date, facility))
     }
 
-    fun friendsAttendeesProfileImages(userId: Long?) = userId?.let{allAttendees().filter { it.isMyFriend(userId) }.map{ it.profileImage }} ?: listOf()
+    fun friendsAttendeesProfileImages(userId: Long?) = userId?.let{friendsAttending(userId).map{ it.profileImage }} ?: listOf()
 
+    fun friendsAttending(userId: Long) = allAttendees().filter { it.isMyFriend(userId) }
     private fun baseCost(): Double = band.cost + facility.cost()
 
     private fun cost(): Double = baseCost() * rentability.getRentability()
@@ -55,10 +56,6 @@ class Show(
     fun allDates() = dates.map{ it.date }.toList().sortedBy { it }
 
     private fun allAttendees() = dates.flatMap { it.attendees }
-//    fun soldOutDates() = dates.filter{ it.isSoldOut() }.size
-//    fun ticketsSoldOfSeatType(seatType: SeatTypes) = dates.sumOf { it.getReservedSeatsOf(seatType) }
-//    fun totalTicketsSold() = facility.getAllSeatTypes().sumOf { ticketsSoldOfSeatType(it) }
-//    fun totalSales() = facility.getAllSeatTypes().sumOf { fullTicketPrice(it) * ticketsSoldOfSeatType(it) }
 
     //Validations
     private fun validateComment(showDate: ShowDate) {
@@ -67,7 +64,8 @@ class Show(
         }
     }
 
-    override fun validSearchCondition(value: String): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun validSearchCondition(value: String) =
+        Comparar.parcial(value, listOf(this.band.name)) ||
+        Comparar.parcial(value, listOf(this.facility.name)) ||
+        Comparar.parcial(value, listOf(this.name))
 }

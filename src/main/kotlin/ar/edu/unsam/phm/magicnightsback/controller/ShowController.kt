@@ -22,10 +22,18 @@ class ShowController {
     @Autowired
     lateinit var userService: UserService
 
+//    @GetMapping("/figuritas")
+//    @Operation(summary = "Devuelve todas las figuritas existentes en el sistema")
+//    fun getAll(
+//        params: BaseFilterParams
+//    ): List<FiguritaBaseDTO> {
+//        return figuritaService.getAll(FiguritaFilterParams(params.palabraClave))
+//    }
+
     @GetMapping("/shows")
     @Operation(summary = "Devuelve todos los disponibles")
-    fun getAll(@RequestParam(required = false, defaultValue = "-1") userId: Long): List<ShowDTO> {
-        return showService.getAll()
+    fun getAll(@RequestParam(required = false, defaultValue = "-1") userId: Long, params: BaseFilterParams): List<ShowDTO> {
+        return showService.getAll(params)
             .map { it.toShowDTO(userId) }
     }
 
