@@ -1,9 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
-import ar.edu.unsam.phm.magicnightsback.dto.UserDTO
-import ar.edu.unsam.phm.magicnightsback.dto.toDTO
-import ar.edu.unsam.phm.magicnightsback.dto.FriendDTO
-import ar.edu.unsam.phm.magicnightsback.dto.toFriendDTO
+import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.serializers.*
 import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
 import ar.edu.unsam.phm.magicnightsback.error.UserError
@@ -15,15 +12,25 @@ import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 class UserService {
     @Autowired
     lateinit var userRepository: UserRepository
-//    fun getUserPurchased(id: Long): List<PurchasedTicketDTO> {
-//        TODO("Not yet implemented")
-//    }
-//
-//    fun getUserPending(id: Long): List<PendingTicketDTO> {
-//        TODO("Not yet implemented")
-//    }
 
-    fun getById(userid: Long) = userRepository.getById(userid)
+    fun getTicketsCart(userId: Long): List<TicketCartDTO> {
+        val user = userRepository.getById(userId)
+
+        /*Mapeo todos los tickets en uno solo por show juntando el precio total, las fechas y
+        la cantidad de tickets para ese show*/
+        val distinctTickets = user.pendingTickets.distinctBy { it.show }
+        return distinctTickets.map { uniqueTicket ->
+            val ticketsSameShow = user.pendingTickets.filter { ticket -> ticket.show == uniqueTicket.show }
+            val totalPrice = ticketsSameShow.sumOf { ticket -> ticket.price }
+            val allDates = ticketsSameShow.map { ticket -> ticket.showDate.date }.distinct()
+            uniqueTicket.toCartDTO(userId, allDates, totalPrice, ticketsSameShow.size)
+        }
+    }
+
+    fun getUserPurchasedTickets(userId: Long): List<PurchsedTicketDTO>{
+        val user = userRepository.getById(userId)
+        return user.tickets.map { ticket -> (ticket.toPurchasedTicketDTO(userId)) }
+    }
 
     fun getUserFriends(id: Long): List<FriendDTO> {
         val friends = this.userRepository.getFriends(id)
@@ -56,7 +63,12 @@ class UserService {
         return userRepository.getById(id).credit
     }
 
-    fun updateUser(loginUser: UserDTO): UserDTO {
-        TODO("Not yet implemented")
+    fun updateUser(id:Long, loginUser: UserDTO) {
+        val userToUpdate = this.userRepository.getById(id)
+
+        userToUpdate.name = loginUser.name
+        userToUpdate.surname = loginUser.surname
+
+        this.userRepository.update(userToUpdate)
     }
 }
