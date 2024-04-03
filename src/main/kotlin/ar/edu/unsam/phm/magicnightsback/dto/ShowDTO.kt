@@ -15,7 +15,8 @@ data class ShowDTO(
     val prices: List<Double>,
     val dates: List<LocalDateTime>,
     val userImageNames: List<String>,
-    val comments: List<CommentDTO>
+    val comments: List<CommentDTO>,
+    val geolocation: String
 )
 
 data class ShowDateDetailsDTO (
@@ -56,6 +57,7 @@ fun Show.toShowDTO(userId: Long, comments: List<CommentDTO> = emptyList(), price
         this.allDates(),
         this.friendsAttendeesProfileImages(userId),
         comments,
+        this.facility.location.toString()
     )
 
 fun Show.toShowDateDetailsDTO(dateSeats: List<DateSeatsDTO>) =
