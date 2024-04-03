@@ -22,3 +22,8 @@ fun User.toDTO(): UserDTO {
         this.dni
     )
 }
+
+data class LoginUserDTO(
+    var username: String = "",
+    var password: String = "",
+)
