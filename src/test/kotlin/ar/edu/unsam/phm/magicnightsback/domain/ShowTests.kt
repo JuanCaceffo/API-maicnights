@@ -123,5 +123,25 @@ class ShowTests : DescribeSpec({
             showBase.soldOutDates() shouldBe 1
             showBase.dates.first().totalAvailableSeats() shouldBe 5
         }
+
+        it("Show debe devolver correctamente todos los tickets vendidos de todas las fechas") {
+            repeat(2){ showBase.addDate(LocalDateTime.now().plusDays(it.toLong())) }
+
+            showBase.dates.first().reserveSeat(TheaterSeatType.LOWERLEVEL, 10)
+            showBase.dates.first().reserveSeat(TheaterSeatType.PULLMAN, 5)
+            showBase.dates.last().reserveSeat(TheaterSeatType.PULLMAN, 5)
+
+            showBase.totalTicketsSold() shouldBe 20
+        }
+
+        it("Show debe devolver correctamente el total vendido de todas las fechas") {
+            repeat(2){ showBase.addDate(LocalDateTime.now().plusDays(it.toLong())) }
+
+            showBase.dates.first().reserveSeat(TheaterSeatType.LOWERLEVEL, 10)
+            showBase.dates.first().reserveSeat(TheaterSeatType.PULLMAN, 5)
+            showBase.dates.last().reserveSeat(TheaterSeatType.PULLMAN, 5)
+
+            showBase.totalSales() shouldBe (14400.0 * 10 + 19400.0 * 10)
+        }
     }
 })
