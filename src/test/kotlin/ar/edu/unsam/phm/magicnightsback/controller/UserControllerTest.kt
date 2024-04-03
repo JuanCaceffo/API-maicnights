@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName;
@@ -49,6 +48,25 @@ class UserControllerTest(
     val lowerLevel = SeatType(TheaterSeatType.LOWERLEVEL, 500)
     val pullman = SeatType(TheaterSeatType.PULLMAN, 300)
 
+    val show = Show(
+        "Cachenged!!",
+        Band(
+            "La Vela Puerca",
+            10000.0
+        ),
+        Facility(
+            name = "Gran Rex",
+            location = Point(-34.60356, -58.38013),
+            seatStrategy = TheaterStrategy()
+        ).apply {
+            addSeatType(pullman)
+            addSeatType(lowerLevel)
+        }
+    ).apply {
+        repeat(5) { addDate(generalDateTime.plusDays(11 + it.toLong())) }
+    }
+    val ticket = Ticket(show, show.dates.first(), TheaterSeatType.PULLMAN, show.ticketPrice(TheaterSeatType.PULLMAN))
+
     @BeforeAll
     fun init() {
         mapper.registerModules(JavaTimeModule())
@@ -70,25 +88,7 @@ class UserControllerTest(
                 profileImage = ""
             )
         )
-        showRepository.create(
-            Show(
-                "Cachenged!!",
-                Band(
-                    "La Vela Puerca",
-                    10000.0
-                ),
-                Facility(
-                    name = "Gran Rex",
-                    location = Point(-34.60356, -58.38013),
-                    seatStrategy = TheaterStrategy()
-                ).apply {
-                    addSeatType(pullman)
-                    addSeatType(lowerLevel)
-                }
-            ).apply {
-                repeat(5) { addDate(generalDateTime.plusDays(11 + it.toLong())) }
-            }
-        )
+        showRepository.create(show)
     }
 
     @AfterAll
@@ -97,16 +97,14 @@ class UserControllerTest(
         showBoostrap.afterPropertiesSet()
     }
 
+    fun userWithPenddingTicket(){
+        val user = userRepository.getById(0)
+        user.pendingTickets.add(ticket)
+    }
 
     @Test
     fun `Dado un endpoint para obtener los tickets del carrito de un usuario con un ticket reservado funciona bien`() {
-        //arrange
-        val user = userRepository.getById(0)
-        val show = showRepository.getById(0)
-        val ticket = Ticket(show, show.dates.first(), TheaterSeatType.PULLMAN, show.ticketPrice(TheaterSeatType.PULLMAN))
-        //active
-        user.pendingTickets.add(ticket)
-
+        userWithPenddingTicket()
         //assert
         mockMvc.perform(
             MockMvcRequestBuilders
@@ -132,15 +130,10 @@ class UserControllerTest(
 
     @Test
     fun `Dado un endpoint para obtener los tickets del carrito de un mismo show con funciones diferentes de un usuario funciona bien`() {
-        //arrange
+        userWithPenddingTicket()
         val user = userRepository.getById(0)
-        val show = showRepository.getById(0)
-        val ticket = Ticket(show, show.dates.first(), TheaterSeatType.LOWERLEVEL, show.ticketPrice(TheaterSeatType.LOWERLEVEL))
         val ticketDifferentDate = Ticket(show, show.dates.last(), TheaterSeatType.LOWERLEVEL, show.ticketPrice(TheaterSeatType.LOWERLEVEL))
 
-
-        //active
-        user.pendingTickets.add(ticket)
         user.pendingTickets.add(ticketDifferentDate)
 
         //assert
@@ -167,9 +160,9 @@ class UserControllerTest(
     }
 
     @Test
-    fun `Un usuario reserva 1 ticket para un show de forma exitosa`(){
+    fun `Un usuario reserva 1 ticket para un show de forma exitosa`() {
         val show = showRepository.getById(0)
-        val data = TicketCreateDTO(0,0,show.ticketPrice(TheaterSeatType.PULLMAN),AllSetTypeNames.PULLMAN,1)
+        val data = TicketCreateDTO(0, 0, show.ticketPrice(TheaterSeatType.PULLMAN), AllSetTypeNames.PULLMAN, 1)
 
         mockMvc.perform(
             MockMvcRequestBuilders
@@ -180,10 +173,11 @@ class UserControllerTest(
             MockMvcResultMatchers.status().isOk
         )
     }
+
     @Test
-    fun `Un usuario reserva una cantidad no permitida de tickets para un show y falla`(){
+    fun `Un usuario reserva una cantidad no permitida de tickets para un show y falla`() {
         val show = showRepository.getById(0)
-        val data = TicketCreateDTO(0,0,show.ticketPrice(TheaterSeatType.PULLMAN),AllSetTypeNames.PULLMAN,1000)
+        val data = TicketCreateDTO(0, 0, show.ticketPrice(TheaterSeatType.PULLMAN), AllSetTypeNames.PULLMAN, 1000)
 
         mockMvc.perform(
             MockMvcRequestBuilders
@@ -194,10 +188,11 @@ class UserControllerTest(
             MockMvcResultMatchers.status().is4xxClientError
         )
     }
+
     @Test
-    fun `Un usuario reserva un ticket con un asiento no disponible para ese show y falla`(){
+    fun `Un usuario reserva un ticket con un asiento no disponible para ese show y falla`() {
         val show = showRepository.getById(0)
-        val data = TicketCreateDTO(0,0,show.ticketPrice(TheaterSeatType.PULLMAN),AllSetTypeNames.UPPERLEVEL,1000)
+        val data = TicketCreateDTO(0, 0, show.ticketPrice(TheaterSeatType.PULLMAN), AllSetTypeNames.UPPERLEVEL, 1000)
 
         mockMvc.perform(
             MockMvcRequestBuilders
@@ -206,6 +201,19 @@ class UserControllerTest(
                 .content(mapper.writeValueAsString(data))
         ).andExpect(
             MockMvcResultMatchers.status().is4xxClientError
+        )
+    }
+
+    @Test
+    fun `Un usaurio puede eliminar todos los tickets que tiene reservados`() {
+        userWithPenddingTicket()
+
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .put("/user-profile/0/remove-reserve-tickets")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+            MockMvcResultMatchers.status().isOk
         )
     }
 }
