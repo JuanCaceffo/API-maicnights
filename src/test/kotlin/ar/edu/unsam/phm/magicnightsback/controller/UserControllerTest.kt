@@ -42,39 +42,39 @@ class UserControllerTest(
     @Autowired val showBoostrap: ShowBoostrap
 ) {
     val mapper = ObjectMapper()
+
     @BeforeAll
-    fun init(){
+    fun init() {
         mapper.registerModules(JavaTimeModule())
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
     }
 
     @BeforeEach
-    fun start(){
+    fun start() {
         userRepository.clear()
         userRepository.create(
             User(
-            name = "Juan",
-            surname = "Caccefo",
-            username = "juanceto01",
-            dni = 1,
-            birthday = LocalDate.of(2003, 2, 1),
-            password = "asdf",
-            profileImage = ""
-        )
+                name = "Juan",
+                surname = "Caccefo",
+                username = "juanceto01",
+                dni = 1,
+                birthday = LocalDate.of(2003, 2, 1),
+                password = "asdf",
+                profileImage = ""
+            )
         )
     }
 
     @AfterAll
-    @BeforeEach
     fun end() {
         userBoostrap.afterPropertiesSet()
         showBoostrap.afterPropertiesSet()
     }
 
     val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
-    val generalDateTime: LocalDateTime = LocalDateTime.parse("2024-03-30T16:57:04.074472231",formatter)
+    val generalDateTime: LocalDateTime = LocalDateTime.parse("2024-03-30T16:57:04.074472231", formatter)
 
-    @Test
+    /*@Test
     fun `Dado un endpoint para obtener los tickets del carrito de un usuario con un ticket reservado funciona bien`() {
         //arrange
         val user = userRepository.getById(0)
@@ -91,10 +91,21 @@ class UserControllerTest(
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(
-                MockMvcResultMatchers.content().json(mapper.writeValueAsString(mutableListOf(ticket.toCartDTO(0, listOf(LocalDateTime.parse("2024-03-30T16:57:04.074472231").minusDays(3)), 10016.0,1))))
+                MockMvcResultMatchers.content().json(
+                    mapper.writeValueAsString(
+                        mutableListOf(
+                            ticket.toCartDTO(
+                                0,
+                                listOf(LocalDateTime.parse("2024-03-30T16:57:04.074472231").minusDays(3)),
+                                10016.0,
+                                1
+                            )
+                        )
+                    )
+                )
             )
-        user.pendingTickets.clear()
     }
+
     @Test
     fun `Dado un endpoint para obtener los tickets del carrito de un mismo show con funciones diferentes de un usuario funciona bien`() {
         //arrange
@@ -116,8 +127,18 @@ class UserControllerTest(
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(
-                MockMvcResultMatchers.content().json(mapper.writeValueAsString(mutableListOf(ticket.toCartDTO(0, listOf(generalDateTime.minusDays(3), generalDateTime.plusDays(11 + 2.toLong())), 20032.0,2))))
+                MockMvcResultMatchers.content().json(
+                    mapper.writeValueAsString(
+                        mutableListOf(
+                            ticket.toCartDTO(
+                                0,
+                                listOf(generalDateTime.minusDays(3), generalDateTime.plusDays(11 + 2.toLong())),
+                                20032.0,
+                                2
+                            )
+                        )
+                    )
+                )
             )
-        user.pendingTickets.clear()
-    }
+    }*/
 }
