@@ -100,7 +100,7 @@ class UserControllerTest(
         val show = showRepository.getById(0)
         val ticket = Ticket(show, show.dates.first(), TheaterSeatType.PULLMAN, show.ticketPrice(TheaterSeatType.PULLMAN))
         //active
-        user.pendingTickets.add(ticket)
+        user.reservedTickets.add(ticket)
         //assert
         mockMvc.perform(
             MockMvcRequestBuilders
@@ -131,8 +131,8 @@ class UserControllerTest(
         val ticket = Ticket(show, show.dates.first(), TheaterSeatType.LOWERLEVEL, show.ticketPrice(TheaterSeatType.LOWERLEVEL))
         val ticketDifferentDate = Ticket(show, show.dates.last(), TheaterSeatType.LOWERLEVEL, show.ticketPrice(TheaterSeatType.LOWERLEVEL))
         //active
-        user.pendingTickets.add(ticket)
-        user.pendingTickets.add(ticketDifferentDate)
+        user.reservedTickets.add(ticket)
+        user.reservedTickets.add(ticketDifferentDate)
         //assert
         mockMvc.perform(
             MockMvcRequestBuilders
@@ -204,7 +204,7 @@ class UserControllerTest(
         val show = showRepository.getById(0)
         val ticket = Ticket(show, show.dates.first(), TheaterSeatType.PULLMAN, show.ticketPrice(TheaterSeatType.PULLMAN))
         //active
-        user.pendingTickets.add(ticket)
+        user.reservedTickets.add(ticket)
 
         mockMvc.perform(
             MockMvcRequestBuilders

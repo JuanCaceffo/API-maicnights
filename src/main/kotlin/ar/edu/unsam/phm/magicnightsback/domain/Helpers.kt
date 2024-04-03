@@ -17,8 +17,8 @@ fun String.removeSpaces(): String {
     return this.trim().replace("\\s+".toRegex(), "")
 }
 
-fun Int.throwIfGreaterThan(number: Int,msg: String): Int {
-    if (this > number){
+fun Number.throwIfGreaterThan(number: Number,msg: String): Number {
+    if (this.toFloat() > number.toFloat()){
         throw BusinessException(msg)
     }
     return this

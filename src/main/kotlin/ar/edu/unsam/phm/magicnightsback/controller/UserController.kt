@@ -26,7 +26,7 @@ class UserController {
     @Autowired
     lateinit var userService: UserService
 
-    @GetMapping("/user-profile/{userId}/pending-tickets")
+    @GetMapping("/user-profile/{userId}/reserved-tickets")
     @Operation(summary = "Permite obtener los tickets por show que el usuario tiene reservados en el carrito")
     fun getUserTicketsCart(@PathVariable userId: Long): List<TicketCartDTO> {
         return userService.getTicketsCart(userId)
@@ -51,6 +51,17 @@ class UserController {
         userService.removeReserveTickets(userId)
     }
 
+    @PutMapping("/user-profile/{userId}/purchase-reserved-tickets")
+    @Operation(summary = "Permite comprar todos los tickets reservados")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Ok"),
+            ApiResponse(responseCode = "400", description = UserError.MSG_NOT_ENOUGH_CREDIT),
+        ]
+    )
+    fun purchaseReservedTickets(@PathVariable userId: Long){
+        userService.purchaseReservedTickets(userId)
+    }
     @GetMapping("/user_profile/{userId}/purchased_tickets")
     fun getUserPurchasedTickets(@PathVariable userId: Long): List<PurchsedTicketDTO> {
         return userService.getUserPurchasedTickets(userId)
@@ -103,9 +114,8 @@ class UserController {
     }
 
     @PutMapping("/user_profile/{id}/add_credit")
-    fun addUserCredit(@PathVariable id: Long, @RequestBody creditToAdd: Map<String, Double>): Double {
-        val credit = creditToAdd["credit"]!!
-        return userService.addCreditToUser(id, credit)
+    fun addUserCredit(@PathVariable id: Long, @RequestBody creditToAdd: Double): Double {
+        return userService.addCreditToUser(id, creditToAdd)
     }
 
 }

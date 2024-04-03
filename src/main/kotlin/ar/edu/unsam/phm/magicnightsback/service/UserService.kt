@@ -1,6 +1,5 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
-import ar.edu.unsam.phm.magicnightsback.domain.AllSetTypeNames
 import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.error.*
@@ -22,9 +21,9 @@ class UserService {
 
         /*Mapeo todos los tickets en uno solo por show juntando el precio total, las fechas y
         la cantidad de tickets para ese show*/
-        val distinctTickets = user.pendingTickets.distinctBy { it.show }
+        val distinctTickets = user.reservedTickets.distinctBy { it.show }
         return distinctTickets.map { uniqueTicket ->
-            val ticketsSameShow = user.pendingTickets.filter { ticket -> ticket.show == uniqueTicket.show }
+            val ticketsSameShow = user.reservedTickets.filter { ticket -> ticket.show == uniqueTicket.show }
             val totalPrice = ticketsSameShow.sumOf { ticket -> ticket.price }
             val allDates = ticketsSameShow.map { ticket -> ticket.showDate.date }.distinct()
             uniqueTicket.toCartDTO(userId, allDates, totalPrice, ticketsSameShow.size)
@@ -88,7 +87,7 @@ class UserService {
 
         showDate.reserveSeat(seatType, ticketData.quantity)
         repeat(ticketData.quantity) {
-            user.pendingTickets.add(Ticket(show, showDate, seatType, ticketData.price))
+            user.reservedTickets.add(Ticket(show, showDate, seatType, ticketData.price))
         }
     }
 
@@ -96,10 +95,14 @@ class UserService {
     fun removeReserveTickets(userId: Long) {
         val user = userRepository.getById(userId)
 
-        user.pendingTickets.forEach {
+        user.reservedTickets.forEach {
             ticket -> ticket.showDate.releaseSeat(ticket.seatType,1)
-            println(ticket.showDate.getAllReservedSeats())
         }
-        user.pendingTickets.clear()
+        user.reservedTickets.clear()
+    }
+
+    fun purchaseReservedTickets(userId: Long) {
+        val user = userRepository.getById(userId)
+        user.buyReservedTickets()
     }
 }
