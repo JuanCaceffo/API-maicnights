@@ -15,8 +15,4 @@ class Comment(
     init {
         require(rating in 0.0..5.0) { BusinessException(ShowCommentError.INVALID_RATTING) }
     }
-
-    override fun validSearchCondition(value: String): Boolean {
-        TODO("Not yet implemented")
-    }
 }

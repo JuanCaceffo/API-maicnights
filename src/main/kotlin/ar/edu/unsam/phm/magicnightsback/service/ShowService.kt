@@ -34,8 +34,8 @@ class ShowService {
 
     fun createFilter(params: BaseFilterParams): Filter<Show>{
         return Filter<Show>().apply {
-            addFilterCondition(BandFilter(params.bandKeyword, showRepository))
-            addFilterCondition(FacilityFilter(params.facilityKeyword, showRepository))
+            addFilterCondition(BandFilter(params.bandKeyword))
+            addFilterCondition(FacilityFilter(params.facilityKeyword))
             addFilterCondition(WithFriends(params.withFriends, params.userId))
         }
     }

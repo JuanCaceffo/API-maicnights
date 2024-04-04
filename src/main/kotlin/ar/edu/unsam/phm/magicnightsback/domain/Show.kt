@@ -63,8 +63,4 @@ class Show(
             throw BusinessException(showError.MSG_DATE_NOT_PASSED)
         }
     }
-
-    override fun validSearchCondition(value: String): Boolean {
-        TODO ("not implemented yet")
-    }
 }

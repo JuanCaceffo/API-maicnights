@@ -68,9 +68,6 @@ class User(
     }
 
     ///// VALIDATORS ///////////////////////////////////////////
-    override fun validSearchCondition(value: String): Boolean {
-        TODO("Not yet implemented")
-    }
 
     fun throwIfNotAdmin(msg: String) {
         //TODO: cambiar a autenthicationException

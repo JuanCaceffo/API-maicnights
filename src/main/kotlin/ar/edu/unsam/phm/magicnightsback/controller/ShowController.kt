@@ -24,9 +24,14 @@ class ShowController {
 
     @GetMapping("/shows")
     @Operation(summary = "Devuelve todos los disponibles")
-    fun getAll(params: BaseFilterParams): List<ShowDTO> {
+    fun getAll(@RequestParam(required = false, defaultValue = "-1") userId: Long,
+               @RequestParam(name = "bandKeyword", required = false, defaultValue = "") bandKeyword: String,
+               @RequestParam(name = "facilityKeyword", required = false, defaultValue = "") facilityKeyword: String,
+               @RequestParam(name = "withFriends", required = false, defaultValue = "false") withFriends: Boolean): List<ShowDTO> {
+
+        val params = BaseFilterParams(userId, bandKeyword, facilityKeyword, withFriends)
         return showService.getAll(params)
-            .map { it.toShowDTO(params.userId) }
+            .map { it.toShowDTO(userId) }
     }
 
     @PostMapping("/show/{showId}/create-date/user/{userId}")

@@ -21,25 +21,56 @@ class FacilityBoostrap(
     val pullman = SeatType(TheaterSeatType.PULLMAN, 300)
 
     private val seatStrategy = mapOf(
-        "theaterStrategyWithBadAccustics" to TheaterStrategy(),
+        "theaterStrategyWithBadAccoustics" to TheaterStrategy(),
         "stadiumStrategyCheap" to StadiumStrategy(10000.0),
-        "theaterStrategyWithAccustics" to TheaterStrategy(true)
+        "theaterStrategyWithAccoustics" to TheaterStrategy(true),
+        "stadiumStrategyExpensive" to StadiumStrategy(80000.0),
     )
 
     val facilities = mapOf(
         "GranRex" to Facility(
             name = "Gran Rex",
             location = Point(-34.60356, -58.38013),
-            seatStrategy = seatStrategy["theaterStrategyWithAccustics"]!!
-        ), "River" to Facility(
+            seatStrategy = seatStrategy["theaterStrategyWithAccoustics"]!!
+        ),
+        "River" to Facility(
             name = "River Plate",
             location = Point(-34.54612, -58.45004),
             seatStrategy = seatStrategy["stadiumStrategyCheap"]!!,
-        ), "MovistarArena" to Facility(
+        ),
+        "MovistarArena" to Facility(
             name = "Movistar Arena",
             location = Point(-34.63579, -58.36527),
-            seatStrategy = seatStrategy["theaterStrategyWithBadAccustics"]!!,
+            seatStrategy = seatStrategy["theaterStrategyWithBadAccoustics"]!!,
+        ),
+        "TeatroColon" to Facility(
+            name = "Teatro Colon",
+            location = Point(-34.60188, -58.38336),
+            seatStrategy = seatStrategy["theaterStrategyWithAccoustics"]!!
+        ),
+        "LunaPark" to Facility(
+            name = "Luna Park",
+            location = Point(-34.60766, -58.37267),
+            seatStrategy = seatStrategy["stadiumStrategyCheap"]!!
+        ),
+        "HipodromoDePalermo" to Facility(
+            name = "Hipodromo de Palermo",
+            location = Point(-34.57802, -58.42675),
+            seatStrategy = seatStrategy["stadiumStrategyExpensive"]!!
+        ),
+        "TeatroOpera" to Facility(
+            name = "Teatro Opera",
+            location = Point(-34.61092, -58.37287),
+            seatStrategy = seatStrategy["theaterStrategyWithAccoustics"]!!
+        ),
+        "LaBombonera" to Facility(
+            name = "La Bombonera",
+            location = Point(-34.63536, -58.36419),
+            seatStrategy = seatStrategy["stadiumStrategyExpensive"]!!
         )
+
+
+
     )
 
     fun addSeats() {
@@ -55,6 +86,24 @@ class FacilityBoostrap(
         facilities["MovistarArena"]!!.apply {
             addSeatType(pullman)
             addSeatType(lowerLevel)
+        }
+        facilities["TeatroColon"]!!.apply {
+            addSeatType(pullman)
+            addSeatType(lowerLevel)
+        }
+        facilities["HipodromoDePalermo"]!!.apply {
+            addSeatType(upperLevel)
+            addSeatType(field)
+            addSeatType(box)
+        }
+        facilities["TeatroOpera"]!!.apply {
+            addSeatType(pullman)
+            addSeatType(lowerLevel)
+        }
+        facilities["LaBombonera"]!!.apply {
+            addSeatType(upperLevel)
+            addSeatType(field)
+            addSeatType(box)
         }
     }
 

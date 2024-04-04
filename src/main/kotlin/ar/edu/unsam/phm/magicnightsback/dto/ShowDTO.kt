@@ -29,3 +29,10 @@ fun Show.toShowDTO(userId: Long) =
         this.allDates(),
         this.friendsAttendeesProfileImages(userId)
     )
+data class CommentDTO(
+    val userImg: String,
+    val userName: String,
+    val text: String,
+    val rating: Double,
+    val date: LocalDateTime
+)

@@ -19,22 +19,53 @@ class ShowBoostrap(
 ) : InitializingBean {
 
     val shows = mapOf(
-        "SmallShow" to Show(
-            "Cachenged!!",
+        "LaVelaPuerca_GranRex" to Show(
+            "Cachenged!! at Gran Rex",
             bandBoostrap.bands["LaVelaPuerca"]!!,
             facilityBoostrap.facilities["GranRex"]!!
         ),
-        "BigShow" to Show(
-            "4 You",
+        "LaVelaPuerca_TeatroColon" to Show(
+            "Cachenged!! at Teatro Colon",
+            bandBoostrap.bands["LaVelaPuerca"]!!,
+            facilityBoostrap.facilities["TeatroColon"]!!
+        ),
+        "PearlJam_River" to Show(
+            "4 You at River Plate",
             bandBoostrap.bands["PearlJam"]!!,
             facilityBoostrap.facilities["River"]!!
         ),
-        "BestSmallShow" to Show(
-            "Demon of Hell Rise Tour",
+        "PearlJam_LaBombonera" to Show(
+            "4 You at La Bombonera",
+            bandBoostrap.bands["PearlJam"]!!,
+            facilityBoostrap.facilities["LaBombonera"]!!
+        ),
+        "AcDc_MovistarArena" to Show(
+            "Demon of Hell Rise Tour at Movistar Arena",
             bandBoostrap.bands["AcDc"]!!,
             facilityBoostrap.facilities["MovistarArena"]!!
         ),
+        "AcDc_TeatroOpera" to Show(
+            "Demon of Hell Rise Tour at Teatro Opera",
+            bandBoostrap.bands["AcDc"]!!,
+            facilityBoostrap.facilities["TeatroOpera"]!!
+        ),
+        "LosRedondos_HipodromoDePalermo" to Show(
+            "Los Redondos at Hipódromo de Palermo",
+            bandBoostrap.bands["LosRedondos"]!!,
+            facilityBoostrap.facilities["HipodromoDePalermo"]!!
+        ),
+        "OneDirection_LunaPark" to Show(
+            "One Direction at Luna Park",
+            bandBoostrap.bands["OneDirection"]!!,
+            facilityBoostrap.facilities["LunaPark"]!!
+        ),
+        "Queen_GranRex" to Show(
+            "Queen at Gran Rex",
+            bandBoostrap.bands["Queen"]!!,
+            facilityBoostrap.facilities["GranRex"]!!
+        )
     )
+
 
     fun createShows() {
         shows.values.forEach { showRepository.apply { create(it) } }
@@ -42,18 +73,44 @@ class ShowBoostrap(
 
     fun createShowDates() {
         val generalDateTime = LocalDateTime.parse("2024-03-30T16:57:04.074472231")
-        shows["SmallShow"]!!.apply {
-            repeat(5) { addDate(generalDateTime.plusDays(11 + it.toLong())) }
-        }
-        shows["BigShow"]!!.apply {
-            addDate(generalDateTime.minusDays(3))
-            repeat(3) { addDate(generalDateTime.plusDays(11 + it.toLong())) }
-        }
-        shows["BestSmallShow"]!!.apply {
+        shows["LaVelaPuerca_GranRex"]!!.apply {
             repeat(2) { addDate(generalDateTime.minusDays(3 + it.toLong())) }
-            repeat(3) { addDate(generalDateTime.plusDays(11 + it.toLong())) }
+            repeat(3) { addDate(generalDateTime.minusDays(11 + it.toLong())) }
+        }
+        shows["LaVelaPuerca_TeatroColon"]!!.apply {
+            repeat(2) { addDate(generalDateTime.minusDays(5 + it.toLong())) }
+            repeat(3) { addDate(generalDateTime.plusDays(14 + it.toLong())) }
+        }
+        shows["PearlJam_River"]!!.apply {
+            repeat(1) { addDate(generalDateTime.minusDays(7 + it.toLong())) }
+            repeat(1) { addDate(generalDateTime.plusDays(10 + it.toLong())) }
+        }
+        shows["PearlJam_LaBombonera"]!!.apply {
+            repeat(3) { addDate(generalDateTime.minusDays(10 + it.toLong())) }
+            repeat(3) { addDate(generalDateTime.plusDays(12 + it.toLong())) }
+        }
+        shows["AcDc_MovistarArena"]!!.apply {
+            repeat(2) { addDate(generalDateTime.minusDays(2 + it.toLong())) }
+            repeat(1) { addDate(generalDateTime.plusDays(13 + it.toLong())) }
+        }
+        shows["AcDc_TeatroOpera"]!!.apply {
+            repeat(2) { addDate(generalDateTime.minusDays(4 + it.toLong())) }
+            repeat(3) { addDate(generalDateTime.plusDays(15 + it.toLong())) }
+        }
+        shows["LosRedondos_HipodromoDePalermo"]!!.apply {
+            repeat(1) { addDate(generalDateTime.minusDays(8 + it.toLong())) }
+            repeat(3) { addDate(generalDateTime.plusDays(9 + it.toLong())) }
+        }
+        shows["OneDirection_LunaPark"]!!.apply {
+            repeat(2) { addDate(generalDateTime.minusDays(6 + it.toLong())) }
+            repeat(4) { addDate(generalDateTime.plusDays(16 + it.toLong())) }
+        }
+        shows["Queen_GranRex"]!!.apply {
+            repeat(2) { addDate(generalDateTime.minusDays(1 + it.toLong())) }
+            repeat(3) { addDate(generalDateTime.minusDays(17 + it.toLong())) }
         }
     }
+
 
     override fun afterPropertiesSet() {
         println("Show creation process starts")

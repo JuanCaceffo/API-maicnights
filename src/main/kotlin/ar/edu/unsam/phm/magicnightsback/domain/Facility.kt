@@ -25,9 +25,6 @@ class SeatType(
     val quantity: Int
 ) : Iterable() {
     fun price() = seatType.price
-    override fun validSearchCondition(value: String): Boolean {
-        TODO("Not yet implemented")
-    }
 }
 
 class Facility(
@@ -49,9 +46,6 @@ class Facility(
     fun getAllSeatTypes() = seats.map { it.seatType }
     fun removeSeatType(type: SeatType) {
         seats.remove(type)
-    }
-    override fun validSearchCondition(value: String): Boolean {
-        return Comparar.parcial(value, listOf(this.name))
     }
 }
 

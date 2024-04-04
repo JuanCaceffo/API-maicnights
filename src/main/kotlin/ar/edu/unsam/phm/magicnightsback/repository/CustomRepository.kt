@@ -9,8 +9,6 @@ abstract class Iterable {
     fun id(newId: Long) {
         id = newId
     }
-
-    abstract fun validSearchCondition(value: String): Boolean
 }
 
 @Repository
@@ -48,9 +46,5 @@ class CustomRepository<T : Iterable> {
 
     fun getById(id: Long): T {
         return elements[id] ?: throw NotFoundException(RepositoryError.ID_NOT_FOUND)
-    }
-
-    fun search(value: String): List<T> {
-        return elements.values.filter { it.validSearchCondition(value) }
     }
 }
