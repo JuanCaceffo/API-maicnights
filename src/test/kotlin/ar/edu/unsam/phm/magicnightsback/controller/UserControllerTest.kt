@@ -107,7 +107,7 @@ class UserControllerTest(
         //assert
         mockMvc.perform(
             MockMvcRequestBuilders
-                .get("/user-profile/0/reserved-tickets")
+                .get("/user/0/reserved-tickets")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -141,7 +141,7 @@ class UserControllerTest(
         //assert
         mockMvc.perform(
             MockMvcRequestBuilders
-                .get("/user-profile/0/reserved-tickets")
+                .get("/user/0/reserved-tickets")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -167,7 +167,7 @@ class UserControllerTest(
         val data = TicketCreateDTO(0,0,show.ticketPrice(TheaterSeatType.PULLMAN),AllSetTypeNames.PULLMAN,1)
         mockMvc.perform(
             MockMvcRequestBuilders
-                .put("/user-profile/0/reserve-tickets")
+                .put("/user/0/reserve-tickets")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(data))
         ).andExpect(
@@ -180,7 +180,7 @@ class UserControllerTest(
         val data = TicketCreateDTO(0,0,show.ticketPrice(TheaterSeatType.PULLMAN),AllSetTypeNames.PULLMAN,1000)
         mockMvc.perform(
             MockMvcRequestBuilders
-                .put("/user-profile/0/reserve-tickets")
+                .put("/user/0/reserve-tickets")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(data))
         ).andExpect(
@@ -193,7 +193,7 @@ class UserControllerTest(
         val data = TicketCreateDTO(0,0,show.ticketPrice(TheaterSeatType.PULLMAN),AllSetTypeNames.UPPERLEVEL,1000)
         mockMvc.perform(
             MockMvcRequestBuilders
-                .put("/user-profile/0/reserve-tickets")
+                .put("/user/0/reserve-tickets")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(data))
         ).andExpect(
@@ -208,7 +208,7 @@ class UserControllerTest(
 
         mockMvc.perform(
             MockMvcRequestBuilders
-                .put("/user-profile/0/remove-reserved-tickets")
+                .put("/user/0/remove-reserved-tickets")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(
             MockMvcResultMatchers.status().isOk
@@ -223,7 +223,7 @@ class UserControllerTest(
 
         mockMvc.perform(
             MockMvcRequestBuilders
-                .put("/user-profile/0/purchase-reserved-tickets")
+                .put("/user/0/purchase-reserved-tickets")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -234,7 +234,7 @@ class UserControllerTest(
 
         mockMvc.perform(
             MockMvcRequestBuilders
-                .put("/user-profile/0/purchase-reserved-tickets")
+                .put("/user/0/purchase-reserved-tickets")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(MockMvcResultMatchers.status().is4xxClientError)
