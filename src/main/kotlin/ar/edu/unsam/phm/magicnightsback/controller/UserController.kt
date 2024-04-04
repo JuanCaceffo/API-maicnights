@@ -9,7 +9,7 @@ import ar.edu.unsam.phm.magicnightsback.dto.PurchsedTicketDTO
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.error.showDateError
 import ar.edu.unsam.phm.magicnightsback.error.showError
-import ar.edu.unsam.phm.magicnightsback.serializers.*
+import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.service.*
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content

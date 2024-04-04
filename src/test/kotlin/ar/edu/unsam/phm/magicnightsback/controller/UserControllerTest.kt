@@ -1,6 +1,5 @@
 package ar.edu.unsam.phm.magicnightsback.controller;
 
-
 import ar.edu.unsam.phm.magicnightsback.boostrap.ShowBoostrap
 import ar.edu.unsam.phm.magicnightsback.boostrap.UserBoostrap
 import ar.edu.unsam.phm.magicnightsback.domain.*

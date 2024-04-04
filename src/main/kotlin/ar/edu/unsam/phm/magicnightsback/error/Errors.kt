@@ -21,6 +21,8 @@ object showError {
 }
 object showDateError{
     const val EXCEEDED_CAPACITY = "Excedio la capacidad maxima de asientos para esta ubicacion"
+    const val MSG_DATE_NOT_FOUND = "La fecha que intento buscar no existe"
+
 }
 object RepositoryError {
     const val ID_NOT_FOUND = "El ID no corresponde con ningún elemento del repositorio"
