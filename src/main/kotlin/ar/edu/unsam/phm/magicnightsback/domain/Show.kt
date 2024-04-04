@@ -1,9 +1,10 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
+import ar.edu.unsam.phm.magicnightsback.dto.CommentDTO
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.showError
-import ar.edu.unsam.phm.magicnightsback.helpers.removeSpaces
 import ar.edu.unsam.phm.magicnightsback.repository.Iterable
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 class Show(
@@ -12,17 +13,12 @@ class Show(
     val facility: Facility
 ) : Iterable() {
     var showImg = "${band.name.removeSpaces().lowercase()}.jpg"
-    val comments = mutableListOf<Comment>()
     private val pendingAttendees = mutableListOf<User>()
     val dates = mutableSetOf<ShowDate>()
     private var rentability: RentabilityType = BasePrice()
 
-    fun totalRating() = if (comments.size > 0) comments.sumOf { it.rating } / comments.size else 0.0
-
-    fun addComments(comment: Comment, showDate: ShowDate){
-        validateComment(showDate)
-        comments.add(comment)
-    }
+    fun comments() = allAttendees().flatMap { it.comments }.filter{ it.show == this }
+    fun totalRating() = if (comments().size > 0) comments().sumOf { it.rating } / comments().size else 0.0
 
     fun changeRentability(newShowStatus: RentabilityType) {
         this.rentability = newShowStatus
@@ -40,21 +36,23 @@ class Show(
         dates.add(ShowDate(date, facility))
     }
 
+    fun getSeatTypes() = facility.seats.map{ it.seatType }
+
     fun friendsAttendeesProfileImages(userId: Long?) = userId?.let{allAttendees().filter { it.isMyFriend(userId) }.map{ it.profileImage }} ?: listOf()
 
-    private fun baseCost(): Double = band.cost + facility.cost()
+    fun baseCost(): Double = band.cost + facility.cost()
 
-    private fun cost(): Double = baseCost() * rentability.getRentability()
+    private fun cost(seatType: SeatTypes): Double = (baseCost() / facility.getTotalSeatCapacity() ) + seatType.price
 
-    private fun baseTicketPrice() = cost() / facility.getTotalSeatCapacity()
+    fun ticketPrice(seatType: SeatTypes) = cost(seatType) * rentability.getRentability()
 
-    fun fullTicketPrice(seatType: SeatTypes) = baseTicketPrice() + seatType.price
-
-    fun allTicketPrices() = facility.getAllSeatTypes().map { fullTicketPrice(it) }
+    fun allTicketPrices() = facility.seats.map { ticketPrice(it.seatType) }
 
     fun allDates() = dates.map{ it.date }.toList().sortedBy { it }
 
-    private fun allAttendees() = dates.flatMap { it.attendees }
+    fun getShowDate(date: LocalDate) = dates.find { it.date.toLocalDate() == date }
+
+    fun allAttendees() = dates.flatMap { it.attendees }
 //    fun soldOutDates() = dates.filter{ it.isSoldOut() }.size
 //    fun ticketsSoldOfSeatType(seatType: SeatTypes) = dates.sumOf { it.getReservedSeatsOf(seatType) }
 //    fun totalTicketsSold() = facility.getAllSeatTypes().sumOf { ticketsSoldOfSeatType(it) }

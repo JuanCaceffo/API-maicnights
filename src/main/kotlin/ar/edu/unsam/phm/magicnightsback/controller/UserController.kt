@@ -2,10 +2,14 @@ package ar.edu.unsam.phm.magicnightsback.controller
 
 import ar.edu.unsam.phm.magicnightsback.dto.UserDTO
 import ar.edu.unsam.phm.magicnightsback.dto.FriendDTO
-import ar.edu.unsam.phm.magicnightsback.dto.PurchsedTicketDTO
 import ar.edu.unsam.phm.magicnightsback.dto.TicketCartDTO
+import ar.edu.unsam.phm.magicnightsback.dto.TicketCreateDTO
+import ar.edu.unsam.phm.magicnightsback.error.FacilityError
+import ar.edu.unsam.phm.magicnightsback.dto.PurchsedTicketDTO
 import ar.edu.unsam.phm.magicnightsback.error.UserError
-import ar.edu.unsam.phm.magicnightsback.serializers.*
+import ar.edu.unsam.phm.magicnightsback.error.showDateError
+import ar.edu.unsam.phm.magicnightsback.error.showError
+import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.service.*
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -16,22 +20,52 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @CrossOrigin(origins = ["*"])
+//TODO: Cambiar el path de user-profile a user y ponerlo en la etiqueta requestMapping
 class UserController {
 
     @Autowired
     lateinit var userService: UserService
 
-    @GetMapping("/user-profile/{userId}/tickets-cart")
+    @GetMapping("/user-profile/{userId}/reserved-tickets")
     @Operation(summary = "Permite obtener los tickets por show que el usuario tiene reservados en el carrito")
     fun getUserTicketsCart(@PathVariable userId: Long): List<TicketCartDTO> {
         return userService.getTicketsCart(userId)
     }
 
+    @PutMapping("/user-profile/{userId}/reserve-tickets")
+    @Operation(summary = "Permite reservar x cantidad de tiquets de un show para una funcion de ese show y para un tipo de asiento")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Ok"),
+            ApiResponse(responseCode = "404", description = showError.TICKET_CART_NOT_FOUND),
+            ApiResponse(responseCode = "400", description = showDateError.EXCEEDED_CAPACITY + "<br>"+ FacilityError.INVALID_SEAT_TYPE),
+        ]
+    )
+    fun addReservedTicket(@PathVariable userId: Long, @RequestBody ticketData: TicketCreateDTO){
+        userService.reserveTicket(userId, ticketData)
+    }
+
+    @PutMapping("/user-profile/{userId}/remove-reserved-tickets")
+    @Operation(summary = "Permite eliminar todos los tiquets reservados")
+    fun removeReservedTickets(@PathVariable userId: Long){
+        userService.removeReserveTickets(userId)
+    }
+
+    @PutMapping("/user-profile/{userId}/purchase-reserved-tickets")
+    @Operation(summary = "Permite comprar todos los tickets reservados")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Ok"),
+            ApiResponse(responseCode = "400", description = UserError.MSG_NOT_ENOUGH_CREDIT),
+        ]
+    )
+    fun purchaseReservedTickets(@PathVariable userId: Long){
+        userService.purchaseReservedTickets(userId)
+    }
     @GetMapping("/user_profile/{userId}/purchased_tickets")
     fun getUserPurchasedTickets(@PathVariable userId: Long): List<PurchsedTicketDTO> {
         return userService.getUserPurchasedTickets(userId)
     }
-
     @GetMapping("/user_profile/{id}/friends")
     fun getUserFriends(@PathVariable id: Long): List<FriendDTO> {
         return userService.getUserFriends(id)
@@ -84,9 +118,8 @@ class UserController {
 
     @PutMapping("/user_profile/{id}/add_credit")
     @Operation(summary = "Permite actualizar los creditos del usuario")
-    fun addUserCredit(@PathVariable id: Long, @RequestBody creditToAdd: Map<String, Double>): Double {
-        val credit = creditToAdd["credit"]!!
-        return userService.addCreditToUser(id, credit)
+    fun addUserCredit(@PathVariable id: Long, @RequestBody creditToAdd: Double): Double {
+        return userService.addCreditToUser(id, creditToAdd)
     }
 
 }

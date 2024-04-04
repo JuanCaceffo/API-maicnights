@@ -37,8 +37,8 @@ class FacilityTests : DescribeSpec({
             stadium.getTotalSeatCapacity() shouldBe 1500
         }
     }
-    describe("Tests Theater") {
 
+    describe("Tests Theater") {
 
         it("Un teatro con mala acustica tiene un costo fijo de 100000") {
             val theater = Facility(
