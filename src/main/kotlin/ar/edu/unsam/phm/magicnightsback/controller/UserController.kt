@@ -25,7 +25,7 @@ class UserController {
     @Autowired
     lateinit var userService: UserService
 
-    @GetMapping("/{userId}/reserved-tickets-total-rice")
+    @GetMapping("/{userId}/reserved-tickets-price")
     fun getResrvedTicketsTotalPrice(@PathVariable userId: Long): Double{
         return userService.reservedTicketsPrice(userId)
     }
