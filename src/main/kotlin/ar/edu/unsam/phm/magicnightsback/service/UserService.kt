@@ -5,7 +5,6 @@ import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.error.*
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
-import ar.edu.unsam.phm.magicnightsback.dto.CommentDTO
 import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import org.springframework.stereotype.Service
@@ -43,7 +42,7 @@ class UserService {
         return friends.map { userFriend -> userFriend.toFriendDTO() }
     }
 
-    fun getUserComments(id: Long): List<CommentUserDTO> {
+    fun getUserComments(id: Long): List<CommentDTO> {
         val user = userRepository.getById(id)
         
         return user.comments.map { comment -> comment.toUserDTO()  }

@@ -46,19 +46,12 @@ data class SeatDTO(
     val maxToSell: Int,
 )
 
-data class CommentDTO(
-    val userImg: String,
-    val userName: String,
-    val text: String,
-    val rating: Double,
-    val date: LocalDateTime
-)
 
 fun Show.allCommentsDTO(): List<CommentDTO> {
     return allAttendees().flatMap {user ->
         user.comments.filter{ it.show == this }.map {
             CommentDTO(
-                user.profileImage,
+                "/mock-imgs/user-imgs/${user.profileImage}",
                 user.username,
                 it.text,
                 it.rating,
