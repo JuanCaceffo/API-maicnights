@@ -3,6 +3,11 @@ package ar.edu.unsam.phm.magicnightsback.dto
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import java.time.LocalDate
 
+data class LoginUserDTO(
+    var username: String = "",
+    var password: String = "",
+)
+
 data class UserDTO(
     val id: Long,
     val name: String,
@@ -22,8 +27,3 @@ fun User.toDTO(): UserDTO {
         this.dni
     )
 }
-
-data class LoginUserDTO(
-    var username: String = "",
-    var password: String = "",
-)

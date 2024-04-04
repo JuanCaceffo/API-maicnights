@@ -23,7 +23,7 @@ fun Ticket.toPurchasedTicketDTO(userId: Long) = PurchsedTicketDTO(
     this.show.band.name,
     this.show.facility.name,
     this.show.totalRating(),
-    this.show.comments.size,
+    this.show.comments().size,
     this.price,
     mutableListOf(this.showDate.date),
     this.show.friendsAttendeesProfileImages(userId)

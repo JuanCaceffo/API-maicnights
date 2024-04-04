@@ -6,10 +6,12 @@ import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import org.springframework.beans.factory.InitializingBean
+import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 
 @Component
+@Order(3)
 class UserBoostrap(
     val userRepository: UserRepository,
     showBoostrap: ShowBoostrap
@@ -19,7 +21,7 @@ class UserBoostrap(
     val bigShow = showBoostrap.shows["BigShow"]!!
     val bestSmallShow = showBoostrap.shows["BestSmallShow"]!!
 
-    private val users = mapOf(
+    val users = mapOf(
         "Pablo" to User(
             name = "Pablo",
             surname = "Foglia",
@@ -108,6 +110,14 @@ class UserBoostrap(
                     )
                 )
             }
+            addTicket(
+                Ticket(
+                    bigShow,
+                    bigShow.dates.elementAt(0),
+                    upperlevel,
+                    bigShow.ticketPrice(upperlevel)
+                )
+            )
         }
 
         users["Sol"]!!.apply {
@@ -127,6 +137,14 @@ class UserBoostrap(
                     bigShow.dates.elementAt(2),
                     box,
                     bigShow.ticketPrice(box)
+                )
+            )
+            addTicket(
+                Ticket(
+                    bigShow,
+                    bigShow.dates.elementAt(0),
+                    upperlevel,
+                    bigShow.ticketPrice(upperlevel)
                 )
             )
         }
@@ -178,7 +196,6 @@ class UserBoostrap(
                     bestSmallShow.ticketPrice(pullman)
                 )
             )
-
         }
     }
 

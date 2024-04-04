@@ -24,7 +24,7 @@ fun Ticket.toCartDTO(userId: Long, showDates: List<LocalDateTime>, price: Double
     this.show.band.name,
     this.show.facility.name,
     this.show.totalRating(),
-    this.show.comments.size,
+    this.show.comments().size,
     price,
     showDates,
     this.show.friendsAttendeesProfileImages(userId),

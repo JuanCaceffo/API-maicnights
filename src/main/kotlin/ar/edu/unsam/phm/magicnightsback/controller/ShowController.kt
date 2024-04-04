@@ -3,7 +3,6 @@ package ar.edu.unsam.phm.magicnightsback.controller
 import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.service.ShowService
-import ar.edu.unsam.phm.magicnightsback.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -20,9 +19,6 @@ class ShowController {
     @Autowired
     lateinit var showService: ShowService
 
-    @Autowired
-    lateinit var userService: UserService
-
     @GetMapping("/shows")
     @Operation(summary = "Devuelve todos shows los disponibles")
     fun getAll(@RequestParam(required = false, defaultValue = "-1") userId: Long): List<ShowDTO> {
@@ -38,16 +34,8 @@ class ShowController {
     ): ShowDTO {
         val show = showService.getById(id)
 
-        val comments = show.comments.map {
-            CommentDTO(
-                it.user.profileImage,
-                it.user.username,
-                it.text,
-                it.rating,
-                it.date
-            )
-        }
-        return show.toShowDTO(userId, comments)
+        val comments = show.allCommentsDTO()
+        return show.toShowDTO(userId,comments)
     }
 
     @GetMapping("/show_dates/{id}")
