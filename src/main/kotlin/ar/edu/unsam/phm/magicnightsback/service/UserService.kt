@@ -1,5 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
+import ar.edu.unsam.phm.magicnightsback.domain.Comment
 import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.error.*
@@ -124,5 +125,13 @@ class UserService {
         }catch (e: Exception){
             throw BusinessException(UserError.NONEXISTENT_USER_COMMENT)
         }
+    }
+
+    fun createComment(id: Long, commentCreat: CommentCreateDTO) {
+        val user = userRepository.getById(id)
+        val ticket = user.tickets[commentCreat.ticketId.toInt()]
+        val comment = Comment(ticket.show,commentCreat.text,commentCreat.rating)
+
+        user.addComment(comment,ticket)
     }
 }

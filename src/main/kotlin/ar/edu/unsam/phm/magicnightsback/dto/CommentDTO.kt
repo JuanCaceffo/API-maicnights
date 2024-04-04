@@ -12,4 +12,12 @@ data class CommentUserDTO(
     val dateT: LocalDateTime
 )
 
-fun Comment.toUserDTO(): CommentUserDTO = CommentUserDTO("/mock-imgs/card-show-imgs/${show.showImg}", show.name,text,rating,date)
+data class CommentCreateDTO(
+    val ticketId: Long,
+    val text: String,
+    val rating: Double,
+)
+
+
+fun Comment.toUserDTO(): CommentUserDTO =
+    CommentUserDTO("/mock-imgs/card-show-imgs/${show.showImg}", show.name, text, rating, date)

@@ -85,10 +85,16 @@ class UserController {
         return userService.getUserComments(id)
     }
 
-    @DeleteMapping("{id}/delete-comment/{commentId}")
+    @DeleteMapping("/{id}/delete-comment/{commentId}")
     @Operation(summary = "Permite eliminar un comentario de un usuario")
     fun deleteComment(@PathVariable id: Long, @PathVariable commentId: Long) {
         userService.deleteComment(commentId, id)
+    }
+
+    @PutMapping("/{id}/create-comment")
+    @Operation(summary = "Permite crear un comentario hacia un show")
+    fun createComment(@RequestBody commentCreat: CommentCreateDTO,  @PathVariable id: Long){
+        userService.createComment(id, commentCreat)
     }
 
     @PostMapping("/login")
