@@ -81,7 +81,7 @@ class UserController {
     }
 
     @GetMapping("/{id}/comments")
-    fun getUserComments(@PathVariable id: Long): List<CommentUserDTO> {
+    fun getUserComments(@PathVariable id: Long): List<CommentDTO> {
         return userService.getUserComments(id)
     }
 

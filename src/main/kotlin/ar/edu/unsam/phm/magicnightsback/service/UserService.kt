@@ -42,7 +42,7 @@ class UserService {
         return friends.map { userFriend -> userFriend.toFriendDTO() }
     }
 
-    fun getUserComments(id: Long): List<CommentUserDTO> {
+    fun getUserComments(id: Long): List<CommentDTO> {
         val user = userRepository.getById(id)
         
         return user.comments.map { comment -> comment.toUserDTO()  }

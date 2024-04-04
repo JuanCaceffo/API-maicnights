@@ -1,7 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.dto
 
 import ar.edu.unsam.phm.magicnightsback.domain.Comment
-import ar.edu.unsam.phm.magicnightsback.domain.User
 import java.time.LocalDateTime
 
 data class CommentUserDTO(
@@ -12,4 +11,4 @@ data class CommentUserDTO(
     val dateT: LocalDateTime
 )
 
-fun Comment.toUserDTO(): CommentUserDTO = CommentUserDTO("/mock-imgs/card-show-imgs/${show.showImg}", show.name,text,rating,date)
+fun Comment.toUserDTO(): CommentDTO = CommentDTO(show.showImg, show.name, text, rating, date)

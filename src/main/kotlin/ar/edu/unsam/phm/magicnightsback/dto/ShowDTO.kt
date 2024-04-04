@@ -48,7 +48,7 @@ data class SeatDTO(
 
 data class CommentDTO(
     val userImg: String,
-    val userName: String,
+    val name: String,
     val text: String,
     val rating: Double,
     val date: LocalDateTime
