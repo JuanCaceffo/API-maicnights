@@ -42,8 +42,10 @@ class UserService {
         return friends.map { userFriend -> userFriend.toFriendDTO() }
     }
 
-    fun getUserComments(id: Long): List<CommentDTO> {
-        TODO("Not yet implemented")
+    fun getUserComments(id: Long): List<CommentUserDTO> {
+        val user = userRepository.getById(id)
+        
+        return user.comments.map { comment -> comment.toUserDTO()  }
     }
 
     fun loginUser(loginUser: LoginUserDTO): Long {
@@ -112,5 +114,15 @@ class UserService {
         val user = userRepository.getById(userId)
 
         return user.reservedTickets.sumOf { ticket -> ticket.price }
+    }
+
+    fun deleteComment(commentId: Long, id: Long) {
+        val user = userRepository.getById(id)
+        try{
+            val comment = user.comments[commentId.toInt()]
+            user.removeComment(comment)
+        }catch (e: Exception){
+            throw BusinessException(UserError.NONEXISTENT_USER_COMMENT)
+        }
     }
 }

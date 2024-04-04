@@ -81,8 +81,14 @@ class UserController {
     }
 
     @GetMapping("/{id}/comments")
-    fun getUserComments(@PathVariable id: Long): List<CommentDTO> {
+    fun getUserComments(@PathVariable id: Long): List<CommentUserDTO> {
         return userService.getUserComments(id)
+    }
+
+    @DeleteMapping("{id}/delete-comment/{commentId}")
+    @Operation(summary = "Permite eliminar un comentario de un usuario")
+    fun deleteComment(@PathVariable id: Long, @PathVariable commentId: Long) {
+        userService.deleteComment(commentId, id)
     }
 
     @PostMapping("/login")
