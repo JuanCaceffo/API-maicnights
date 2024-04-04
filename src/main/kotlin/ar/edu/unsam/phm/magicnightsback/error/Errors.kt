@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ResponseStatus
 
 object UserError {
-    const val MSG_NOT_ENOUGH_CREDIT = "No tiene saldo suficiente"
+    const val MSG_NOT_ENOUGH_CREDIT = "No tiene saldo suficiente para realizar la compra"
     const val BAD_CREDENTIALS = "El usuario o la contraseña no son validos"
     const val USER_NOT_AUTHORIZED_CREATE_DATE = "El usuario debe ser administrador para crear una nueva funcion"
 }

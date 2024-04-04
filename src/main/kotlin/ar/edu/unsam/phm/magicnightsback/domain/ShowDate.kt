@@ -16,7 +16,7 @@ class ShowDate(
 
     //TODO: validar que pueda reservar la cantidad de asientos
     fun reserveSeat(seatType: SeatTypes, quantity: Int) {
-        reservedSeats[seatType.name] = (reservedSeats[seatType.name]!! + quantity).throwIfGreaterThan(availableSeatsOf(seatType),showDateError.EXCEEDED_CAPACITY)
+        reservedSeats[seatType.name] = (reservedSeats[seatType.name]!! + quantity).throwIfGreaterThan(availableSeatsOf(seatType),showDateError.EXCEEDED_CAPACITY).toInt()
     }
 
     fun releaseSeat(SeatType: SeatTypes, quantity: Int) {
