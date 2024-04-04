@@ -44,9 +44,9 @@ class Show(
 
     fun friendsAttendeesProfileImages(userId: Long?) = userId?.let{allAttendees().filter { it.isMyFriend(userId) }.map{ it.profileImage }} ?: listOf()
 
-    private fun baseCost(): Double = (band.cost + facility.cost()) / facility.getTotalSeatCapacity()
+    fun baseCost(): Double = band.cost + facility.cost()
 
-    private fun cost(seatType: SeatTypes): Double = baseCost() + seatType.price
+    private fun cost(seatType: SeatTypes): Double = (baseCost() / facility.getTotalSeatCapacity() ) + seatType.price
 
     fun ticketPrice(seatType: SeatTypes) = cost(seatType) * rentability.getRentability()
 
