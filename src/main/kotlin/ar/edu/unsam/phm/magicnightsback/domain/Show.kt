@@ -17,20 +17,6 @@ class Show(
     val dates = mutableSetOf<ShowDate>()
     private var rentability: RentabilityType = BasePrice()
 
-    fun allCommentsDTO(): List<CommentDTO> {
-        return allAttendees().flatMap {user ->
-            user.comments.filter{ it.show == this }.map {
-                CommentDTO(
-                    user.profileImage,
-                    user.username,
-                    it.text,
-                    it.rating,
-                    it.date
-                )
-            }
-        }
-    }
-
     fun comments() = allAttendees().flatMap { it.comments }.filter{ it.show == this }
     fun totalRating() = if (comments().size > 0) comments().sumOf { it.rating } / comments().size else 0.0
 
@@ -66,7 +52,7 @@ class Show(
 
     fun getShowDate(date: LocalDate) = dates.find { it.date.toLocalDate() == date }
 
-    private fun allAttendees() = dates.flatMap { it.attendees }
+    fun allAttendees() = dates.flatMap { it.attendees }
 //    fun soldOutDates() = dates.filter{ it.isSoldOut() }.size
 //    fun ticketsSoldOfSeatType(seatType: SeatTypes) = dates.sumOf { it.getReservedSeatsOf(seatType) }
 //    fun totalTicketsSold() = facility.getAllSeatTypes().sumOf { ticketsSoldOfSeatType(it) }

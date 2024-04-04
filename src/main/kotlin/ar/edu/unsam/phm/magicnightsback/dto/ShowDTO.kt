@@ -1,6 +1,5 @@
 package ar.edu.unsam.phm.magicnightsback.dto
 
-import ar.edu.unsam.phm.magicnightsback.domain.SeatType
 import ar.edu.unsam.phm.magicnightsback.domain.Show
 import org.uqbar.geodds.Point
 import java.time.LocalDateTime
@@ -54,6 +53,20 @@ data class CommentDTO(
     val rating: Double,
     val date: LocalDateTime
 )
+
+fun Show.allCommentsDTO(): List<CommentDTO> {
+    return allAttendees().flatMap {user ->
+        user.comments.filter{ it.show == this }.map {
+            CommentDTO(
+                user.profileImage,
+                user.username,
+                it.text,
+                it.rating,
+                it.date
+            )
+        }
+    }
+}
 
 fun Show.toShowDTO(userId: Long, comments: List<CommentDTO> = emptyList(), price: Double = 0.0) =
     ShowDTO(
