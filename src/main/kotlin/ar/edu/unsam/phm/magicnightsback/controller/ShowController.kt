@@ -48,7 +48,7 @@ class ShowController {
         val toSeatsDto = seats.map {
             SeatDTO(
                 it.toString(),
-                show.fullTicketPrice(it),
+                show.ticketPrice(it),
                 showDate!!.availableSeatsOf(it)
             )
         }

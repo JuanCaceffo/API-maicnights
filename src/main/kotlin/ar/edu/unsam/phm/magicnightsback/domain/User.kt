@@ -3,6 +3,7 @@ package ar.edu.unsam.phm.magicnightsback.domain
 import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.showError
+import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.repository.Iterable
 import java.time.LocalDate
 
@@ -18,7 +19,7 @@ class User(
     val profileImage: String = "default.jpg"
 ) : Iterable() {
     val friends = mutableListOf<User>()
-    val pendingTickets = mutableListOf<Ticket>()
+    val reservedTickets = mutableListOf<Ticket>()
     val tickets = mutableListOf<Ticket>()
     val comments = mutableListOf<Comment>()
     var credit = 0.0
@@ -71,6 +72,14 @@ class User(
 
     fun pay(price: Double) {
         removeCredit(price)
+    }
+
+    fun buyReservedTickets() {
+        val price = reservedTickets.sumOf { ticket -> ticket.price }
+        price.throwIfGreaterThan(credit, UserError.MSG_NOT_ENOUGH_CREDIT)
+
+        tickets.addAll(reservedTickets)
+        reservedTickets.clear()
     }
 
     ///// VALIDATORS ///////////////////////////////////////////

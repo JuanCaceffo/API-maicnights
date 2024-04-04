@@ -17,7 +17,7 @@ class CommentBoostrap(
     userBoostrap: UserBoostrap,
 ) : InitializingBean {
 
-    val ticket = Ticket(showBoostrap.shows["BigShow"]!!, showBoostrap.shows["BigShow"]!!.dates.first() ,StadiumSeatType.UPPERLEVEL)
+    val ticket = Ticket(showBoostrap.shows["BigShow"]!!, showBoostrap.shows["BigShow"]!!.dates.first() ,StadiumSeatType.UPPERLEVEL, showBoostrap.shows["BigShow"]!!.ticketPrice(StadiumSeatType.UPPERLEVEL))
 
     val sol = userBoostrap.users["Sol"]!!
     val pablo = userBoostrap.users["Pablo"]!!
