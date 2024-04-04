@@ -107,4 +107,10 @@ class UserService {
         val user = userRepository.getById(userId)
         user.buyReservedTickets()
     }
+
+    fun reservedTicketsPrice(userId: Long): Double {
+        val user = userRepository.getById(userId)
+
+        return user.reservedTickets.sumOf { ticket -> ticket.price }
+    }
 }

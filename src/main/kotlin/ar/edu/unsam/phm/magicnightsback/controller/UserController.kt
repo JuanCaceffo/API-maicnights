@@ -20,19 +20,23 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @CrossOrigin(origins = ["*"])
-//TODO: Cambiar el path de user-profile a user y ponerlo en la etiqueta requestMapping
+@RequestMapping("/user")
 class UserController {
-
     @Autowired
     lateinit var userService: UserService
 
-    @GetMapping("/user-profile/{userId}/reserved-tickets")
+    @GetMapping("/{userId}/reserved-tickets-price")
+    fun getResrvedTicketsTotalPrice(@PathVariable userId: Long): Double{
+        return userService.reservedTicketsPrice(userId)
+    }
+
+    @GetMapping("/{userId}/reserved-tickets")
     @Operation(summary = "Permite obtener los tickets por show que el usuario tiene reservados en el carrito")
     fun getUserTicketsCart(@PathVariable userId: Long): List<TicketCartDTO> {
         return userService.getTicketsCart(userId)
     }
 
-    @PutMapping("/user-profile/{userId}/reserve-tickets")
+    @PutMapping("/{userId}/reserve-tickets")
     @Operation(summary = "Permite reservar x cantidad de tiquets de un show para una funcion de ese show y para un tipo de asiento")
     @ApiResponses(
         value = [
@@ -45,13 +49,13 @@ class UserController {
         userService.reserveTicket(userId, ticketData)
     }
 
-    @PutMapping("/user-profile/{userId}/remove-reserved-tickets")
+    @PutMapping("/{userId}/remove-reserved-tickets")
     @Operation(summary = "Permite eliminar todos los tiquets reservados")
     fun removeReservedTickets(@PathVariable userId: Long){
         userService.removeReserveTickets(userId)
     }
 
-    @PutMapping("/user-profile/{userId}/purchase-reserved-tickets")
+    @PutMapping("/{userId}/purchase-reserved-tickets")
     @Operation(summary = "Permite comprar todos los tickets reservados")
     @ApiResponses(
         value = [
@@ -62,21 +66,21 @@ class UserController {
     fun purchaseReservedTickets(@PathVariable userId: Long){
         userService.purchaseReservedTickets(userId)
     }
-    @GetMapping("/user_profile/{userId}/purchased_tickets")
+    @GetMapping("/{userId}/purchased_tickets")
     fun getUserPurchasedTickets(@PathVariable userId: Long): List<PurchsedTicketDTO> {
         return userService.getUserPurchasedTickets(userId)
     }
-    @GetMapping("/user_profile/{id}/friends")
+    @GetMapping("/{id}/friends")
     fun getUserFriends(@PathVariable id: Long): List<FriendDTO> {
         return userService.getUserFriends(id)
     }
 
-    @DeleteMapping("/user_profile/{userId}/friends/{friendId}")
+    @DeleteMapping("/{userId}/remove-friend/{friendId}")
     fun deleteUserFriend(@PathVariable userId: Long, @PathVariable friendId: Long) {
         userService.deleteUserFriend(userId, friendId)
     }
 
-    @GetMapping("/user_profile/{id}/comments")
+    @GetMapping("/{id}/comments")
     fun getUserComments(@PathVariable id: Long): List<CommentDTO> {
         return userService.getUserComments(id)
     }
@@ -93,30 +97,25 @@ class UserController {
         return userService.loginUser(userToLogin)
     }
 
-    @GetMapping("/user_profile/{id}")
+    @GetMapping("/{id}/data")
     @Operation(summary = "Permite obtener la data del perfil del usuario")
     fun getUser(@PathVariable id: Long): UserDTO {
         return userService.getUser(id)
     }
 
-    @PutMapping("/user_profile/{id}")
+    @PutMapping("/{id}/update")
     @Operation(summary = "Permite actualizar la data del usuario")
     fun updateUser(@PathVariable id: Long, @RequestBody user: UserDTO) {
         return userService.updateUser(id, user)
     }
 
-    /*@PatchMapping("/update-user")
-    fun updateUser(@RequestBody userToUpdate: UserDTO) {
-        userService.updateUser(userToUpdate)
-    }*/
-
-    @GetMapping("/user_profile/{id}/credit")
+    @GetMapping("/{id}/credit")
     @Operation(summary = "Permite obtener los creditos del usuario")
     fun getUserCredit(@PathVariable id: Long): Double {
         return userService.getUserCredit(id)
     }
 
-    @PutMapping("/user_profile/{id}/add_credit")
+    @PutMapping("/{id}/add_credit")
     @Operation(summary = "Permite actualizar los creditos del usuario")
     fun addUserCredit(@PathVariable id: Long, @RequestBody creditToAdd: Double): Double {
         return userService.addCreditToUser(id, creditToAdd)
