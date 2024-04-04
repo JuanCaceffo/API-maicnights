@@ -39,5 +39,6 @@ class ShowService {
             addFilterCondition(WithFriends(params.withFriends, params.userId))
         }
     }
+    fun getById(id: Long) = showRepository.getById(id)
 }
 

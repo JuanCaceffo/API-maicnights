@@ -6,10 +6,12 @@ import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import org.springframework.beans.factory.InitializingBean
+import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 
 @Component
+@Order(3)
 class UserBoostrap(
     val userRepository: UserRepository,
     showBoostrap: ShowBoostrap
@@ -26,7 +28,7 @@ class UserBoostrap(
     val queenGranRex = showBoostrap.shows["Queen_GranRex"]!!
 
 
-    private val users = mapOf(
+    val users = mapOf(
         "Pablo" to User(
             name = "Pablo",
             surname = "Foglia",
@@ -34,31 +36,33 @@ class UserBoostrap(
             dni = 26765114,
             birthday = LocalDate.of(1978, 10, 20),
             password = "asdf",
-            isAdmin = true
-        ),
-        "Juan" to User(
+            isAdmin = true,
+            profileImage = "pablito.jpeg"
+        ), "Juan" to User(
             name = "Juan",
             surname = "Caccefo",
             username = "juanceto01",
             dni = 18274535,
             birthday = LocalDate.of(2003, 2, 1),
             password = "asdf",
-        ),
-        "Sol" to User(
+
+            profileImage = "juan.jpeg"
+        ), "Sol" to User(
             name = "Sol",
             surname = "Lopez",
             username = "mariasol",
             dni = 130293745,
             birthday = LocalDate.of(2001, 2, 15),
-            password = "asdf"
-        ),
-        "Denise" to User(
+            password = "asdf",
+            profileImage = "sol.jpeg"
+        ), "Denise" to User(
             name = "Denise",
             surname = "Amarfil",
             username = "Denise123",
             dni = 94528553,
             birthday = LocalDate.of(2001, 5, 15),
-            password = "asdf"
+            password = "asdf",
+            profileImage = "denise.jpeg"
         ),
         "Carolina" to User(
             name = "Carolina",
@@ -163,7 +167,8 @@ class UserBoostrap(
                 Ticket(
                     smallshowGranrex,
                     smallshowGranrex.dates.elementAt(0),
-                    pullman
+                    pullman,
+                    smallshowGranrex.ticketPrice(pullman)
                 )
             )
             repeat(2) {
@@ -171,7 +176,8 @@ class UserBoostrap(
                     Ticket(
                         smallShowTeatroColon,
                         smallShowTeatroColon.dates.elementAt(1),
-                        pullman
+                        pullman,
+                        smallShowTeatroColon.ticketPrice(pullman)
                     )
                 )
             }
@@ -180,10 +186,19 @@ class UserBoostrap(
                     Ticket(
                         bigShowRiver,
                         bigShowRiver.dates.elementAt(1),
-                        pullman
+                        pullman,
+                        bigShowRiver.ticketPrice(pullman)
                     )
                 )
             }
+            addTicket(
+                Ticket(
+                    bigShowLaBombonera,
+                    bigShowLaBombonera.dates.elementAt(0),
+                    upperlevel,
+                    bigShowLaBombonera.ticketPrice(upperlevel)
+                )
+            )
         }
 
         users["Sol"]!!.apply {
@@ -192,7 +207,8 @@ class UserBoostrap(
                     Ticket(
                         smallshowGranrex,
                         smallshowGranrex.dates.elementAt(0),
-                        lowerlevel
+                        lowerlevel,
+                        smallshowGranrex.ticketPrice(lowerlevel)
                     )
                 )
             }
@@ -204,7 +220,8 @@ class UserBoostrap(
                     Ticket(
                         smallshowGranrex,
                         smallshowGranrex.dates.elementAt(0),
-                        pullman
+                        pullman,
+                        smallshowGranrex.ticketPrice(pullman)
                     )
                 )
             }
@@ -215,7 +232,8 @@ class UserBoostrap(
                 Ticket(
                     smallshowGranrex,
                     smallshowGranrex.dates.elementAt(0),
-                    pullman
+                    pullman,
+                    smallshowGranrex.ticketPrice(pullman)
                 )
             )
         }
@@ -225,7 +243,8 @@ class UserBoostrap(
                 Ticket(
                     smallshowGranrex,
                     smallshowGranrex.dates.elementAt(0),
-                    pullman
+                    pullman,
+                    smallshowGranrex.ticketPrice(pullman)
                 )
             )
         }
@@ -235,7 +254,8 @@ class UserBoostrap(
                 Ticket(
                     smallshowGranrex,
                     smallshowGranrex.dates.elementAt(0),
-                    pullman
+                    pullman,
+                    smallshowGranrex.ticketPrice(pullman)
                 )
             )
         }
@@ -245,7 +265,8 @@ class UserBoostrap(
                 Ticket(
                     smallshowGranrex,
                     smallshowGranrex.dates.elementAt(0),
-                    pullman
+                    pullman,
+                    smallshowGranrex.ticketPrice(pullman)
                 )
             )
         }

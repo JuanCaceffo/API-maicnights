@@ -6,7 +6,5 @@ data class Ticket(
     val show: Show,
     val showDate: ShowDate,
     val seatType: SeatTypes,
-) : Iterable() {
-
-    val price: Double = show.fullTicketPrice(seatType)
-}
+    val price: Double
+) : Iterable()

@@ -6,8 +6,7 @@ import ar.edu.unsam.phm.magicnightsback.repository.Iterable
 import java.time.LocalDateTime
 
 class Comment(
-    val user: User,
-    val band: Band,
+    val show: Show,
     val text: String,
     val rating: Double
 ) : Iterable() {

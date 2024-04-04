@@ -1,7 +1,10 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
+import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.dto.*
-import ar.edu.unsam.phm.magicnightsback.serializers.*
+import ar.edu.unsam.phm.magicnightsback.error.*
+import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
+import ar.edu.unsam.phm.magicnightsback.dto.CommentDTO
 import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import org.springframework.stereotype.Service
@@ -13,14 +16,16 @@ class UserService {
     @Autowired
     lateinit var userRepository: UserRepository
 
+    @Autowired
+    lateinit var showRepository: ShowRepository
     fun getTicketsCart(userId: Long): List<TicketCartDTO> {
         val user = userRepository.getById(userId)
 
         /*Mapeo todos los tickets en uno solo por show juntando el precio total, las fechas y
         la cantidad de tickets para ese show*/
-        val distinctTickets = user.pendingTickets.distinctBy { it.show }
+        val distinctTickets = user.reservedTickets.distinctBy { it.show }
         return distinctTickets.map { uniqueTicket ->
-            val ticketsSameShow = user.pendingTickets.filter { ticket -> ticket.show == uniqueTicket.show }
+            val ticketsSameShow = user.reservedTickets.filter { ticket -> ticket.show == uniqueTicket.show }
             val totalPrice = ticketsSameShow.sumOf { ticket -> ticket.price }
             val allDates = ticketsSameShow.map { ticket -> ticket.showDate.date }.distinct()
             uniqueTicket.toCartDTO(userId, allDates, totalPrice, ticketsSameShow.size)
@@ -38,11 +43,14 @@ class UserService {
     }
 
     fun getUserComments(id: Long): List<CommentDTO> {
-        TODO("Not yet implemented")
+        val user = userRepository.getById(id)
+        
+        return user.comments.map { comment -> comment.toUserDTO()  }
     }
 
     fun loginUser(loginUser: LoginUserDTO): Long {
-        return this.userRepository.getLoginUser(loginUser) ?: throw AuthenticationException(UserError.BAD_CREDENTIALS)
+        return this.userRepository.getLoginUser(loginUser)
+            ?: throw AuthenticationException(UserError.BAD_CREDENTIALS)
     }
 
     fun getUser(id: Long): UserDTO {
@@ -63,12 +71,58 @@ class UserService {
         return userRepository.getById(id).credit
     }
 
-    fun updateUser(id:Long, loginUser: UserDTO) {
+    fun updateUser(id: Long, loginUser: UserDTO) {
         val userToUpdate = this.userRepository.getById(id)
 
         userToUpdate.name = loginUser.name
         userToUpdate.surname = loginUser.surname
 
         this.userRepository.update(userToUpdate)
+    }
+
+    //TODO: posible extrapolacion de orquetado de logica de reserva en una entidad cart
+    fun reserveTicket(userId: Long, ticketData: TicketCreateDTO) {
+        val user = userRepository.getById(userId)
+        val show = showRepository.getById(ticketData.showId)
+        val showDate = show.dates.elementAtOrNull(ticketData.showDateId.toInt()) ?: throw NotFoundException(
+            showError.TICKET_CART_NOT_FOUND
+        )
+        val seatType = show.facility.getSeat(ticketData.seatTypeName).seatType
+
+        showDate.reserveSeat(seatType, ticketData.quantity)
+        repeat(ticketData.quantity) {
+            user.reservedTickets.add(Ticket(show, showDate, seatType, ticketData.price))
+        }
+    }
+
+    //TODO: posible extrapolacion de orquetado de logica de elimindo en una entidad cart
+    fun removeReserveTickets(userId: Long) {
+        val user = userRepository.getById(userId)
+
+        user.reservedTickets.forEach {
+            ticket -> ticket.showDate.releaseSeat(ticket.seatType,1)
+        }
+        user.reservedTickets.clear()
+    }
+
+    fun purchaseReservedTickets(userId: Long) {
+        val user = userRepository.getById(userId)
+        user.buyReservedTickets()
+    }
+
+    fun reservedTicketsPrice(userId: Long): Double {
+        val user = userRepository.getById(userId)
+
+        return user.reservedTickets.sumOf { ticket -> ticket.price }
+    }
+
+    fun deleteComment(commentId: Long, id: Long) {
+        val user = userRepository.getById(id)
+        try{
+            val comment = user.comments[commentId.toInt()]
+            user.removeComment(comment)
+        }catch (e: Exception){
+            throw BusinessException(UserError.NONEXISTENT_USER_COMMENT)
+        }
     }
 }
