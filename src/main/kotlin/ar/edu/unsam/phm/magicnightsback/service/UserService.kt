@@ -115,4 +115,14 @@ class UserService {
 
         return user.reservedTickets.sumOf { ticket -> ticket.price }
     }
+
+    fun deleteComment(commentId: Long, id: Long) {
+        val user = userRepository.getById(id)
+        try{
+            val comment = user.comments[commentId.toInt()]
+            user.removeComment(comment)
+        }catch (e: Exception){
+            throw BusinessException(UserError.NONEXISTENT_USER_COMMENT)
+        }
+    }
 }

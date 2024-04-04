@@ -85,6 +85,12 @@ class UserController {
         return userService.getUserComments(id)
     }
 
+    @DeleteMapping("{id}/delete-comment/{commentId}")
+    @Operation(summary = "Permite eliminar un comentario de un usuario")
+    fun deleteComment(@PathVariable id: Long, @PathVariable commentId: Long) {
+        userService.deleteComment(commentId, id)
+    }
+
     @PostMapping("/login")
     @Operation(summary = "Permite logear un usuario registrado en el sistema")
     @ApiResponses(

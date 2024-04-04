@@ -7,6 +7,7 @@ object UserError {
     const val MSG_NOT_ENOUGH_CREDIT = "No tiene saldo suficiente para realizar la compra"
     const val BAD_CREDENTIALS = "El usuario o la contraseña no son validos"
     const val USER_NOT_AUTHORIZED_CREATE_DATE = "El usuario debe ser administrador para crear una nueva funcion"
+    const val NONEXISTENT_USER_COMMENT = "El comentario que intenta eliminar no existe"
 }
 
 object ShowCommentError {
