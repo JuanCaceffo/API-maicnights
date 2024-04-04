@@ -4,6 +4,7 @@ import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.showError
 import ar.edu.unsam.phm.magicnightsback.helpers.removeSpaces
 import ar.edu.unsam.phm.magicnightsback.repository.Iterable
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 class Show(
@@ -40,6 +41,8 @@ class Show(
         dates.add(ShowDate(date, facility))
     }
 
+    fun getSeatTypes() = facility.seats.map{ it.seatType }
+
     fun friendsAttendeesProfileImages(userId: Long?) = userId?.let{allAttendees().filter { it.isMyFriend(userId) }.map{ it.profileImage }} ?: listOf()
 
     private fun baseCost(): Double = band.cost + facility.cost()
@@ -53,6 +56,8 @@ class Show(
     fun allTicketPrices() = facility.getAllSeatTypes().map { fullTicketPrice(it) }
 
     fun allDates() = dates.map{ it.date }.toList().sortedBy { it }
+
+    fun getShowDate(date: LocalDate) = dates.find { it.date.toLocalDate() == date }
 
     private fun allAttendees() = dates.flatMap { it.attendees }
 //    fun soldOutDates() = dates.filter{ it.isSoldOut() }.size

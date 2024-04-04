@@ -1,6 +1,5 @@
 package ar.edu.unsam.phm.magicnightsback.controller;
 
-
 import ar.edu.unsam.phm.magicnightsback.boostrap.ShowBoostrap
 import ar.edu.unsam.phm.magicnightsback.boostrap.UserBoostrap
 import ar.edu.unsam.phm.magicnightsback.domain.StadiumSeatType
@@ -57,97 +56,8 @@ class UserControllerTest(
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
     }
 
-    @BeforeEach
-    fun start() {
-        userRepository.clear()
-        userRepository.create(
-            User(
-                name = "Juan",
-                surname = "Caccefo",
-                username = "juanceto01",
-                dni = 1,
-                birthday = LocalDate.of(2003, 2, 1),
-                password = "asdf",
-                profileImage = ""
-            )
-        )
-    }
-
-//    @AfterAll
-//    fun end() {
-//        userBoostrap.afterPropertiesSet()
-//        showBoostrap.afterPropertiesSet()
-//    }
-
     val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
     val generalDateTime: LocalDateTime = LocalDateTime.parse("2024-03-30T16:57:04.074472231", formatter)
-
-    /*@Test
-    fun `Dado un endpoint para obtener los tickets del carrito de un usuario con un ticket reservado funciona bien`() {
-        //arrange
-        val user = userRepository.getById(0)
-        val show = showRepository.getById(1)
-        val ticket = Ticket(show, show.dates.first(), StadiumSeatType.UPPERLEVEL)
-        //active
-        user.pendingTickets.add(ticket)
-
-        //assert
-        mockMvc.perform(
-            MockMvcRequestBuilders
-                .get("/user-profile/0/tickets-cart")
-                .contentType(MediaType.APPLICATION_JSON)
-        )
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(
-                MockMvcResultMatchers.content().json(
-                    mapper.writeValueAsString(
-                        mutableListOf(
-                            ticket.toCartDTO(
-                                0,
-                                listOf(LocalDateTime.parse("2024-03-30T16:57:04.074472231").minusDays(3)),
-                                10016.0,
-                                1
-                            )
-                        )
-                    )
-                )
-            )
-    }
-
-    @Test
-    fun `Dado un endpoint para obtener los tickets del carrito de un mismo show con funciones diferentes de un usuario funciona bien`() {
-        //arrange
-        val user = userRepository.getById(0)
-        val show = showRepository.getById(1)
-        val ticket = Ticket(show, show.dates.first(), StadiumSeatType.UPPERLEVEL)
-        val ticketDifferentDate = Ticket(show, show.dates.last(), StadiumSeatType.UPPERLEVEL)
-
-        //active
-        user.pendingTickets.add(ticket)
-        user.pendingTickets.add(ticketDifferentDate)
-
-        //assert
-        mockMvc.perform(
-            MockMvcRequestBuilders
-                .get("/user-profile/0/tickets-cart")
-                .contentType(MediaType.APPLICATION_JSON)
-        )
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(
-                MockMvcResultMatchers.content().json(
-                    mapper.writeValueAsString(
-                        mutableListOf(
-                            ticket.toCartDTO(
-                                0,
-                                listOf(generalDateTime.minusDays(3), generalDateTime.plusDays(11 + 2.toLong())),
-                                20032.0,
-                                2
-                            )
-                        )
-                    )
-                )
-            )
-    }*/
 
     @Test
     fun `Un usuario se puede logear con las credenciales correctas`() {

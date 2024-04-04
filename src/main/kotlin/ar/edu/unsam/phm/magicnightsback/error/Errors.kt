@@ -18,6 +18,7 @@ object ShowCommentError {
 object showError {
     const val MSG_DATE_NOT_PASSED = "La fecha del Show todavia no paso"
     const val MSG_SETS_UNAVILABLES = "Excedio la cantidad de asientos disponibles"
+    const val MSG_DATE_NOT_FOUND = "La fecha que intento buscar no existe"
 }
 
 object RepositoryError {
