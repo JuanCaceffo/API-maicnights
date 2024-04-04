@@ -27,7 +27,8 @@ class UserBoostrap(
             dni = 26765114,
             birthday = LocalDate.of(1978, 10, 20),
             password = "asdf",
-            isAdmin = true
+            isAdmin = true,
+            profileImage = "pablito.jpeg"
         ), "Juan" to User(
             name = "Juan",
             surname = "Caccefo",
@@ -35,7 +36,7 @@ class UserBoostrap(
             dni = 1,
             birthday = LocalDate.of(2003, 2, 1),
             password = "asdf",
-            profileImage = ""
+            profileImage = "juan.jpeg"
         ), "Sol" to User(
             name = "Sol",
             surname = "Lopez",
@@ -49,7 +50,8 @@ class UserBoostrap(
             username = "Denise123",
             dni = 1,
             birthday = LocalDate.of(2001, 5, 15),
-            password = "asdf"
+            password = "asdf",
+            profileImage = "denise.jpeg"
         )
     )
 

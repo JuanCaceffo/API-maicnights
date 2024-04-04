@@ -60,11 +60,13 @@ class UserController {
     }
 
     @GetMapping("/user_profile/{id}")
+    @Operation(summary = "Permite obtener la data del perfil del usuario")
     fun getUser(@PathVariable id: Long): UserDTO {
         return userService.getUser(id)
     }
 
     @PutMapping("/user_profile/{id}")
+    @Operation(summary = "Permite actualizar la data del usuario")
     fun updateUser(@PathVariable id: Long, @RequestBody user: UserDTO) {
         return userService.updateUser(id, user)
     }
@@ -75,11 +77,13 @@ class UserController {
     }*/
 
     @GetMapping("/user_profile/{id}/credit")
+    @Operation(summary = "Permite obtener los creditos del usuario")
     fun getUserCredit(@PathVariable id: Long): Double {
         return userService.getUserCredit(id)
     }
 
     @PutMapping("/user_profile/{id}/add_credit")
+    @Operation(summary = "Permite actualizar los creditos del usuario")
     fun addUserCredit(@PathVariable id: Long, @RequestBody creditToAdd: Map<String, Double>): Double {
         val credit = creditToAdd["credit"]!!
         return userService.addCreditToUser(id, credit)
