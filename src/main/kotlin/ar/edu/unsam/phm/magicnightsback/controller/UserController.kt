@@ -20,10 +20,9 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @CrossOrigin(origins = ["*"])
-@RequestMapping("user")
+@RequestMapping("/user")
 class UserController {
-
-    @
+    @Autowired
     lateinit var userService: UserService
 
     @GetMapping("/{userId}/reserved-tickets-total-rice")
