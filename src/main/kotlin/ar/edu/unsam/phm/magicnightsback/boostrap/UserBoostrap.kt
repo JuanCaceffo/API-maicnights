@@ -212,6 +212,16 @@ class UserBoostrap(
                     )
                 )
             }
+            repeat(2) {
+                addTicket(
+                    Ticket(
+                        bigShowRiver,
+                        bigShowRiver.dates.elementAt(1),
+                        pullman,
+                        bigShowRiver.ticketPrice(pullman)
+                    )
+                )
+            }
         }
 
         users["Juan"]!!.apply {
@@ -222,6 +232,16 @@ class UserBoostrap(
                         smallshowGranrex.dates.elementAt(0),
                         pullman,
                         smallshowGranrex.ticketPrice(pullman)
+                    )
+                )
+            }
+            repeat(2) {
+                addTicket(
+                    Ticket(
+                        bigShowRiver,
+                        bigShowRiver.dates.elementAt(1),
+                        pullman,
+                        bigShowRiver.ticketPrice(pullman)
                     )
                 )
             }
@@ -236,6 +256,16 @@ class UserBoostrap(
                     smallshowGranrex.ticketPrice(pullman)
                 )
             )
+            repeat(2) {
+                addTicket(
+                    Ticket(
+                        bigShowRiver,
+                        bigShowRiver.dates.elementAt(1),
+                        pullman,
+                        bigShowRiver.ticketPrice(pullman)
+                    )
+                )
+            }
         }
 
         users["Carolina"]!!.apply {
@@ -245,6 +275,14 @@ class UserBoostrap(
                     smallshowGranrex.dates.elementAt(0),
                     pullman,
                     smallshowGranrex.ticketPrice(pullman)
+                )
+            )
+            addTicket(
+                Ticket(
+                    bestSmallShowMovistarArena,
+                    bestSmallShowMovistarArena.dates.elementAt(0),
+                    lowerlevel,
+                    bestSmallShowMovistarArena.ticketPrice(lowerlevel)
                 )
             )
         }
@@ -258,6 +296,14 @@ class UserBoostrap(
                     smallshowGranrex.ticketPrice(pullman)
                 )
             )
+            addTicket(
+                Ticket(
+                    bestSmallShowTeatroOpera,
+                    bestSmallShowTeatroOpera.dates.elementAt(0),
+                    pullman,
+                    bestSmallShowTeatroOpera.ticketPrice(pullman)
+                )
+            )
         }
 
         users["Ana"]!!.apply {
@@ -267,6 +313,14 @@ class UserBoostrap(
                     smallshowGranrex.dates.elementAt(0),
                     pullman,
                     smallshowGranrex.ticketPrice(pullman)
+                )
+            )
+            addTicket(
+                Ticket(
+                    losRedondosHipodromoDePalermo,
+                    losRedondosHipodromoDePalermo.dates.elementAt(0),
+                    field,
+                    losRedondosHipodromoDePalermo.ticketPrice(field)
                 )
             )
         }
@@ -287,6 +341,21 @@ class UserBoostrap(
         }
         bigShowRiver.apply {
             dates.elementAt(1).addAttendee(users["Pablo"]!!)
+            dates.elementAt(1).addAttendee(users["Sol"]!!)
+            dates.elementAt(1).addAttendee(users["Juan"]!!)
+            dates.elementAt(1).addAttendee(users["Denise"]!!)
+        }
+        bigShowLaBombonera.apply {
+            dates.elementAt(0).addAttendee(users["Pablo"]!!)
+        }
+        bestSmallShowMovistarArena.apply {
+            dates.elementAt(0).addAttendee(users["Carolina"]!!)
+        }
+        bestSmallShowTeatroOpera.apply {
+            dates.elementAt(0).addAttendee(users["Marcos"]!!)
+        }
+        losRedondosHipodromoDePalermo.apply {
+            dates.elementAt(0).addAttendee(users["Ana"]!!)
         }
     }
 
