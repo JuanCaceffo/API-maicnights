@@ -3,14 +3,12 @@ package ar.edu.unsam.phm.magicnightsback.controller
 import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.service.ShowService
-import ar.edu.unsam.phm.magicnightsback.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.bind.annotation.CrossOrigin
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @RestController
@@ -67,9 +65,16 @@ class ShowController {
     }
 
     @GetMapping("/admin_dashboard/shows/{id}")
+    @Operation(summary = "Devuelve todos los shows disponibles para dashboard Admin")
+    fun getAllforAdmin(): List<ShowAdminDTO> {
+        return showService.getAll()
+            .map { it.toShowAdminDTO() }
+    }
+
+    @GetMapping("/admin_dashboard/shows/{id}/stats")
     @Operation(summary = "Devuelve los stats de un show según su id")
-    fun getAdminShowById(@PathVariable id: Long): ShowAdminDTO {
+    fun getShowStatsById(@PathVariable id: Long): ShowStatsDTO {
         val show = showService.getById(id)
-        return show.toShowAdminDTO()
+        return show.toShowStatsDTO()
     }
 }
