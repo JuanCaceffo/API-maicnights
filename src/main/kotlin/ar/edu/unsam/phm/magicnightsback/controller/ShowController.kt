@@ -64,14 +64,14 @@ class ShowController {
         showService.createShowDate(showId, userId, date)
     }
 
-    @GetMapping("/admin_dashboard/shows/{id}")
+    @GetMapping("/admin_dashboard/shows/")
     @Operation(summary = "Devuelve todos los shows disponibles para dashboard Admin")
     fun getAllforAdmin(): List<ShowAdminDTO> {
         return showService.getAll()
             .map { it.toShowAdminDTO() }
     }
 
-    @GetMapping("/admin_dashboard/shows/{id}/stats")
+    @GetMapping("/admin_dashboard/shows/{id}")
     @Operation(summary = "Devuelve los stats de un show según su id")
     fun getShowStatsById(@PathVariable id: Long): ShowStatsDTO {
         val show = showService.getById(id)
