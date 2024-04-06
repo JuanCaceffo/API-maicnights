@@ -199,23 +199,15 @@ class UserBoostrap(
                     bestSmallShow.ticketPrice(pullman)
                 )
             )
-        }
-    }
+            addTicket(
+                Ticket(
+                    bigShow,
+                    bigShow.dates.elementAt(0),
+                    field,
+                    bigShow.ticketPrice(field)
 
-    fun addAttendees() {
-        smallShow.apply {
-            smallShow.dates.elementAt(0).addAttendee(users["Pablo"]!!)
-            smallShow.dates.elementAt(1).addAttendee(users["Sol"]!!)
-            smallShow.dates.elementAt(4).addAttendee(users["Denise"]!!)
-        }
-        bigShow.apply {
-            bigShow.dates.elementAt(1).addAttendee(users["Pablo"]!!)
-            bigShow.dates.elementAt(2).addAttendee(users["Sol"]!!)
-            bigShow.dates.elementAt(2).addAttendee(users["Denise"]!!)
-            bigShow.dates.elementAt(0).addAttendee(users["Juan"]!!)
-        }
-        bestSmallShow.apply {
-            bestSmallShow.dates.elementAt(3).addAttendee(users["Juan"]!!)
+                )
+            )
         }
     }
 
@@ -224,7 +216,6 @@ class UserBoostrap(
         createUsers()
         addFriends()
         buyTickets()
-        addAttendees()
         println("User creation process ends")
     }
 }

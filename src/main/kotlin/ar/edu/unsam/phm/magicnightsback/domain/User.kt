@@ -38,13 +38,13 @@ class User(
         friends.removeIf { friend -> friend.id == id }
     }
 
-    fun addComment(comment: Comment, ticket: Ticket) {
-        validComment(ticket)
+    fun addComment(comment: Comment, show: Show) {
+        validComment(show)
         comments.add(comment)
     }
 
-    private fun validComment(ticket: Ticket){
-        if (!ticket.showDate.datePassed()) throw BusinessException(showError.MSG_DATE_NOT_PASSED)
+    private fun validComment(show: Show){
+        if (!show.canBeCommented(this)) throw BusinessException(showError.USER_CANT_COMMENT)
     }
     fun isMyFriend(user: User) = friends.any { it == user }
 
@@ -53,10 +53,12 @@ class User(
     }
 
     fun addTicket(ticket: Ticket) {
+        ticket.showDate.addAttendee(this)
         tickets.add(ticket)
     }
 
     fun removeTicket(ticket: Ticket) {
+        ticket.showDate.attendees.remove(this)
         tickets.remove(ticket)
     }
 
@@ -78,8 +80,7 @@ class User(
         val price = reservedTickets.sumOf { ticket -> ticket.price }
         price.throwIfGreaterThan(credit, UserError.MSG_NOT_ENOUGH_CREDIT)
 
-        reservedTickets.forEach { ticket -> ticket.showDate.addAttendee(this) }
-        tickets.addAll(reservedTickets)
+        reservedTickets.forEach { ticket -> addTicket(ticket) }
         reservedTickets.clear()
     }
 
