@@ -6,7 +6,7 @@ import ar.edu.unsam.phm.magicnightsback.domain.*
 import ar.edu.unsam.phm.magicnightsback.dto.CommentCreateDTO
 import ar.edu.unsam.phm.magicnightsback.dto.TicketCreateDTO
 import ar.edu.unsam.phm.magicnightsback.dto.toTicketDTO
-import ar.edu.unsam.phm.magicnightsback.dto.toUserDTO
+import ar.edu.unsam.phm.magicnightsback.dto.toUserCommentDTO
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -15,7 +15,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import io.mockk.every
 import io.mockk.mockkStatic
 import org.junit.jupiter.api.*
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
@@ -269,7 +268,7 @@ class UserControllerTest(
             .andExpect(
                 MockMvcResultMatchers.status().isOk
             )
-            .andExpect(MockMvcResultMatchers.content().json(mapper.writeValueAsString(listOf(comment.toUserDTO()))))
+            .andExpect(MockMvcResultMatchers.content().json(mapper.writeValueAsString(listOf(comment.toUserCommentDTO()))))
     }
 
     fun userWithBuyedTicket(): CommentCreateDTO {

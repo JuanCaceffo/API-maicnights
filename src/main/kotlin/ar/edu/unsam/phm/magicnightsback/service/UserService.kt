@@ -51,7 +51,7 @@ class UserService {
     fun getUserComments(id: Long): List<CommentDTO> {
         val user = userRepository.getById(id)
         
-        return user.comments.map { comment -> comment.toUserDTO()  }
+        return user.comments.map { comment -> comment.toUserCommentDTO()  }
     }
 
     fun loginUser(loginUser: LoginUserDTO): Long {

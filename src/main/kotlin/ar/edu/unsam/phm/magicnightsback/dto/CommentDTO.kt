@@ -18,5 +18,5 @@ data class CommentCreateDTO(
 )
 
 
-fun Comment.toUserDTO(): CommentDTO =
+fun Comment.toUserCommentDTO(): CommentDTO =
     CommentDTO("/mock-imgs/card-show-imgs/${show.showImg}", show.name, text, rating, date)
