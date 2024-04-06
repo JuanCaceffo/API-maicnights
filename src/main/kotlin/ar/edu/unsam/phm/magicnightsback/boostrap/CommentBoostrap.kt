@@ -27,17 +27,17 @@ class CommentBoostrap(
     val commentMap = mapOf(
         "BigShowComment1" to Comment(
             showBoostrap.shows["BigShow"]!!,
-            "Que divertido estuvo",
+            "Que divertido estuvo, la pase re bien con mis amigos.",
             4.0),
 
         "BigShowComment2" to Comment(
             showBoostrap.shows["BigShow"]!!,
-            "genial!!!",
+            "genial!!! Ame!! A parte los chicos re copados, al finalizar el show se quedaron para darnos autografos! <3",
             5.0),
 
         "BigShowComment3" to Comment(
             showBoostrap.shows["BigShow"]!!,
-            "Buenardo",
+            "Buenardo. Fue el regalo de cumple de mi pareja y quede re bien.",
             5.0),
 
         "BigShowComment4" to Comment(
