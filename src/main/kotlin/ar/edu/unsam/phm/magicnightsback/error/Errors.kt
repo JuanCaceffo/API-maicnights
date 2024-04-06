@@ -16,7 +16,7 @@ object ShowCommentError {
 }
 
 object showError {
-    const val MSG_DATE_NOT_PASSED = "La fecha del Show todavia no paso"
+    const val USER_CANT_COMMENT = "El usaurio no puede comentar el show"
     const val MSG_SETS_UNAVILABLES = "Excedio la cantidad de asientos disponibles"
     const val TICKET_CART_NOT_FOUND = "No se encontró la fecha en el show especificado"
 }

@@ -255,10 +255,14 @@ class UserControllerTest(
     fun `Un usuario al llamar al endpoint get de comments puede obtener todos los comentarios que realizo a a algun show sin error`() {
         val user = userRepository.getById(0)
         val show = showRepository.getById(0)
-        val ticket = Ticket(show, show.dates.last(), TheaterSeatType.PULLMAN, show.ticketPrice(TheaterSeatType.PULLMAN))
+        val ticket = Ticket(show, show.dates.first(), TheaterSeatType.PULLMAN, show.ticketPrice(TheaterSeatType.PULLMAN))
         val comment = Comment(show,"goood",4.0)
 
-        user.addComment(comment, ticket)
+        mockkStatic(LocalDateTime::class)
+        every { LocalDateTime.now() }  returns generalDateTime.plusDays(12)
+
+        user.addTicket(ticket)
+        user.addComment(comment, ticket.show)
 
         mockMvc.perform(
             MockMvcRequestBuilders

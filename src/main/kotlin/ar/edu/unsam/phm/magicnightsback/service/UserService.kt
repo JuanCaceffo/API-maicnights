@@ -134,9 +134,9 @@ class UserService {
 
     fun createComment(id: Long, commentCreat: CommentCreateDTO) {
         val user = userRepository.getById(id)
-        val ticket = user.tickets[commentCreat.ticketId.toInt()]
+        val ticket = user.tickets.distinctBy { it.show }[commentCreat.groupTicketId.toInt()]
         val comment = Comment(ticket.show,commentCreat.text,commentCreat.rating)
 
-        user.addComment(comment,ticket)
+        user.addComment(comment,ticket.show)
     }
 }

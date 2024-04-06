@@ -12,7 +12,7 @@ data class CommentDTO(
 )
 
 data class CommentCreateDTO(
-    val ticketId: Long,
+    val groupTicketId: Long,
     val text: String,
     val rating: Double,
 )
