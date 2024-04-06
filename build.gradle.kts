@@ -37,6 +37,7 @@ dependencies {
 	implementation("org.uqbar-project:geodds-xtend:1.0.3")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.mockito:mockito-core:3.+")
 	testImplementation("io.mockk:mockk:${mockkVersion}")
 	testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
 	testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")

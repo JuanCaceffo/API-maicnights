@@ -1,5 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
+import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.service.ShowService
@@ -23,7 +24,7 @@ class ShowController {
     @Operation(summary = "Devuelve todos shows los disponibles")
     fun getAll(@RequestParam(required = false, defaultValue = "-1") userId: Long): List<ShowDTO> {
         return showService.getAll()
-            .map { it.toShowDTO(userId) }
+            .map { it.toShowDTO(showService.getAPossibleUserById(userId)) }
     }
 
     @GetMapping("/show/{id}")
@@ -35,7 +36,7 @@ class ShowController {
         val show = showService.getById(id)
 
         val comments = show.allCommentsDTO()
-        return show.toShowDTO(userId,comments)
+        return show.toShowDTO(showService.getAPossibleUserById(userId),comments)
     }
 
     @GetMapping("/show_dates/{id}")

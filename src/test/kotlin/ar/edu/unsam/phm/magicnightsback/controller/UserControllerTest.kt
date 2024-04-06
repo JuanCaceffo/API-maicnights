@@ -1,22 +1,20 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
-import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.boostrap.ShowBoostrap
 import ar.edu.unsam.phm.magicnightsback.boostrap.UserBoostrap
 import ar.edu.unsam.phm.magicnightsback.domain.*
+import ar.edu.unsam.phm.magicnightsback.dto.CommentCreateDTO
 import ar.edu.unsam.phm.magicnightsback.dto.TicketCreateDTO
 import ar.edu.unsam.phm.magicnightsback.dto.toCartDTO
+import ar.edu.unsam.phm.magicnightsback.dto.toUserCommentDTO
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
+import io.mockk.every
+import io.mockk.mockkStatic
+import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
@@ -28,6 +26,7 @@ import org.uqbar.geodds.Point
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -47,6 +46,7 @@ class UserControllerTest(
 
     val lowerLevel = SeatType(TheaterSeatType.LOWERLEVEL, 500)
     val pullman = SeatType(TheaterSeatType.PULLMAN, 300)
+
 
     @BeforeAll
     fun init() {
@@ -89,20 +89,25 @@ class UserControllerTest(
             }
         )
     }
+
     @AfterAll
     fun end() {
         userBoostrap.afterPropertiesSet()
         showBoostrap.afterPropertiesSet()
     }
+
     fun setUserWithTicket(): Ticket {
         val user = userRepository.getById(0)
         val show = showRepository.getById(0)
-        val ticket = Ticket(show, show.dates.first(), TheaterSeatType.PULLMAN, show.ticketPrice(TheaterSeatType.PULLMAN))
+        val ticket =
+            Ticket(show, show.dates.first(), TheaterSeatType.PULLMAN, show.ticketPrice(TheaterSeatType.PULLMAN))
         user.reservedTickets.add(ticket)
         return ticket
     }
+
     @Test
     fun `Dado un endpoint para obtener los tickets del carrito de un usuario con un ticket reservado funciona bien`() {
+        val user = userRepository.getById(0)
         val ticket = setUserWithTicket()
         //assert
         mockMvc.perform(
@@ -116,7 +121,7 @@ class UserControllerTest(
                     mapper.writeValueAsString(
                         mutableListOf(
                             ticket.toCartDTO(
-                                0,
+                                user,
                                 listOf(LocalDateTime.parse("2024-03-30T16:57:04.074472231").plusDays(11)),
                                 8110.0,
                                 1
@@ -133,8 +138,10 @@ class UserControllerTest(
         //arrange
         val user = userRepository.getById(0)
         val show = showRepository.getById(0)
-        val ticket = Ticket(show, show.dates.first(), TheaterSeatType.LOWERLEVEL, show.ticketPrice(TheaterSeatType.LOWERLEVEL))
-        val ticketDifferentDate = Ticket(show, show.dates.last(), TheaterSeatType.LOWERLEVEL, show.ticketPrice(TheaterSeatType.LOWERLEVEL))
+        val ticket =
+            Ticket(show, show.dates.first(), TheaterSeatType.LOWERLEVEL, show.ticketPrice(TheaterSeatType.LOWERLEVEL))
+        val ticketDifferentDate =
+            Ticket(show, show.dates.last(), TheaterSeatType.LOWERLEVEL, show.ticketPrice(TheaterSeatType.LOWERLEVEL))
         //active
         user.reservedTickets.add(ticket)
         user.reservedTickets.add(ticketDifferentDate)
@@ -150,7 +157,7 @@ class UserControllerTest(
                     mapper.writeValueAsString(
                         mutableListOf(
                             ticket.toCartDTO(
-                                0,
+                                user,
                                 listOf(generalDateTime.plusDays(11), generalDateTime.plusDays(11 + 4.toLong())),
                                 24220.0,
                                 2
@@ -162,9 +169,9 @@ class UserControllerTest(
     }
 
     @Test
-    fun `Un usuario reserva 1 ticket para un show de forma exitosa`(){
+    fun `Un usuario reserva 1 ticket para un show de forma exitosa`() {
         val show = showRepository.getById(0)
-        val data = TicketCreateDTO(0,0,show.ticketPrice(TheaterSeatType.PULLMAN),AllSetTypeNames.PULLMAN,1)
+        val data = TicketCreateDTO(0, 0, show.ticketPrice(TheaterSeatType.PULLMAN), AllSetTypeNames.PULLMAN, 1)
         mockMvc.perform(
             MockMvcRequestBuilders
                 .put("/user/0/reserve-tickets")
@@ -174,10 +181,11 @@ class UserControllerTest(
             MockMvcResultMatchers.status().isOk
         )
     }
+
     @Test
-    fun `Un usuario reserva una cantidad no permitida de tickets para un show y falla`(){
+    fun `Un usuario reserva una cantidad no permitida de tickets para un show y falla`() {
         val show = showRepository.getById(0)
-        val data = TicketCreateDTO(0,0,show.ticketPrice(TheaterSeatType.PULLMAN),AllSetTypeNames.PULLMAN,1000)
+        val data = TicketCreateDTO(0, 0, show.ticketPrice(TheaterSeatType.PULLMAN), AllSetTypeNames.PULLMAN, 1000)
         mockMvc.perform(
             MockMvcRequestBuilders
                 .put("/user/0/reserve-tickets")
@@ -187,10 +195,11 @@ class UserControllerTest(
             MockMvcResultMatchers.status().is4xxClientError
         )
     }
+
     @Test
-    fun `Un usuario reserva un ticket con un asiento no disponible para ese show y falla`(){
+    fun `Un usuario reserva un ticket con un asiento no disponible para ese show y falla`() {
         val show = showRepository.getById(0)
-        val data = TicketCreateDTO(0,0,show.ticketPrice(TheaterSeatType.PULLMAN),AllSetTypeNames.UPPERLEVEL,1000)
+        val data = TicketCreateDTO(0, 0, show.ticketPrice(TheaterSeatType.PULLMAN), AllSetTypeNames.UPPERLEVEL, 1000)
         mockMvc.perform(
             MockMvcRequestBuilders
                 .put("/user/0/reserve-tickets")
@@ -214,8 +223,9 @@ class UserControllerTest(
             MockMvcResultMatchers.status().isOk
         )
     }
+
     @Test
-    fun `Al ejecutar el endpoint para comprar todos los tiquetes reservados de un usuario con credio suficiente sale bien`(){
+    fun `Al ejecutar el endpoint para comprar todos los tiquetes reservados de un usuario con credio suficiente sale bien`() {
         setUserWithTicket()
         val user = userRepository.getById(0)
 
@@ -228,8 +238,9 @@ class UserControllerTest(
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
     }
+
     @Test
-    fun `Al ejecutar el endpoint para comprar todos los tiquetes reservados de un usuario con crediotos insuficientes lanza una exepcion`(){
+    fun `Al ejecutar el endpoint para comprar todos los tiquetes reservados de un usuario con crediotos insuficientes lanza una exepcion`() {
         setUserWithTicket()
 
         mockMvc.perform(
@@ -239,6 +250,83 @@ class UserControllerTest(
         )
             .andExpect(MockMvcResultMatchers.status().is4xxClientError)
     }
+
+    @Test
+    fun `Un usuario al llamar al endpoint get de comments puede obtener todos los comentarios que realizo a a algun show sin error`() {
+        val user = userRepository.getById(0)
+        val show = showRepository.getById(0)
+        val ticket = Ticket(show, show.dates.last(), TheaterSeatType.PULLMAN, show.ticketPrice(TheaterSeatType.PULLMAN))
+        val comment = Comment(show,"goood",4.0)
+
+        user.addComment(comment, ticket)
+
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .get("/user/0/comments")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(
+                MockMvcResultMatchers.status().isOk
+            )
+            .andExpect(MockMvcResultMatchers.content().json(mapper.writeValueAsString(listOf(comment.toUserCommentDTO()))))
+    }
+
+    fun userWithBuyedTicket(): CommentCreateDTO {
+        val user = userRepository.getById(0)
+        val ticket = setUserWithTicket()
+        val comment = CommentCreateDTO(0L,"godd",4.0)
+
+        user.addTicket(ticket)
+        return comment
+    }
+
+    @Test
+    fun `Un usuario al llamar al endpoint para crear un ticket sale mal ya que la funcion a la que intenta comentar no fue dada aun`() {
+        val comment = userWithBuyedTicket()
+        mockkStatic(LocalDateTime::class)
+        every { LocalDateTime.now() }  returns generalDateTime
+
+
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .put("/user/0/create-comment")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(comment))
+        )
+            .andExpect(MockMvcResultMatchers.status().is4xxClientError)
+    }
+
+    @Test
+    fun `Un usuario al llamar al endpoint para crear un ticket sale bien`() {
+        val comment = userWithBuyedTicket()
+        mockkStatic(LocalDateTime::class)
+        every { LocalDateTime.now() }  returns generalDateTime.plusDays(20)
+
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .put("/user/0/create-comment")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(comment))
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+    }
+
+    @Test
+    fun `Un usaurio al llamar a un endpoint para eliminar un comentario funciona bien`(){
+        val user = userRepository.getById(0)
+        val show = showRepository.getById(0)
+        val comment = Comment(show,"goood",4.0)
+
+        user.comments.add(comment)
+
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .delete("/user/0/delete-comment/0")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(MockMvcResultMatchers.status().isOk)
+    }
+
+
     //TODO: hacer este test bien, sin when
     /*
     @Test

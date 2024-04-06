@@ -1,10 +1,10 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
+import ar.edu.unsam.phm.magicnightsback.domain.Comment
 import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.error.*
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
-import ar.edu.unsam.phm.magicnightsback.dto.CommentDTO
 import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import org.springframework.stereotype.Service
@@ -28,13 +28,13 @@ class UserService {
             val ticketsSameShow = user.reservedTickets.filter { ticket -> ticket.show == uniqueTicket.show }
             val totalPrice = ticketsSameShow.sumOf { ticket -> ticket.price }
             val allDates = ticketsSameShow.map { ticket -> ticket.showDate.date }.distinct()
-            uniqueTicket.toCartDTO(userId, allDates, totalPrice, ticketsSameShow.size)
+            uniqueTicket.toCartDTO(user, allDates, totalPrice, ticketsSameShow.size)
         }
     }
 
     fun getUserPurchasedTickets(userId: Long): List<PurchsedTicketDTO>{
         val user = userRepository.getById(userId)
-        return user.tickets.map { ticket -> (ticket.toPurchasedTicketDTO(userId)) }
+        return user.tickets.map { ticket -> (ticket.toPurchasedTicketDTO(user)) }
     }
 
     fun getUserFriends(id: Long): List<FriendDTO> {
@@ -45,7 +45,7 @@ class UserService {
     fun getUserComments(id: Long): List<CommentDTO> {
         val user = userRepository.getById(id)
         
-        return user.comments.map { comment -> comment.toUserDTO()  }
+        return user.comments.map { comment -> comment.toUserCommentDTO()  }
     }
 
     fun loginUser(loginUser: LoginUserDTO): Long {
@@ -124,5 +124,13 @@ class UserService {
         }catch (e: Exception){
             throw BusinessException(UserError.NONEXISTENT_USER_COMMENT)
         }
+    }
+
+    fun createComment(id: Long, commentCreat: CommentCreateDTO) {
+        val user = userRepository.getById(id)
+        val ticket = user.tickets[commentCreat.ticketId.toInt()]
+        val comment = Comment(ticket.show,commentCreat.text,commentCreat.rating)
+
+        user.addComment(comment,ticket)
     }
 }

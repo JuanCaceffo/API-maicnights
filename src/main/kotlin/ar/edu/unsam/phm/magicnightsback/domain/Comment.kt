@@ -8,11 +8,13 @@ import java.time.LocalDateTime
 class Comment(
     val show: Show,
     val text: String,
-    val rating: Double
+    val rating: Double,
 ) : Iterable() {
-    val date = LocalDateTime.now()
+    val date: LocalDateTime
+
     init {
         require(rating in 0.0..5.0) { BusinessException(ShowCommentError.INVALID_RATTING) }
+        date = LocalDateTime.now()
     }
 
     override fun validSearchCondition(value: String): Boolean {

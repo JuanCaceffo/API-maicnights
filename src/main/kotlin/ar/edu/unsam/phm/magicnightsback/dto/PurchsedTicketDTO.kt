@@ -13,10 +13,10 @@ data class PurchsedTicketDTO(
     val totalComments: Int?,
     val price: Double?,
     val dates: MutableList<LocalDateTime>,
-    val userImageNames: List<String>,
+    val userImageNames: List<String>
 )
 
-fun Ticket.toPurchasedTicketDTO(userId: Long) = PurchsedTicketDTO(
+fun Ticket.toPurchasedTicketDTO(user: User) = PurchsedTicketDTO(
     this.id,
     this.show.showImg,
     this.show.name,
@@ -26,5 +26,5 @@ fun Ticket.toPurchasedTicketDTO(userId: Long) = PurchsedTicketDTO(
     this.show.comments().size,
     this.price,
     mutableListOf(this.showDate.date),
-    this.show.friendsAttendeesProfileImages(userId)
+    this.show.friendsAttendeesProfileImages(user)
 )

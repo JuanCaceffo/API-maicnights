@@ -17,7 +17,7 @@ data class TicketCartDTO(
     val quantity: Int
 )
 
-fun Ticket.toCartDTO(userId: Long, showDates: List<LocalDateTime>, price: Double, quantity: Int) = TicketCartDTO(
+fun Ticket.toCartDTO(user: User, showDates: List<LocalDateTime>, price: Double, quantity: Int) = TicketCartDTO(
     this.id,
     this.show.showImg,
     this.show.name,
@@ -27,7 +27,7 @@ fun Ticket.toCartDTO(userId: Long, showDates: List<LocalDateTime>, price: Double
     this.show.comments().size,
     price,
     showDates,
-    this.show.friendsAttendeesProfileImages(userId),
+    this.show.friendsAttendeesProfileImages(user),
     quantity
 )
 
