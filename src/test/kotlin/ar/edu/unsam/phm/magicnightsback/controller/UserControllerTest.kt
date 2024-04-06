@@ -108,6 +108,7 @@ class UserControllerTest(
 
     @Test
     fun `Dado un endpoint para obtener los tickets del carrito de un usuario con un ticket reservado funciona bien`() {
+        val user = userRepository.getById(0)
         val ticket = setUserWithTicket()
         //assert
         mockMvc.perform(
@@ -121,7 +122,7 @@ class UserControllerTest(
                     mapper.writeValueAsString(
                         mutableListOf(
                             ticket.toCartDTO(
-                                0,
+                                user,
                                 listOf(LocalDateTime.parse("2024-03-30T16:57:04.074472231").plusDays(11)),
                                 8110.0,
                                 1
@@ -157,7 +158,7 @@ class UserControllerTest(
                     mapper.writeValueAsString(
                         mutableListOf(
                             ticket.toCartDTO(
-                                0,
+                                user,
                                 listOf(generalDateTime.plusDays(11), generalDateTime.plusDays(11 + 4.toLong())),
                                 24220.0,
                                 2

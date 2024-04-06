@@ -1,6 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.dto
 
 import ar.edu.unsam.phm.magicnightsback.domain.Show
+import ar.edu.unsam.phm.magicnightsback.domain.User
 import org.uqbar.geodds.Point
 import java.time.LocalDateTime
 import kotlin.math.ceil
@@ -61,7 +62,7 @@ fun Show.allCommentsDTO(): List<CommentDTO> {
     }
 }
 
-fun Show.toShowDTO(userId: Long, comments: List<CommentDTO> = emptyList(), price: Double = 0.0) =
+fun Show.toShowDTO(user: User?, comments: List<CommentDTO> = emptyList(), price: Double = 0.0) =
     ShowDTO(
         this.id,
         this.showImg,
@@ -73,7 +74,7 @@ fun Show.toShowDTO(userId: Long, comments: List<CommentDTO> = emptyList(), price
         price,
         this.allTicketPrices(),
         this.allDates(),
-        this.friendsAttendeesProfileImages(userId),
+        if(user != null) this.friendsAttendeesProfileImages(user) else listOf(),
         comments,
         pointToDMS(this.facility.location)
     )

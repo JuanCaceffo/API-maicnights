@@ -28,7 +28,7 @@ class UserService {
             val ticketsSameShow = user.reservedTickets.filter { ticket -> ticket.show == uniqueTicket.show }
             val totalPrice = ticketsSameShow.sumOf { ticket -> ticket.price }
             val allDates = ticketsSameShow.map { ticket -> ticket.showDate.date }.distinct()
-            uniqueTicket.toCartDTO(userId, allDates, totalPrice, ticketsSameShow.size)
+            uniqueTicket.toCartDTO(user, allDates, totalPrice, ticketsSameShow.size)
         }
     }
 
