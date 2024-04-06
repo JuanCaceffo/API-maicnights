@@ -5,7 +5,7 @@ import ar.edu.unsam.phm.magicnightsback.boostrap.UserBoostrap
 import ar.edu.unsam.phm.magicnightsback.domain.*
 import ar.edu.unsam.phm.magicnightsback.dto.CommentCreateDTO
 import ar.edu.unsam.phm.magicnightsback.dto.TicketCreateDTO
-import ar.edu.unsam.phm.magicnightsback.dto.toCartDTO
+import ar.edu.unsam.phm.magicnightsback.dto.toTicketDTO
 import ar.edu.unsam.phm.magicnightsback.dto.toUserDTO
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
@@ -121,12 +121,12 @@ class UserControllerTest(
                 MockMvcResultMatchers.content().json(
                     mapper.writeValueAsString(
                         mutableListOf(
-                            ticket.toCartDTO(
+                            ticket.toTicketDTO(
                                 user,
                                 listOf(LocalDateTime.parse("2024-03-30T16:57:04.074472231").plusDays(11)),
                                 8110.0,
                                 1
-                            )
+                            ).toTicketCartDTO()
                         )
                     )
                 )
@@ -157,12 +157,12 @@ class UserControllerTest(
                 MockMvcResultMatchers.content().json(
                     mapper.writeValueAsString(
                         mutableListOf(
-                            ticket.toCartDTO(
+                            ticket.toTicketDTO(
                                 user,
                                 listOf(generalDateTime.plusDays(11), generalDateTime.plusDays(11 + 4.toLong())),
                                 24220.0,
                                 2
-                            )
+                            ).toTicketCartDTO()
                         )
                     )
                 )

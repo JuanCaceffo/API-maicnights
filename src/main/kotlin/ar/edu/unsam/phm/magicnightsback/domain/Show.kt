@@ -16,7 +16,10 @@ class Show(
     private var rentability: RentabilityType = BasePrice()
 
     fun comments() = allAttendees().flatMap { it.comments }.filter{ it.show == this }
-    fun totalRating() = if (comments().size > 0) comments().sumOf { it.rating } / comments().size else 0.0
+    fun totalRating() = if (comments().isNotEmpty()) comments().sumOf { it.rating } / comments().size else 0.0
+
+    fun isAlreadyCommented(user: User): Boolean = allAttendees().find { showUser -> showUser == user }?.comments?.any { comment -> comment.show == this }
+        ?: false
 
     fun changeRentability(newShowStatus: RentabilityType) {
         this.rentability = newShowStatus
@@ -58,4 +61,6 @@ class Show(
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
     }
+
+
 }

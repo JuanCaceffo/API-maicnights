@@ -2,6 +2,7 @@ package ar.edu.unsam.phm.magicnightsback.service
 
 import ar.edu.unsam.phm.magicnightsback.domain.Comment
 import ar.edu.unsam.phm.magicnightsback.domain.Ticket
+import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.error.*
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
@@ -18,23 +19,28 @@ class UserService {
 
     @Autowired
     lateinit var showRepository: ShowRepository
-    fun getTicketsCart(userId: Long): List<TicketCartDTO> {
-        val user = userRepository.getById(userId)
 
-        /*Mapeo todos los tickets en uno solo por show juntando el precio total, las fechas y
+    /*Mapeo todos los tickets en uno solo por show juntando el precio total, las fechas y
         la cantidad de tickets para ese show*/
-        val distinctTickets = user.reservedTickets.distinctBy { it.show }
+    fun getTicketsGroupedByShow(user: User,ticketList: List<Ticket>): List<TicketDTO> {
+        val distinctTickets = ticketList.distinctBy { it.show }
         return distinctTickets.map { uniqueTicket ->
-            val ticketsSameShow = user.reservedTickets.filter { ticket -> ticket.show == uniqueTicket.show }
+            val ticketsSameShow = ticketList.filter { ticket -> ticket.show == uniqueTicket.show }
             val totalPrice = ticketsSameShow.sumOf { ticket -> ticket.price }
             val allDates = ticketsSameShow.map { ticket -> ticket.showDate.date }.distinct()
-            uniqueTicket.toCartDTO(user, allDates, totalPrice, ticketsSameShow.size)
+            uniqueTicket.toTicketDTO(user, allDates, totalPrice, ticketsSameShow.size)
         }
     }
 
-    fun getUserPurchasedTickets(userId: Long): List<PurchsedTicketDTO>{
+    fun getTicketsCart(userId: Long): List<TicketCartDTO> {
         val user = userRepository.getById(userId)
-        return user.tickets.map { ticket -> (ticket.toPurchasedTicketDTO(user)) }
+
+        return getTicketsGroupedByShow(user,user.reservedTickets).map { it.toTicketCartDTO() }
+    }
+
+    fun getUserPurchasedTickets(userId: Long): List<PurchasedTicketDTO>{
+        val user = userRepository.getById(userId)
+        return getTicketsGroupedByShow(user,user.tickets).map { it.toPurchasedTicketDTO() }
     }
 
     fun getUserFriends(id: Long): List<FriendDTO> {

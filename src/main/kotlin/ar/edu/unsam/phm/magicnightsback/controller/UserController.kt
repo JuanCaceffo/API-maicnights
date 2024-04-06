@@ -5,7 +5,7 @@ import ar.edu.unsam.phm.magicnightsback.dto.FriendDTO
 import ar.edu.unsam.phm.magicnightsback.dto.TicketCartDTO
 import ar.edu.unsam.phm.magicnightsback.dto.TicketCreateDTO
 import ar.edu.unsam.phm.magicnightsback.error.FacilityError
-import ar.edu.unsam.phm.magicnightsback.dto.PurchsedTicketDTO
+import ar.edu.unsam.phm.magicnightsback.dto.PurchasedTicketDTO
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.error.showDateError
 import ar.edu.unsam.phm.magicnightsback.error.showError
@@ -68,7 +68,7 @@ class UserController {
     }
     @GetMapping("/{userId}/purchased_tickets")
     @Operation(summary = "Permite obtener todos los tickets comprados por el usuario")
-    fun getUserPurchasedTickets(@PathVariable userId: Long): List<PurchsedTicketDTO> {
+    fun getUserPurchasedTickets(@PathVariable userId: Long): List<PurchasedTicketDTO> {
         return userService.getUserPurchasedTickets(userId)
     }
     @GetMapping("/{id}/friends")
