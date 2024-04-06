@@ -12,7 +12,6 @@ class Show(
     val facility: Facility
 ) : Iterable() {
     var showImg = "${band.name.removeSpaces().lowercase()}.jpg"
-    private val pendingAttendees = mutableListOf<User>()
     val dates = mutableSetOf<ShowDate>()
     private var rentability: RentabilityType = BasePrice()
 
@@ -23,21 +22,13 @@ class Show(
         this.rentability = newShowStatus
     }
 
-    fun addPendingAttendee(user: User) {
-        pendingAttendees.add(user)
-    }
-
-    fun removePendingAttendee(user: User) {
-        pendingAttendees.remove(user)
-    }
-
     fun addDate(date:LocalDateTime) {
         dates.add(ShowDate(date, facility))
     }
 
     fun getSeatTypes() = facility.seats.map{ it.seatType }
 
-    fun friendsAttendeesProfileImages(userId: Long?) = userId?.let{allAttendees().filter { it.isMyFriend(userId) }.map{ it.profileImage }} ?: listOf()
+    fun friendsAttendeesProfileImages(user: User) = allAttendees().filter { it.isMyFriend(user) }.map{ it.profileImage }
 
     fun baseCost(): Double = band.cost + facility.cost()
 

@@ -67,6 +67,7 @@ class UserController {
         userService.purchaseReservedTickets(userId)
     }
     @GetMapping("/{userId}/purchased_tickets")
+    @Operation(summary = "Permite obtener todos los tickets comprados por el usuario")
     fun getUserPurchasedTickets(@PathVariable userId: Long): List<PurchsedTicketDTO> {
         return userService.getUserPurchasedTickets(userId)
     }

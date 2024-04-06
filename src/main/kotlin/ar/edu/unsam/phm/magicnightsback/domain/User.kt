@@ -46,7 +46,7 @@ class User(
     private fun validComment(ticket: Ticket){
         if (!ticket.showDate.datePassed()) throw BusinessException(showError.MSG_DATE_NOT_PASSED)
     }
-    fun isMyFriend(userId: Long) = friends.any { it.id == userId }
+    fun isMyFriend(user: User) = friends.any { it == user }
 
     fun removeComment(comment: Comment) {
         comments.remove(comment)
@@ -78,6 +78,7 @@ class User(
         val price = reservedTickets.sumOf { ticket -> ticket.price }
         price.throwIfGreaterThan(credit, UserError.MSG_NOT_ENOUGH_CREDIT)
 
+        reservedTickets.forEach { ticket -> ticket.showDate.addAttendee(this) }
         tickets.addAll(reservedTickets)
         reservedTickets.clear()
     }

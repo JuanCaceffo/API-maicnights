@@ -34,7 +34,7 @@ class UserService {
 
     fun getUserPurchasedTickets(userId: Long): List<PurchsedTicketDTO>{
         val user = userRepository.getById(userId)
-        return user.tickets.map { ticket -> (ticket.toPurchasedTicketDTO(userId)) }
+        return user.tickets.map { ticket -> (ticket.toPurchasedTicketDTO(user)) }
     }
 
     fun getUserFriends(id: Long): List<FriendDTO> {
