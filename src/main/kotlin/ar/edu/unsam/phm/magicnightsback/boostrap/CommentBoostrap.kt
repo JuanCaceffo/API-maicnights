@@ -47,10 +47,10 @@ class CommentBoostrap(
     )
 
     fun addComments() {
-        sol.addComment(commentMap["BigShowComment1"]!!,ticket)
-        pablo.addComment(commentMap["BigShowComment2"]!!,ticket)
-        juan.addComment(commentMap["BigShowComment3"]!!,ticket)
-        denise.addComment(commentMap["BigShowComment4"]!!,ticket)
+        sol.addComment(commentMap["BigShowComment1"]!!,ticket.show)
+        pablo.addComment(commentMap["BigShowComment2"]!!,ticket.show)
+        juan.addComment(commentMap["BigShowComment3"]!!,ticket.show)
+        denise.addComment(commentMap["BigShowComment4"]!!,ticket.show)
     }
 
     override fun afterPropertiesSet() {

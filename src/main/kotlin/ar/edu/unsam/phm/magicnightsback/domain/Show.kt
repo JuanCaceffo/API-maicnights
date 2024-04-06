@@ -18,8 +18,13 @@ class Show(
     fun comments() = allAttendees().flatMap { it.comments }.filter{ it.show == this }
     fun totalRating() = if (comments().isNotEmpty()) comments().sumOf { it.rating } / comments().size else 0.0
 
-    fun isAlreadyCommented(user: User): Boolean = allAttendees().find { showUser -> showUser == user }?.comments?.any { comment -> comment.show == this }
+    fun canBeCommented(user: User) = !isAlreadyCommented(user) && anyShowDatesPassedFor(user)
+
+    private fun isAlreadyCommented(user: User): Boolean = allAttendees().find { showUser -> showUser == user }?.comments?.any { comment -> comment.show == this }
         ?: false
+
+    private fun anyShowDatesPassedFor(user:User) = dates.filter { date -> date.attendees.contains(user) }.any { date -> date.datePassed() }
+
 
     fun changeRentability(newShowStatus: RentabilityType) {
         this.rentability = newShowStatus
@@ -54,7 +59,7 @@ class Show(
     //Validations
     private fun validateComment(showDate: ShowDate) {
         if(!showDate.datePassed()){
-            throw BusinessException(showError.MSG_DATE_NOT_PASSED)
+            throw BusinessException(showError.USER_CANT_COMMENT)
         }
     }
 
