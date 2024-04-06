@@ -1,9 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import ar.edu.unsam.phm.magicnightsback.dto.CommentDTO
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.showError
-import ar.edu.unsam.phm.magicnightsback.helpers.removeSpaces
 import ar.edu.unsam.phm.magicnightsback.repository.Iterable
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -20,50 +18,36 @@ class Show(
 
     fun rentability() = (totalSales()-baseCost())/totalSales()*100
 
-    fun allCommentsDTO(): List<CommentDTO> {
-        return allAttendees().flatMap {user ->
-            user.comments.filter{ it.show == this }.map {
-                CommentDTO(
-                    user.profileImage,
-                    user.username,
-                    it.text,
-                    it.rating,
-                    it.date
-                )
-            }
-        }
-    }
-
     fun comments() = allAttendees().flatMap { it.comments }.filter{ it.show == this }
-    fun totalRating() = if (comments().size > 0) comments().sumOf { it.rating } / comments().size else 0.0
+    fun totalRating() = if (comments().isNotEmpty()) comments().sumOf { it.rating } / comments().size else 0.0
+
+    fun canBeCommented(user: User) = !isAlreadyCommented(user) && anyShowDatesPassedFor(user)
+
+    private fun isAlreadyCommented(user: User): Boolean = allAttendees().find { showUser -> showUser == user }?.comments?.any { comment -> comment.show == this }
+        ?: false
+
+    private fun anyShowDatesPassedFor(user:User) = dates.filter { date -> date.attendees.contains(user) }.any { date -> date.datePassed() }
+
 
     fun changeRentability(newShowStatus: RentabilityType) {
         this.rentabilityType = newShowStatus
-    }
-
-    fun addPendingAttendee(user: User) {
-        pendingAttendees.add(user)
-    }
-
-    fun removePendingAttendee(user: User) {
-        pendingAttendees.remove(user)
     }
 
     fun addDate(date:LocalDateTime) {
         dates.add(ShowDate(date, facility))
     }
 
-    fun friendsAttendeesProfileImages(userId: Long?) = userId?.let{allAttendees().filter { it.isMyFriend(userId) }.map{ it.profileImage }} ?: listOf()
+    fun getSeatTypes() = facility.seats.map{ it.seatType }
 
-    private fun baseCost(): Double = band.cost + facility.cost()
+    fun friendsAttendeesProfileImages(user: User) = allAttendees().filter { it.isMyFriend(user) }.map{ it.profileImage }
 
-    private fun cost(): Double = baseCost() * rentabilityType.getRentability()
+    fun baseCost(): Double = band.cost + facility.cost()
 
-    private fun baseTicketPrice() = cost() / facility.getTotalSeatCapacity()
+    private fun cost(seatType: SeatTypes): Double = (baseCost() / facility.getTotalSeatCapacity() ) + seatType.price
 
-    fun fullTicketPrice(seatType: SeatTypes) = baseTicketPrice() + seatType.price
+    fun ticketPrice(seatType: SeatTypes): Double = cost(seatType) * rentabilityType.getRentability()
 
-    fun allTicketPrices() = facility.getAllSeatTypes().map { fullTicketPrice(it) }
+    fun allTicketPrices() = facility.seats.map { ticketPrice(it.seatType) }
 
     fun allDates() = dates.map{ it.date }.toList().sortedBy { it }
 
@@ -73,16 +57,18 @@ class Show(
     fun soldOutDates() = dates.filter{ it.isSoldOut() }.size
     fun ticketsSoldOfSeatType(seatType: SeatTypes) = dates.sumOf { it.getReservedSeatsOf(seatType) }
     fun totalTicketsSold() = facility.getAllSeatTypes().sumOf { ticketsSoldOfSeatType(it) }
-    fun totalSales() = facility.getAllSeatTypes().sumOf { fullTicketPrice(it) * ticketsSoldOfSeatType(it) }
+    fun totalSales() = facility.getAllSeatTypes().sumOf { ticketPrice(it) * ticketsSoldOfSeatType(it) }
 
     //Validations
     private fun validateComment(showDate: ShowDate) {
         if(!showDate.datePassed()){
-            throw BusinessException(showError.MSG_DATE_NOT_PASSED)
+            throw BusinessException(showError.USER_CANT_COMMENT)
         }
     }
 
     override fun validSearchCondition(value: String): Boolean {
         TODO("Not yet implemented")
     }
+
+
 }

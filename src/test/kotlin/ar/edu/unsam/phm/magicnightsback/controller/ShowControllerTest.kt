@@ -9,6 +9,7 @@ import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.kotest.core.annotation.DisplayName
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -68,7 +69,7 @@ class ShowControllerTest(
         facilityRepository.create(baseFacility)
     }
 
-    @BeforeAll
+    @AfterAll
     fun end() {
         userBoostrap.afterPropertiesSet()
         facilityBoostrap.afterPropertiesSet()

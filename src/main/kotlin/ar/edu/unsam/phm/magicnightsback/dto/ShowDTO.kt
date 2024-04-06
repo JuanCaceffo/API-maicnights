@@ -1,7 +1,10 @@
 package ar.edu.unsam.phm.magicnightsback.dto
 
 import ar.edu.unsam.phm.magicnightsback.domain.Show
+import ar.edu.unsam.phm.magicnightsback.domain.User
+import org.uqbar.geodds.Point
 import java.time.LocalDateTime
+import kotlin.math.ceil
 
 data class ShowDTO(
     val id: Long,
@@ -15,34 +18,51 @@ data class ShowDTO(
     val prices: List<Double>,
     val dates: List<LocalDateTime>,
     val userImageNames: List<String>,
-    val comments: List<CommentDTO>
+    val comments: List<CommentDTO>,
+    val geolocation: String
 )
 
-data class ShowDateDetailsDTO (
-    val showId: Long,
-    val dateSeats: List<DateSeatsDTO>
-)
+fun pointToDMS(point: Point): String {
+    val latitude = point.x
+    val longitude = point.y
 
-data class DateSeatsDTO(
-    val date: LocalDateTime,
-    val seats: List<SeatsDTO>
-)
+    val latitudeDirection = if (latitude >= 0) "N" else "S"
+    val longitudeDirection = if (longitude >= 0) "E" else "W"
 
-data class SeatsDTO(
+    return "Latitude: ${decimalToDMS(latitude)} $latitudeDirection, Longitude: ${decimalToDMS(longitude)} $longitudeDirection"
+}
+
+fun decimalToDMS(decimal: Double): String {
+    val degrees = decimal.toInt()
+    val minutesDouble = (decimal - degrees) * 60
+    val minutes = minutesDouble.toInt()
+    val secondsDouble = (minutesDouble - minutes) * 60
+    val seconds = ceil(secondsDouble).toInt()
+
+    return "$degrees° $minutes' $seconds''"
+}
+data class SeatDTO(
     val seatType: String,
     val price: Double,
     val maxToSell: Int,
 )
 
-data class CommentDTO(
-    val userImg: String,
-    val userName: String,
-    val text: String,
-    val rating: Double,
-    val date: LocalDateTime
-)
 
-fun Show.toShowDTO(userId: Long, comments: List<CommentDTO> = emptyList(), price: Double = 0.0) =
+fun Show.allCommentsDTO(): List<CommentDTO> {
+    return allAttendees().flatMap {user ->
+        user.comments.filter{ it.show == this }.map {
+            CommentDTO(
+                "/mock-imgs/user-imgs/${user.profileImage}",
+                user.username,
+                it.text,
+                it.rating,
+                it.date
+            )
+        }
+    }
+}
+
+fun Show.toShowDTO(user: User?, comments: List<CommentDTO> = emptyList(), price: Double = 0.0) =
     ShowDTO(
         this.id,
         this.showImg,
@@ -54,13 +74,7 @@ fun Show.toShowDTO(userId: Long, comments: List<CommentDTO> = emptyList(), price
         price,
         this.allTicketPrices(),
         this.allDates(),
-        this.friendsAttendeesProfileImages(userId),
+        if(user != null) this.friendsAttendeesProfileImages(user) else listOf(),
         comments,
+        pointToDMS(this.facility.location)
     )
-
-fun Show.toShowDateDetailsDTO(dateSeats: List<DateSeatsDTO>) =
-    ShowDateDetailsDTO(
-        this.id,
-        dateSeats
-    )
-

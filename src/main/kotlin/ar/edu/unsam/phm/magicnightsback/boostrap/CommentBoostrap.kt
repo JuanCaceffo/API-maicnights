@@ -8,7 +8,6 @@ import org.springframework.context.annotation.DependsOn
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 @Component
 @Order(4)
@@ -18,7 +17,7 @@ class CommentBoostrap(
     userBoostrap: UserBoostrap,
 ) : InitializingBean {
 
-    val ticket = Ticket(showBoostrap.shows["BigShow"]!!, showBoostrap.shows["BigShow"]!!.getShowDate(LocalDate.now().minusDays(3))!! ,StadiumSeatType.UPPERLEVEL)
+    val ticket = Ticket(showBoostrap.shows["BigShow"]!!, showBoostrap.shows["BigShow"]!!.dates.first() ,StadiumSeatType.UPPERLEVEL, showBoostrap.shows["BigShow"]!!.ticketPrice(StadiumSeatType.UPPERLEVEL))
 
     val sol = userBoostrap.users["Sol"]!!
     val pablo = userBoostrap.users["Pablo"]!!
@@ -28,17 +27,17 @@ class CommentBoostrap(
     val commentMap = mapOf(
         "BigShowComment1" to Comment(
             showBoostrap.shows["BigShow"]!!,
-            "Que divertido estuvo",
+            "Que divertido estuvo, la pase re bien con mis amigos.",
             4.0),
 
         "BigShowComment2" to Comment(
             showBoostrap.shows["BigShow"]!!,
-            "genial!!!",
+            "genial!!! Ame!! A parte los chicos re copados, al finalizar el show se quedaron para darnos autografos! <3",
             5.0),
 
         "BigShowComment3" to Comment(
             showBoostrap.shows["BigShow"]!!,
-            "Buenardo",
+            "Buenardo. Fue el regalo de cumple de mi pareja y quede re bien.",
             5.0),
 
         "BigShowComment4" to Comment(
@@ -48,10 +47,10 @@ class CommentBoostrap(
     )
 
     fun addComments() {
-        sol.addComment(commentMap["BigShowComment1"]!!,ticket)
-        pablo.addComment(commentMap["BigShowComment2"]!!,ticket)
-        juan.addComment(commentMap["BigShowComment3"]!!,ticket)
-        denise.addComment(commentMap["BigShowComment4"]!!,ticket)
+        sol.addComment(commentMap["BigShowComment1"]!!,ticket.show)
+        pablo.addComment(commentMap["BigShowComment2"]!!,ticket.show)
+        juan.addComment(commentMap["BigShowComment3"]!!,ticket.show)
+        denise.addComment(commentMap["BigShowComment4"]!!,ticket.show)
     }
 
     override fun afterPropertiesSet() {

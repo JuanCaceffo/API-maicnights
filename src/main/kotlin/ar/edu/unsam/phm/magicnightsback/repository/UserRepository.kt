@@ -1,7 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.repository
 
 import ar.edu.unsam.phm.magicnightsback.domain.User
-import ar.edu.unsam.phm.magicnightsback.serializers.LoginUserDTO
+import ar.edu.unsam.phm.magicnightsback.dto.LoginUserDTO
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -21,7 +21,7 @@ class UserRepository : CustomRepository<User>() {
         this.update(user)
     }
 
-    fun getFriends(userId: Long): MutableSet<User> {
+    fun getFriends(userId: Long): MutableList<User> {
         return this.getById(userId).friends
     }
 }
