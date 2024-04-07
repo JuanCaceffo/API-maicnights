@@ -116,7 +116,7 @@ class UserService {
     fun reservedTicketsPrice(userId: Long): Double {
         val user = userRepository.getById(userId)
 
-        return user.reservedTickets.sumOf { ticket -> ticket.seatPrice }
+        return user.reservedTickets.sumOf { ticket -> ticket.price() }
     }
 
     fun deleteComment(commentId: Long, id: Long) {
