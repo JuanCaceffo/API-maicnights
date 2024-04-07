@@ -17,20 +17,6 @@ data class TicketDTO(
     val quantity: Int,
     val canBeCommented: Boolean
 ){
-    fun toTicketCartDTO(): TicketCartDTO = TicketCartDTO(
-        id,
-        showImg,
-        showName,
-        bandName,
-        facilityName,
-        rating,
-        totalComments,
-        price,
-        dates,
-        userImageNames,
-        quantity
-    )
-
     fun toPurchasedTicketDTO(): PurchasedTicketDTO = PurchasedTicketDTO(
         id,
         showImg,
@@ -42,6 +28,7 @@ data class TicketDTO(
         price,
         dates,
         userImageNames,
+        quantity,
         canBeCommented
     )
 }
@@ -62,20 +49,6 @@ fun Ticket.toTicketDTO(user: User, price: Double, quantity: Int) = TicketDTO(
     this.show.canBeCommented(user)
 )
 
-data class TicketCartDTO(
-    val id: Long,
-    val showImg: String,
-    val showName: String,
-    val bandName: String,
-    val facilityName: String,
-    val rating: Double,
-    val totalComments: Int,
-    val price: Double,
-    val dates: List<LocalDateTime>,
-    val userImageNames: List<String>,
-    val quantity: Int
-)
-
 data class PurchasedTicketDTO(
     val id: Long,
     val showImg: String,
@@ -87,6 +60,7 @@ data class PurchasedTicketDTO(
     val price: Double?,
     val dates: List<LocalDateTime>,
     val userImageNames: List<String>,
+    val quantity: Int,
     val canBeCommented: Boolean
 )
 

@@ -124,7 +124,7 @@ class UserControllerTest(
                                 user,
                                 8110.0,
                                 ticket.quantity
-                            ).toTicketCartDTO()
+                            )
                         )
                     )
                 )
@@ -159,12 +159,12 @@ class UserControllerTest(
                                 user,
                                 12110.0,
                                 1
-                            ).toTicketCartDTO(),
+                            ),
                             ticketDifferentDate.toTicketDTO(
                                 user,
                                 12110.0,
                                 1
-                            ).toTicketCartDTO()
+                            )
                         )
                     )
                 )

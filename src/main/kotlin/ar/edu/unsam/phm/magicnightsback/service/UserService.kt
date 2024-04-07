@@ -31,10 +31,10 @@ class UserService {
         }
     }
 
-    fun getTicketsCart(userId: Long): List<TicketCartDTO> {
+    fun getTicketsCart(userId: Long): List<TicketDTO> {
         val user = userRepository.getById(userId)
 
-        return getTicketsGroupedByShowDate(user,user.reservedTickets).map { it.toTicketCartDTO() }
+        return getTicketsGroupedByShowDate(user,user.reservedTickets)
     }
 
     fun getUserPurchasedTickets(userId: Long): List<PurchasedTicketDTO>{

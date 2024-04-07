@@ -78,7 +78,7 @@ class User(
 
     fun buyReservedTickets() {
         val price = reservedTickets.sumOf { ticket -> ticket.seatPrice }
-        price.throwIfGreaterThan(credit, UserError.MSG_NOT_ENOUGH_CREDIT)
+        credit = (credit - price).throwErrorIfNegative(BusinessException(UserError.MSG_NOT_ENOUGH_CREDIT)).toDouble()
 
         reservedTickets.forEach { ticket -> addTicket(ticket) }
         reservedTickets.clear()

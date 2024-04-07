@@ -2,7 +2,6 @@ package ar.edu.unsam.phm.magicnightsback.controller
 
 import ar.edu.unsam.phm.magicnightsback.dto.UserDTO
 import ar.edu.unsam.phm.magicnightsback.dto.FriendDTO
-import ar.edu.unsam.phm.magicnightsback.dto.TicketCartDTO
 import ar.edu.unsam.phm.magicnightsback.dto.TicketCreateDTO
 import ar.edu.unsam.phm.magicnightsback.error.FacilityError
 import ar.edu.unsam.phm.magicnightsback.dto.PurchasedTicketDTO
@@ -32,7 +31,7 @@ class UserController {
 
     @GetMapping("/{userId}/reserved-tickets")
     @Operation(summary = "Permite obtener los tickets por funcion que el usuario tiene reservados en el carrito")
-    fun getUserTicketsCart(@PathVariable userId: Long): List<TicketCartDTO> {
+    fun getUserTicketsCart(@PathVariable userId: Long): List<TicketDTO> {
         return userService.getTicketsCart(userId)
     }
 
