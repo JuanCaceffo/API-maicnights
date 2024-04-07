@@ -1,22 +1,32 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-class Cart {
-    val userCarts: MutableMap<User, MutableList<Ticket>> = mutableMapOf()
+import ar.edu.unsam.phm.magicnightsback.repository.Iterable
 
-    private fun getOrAddCartTo(user:User) = userCarts.getOrPut(user) { mutableListOf() }
+class Cart(val user: User): Iterable() {
+    val reservedTickets: MutableList<Ticket> = mutableListOf()
 
 
-    fun getAllTickets(user: User) = getOrAddCartTo(user)
+    fun getAllTickets() = reservedTickets
 
-    fun reserveTicket(user: User, ticket: Ticket) {
+    fun reserveTicket(ticket: Ticket) {
         ticket.showDate.reserveSeat(ticket.seatType, ticket.quantity)
-        getOrAddCartTo(user).add(ticket)
+        reservedTickets.add(ticket)
     }
 
-    fun removeTickets(user: User){
-        getOrAddCartTo(user).forEach { ticket -> ticket.showDate.releaseSeat(ticket.seatType,ticket.quantity) }
-        getOrAddCartTo(user).clear()
+    fun removeTickets(){
+        reservedTickets.forEach { ticket -> ticket.showDate.releaseSeat(ticket.seatType,ticket.quantity) }
+        reservedTickets.clear()
     }
 
-    fun ticketsSize(user: User) = getOrAddCartTo(user).size
+    fun ticketsSize() = reservedTickets.sumOf { ticket -> ticket.quantity }
+
+    fun buyReservedTickets(){
+        user.decreaseCredits(totalPrice())
+        reservedTickets.clear()
+    }
+
+    fun totalPrice() = reservedTickets.sumOf { ticket -> ticket.price() }
+    override fun validSearchCondition(value: String): Boolean {
+        TODO("Not yet implemented")
+    }
 }

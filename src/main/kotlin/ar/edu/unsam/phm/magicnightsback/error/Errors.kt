@@ -33,6 +33,10 @@ object FacilityError {
     const val INVALID_SEAT_TYPE = "El tipo de asiento ingresado no es valido para este tipo de instalacion"
 }
 
+object cartError {
+    const val CART_FOR_USER_NOT_FOUND = "El carrito para el usaurio especificado no fue encontrado"
+}
+
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 class BusinessException(msg: String) : RuntimeException(msg)
 

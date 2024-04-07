@@ -68,12 +68,8 @@ class User(
 
     fun age(): Int = birthday.calculateAge()
 
-    fun buyReservedTickets() {
-        val price = reservedTickets.sumOf { ticket -> ticket.price() }
-        credit = (credit - price).throwErrorIfNegative(BusinessException(UserError.MSG_NOT_ENOUGH_CREDIT)).toDouble()
-
-        reservedTickets.forEach { ticket -> addTicket(ticket) }
-        reservedTickets.clear()
+    fun decreaseCredits(qunatity: Double){
+        credit = (credit - qunatity).throwErrorIfNegative(BusinessException(UserError.MSG_NOT_ENOUGH_CREDIT)).toDouble()
     }
 
     ///// VALIDATORS ///////////////////////////////////////////
