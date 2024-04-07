@@ -66,15 +66,7 @@ class User(
         this.credit += credit
     }
 
-    fun removeCredit(credit: Double) {
-        this.credit -= credit
-    }
-
     fun age(): Int = birthday.calculateAge()
-
-    fun pay(price: Double) {
-        removeCredit(price)
-    }
 
     fun buyReservedTickets() {
         val price = reservedTickets.sumOf { ticket -> ticket.price() }
@@ -90,7 +82,6 @@ class User(
     }
 
     fun throwIfNotAdmin(msg: String) {
-        //TODO: cambiar a autenthicationException
         if (!isAdmin) throw AuthenticationException(msg)
     }
 }
