@@ -108,7 +108,7 @@ class UserService {
         user.reservedTickets.clear()
     }
 
-    fun purchaseReservedTickets(userId: Long) {
+    fun buyReservedTickets(userId: Long) {
         val user = userRepository.getById(userId)
         user.buyReservedTickets()
     }

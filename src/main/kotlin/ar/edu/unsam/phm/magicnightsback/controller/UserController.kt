@@ -63,7 +63,7 @@ class UserController {
         ]
     )
     fun purchaseReservedTickets(@PathVariable userId: Long){
-        userService.purchaseReservedTickets(userId)
+        userService.buyReservedTickets(userId)
     }
     @GetMapping("/{userId}/purchased_tickets")
     @Operation(summary = "Permite obtener todos los tickets por funcion comprados por el usuario")
