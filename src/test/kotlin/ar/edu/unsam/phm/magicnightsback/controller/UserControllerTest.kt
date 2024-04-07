@@ -122,9 +122,8 @@ class UserControllerTest(
                         mutableListOf(
                             ticket.toTicketDTO(
                                 user,
-                                listOf(LocalDateTime.parse("2024-03-30T16:57:04.074472231").plusDays(11)),
                                 8110.0,
-                                1
+                                ticket.quantity
                             ).toTicketCartDTO()
                         )
                     )
@@ -158,9 +157,13 @@ class UserControllerTest(
                         mutableListOf(
                             ticket.toTicketDTO(
                                 user,
-                                listOf(generalDateTime.plusDays(11), generalDateTime.plusDays(11 + 4.toLong())),
-                                24220.0,
-                                2
+                                12110.0,
+                                1
+                            ).toTicketCartDTO(),
+                            ticketDifferentDate.toTicketDTO(
+                                user,
+                                12110.0,
+                                1
                             ).toTicketCartDTO()
                         )
                     )

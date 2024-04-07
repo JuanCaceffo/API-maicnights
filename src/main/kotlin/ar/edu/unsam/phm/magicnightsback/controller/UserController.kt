@@ -31,7 +31,7 @@ class UserController {
     }
 
     @GetMapping("/{userId}/reserved-tickets")
-    @Operation(summary = "Permite obtener los tickets por show que el usuario tiene reservados en el carrito")
+    @Operation(summary = "Permite obtener los tickets por funcion que el usuario tiene reservados en el carrito")
     fun getUserTicketsCart(@PathVariable userId: Long): List<TicketCartDTO> {
         return userService.getTicketsCart(userId)
     }
@@ -67,7 +67,7 @@ class UserController {
         userService.purchaseReservedTickets(userId)
     }
     @GetMapping("/{userId}/purchased_tickets")
-    @Operation(summary = "Permite obtener todos los tickets comprados por el usuario")
+    @Operation(summary = "Permite obtener todos los tickets por funcion comprados por el usuario")
     fun getUserPurchasedTickets(@PathVariable userId: Long): List<PurchasedTicketDTO> {
         return userService.getUserPurchasedTickets(userId)
     }

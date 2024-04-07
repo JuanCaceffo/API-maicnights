@@ -47,7 +47,7 @@ data class TicketDTO(
 }
 
 
-fun Ticket.toTicketDTO(user: User, showDates: List<LocalDateTime>, price: Double, quantity: Int) = TicketDTO(
+fun Ticket.toTicketDTO(user: User, price: Double, quantity: Int) = TicketDTO(
     this.id,
     this.show.showImg,
     this.show.name,
@@ -56,7 +56,7 @@ fun Ticket.toTicketDTO(user: User, showDates: List<LocalDateTime>, price: Double
     this.show.totalRating(),
     this.show.comments().size,
     price,
-    showDates,
+    listOf(this.showDate.date),
     this.show.friendsAttendeesProfileImages(user),
     quantity,
     this.show.canBeCommented(user)
@@ -93,7 +93,7 @@ data class PurchasedTicketDTO(
 data class TicketCreateDTO(
     val showId: Long,
     val showDateId: Long,
-    val price: Double,
+    val seatPrice: Double,
     val seatTypeName: AllSetTypeNames,
     val quantity: Int
 )
