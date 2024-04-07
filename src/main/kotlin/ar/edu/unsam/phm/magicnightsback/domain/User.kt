@@ -46,7 +46,7 @@ class User(
     private fun validComment(show: Show){
         if (!show.canBeCommented(this)) throw BusinessException(showError.USER_CANT_COMMENT)
     }
-    fun isMyFriend(user: User) = friends.any { it == user }
+    fun isMyFriend(user: User) = friends.contains(user)
 
     fun removeComment(comment: Comment) {
         comments.remove(comment)

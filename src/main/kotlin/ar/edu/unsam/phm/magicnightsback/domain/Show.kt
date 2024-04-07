@@ -50,7 +50,7 @@ class Show(
 
     fun getShowDate(date: LocalDate) = dates.find { it.date.toLocalDate() == date }
 
-    fun allAttendees() = dates.flatMap { it.attendees }
+    fun allAttendees() = dates.flatMap { it.attendees }.distinct()
 //    fun soldOutDates() = dates.filter{ it.isSoldOut() }.size
 //    fun ticketsSoldOfSeatType(seatType: SeatTypes) = dates.sumOf { it.getReservedSeatsOf(seatType) }
 //    fun totalTicketsSold() = facility.getAllSeatTypes().sumOf { ticketsSoldOfSeatType(it) }
