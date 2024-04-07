@@ -52,7 +52,7 @@ fun Show.allCommentsDTO(): List<CommentDTO> {
     return allAttendees().flatMap {user ->
         user.comments.filter{ it.show == this }.map {
             CommentDTO(
-                "/mock-imgs/user-imgs/${user.profileImage}",
+                user.profileImage,
                 user.username,
                 it.text,
                 it.rating,

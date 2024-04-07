@@ -17,6 +17,5 @@ data class CommentCreateDTO(
     val rating: Double,
 )
 
-
 fun Comment.toUserCommentDTO(): CommentDTO =
-    CommentDTO("/mock-imgs/card-show-imgs/${show.showImg}", show.name, text, rating, date)
+    CommentDTO(show.showImg, show.name, text, rating, date)
