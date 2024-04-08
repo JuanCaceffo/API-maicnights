@@ -22,6 +22,7 @@ class Cart(val user: User): Iterable() {
 
     fun buyReservedTickets(){
         user.decreaseCredits(totalPrice())
+        getAllTickets().forEach { ticket -> user.addTicket(ticket) }
         reservedTickets.clear()
     }
 
