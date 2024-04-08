@@ -185,7 +185,7 @@ class UserBoostrap(
                 addTicket(
                     Ticket(
                         bigShowRiver,
-                        bigShowRiver.dates.elementAt(1),
+                        bigShowRiver.dates.elementAt(0),
                         pullman,
                         bigShowRiver.ticketPrice(pullman)
                     )
@@ -216,7 +216,7 @@ class UserBoostrap(
                 addTicket(
                     Ticket(
                         bigShowRiver,
-                        bigShowRiver.dates.elementAt(1),
+                        bigShowRiver.dates.elementAt(0),
                         pullman,
                         bigShowRiver.ticketPrice(pullman)
                     )
@@ -239,7 +239,7 @@ class UserBoostrap(
                 addTicket(
                     Ticket(
                         bigShowRiver,
-                        bigShowRiver.dates.elementAt(1),
+                        bigShowRiver.dates.elementAt(0),
                         pullman,
                         bigShowRiver.ticketPrice(pullman)
                     )
@@ -260,7 +260,7 @@ class UserBoostrap(
                 addTicket(
                     Ticket(
                         bigShowRiver,
-                        bigShowRiver.dates.elementAt(1),
+                        bigShowRiver.dates.elementAt(0),
                         pullman,
                         bigShowRiver.ticketPrice(pullman)
                     )
