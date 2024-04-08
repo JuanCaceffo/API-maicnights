@@ -13,12 +13,20 @@ fun Int.throwErrorIfNegative(error: RuntimeException): Int {
     return this
 }
 
+object Comparar {
+    fun total(buscado: String, listaComparar: List<String>, caseSense: Boolean = true) =
+        listaComparar.any { it.equals(buscado, ignoreCase = caseSense) }
+
+    fun parcial(busquedoParcial: String, listaComparar: List<String>, caseSense: Boolean = true) =
+        listaComparar.any { it.contains(busquedoParcial, ignoreCase = caseSense) }
+}
+
 fun String.removeSpaces(): String {
     return this.trim().replace("\\s+".toRegex(), "")
 }
 
-fun Number.throwIfGreaterThan(number: Number,msg: String): Number {
-    if (this.toFloat() > number.toFloat()){
+fun Number.throwIfGreaterThan(number: Number, msg: String): Number {
+    if (this.toFloat() > number.toFloat()) {
         throw BusinessException(msg)
     }
     return this

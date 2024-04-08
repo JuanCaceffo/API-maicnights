@@ -60,29 +60,29 @@ class ShowTests : DescribeSpec({
     }
 
     val showBase = Show("La vela puerca", Band("La vela puerca", 10000.0), theterWithLowCapacity)
+    val ticketPricePullmanBase = 8110
+    val ticketPriceLowerlevelBase = 12110
 
-    //cost pullman 10137.5
-    //cost lowerllevel 15137.5
     describe("Tests Shows") {
         it("Un show en estado base con un teatro chico con acustica mala y una sola funcion tiene un precio bajo para cada entrada en las diferentes ubicaciones") {
-            showBase.ticketPrice(TheaterSeatType.PULLMAN) shouldBe 8110
-            showBase.ticketPrice(TheaterSeatType.LOWERLEVEL) shouldBe 12110
+            showBase.ticketPrice(TheaterSeatType.PULLMAN) shouldBe ticketPricePullmanBase
+            showBase.ticketPrice(TheaterSeatType.LOWERLEVEL) shouldBe ticketPriceLowerlevelBase
 
         }
         it("Un show en estado de venta plena con un teatro chico con acustica mala y una sola funcion tiene un precio promedio para cada entrada en las diferentes ubicaciones") {
             //ACTIVATE
             showBase.changeRentability(FullSale())
             //ASSERT
-            showBase.ticketPrice(TheaterSeatType.PULLMAN) shouldBe 10137.5
-            showBase.ticketPrice(TheaterSeatType.LOWERLEVEL) shouldBe 15137.5
+            showBase.ticketPrice(TheaterSeatType.PULLMAN) shouldBe (ticketPricePullmanBase * (1/0.8))
+            showBase.ticketPrice(TheaterSeatType.LOWERLEVEL) shouldBe (ticketPriceLowerlevelBase * (1/0.8))
 
         }
         it("Un show en estado de venta MegaShow con un teatro chico con acustica mala y una sola funcion tiene un precio elevado para cada entrada en las diferentes ubicaciones") {
             //ACTIVATE
             showBase.changeRentability(MegaShow())
             //ASSERT
-            showBase.ticketPrice(TheaterSeatType.PULLMAN) shouldBe 13178.75
-            showBase.ticketPrice(TheaterSeatType.LOWERLEVEL) shouldBe 19678.75
+            showBase.ticketPrice(TheaterSeatType.PULLMAN) shouldBe (ticketPricePullmanBase * (1.3/0.8))
+            showBase.ticketPrice(TheaterSeatType.LOWERLEVEL) shouldBe (ticketPriceLowerlevelBase * (1.3/0.8))
         }
         it("Debe poder agregar correctamente fechas al show") {
             repeat(3){ showBase.addDate(LocalDateTime.now().plusDays(it.toLong())) }
@@ -116,10 +116,9 @@ class ShowTests : DescribeSpec({
 
         it("Show con 1 fecha soldOut y otra fecha con seats disponible debe poder informarlo correctamente") {
             repeat(2){ showBase.addDate(LocalDateTime.now().plusDays(it.toLong())) }
-
             showBase.dates.forEach{
-                it.reserveSeat(TheaterSeatType.LOWERLEVEL, 10)
-                it.reserveSeat(TheaterSeatType.PULLMAN, 5)
+                it.reserveSeat(TheaterSeatType.LOWERLEVEL, 500)
+                it.reserveSeat(TheaterSeatType.PULLMAN, 295)
             }
             showBase.dates.last().reserveSeat(TheaterSeatType.PULLMAN, 5)
 
@@ -140,11 +139,11 @@ class ShowTests : DescribeSpec({
         it("Show debe devolver correctamente el total vendido de todas las fechas") {
             repeat(2){ showBase.addDate(LocalDateTime.now().plusDays(it.toLong())) }
 
-            showBase.dates.first().reserveSeat(TheaterSeatType.LOWERLEVEL, 10)
-            showBase.dates.first().reserveSeat(TheaterSeatType.PULLMAN, 5)
-            showBase.dates.last().reserveSeat(TheaterSeatType.PULLMAN, 5)
+            showBase.dates.first().reserveSeat(TheaterSeatType.LOWERLEVEL, 500)
+            showBase.dates.first().reserveSeat(TheaterSeatType.PULLMAN, 295)
+            showBase.dates.last().reserveSeat(TheaterSeatType.PULLMAN, 295)
 
-            showBase.totalSales() shouldBe (14400.0 * 10 + 19400.0 * 10)
+            showBase.totalSales() shouldBe (ticketPriceLowerlevelBase * 500 + ticketPricePullmanBase * 590)
         }
     }
 })

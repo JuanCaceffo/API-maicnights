@@ -21,9 +21,14 @@ class ShowController {
     lateinit var showService: ShowService
 
     @GetMapping("/shows")
-    @Operation(summary = "Devuelve todos shows los disponibles")
-    fun getAll(@RequestParam(required = false, defaultValue = "-1") userId: Long): List<ShowDTO> {
-        return showService.getAll()
+    @Operation(summary = "Devuelve todos los disponibles")
+    fun getAll(@RequestParam(required = false, defaultValue = "-1") userId: Long,
+               @RequestParam(name = "bandKeyword", required = false, defaultValue = "") bandKeyword: String,
+               @RequestParam(name = "facilityKeyword", required = false, defaultValue = "") facilityKeyword: String,
+               @RequestParam(name = "withFriends", required = false, defaultValue = "false") withFriends: Boolean): List<ShowDTO> {
+
+        val params = BaseFilterParams(userId, bandKeyword, facilityKeyword, withFriends)
+        return showService.getAll(params)
             .map { it.toShowDTO(showService.getAPossibleUserById(userId)) }
     }
 
@@ -97,8 +102,11 @@ class ShowController {
 
     @GetMapping("/admin_dashboard/shows/")
     @Operation(summary = "Devuelve todos los shows disponibles para dashboard Admin")
-    fun getAllforAdmin(): List<ShowAdminDTO> {
-        return showService.getAll()
+    fun getAllforAdmin(@RequestParam(required = false, defaultValue = "-1") userId: Long,
+                       @RequestParam(name = "bandKeyword", required = false, defaultValue = "") bandKeyword: String,
+                       @RequestParam(name = "facilityKeyword", required = false, defaultValue = "") facilityKeyword: String): List<ShowAdminDTO> {
+        val params = BaseFilterParams(userId, bandKeyword, facilityKeyword)
+        return showService.getAll(params)
             .map { it.toShowAdminDTO() }
     }
 

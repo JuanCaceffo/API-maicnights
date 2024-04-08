@@ -36,10 +36,10 @@ class Show(
     fun addDate(date:LocalDateTime) {
         dates.add(ShowDate(date, facility))
     }
+    fun friendsAttendeesProfileImages(user: User) = friendsAttending(user.id).map{ it.profileImage }
+    fun friendsAttending(userId: Long) = allAttendees().filter { it.isMyFriend(userId) }
 
     fun getSeatTypes() = facility.seats.map{ it.seatType }
-
-    fun friendsAttendeesProfileImages(user: User) = allAttendees().filter { it.isMyFriend(user) }.map{ it.profileImage }
 
     fun baseCost(): Double = band.cost + facility.cost()
 
@@ -51,23 +51,21 @@ class Show(
 
     fun allDates() = dates.map{ it.date }.toList().sortedBy { it }
 
-    fun getShowDate(date: LocalDate) = dates.find { it.date.toLocalDate() == date }
-
     fun allAttendees() = dates.flatMap { it.attendees }
     fun soldOutDates() = dates.filter{ it.isSoldOut() }.size
     fun ticketsSoldOfSeatType(seatType: SeatTypes) = dates.sumOf { it.getReservedSeatsOf(seatType) }
     fun totalTicketsSold() = facility.getAllSeatTypes().sumOf { ticketsSoldOfSeatType(it) }
-    fun totalSales() = facility.getAllSeatTypes().sumOf { ticketPrice(it) * ticketsSoldOfSeatType(it) }
+    fun totalSales(): Double {
+        var accum = 0.0
+        facility.getAllSeatTypes().forEach { accum += (ticketPrice(it) * ticketsSoldOfSeatType(it)) }
+        return accum
+    }
+    fun getShowDate(date: LocalDate) = dates.find { it.date.toLocalDate() == date }
+
     //Validations
     private fun validateComment(showDate: ShowDate) {
         if(!showDate.datePassed()){
             throw BusinessException(showError.USER_CANT_COMMENT)
         }
     }
-
-    override fun validSearchCondition(value: String): Boolean {
-        TODO("Not yet implemented")
-    }
-
-
 }

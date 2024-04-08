@@ -17,6 +17,12 @@ class BandBoostrap(
         "PearlJam" to Band("Pearl Jam",
             20000.0),
         "AcDc" to Band("AcDc",
+            30000.0),
+        "LosRedondos" to Band("Los Redondos",
+            10000.0),
+        "OneDirection" to Band("One Direction",
+            20000.0),
+        "Queen" to Band("Queen",
             30000.0)
     )
 

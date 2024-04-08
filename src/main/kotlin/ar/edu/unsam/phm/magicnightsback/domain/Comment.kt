@@ -16,8 +16,4 @@ class Comment(
         require(rating in 0.0..5.0) { BusinessException(ShowCommentError.INVALID_RATTING) }
         date = LocalDateTime.now()
     }
-
-    override fun validSearchCondition(value: String): Boolean {
-        TODO("Not yet implemented")
-    }
 }

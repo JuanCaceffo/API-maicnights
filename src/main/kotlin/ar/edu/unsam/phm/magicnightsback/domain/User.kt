@@ -46,7 +46,7 @@ class User(
     private fun validComment(show: Show){
         if (!show.canBeCommented(this)) throw BusinessException(showError.USER_CANT_COMMENT)
     }
-    fun isMyFriend(user: User) = friends.contains(user)
+    fun isMyFriend(userId: Long): Boolean = friends.map{ it.id }.contains(userId)
 
     fun removeComment(comment: Comment) {
         comments.remove(comment)
@@ -85,9 +85,6 @@ class User(
     }
 
     ///// VALIDATORS ///////////////////////////////////////////
-    override fun validSearchCondition(value: String): Boolean {
-        TODO("Not yet implemented")
-    }
 
     fun throwIfNotAdmin(msg: String) {
         //TODO: cambiar a autenthicationException

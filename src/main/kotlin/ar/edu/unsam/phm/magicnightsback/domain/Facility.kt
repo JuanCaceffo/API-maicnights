@@ -41,9 +41,6 @@ class SeatType(
 ) : Iterable() {
     val name = seatType.name
     fun price() = seatType.price
-    override fun validSearchCondition(value: String): Boolean {
-        TODO("Not yet implemented")
-    }
 }
 
 class Facility(
@@ -74,10 +71,6 @@ class Facility(
         if (!seatStrategy.allowedSeat(seatTypeName)) {
             throw ex
         }
-    }
-
-    override fun validSearchCondition(value: String): Boolean {
-        TODO("Not yet implemented")
     }
 }
 

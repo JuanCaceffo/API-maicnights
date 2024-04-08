@@ -7,8 +7,4 @@ data class Ticket(
     val showDate: ShowDate,
     val seatType: SeatTypes,
     val price: Double
-) : Iterable() {
-    override fun validSearchCondition(value: String): Boolean {
-        TODO("Not yet implemented")
-    }
-}
+) : Iterable()
