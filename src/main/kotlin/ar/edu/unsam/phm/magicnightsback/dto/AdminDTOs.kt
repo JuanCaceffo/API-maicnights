@@ -9,6 +9,7 @@ data class ShowAdminDTO(
     val showName: String,
     val bandName: String,
     val facilityName: String,
+    val dates: List<LocalDateTime>,
     val prices: List<Double>
 )
 
@@ -19,12 +20,12 @@ fun Show.toShowAdminDTO() =
         this.name,
         this.band.name,
         this.facility.name,
+        this.allDates(),
         this.allTicketPrices()
     )
 
 data class ShowStatsDTO (
     val id: Long,
-    val dates: List<LocalDateTime>,
     val totalSales: Double,
     val pendingAttendees: Int,
     val rentability: Double,
@@ -33,7 +34,6 @@ data class ShowStatsDTO (
 
 fun Show.toShowStatsDTO() = ShowStatsDTO(
     this.id,
-    this.allDates(),
     this.totalSales(),
     this.pendingAttendees.size,
     this.rentability(),
