@@ -58,7 +58,6 @@ class Show(
     fun ticketsSoldOfSeatType(seatType: SeatTypes) = dates.sumOf { it.getReservedSeatsOf(seatType) }
     fun totalTicketsSold() = facility.getAllSeatTypes().sumOf { ticketsSoldOfSeatType(it) }
     fun totalSales() = facility.getAllSeatTypes().sumOf { ticketPrice(it) * ticketsSoldOfSeatType(it) }
-
     //Validations
     private fun validateComment(showDate: ShowDate) {
         if(!showDate.datePassed()){
