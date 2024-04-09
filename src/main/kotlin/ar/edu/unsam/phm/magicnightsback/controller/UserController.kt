@@ -24,47 +24,6 @@ class UserController {
     @Autowired
     lateinit var userService: UserService
 
-    @GetMapping("/{userId}/reserved-tickets-price")
-    fun getResrvedTicketsTotalPrice(@PathVariable userId: Long): Double{
-        return userService.reservedTicketsPrice(userId)
-    }
-
-    @GetMapping("/{userId}/reserved-tickets")
-    @Operation(summary = "Permite obtener los tickets por funcion que el usuario tiene reservados en el carrito")
-    fun getUserTicketsCart(@PathVariable userId: Long): List<TicketDTO> {
-        return userService.getTicketsCart(userId)
-    }
-
-    @PutMapping("/{userId}/reserve-tickets")
-    @Operation(summary = "Permite reservar x cantidad de tiquets de un show para una funcion de ese show y para un tipo de asiento")
-    @ApiResponses(
-        value = [
-            ApiResponse(responseCode = "200", description = "Ok"),
-            ApiResponse(responseCode = "404", description = showError.TICKET_CART_NOT_FOUND),
-            ApiResponse(responseCode = "400", description = showDateError.EXCEEDED_CAPACITY + "<br>"+ FacilityError.INVALID_SEAT_TYPE),
-        ]
-    )
-    fun addReservedTicket(@PathVariable userId: Long, @RequestBody ticketData: TicketCreateDTO){
-        userService.reserveTicket(userId, ticketData)
-    }
-
-    @PutMapping("/{userId}/remove-reserved-tickets")
-    @Operation(summary = "Permite eliminar todos los tiquets reservados")
-    fun removeReservedTickets(@PathVariable userId: Long){
-        userService.removeReserveTickets(userId)
-    }
-
-    @PutMapping("/{userId}/purchase-reserved-tickets")
-    @Operation(summary = "Permite comprar todos los tickets reservados")
-    @ApiResponses(
-        value = [
-            ApiResponse(responseCode = "200", description = "Ok"),
-            ApiResponse(responseCode = "400", description = UserError.MSG_NOT_ENOUGH_CREDIT),
-        ]
-    )
-    fun purchaseReservedTickets(@PathVariable userId: Long){
-        userService.buyReservedTickets(userId)
-    }
     @GetMapping("/{userId}/purchased_tickets")
     @Operation(summary = "Permite obtener todos los tickets por funcion comprados por el usuario")
     fun getUserPurchasedTickets(@PathVariable userId: Long): List<PurchasedTicketDTO> {

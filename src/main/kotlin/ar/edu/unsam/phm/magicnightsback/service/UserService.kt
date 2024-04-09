@@ -31,12 +31,6 @@ class UserService {
         }
     }
 
-    fun getTicketsCart(userId: Long): List<TicketDTO> {
-        val user = userRepository.getById(userId)
-
-        return getTicketsGroupedByShowDate(user,user.reservedTickets)
-    }
-
     fun getUserPurchasedTickets(userId: Long): List<PurchasedTicketDTO>{
         val user = userRepository.getById(userId)
         return getTicketsGroupedByShowDate(user,user.tickets).map { it.toPurchasedTicketDTO() }
@@ -83,40 +77,6 @@ class UserService {
         userToUpdate.surname = loginUser.surname
 
         this.userRepository.update(userToUpdate)
-    }
-
-    //TODO: posible extrapolacion de orquetado de logica de reserva en una entidad cart
-    fun reserveTicket(userId: Long, ticketData: TicketCreateDTO) {
-        val user = userRepository.getById(userId)
-        val show = showRepository.getById(ticketData.showId)
-        val showDate = show.dates.elementAtOrNull(ticketData.showDateId.toInt()) ?: throw NotFoundException(
-            showError.TICKET_CART_NOT_FOUND
-        )
-        val seatType = show.facility.getSeat(ticketData.seatTypeName).seatType
-
-        showDate.reserveSeat(seatType, ticketData.quantity)
-        user.reservedTickets.add(Ticket(show, showDate, seatType, ticketData.seatPrice,ticketData.quantity))
-    }
-
-    //TODO: posible extrapolacion de orquetado de logica de elimindo en una entidad cart
-    fun removeReserveTickets(userId: Long) {
-        val user = userRepository.getById(userId)
-
-        user.reservedTickets.forEach {
-            ticket -> ticket.showDate.releaseSeat(ticket.seatType,ticket.quantity)
-        }
-        user.reservedTickets.clear()
-    }
-
-    fun buyReservedTickets(userId: Long) {
-        val user = userRepository.getById(userId)
-        user.buyReservedTickets()
-    }
-
-    fun reservedTicketsPrice(userId: Long): Double {
-        val user = userRepository.getById(userId)
-
-        return user.reservedTickets.sumOf { ticket -> ticket.price() }
     }
 
     fun deleteComment(commentId: Long, id: Long) {
