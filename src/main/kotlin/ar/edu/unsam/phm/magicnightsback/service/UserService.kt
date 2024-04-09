@@ -20,27 +20,20 @@ class UserService {
     @Autowired
     lateinit var showRepository: ShowRepository
 
-    /*Mapeo todos los tickets en uno solo por show juntando el precio total, las fechas y
-        la cantidad de tickets para ese show*/
-    fun getTicketsGroupedByShow(user: User,ticketList: List<Ticket>): List<TicketDTO> {
-        val distinctTickets = ticketList.distinctBy { it.show }
+    /*Mapeo todos los tickets en uno solo por showDate juntando el precio total*/
+    fun getTicketsGroupedByShowDate(user: User, ticketList: List<Ticket>): List<TicketDTO> {
+        val distinctTickets = ticketList.distinctBy { it.showDate }
         return distinctTickets.map { uniqueTicket ->
-            val ticketsSameShow = ticketList.filter { ticket -> ticket.show == uniqueTicket.show }
-            val totalPrice = ticketsSameShow.sumOf { ticket -> ticket.price }
-            val allDates = ticketsSameShow.map { ticket -> ticket.showDate.date }.distinct()
-            uniqueTicket.toTicketDTO(user, allDates, totalPrice, ticketsSameShow.size)
+            val ticketsSameShowDate = ticketList.filter { ticket -> ticket.showDate == uniqueTicket.showDate }
+            val totalPrice = ticketsSameShowDate.sumOf { ticket -> ticket.price() }
+            val quantity = ticketsSameShowDate.sumOf { ticket -> ticket.quantity }
+            uniqueTicket.toTicketDTO(user, totalPrice, quantity)
         }
-    }
-
-    fun getTicketsCart(userId: Long): List<TicketCartDTO> {
-        val user = userRepository.getById(userId)
-
-        return getTicketsGroupedByShow(user,user.reservedTickets).map { it.toTicketCartDTO() }
     }
 
     fun getUserPurchasedTickets(userId: Long): List<PurchasedTicketDTO>{
         val user = userRepository.getById(userId)
-        return getTicketsGroupedByShow(user,user.tickets).map { it.toPurchasedTicketDTO() }
+        return getTicketsGroupedByShowDate(user,user.tickets).map { it.toPurchasedTicketDTO() }
     }
 
     fun getUserFriends(id: Long): List<FriendDTO> {
@@ -86,42 +79,6 @@ class UserService {
         this.userRepository.update(userToUpdate)
     }
 
-    //TODO: posible extrapolacion de orquetado de logica de reserva en una entidad cart
-    fun reserveTicket(userId: Long, ticketData: TicketCreateDTO) {
-        val user = userRepository.getById(userId)
-        val show = showRepository.getById(ticketData.showId)
-        val showDate = show.dates.elementAtOrNull(ticketData.showDateId.toInt()) ?: throw NotFoundException(
-            showError.TICKET_CART_NOT_FOUND
-        )
-        val seatType = show.facility.getSeat(ticketData.seatTypeName).seatType
-
-        showDate.reserveSeat(seatType, ticketData.quantity)
-        repeat(ticketData.quantity) {
-            user.reservedTickets.add(Ticket(show, showDate, seatType, ticketData.price))
-        }
-    }
-
-    //TODO: posible extrapolacion de orquetado de logica de elimindo en una entidad cart
-    fun removeReserveTickets(userId: Long) {
-        val user = userRepository.getById(userId)
-
-        user.reservedTickets.forEach {
-            ticket -> ticket.showDate.releaseSeat(ticket.seatType,1)
-        }
-        user.reservedTickets.clear()
-    }
-
-    fun purchaseReservedTickets(userId: Long) {
-        val user = userRepository.getById(userId)
-        user.buyReservedTickets()
-    }
-
-    fun reservedTicketsPrice(userId: Long): Double {
-        val user = userRepository.getById(userId)
-
-        return user.reservedTickets.sumOf { ticket -> ticket.price }
-    }
-
     fun deleteComment(commentId: Long, id: Long) {
         val user = userRepository.getById(id)
         try{
@@ -134,7 +91,7 @@ class UserService {
 
     fun createComment(id: Long, commentCreat: CommentCreateDTO) {
         val user = userRepository.getById(id)
-        val ticket = user.tickets.distinctBy { it.show }[commentCreat.groupTicketId.toInt()]
+        val ticket = user.tickets.distinctBy { it.showDate }[commentCreat.groupTicketId.toInt()]
         val comment = Comment(ticket.show,commentCreat.text,commentCreat.rating)
 
         user.addComment(comment,ticket.show)

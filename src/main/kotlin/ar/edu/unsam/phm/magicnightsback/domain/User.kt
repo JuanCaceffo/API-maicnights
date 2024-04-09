@@ -66,22 +66,10 @@ class User(
         this.credit += credit
     }
 
-    fun removeCredit(credit: Double) {
-        this.credit -= credit
-    }
-
     fun age(): Int = birthday.calculateAge()
 
-    fun pay(price: Double) {
-        removeCredit(price)
-    }
-
-    fun buyReservedTickets() {
-        val price = reservedTickets.sumOf { ticket -> ticket.price }
-        price.throwIfGreaterThan(credit, UserError.MSG_NOT_ENOUGH_CREDIT)
-
-        reservedTickets.forEach { ticket -> addTicket(ticket) }
-        reservedTickets.clear()
+    fun decreaseCredits(qunatity: Double){
+        credit = (credit - qunatity).throwErrorIfNegative(BusinessException(UserError.MSG_NOT_ENOUGH_CREDIT)).toDouble()
     }
 
     ///// VALIDATORS ///////////////////////////////////////////
@@ -90,7 +78,6 @@ class User(
     }
 
     fun throwIfNotAdmin(msg: String) {
-        //TODO: cambiar a autenthicationException
         if (!isAdmin) throw AuthenticationException(msg)
     }
 }
