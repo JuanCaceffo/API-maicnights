@@ -52,17 +52,17 @@ class ShowBoostrap(
             facilityBoostrap.facilities["TeatroOpera"]!!
         ),
         "LosRedondos_HipodromoDePalermo" to Show(
-            "Los Redondos",
+            "De ricota",
             bandBoostrap.bands["LosRedondos"]!!,
-            facilityBoostrap.facilities["HipodromoDePalermo"]!!
+            facilityBoostrap.facilities["ClubDePolo"]!!
         ),
         "OneDirection_LunaPark" to Show(
-            "One Direction",
+            "Midnight",
             bandBoostrap.bands["OneDirection"]!!,
             facilityBoostrap.facilities["LunaPark"]!!
         ),
         "Queen_GranRex" to Show(
-            "Queen",
+            "Love of my life",
             bandBoostrap.bands["Queen"]!!,
             facilityBoostrap.facilities["GranRex"]!!
         )

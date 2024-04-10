@@ -35,7 +35,7 @@ class ShowDate(
         return facility.getTotalSeatCapacity() - getAllReservedSeats()
     }
 
-    fun datePassed(): Boolean = date.isBefore(LocalDateTime.now()) as Boolean
+    fun datePassed(): Boolean = date.isBefore(LocalDateTime.now())
 
     fun isSoldOut() = totalAvailableSeats() == 0
 }

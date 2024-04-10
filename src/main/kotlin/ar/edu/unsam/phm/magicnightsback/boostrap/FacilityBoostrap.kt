@@ -52,8 +52,8 @@ class FacilityBoostrap(
             location = Point(-34.60766, -58.37267),
             seatStrategy = seatStrategy["stadiumStrategyCheap"]!!
         ),
-        "HipodromoDePalermo" to Facility(
-            name = "Hipodromo de Palermo",
+        "ClubDePolo" to Facility(
+            name = "Club De Polo",
             location = Point(-34.57802, -58.42675),
             seatStrategy = seatStrategy["stadiumStrategyExpensive"]!!
         ),
@@ -82,6 +82,11 @@ class FacilityBoostrap(
             addSeatType(field)
             addSeatType(box)
         }
+        facilities["LunaPark"]!!.apply {
+            addSeatType(upperLevel)
+            addSeatType(field)
+            addSeatType(box)
+        }
         facilities["MovistarArena"]!!.apply {
             addSeatType(pullman)
             addSeatType(lowerLevel)
@@ -90,7 +95,7 @@ class FacilityBoostrap(
             addSeatType(pullman)
             addSeatType(lowerLevel)
         }
-        facilities["HipodromoDePalermo"]!!.apply {
+        facilities["ClubDePolo"]!!.apply {
             addSeatType(upperLevel)
             addSeatType(field)
             addSeatType(box)
