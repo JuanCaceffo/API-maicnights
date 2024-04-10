@@ -66,6 +66,11 @@ class FacilityBoostrap(
             name = "La Bombonera",
             location = Point(-34.63536, -58.36419),
             seatStrategy = seatStrategy["stadiumStrategyExpensive"]!!
+        ),
+        "smallFacility" to Facility(
+            name = "Teatro Poker",
+            location = Point(-34.60356, -58.38013),
+            seatStrategy = seatStrategy["theaterStrategyWithAccoustics"]!!
         )
     )
 
@@ -105,6 +110,10 @@ class FacilityBoostrap(
             addSeatType(upperLevel)
             addSeatType(field)
             addSeatType(box)
+        }
+        facilities["smallFacility"]!!.apply {
+            addSeatType(lowerLevel)
+            addSeatType(pullman)
         }
     }
 

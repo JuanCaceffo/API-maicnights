@@ -16,7 +16,7 @@ class Show(
     val dates = mutableSetOf<ShowDate>()
     var rentabilityType: RentabilityType = BasePrice()
 
-    fun rentability() = if (totalSales() != 0.0) (totalSales() - baseCost()) / totalSales() * 100 else 0.0
+    fun rentability() = if (totalSales() != 0.0) (((totalSales() - baseCost()) / totalSales()) * 100) else 0.0
 
     fun comments() = allAttendees().flatMap { it.comments }.filter{ it.show == this }
     fun totalRating() = if (comments().isNotEmpty()) comments().sumOf { it.rating } / comments().size else 0.0
@@ -43,7 +43,7 @@ class Show(
 
     fun baseCost(): Double = band.cost + facility.cost()
 
-    private fun cost(seatType: SeatTypes): Double = (baseCost() / facility.getTotalSeatCapacity() ) + seatType.price
+    private fun cost(seatType: SeatTypes): Double = if (facility.getTotalSeatCapacity() != 0) ((baseCost() / facility.getTotalSeatCapacity() ) + seatType.price) else (baseCost() / seatType.price)
 
     fun ticketPrice(seatType: SeatTypes): Double = cost(seatType) * rentabilityType.getRentability()
 

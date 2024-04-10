@@ -1,7 +1,9 @@
 package ar.edu.unsam.phm.magicnightsback.boostrap
 
+import ar.edu.unsam.phm.magicnightsback.domain.AllSetTypeNames
 import ar.edu.unsam.phm.magicnightsback.domain.Comment
 import ar.edu.unsam.phm.magicnightsback.domain.Show
+import ar.edu.unsam.phm.magicnightsback.domain.TheaterSeatType
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.context.annotation.DependsOn
@@ -65,6 +67,11 @@ class ShowBoostrap(
             "Love of my life",
             bandBoostrap.bands["Queen"]!!,
             facilityBoostrap.facilities["GranRex"]!!
+        ),
+        "LaVelaPuerca_SmallFacility" to Show(
+            "Arriba!",
+            bandBoostrap.bands["LaVelaPuerca"]!!,
+            facilityBoostrap.facilities["smallFacility"]!!
         )
     )
 
@@ -111,6 +118,23 @@ class ShowBoostrap(
             repeat(2) { addDate(generalDateTime.minusDays(1 + it.toLong())) }
             repeat(3) { addDate(generalDateTime.minusDays(17 + it.toLong())) }
         }
+        shows["LaVelaPuerca_SmallFacility"]!!.apply {
+            repeat(1) { addDate(generalDateTime.minusDays(1 + it.toLong())) }
+            repeat(1) { addDate(generalDateTime.plusDays(17 + it.toLong())) }
+        }
+    }
+
+    fun addAttendees() {
+        shows["LaVelaPuerca_SmallFacility"]!!.apply {
+            dates.first().apply{
+                reservedSeats[AllSetTypeNames.PULLMAN.name] = 100
+                reservedSeats[AllSetTypeNames.LOWERLEVEL.name] = 50
+            }
+            dates.last().apply{
+                reservedSeats[AllSetTypeNames.PULLMAN.name] = 500
+                reservedSeats[AllSetTypeNames.LOWERLEVEL.name] = 300
+            }
+        }
     }
 
 
@@ -118,6 +142,7 @@ class ShowBoostrap(
         println("Show creation process starts")
         createShows()
         createShowDates()
+        addAttendees()
         println("Show creation process ends")
     }
 }

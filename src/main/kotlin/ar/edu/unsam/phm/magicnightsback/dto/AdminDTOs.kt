@@ -1,7 +1,9 @@
 package ar.edu.unsam.phm.magicnightsback.dto
 
 import ar.edu.unsam.phm.magicnightsback.domain.Show
+import ar.edu.unsam.phm.magicnightsback.domain.truncar
 import java.time.LocalDateTime
+import kotlin.math.roundToInt
 
 data class ShowAdminDTO(
     val id: Long,
@@ -29,13 +31,15 @@ data class ShowStatsDTO (
     val totalSales: Double,
     val pendingAttendees: Int,
     val rentability: Double,
-    val soldOutDates: Int
+    val soldOutDates: Int,
+    val baseCost: Double
 )
 
 fun Show.toShowStatsDTO() = ShowStatsDTO(
     this.id,
-    this.totalSales(),
+    this.totalSales().truncar(),
     this.pendingAttendees.size,
-    this.rentability(),
-    this.soldOutDates()
+    this.rentability().truncar().coerceAtLeast(0.0),
+    this.soldOutDates(),
+    this.baseCost()
 )

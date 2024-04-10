@@ -13,6 +13,10 @@ fun Number.throwErrorIfNegative(error: RuntimeException): Number {
     return this
 }
 
+fun Double.truncar(): Double {
+    return String.format("%.2f", this).toDouble()
+}
+
 object Comparar {
     fun total(buscado: String, listaComparar: List<String>, caseSense: Boolean = true) =
         listaComparar.any { it.equals(buscado, ignoreCase = caseSense) }

@@ -56,7 +56,7 @@ class Facility(
     fun getAllSeatTypes() = seats.map {it.seatType}
 
     fun getSeatCapacity(seatType: SeatTypes) = getSeat(AllSetTypeNames.valueOf(seatType.name)).quantity
-    fun getTotalSeatCapacity() = if (seats.sumOf { it.quantity } != 0) seats.sumOf { it.quantity } else 1
+    fun getTotalSeatCapacity(): Int = seats.sumOf { it.quantity }
     fun addSeatType(seat: SeatType) {
         thorwInvalidSeatType(seat.name, BusinessException(FacilityError.INVALID_SEAT_TYPE))
         seats.add(seat)
