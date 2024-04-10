@@ -66,6 +66,11 @@ class ShowController {
         return LocalDate.parse(dateString, formatter)
     }
 
+    fun parseLocalDateTime(dateString: String): LocalDateTime {
+        val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+        return LocalDateTime.parse(dateString, formatter)
+    }
+
 
 //    @GetMapping("/showDates/{id}/")
 //    @Operation(summary = "Devuelve los datos por cada fecha de un show según su id")
@@ -88,16 +93,16 @@ class ShowController {
 //        return show.toShowDateDetailsDTO(listOf(dateSeats))
 //    }
 
-    @PostMapping("/show/{showId}/create-date/user/{userId}")
-    @Operation(summary = "Permite agregar un show si el usuario es administrador")
+    @PostMapping("/show/{showId}/create-show-date")
+    @Operation(summary = "Permite agregar una fecha si el usuario es administrador")
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "Ok"),
             ApiResponse(responseCode = "400", description = UserError.USER_NOT_AUTHORIZED_CREATE_DATE),
         ]
     )
-    fun createShowDate(@PathVariable showId: Long, @PathVariable userId: Long, @RequestBody date: LocalDateTime) {
-        showService.createShowDate(showId, userId, date)
+    fun createShowDate(@PathVariable showId: Long, @RequestBody body: ShowDateDTO) {
+        showService.createShowDate(showId, body.userId, parseLocalDateTime(body.date))
     }
 
     @GetMapping("/admin_dashboard/shows/")
