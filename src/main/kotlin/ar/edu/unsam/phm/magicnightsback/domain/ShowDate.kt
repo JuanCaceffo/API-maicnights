@@ -7,7 +7,7 @@ class ShowDate(
     val date: LocalDateTime,
     val facility: Facility
 ) {
-    val attendees = mutableListOf<User>()
+    val attendees = mutableSetOf<User>()
     val reservedSeats = facility.seatStrategy.allowedSeatsNames().associateWith { 0 }.toMutableMap()
 
     fun addAttendee(user: User) {

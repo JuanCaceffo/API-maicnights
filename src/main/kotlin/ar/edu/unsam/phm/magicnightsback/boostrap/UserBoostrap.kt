@@ -202,7 +202,6 @@ class UserBoostrap(
         }
 
         users["Sol"]!!.apply {
-            repeat(2) {
                 addTicket(
                     Ticket(
                         smallshowGranrex,
@@ -211,7 +210,7 @@ class UserBoostrap(
                         smallshowGranrex.ticketPrice(lowerlevel)
                     )
                 )
-            }
+
             repeat(2) {
                 addTicket(
                     Ticket(
@@ -225,7 +224,6 @@ class UserBoostrap(
         }
 
         users["Juan"]!!.apply {
-            repeat(3) {
                 addTicket(
                     Ticket(
                         smallshowGranrex,
@@ -234,7 +232,6 @@ class UserBoostrap(
                         smallshowGranrex.ticketPrice(pullman)
                     )
                 )
-            }
             repeat(2) {
                 addTicket(
                     Ticket(

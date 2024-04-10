@@ -6,8 +6,8 @@ import java.time.Period
 
 fun LocalDate.calculateAge(): Int = Period.between(this, LocalDate.now()).years
 
-fun Int.throwErrorIfNegative(error: RuntimeException): Int {
-    if (this < 0) {
+fun Number.throwErrorIfNegative(error: RuntimeException): Number {
+    if (this.toFloat() < 0F) {
         throw error
     }
     return this

@@ -22,47 +22,47 @@ class ShowBoostrap(
 
     val shows = mapOf(
         "LaVelaPuerca_GranRex" to Show(
-            "Cachenged!! at Gran Rex",
+            "Cachenged!!",
             bandBoostrap.bands["LaVelaPuerca"]!!,
             facilityBoostrap.facilities["GranRex"]!!
         ),
         "LaVelaPuerca_TeatroColon" to Show(
-            "Cachenged!! at Teatro Colon",
+            "Cachenged!!",
             bandBoostrap.bands["LaVelaPuerca"]!!,
             facilityBoostrap.facilities["TeatroColon"]!!
         ),
         "PearlJam_River" to Show(
-            "4 You at River Plate",
+            "4 You",
             bandBoostrap.bands["PearlJam"]!!,
             facilityBoostrap.facilities["River"]!!
         ),
         "PearlJam_LaBombonera" to Show(
-            "4 You at La Bombonera",
+            "4 You",
             bandBoostrap.bands["PearlJam"]!!,
             facilityBoostrap.facilities["LaBombonera"]!!
         ),
         "AcDc_MovistarArena" to Show(
-            "Demon of Hell Rise Tour at Movistar Arena",
+            "Demon of Hell Rise Tour",
             bandBoostrap.bands["AcDc"]!!,
             facilityBoostrap.facilities["MovistarArena"]!!
         ),
         "AcDc_TeatroOpera" to Show(
-            "Demon of Hell Rise Tour at Teatro Opera",
+            "Demon of Hell Rise Tour",
             bandBoostrap.bands["AcDc"]!!,
             facilityBoostrap.facilities["TeatroOpera"]!!
         ),
         "LosRedondos_HipodromoDePalermo" to Show(
-            "Los Redondos at Hipódromo de Palermo",
+            "Los Redondos",
             bandBoostrap.bands["LosRedondos"]!!,
             facilityBoostrap.facilities["HipodromoDePalermo"]!!
         ),
         "OneDirection_LunaPark" to Show(
-            "One Direction at Luna Park",
+            "One Direction",
             bandBoostrap.bands["OneDirection"]!!,
             facilityBoostrap.facilities["LunaPark"]!!
         ),
         "Queen_GranRex" to Show(
-            "Queen at Gran Rex",
+            "Queen",
             bandBoostrap.bands["Queen"]!!,
             facilityBoostrap.facilities["GranRex"]!!
         )

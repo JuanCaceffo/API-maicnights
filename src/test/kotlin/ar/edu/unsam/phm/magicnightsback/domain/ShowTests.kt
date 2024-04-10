@@ -7,6 +7,24 @@ import org.uqbar.geodds.Point
 import java.time.LocalDate
 import java.time.LocalDateTime
 
+val upperLevel = SeatType(StadiumSeatType.UPPERLEVEL, 300)
+val field = SeatType(StadiumSeatType.FIELD, 1000)
+val box = SeatType(StadiumSeatType.BOX,200)
+val lowerLevel = SeatType(TheaterSeatType.LOWERLEVEL, 500)
+val pullman = SeatType(TheaterSeatType.PULLMAN, 300)
+
+val theterWithLowCapacity = Facility(
+    "Teatro de pacheco",
+    Point(-34.54612, -58.45004),
+    TheaterStrategy()
+).apply {
+    addSeatType(lowerLevel)
+    addSeatType(pullman)
+}
+
+val showBase = Show("La vela puerca", Band("La vela puerca", 10000.0), theterWithLowCapacity)
+
+
 class ShowTests : DescribeSpec({
     isolationMode = IsolationMode.InstancePerTest
     val upperLevel = SeatType(StadiumSeatType.UPPERLEVEL, 300)
