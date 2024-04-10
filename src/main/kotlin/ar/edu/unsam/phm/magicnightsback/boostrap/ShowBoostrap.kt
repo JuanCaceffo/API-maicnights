@@ -51,7 +51,7 @@ class ShowBoostrap(
             bandBoostrap.bands["AcDc"]!!,
             facilityBoostrap.facilities["TeatroOpera"]!!
         ),
-        "LosRedondos_HipodromoDePalermo" to Show(
+        "LosRedondos_ClubDePolo" to Show(
             "De ricota",
             bandBoostrap.bands["LosRedondos"]!!,
             facilityBoostrap.facilities["ClubDePolo"]!!
@@ -99,7 +99,7 @@ class ShowBoostrap(
             repeat(2) { addDate(generalDateTime.minusDays(4 + it.toLong())) }
             repeat(3) { addDate(generalDateTime.plusDays(15 + it.toLong())) }
         }
-        shows["LosRedondos_HipodromoDePalermo"]!!.apply {
+        shows["LosRedondos_ClubDePolo"]!!.apply {
             repeat(1) { addDate(generalDateTime.minusDays(8 + it.toLong())) }
             repeat(3) { addDate(generalDateTime.plusDays(9 + it.toLong())) }
         }

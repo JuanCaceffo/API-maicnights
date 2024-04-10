@@ -9,7 +9,7 @@ import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 
 @Component
-@Order(4)
+@Order(5)
 @DependsOn("showBoostrap", "userBoostrap")
 class CommentBoostrap(
     showBoostrap: ShowBoostrap,

@@ -67,9 +67,6 @@ class FacilityBoostrap(
             location = Point(-34.63536, -58.36419),
             seatStrategy = seatStrategy["stadiumStrategyExpensive"]!!
         )
-
-
-
     )
 
     fun addSeats() {

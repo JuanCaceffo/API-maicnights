@@ -13,20 +13,8 @@ import java.time.LocalDate
 @Component
 @Order(3)
 class UserBoostrap(
-    val userRepository: UserRepository,
-    showBoostrap: ShowBoostrap
+    val userRepository: UserRepository
 ) : InitializingBean {
-
-    val smallshowGranrex = showBoostrap.shows["LaVelaPuerca_GranRex"]!!
-    val smallShowTeatroColon = showBoostrap.shows["LaVelaPuerca_TeatroColon"]!!
-    val bigShowRiver = showBoostrap.shows["PearlJam_River"]!!
-    val bigShowLaBombonera = showBoostrap.shows["PearlJam_LaBombonera"]!!
-    val bestSmallShowMovistarArena = showBoostrap.shows["AcDc_MovistarArena"]!!
-    val bestSmallShowTeatroOpera = showBoostrap.shows["AcDc_TeatroOpera"]!!
-    val losRedondosHipodromoDePalermo = showBoostrap.shows["LosRedondos_HipodromoDePalermo"]!!
-    val oneDirectionLunaPark = showBoostrap.shows["OneDirection_LunaPark"]!!
-    val queenGranRex = showBoostrap.shows["Queen_GranRex"]!!
-
 
     val users = mapOf(
         "Pablo" to User(
@@ -37,7 +25,7 @@ class UserBoostrap(
             birthday = LocalDate.of(1978, 10, 20),
             password = "asdf",
             isAdmin = true,
-            profileImage = "pablito.jpeg"
+            profileImage = "pablito.jpeg",
         ), "Juan" to User(
             name = "Juan",
             surname = "Caccefo",
@@ -89,7 +77,6 @@ class UserBoostrap(
             password = "asdf"
         )
     )
-
 
     fun createUsers() {
         users.values.forEach { user -> userRepository.apply { create(user) } }
@@ -155,213 +142,15 @@ class UserBoostrap(
         users.values.forEach { userRepository.update(it) }
     }
 
-    fun buyTickets() {
-        val lowerlevel = TheaterSeatType.LOWERLEVEL
-        val pullman = TheaterSeatType.PULLMAN
-        val upperlevel = StadiumSeatType.UPPERLEVEL
-        val field = StadiumSeatType.FIELD
-        val box = StadiumSeatType.BOX
-
-        users["Pablo"]!!.apply {
-            addTicket(
-                Ticket(
-                    smallshowGranrex,
-                    smallshowGranrex.dates.elementAt(0),
-                    pullman,
-                    smallshowGranrex.ticketPrice(pullman)
-                )
-            )
-            repeat(2) {
-                addTicket(
-                    Ticket(
-                        smallShowTeatroColon,
-                        smallShowTeatroColon.dates.elementAt(1),
-                        pullman,
-                        smallShowTeatroColon.ticketPrice(pullman)
-                    )
-                )
-            }
-            repeat(2) {
-                addTicket(
-                    Ticket(
-                        bigShowRiver,
-                        bigShowRiver.dates.elementAt(0),
-                        pullman,
-                        bigShowRiver.ticketPrice(pullman)
-                    )
-                )
-            }
-            addTicket(
-                Ticket(
-                    bigShowLaBombonera,
-                    bigShowLaBombonera.dates.elementAt(0),
-                    upperlevel,
-                    bigShowLaBombonera.ticketPrice(upperlevel)
-                )
-            )
-        }
-
-        users["Sol"]!!.apply {
-                addTicket(
-                    Ticket(
-                        smallshowGranrex,
-                        smallshowGranrex.dates.elementAt(0),
-                        lowerlevel,
-                        smallshowGranrex.ticketPrice(lowerlevel)
-                    )
-                )
-
-            repeat(2) {
-                addTicket(
-                    Ticket(
-                        bigShowRiver,
-                        bigShowRiver.dates.elementAt(0),
-                        pullman,
-                        bigShowRiver.ticketPrice(pullman)
-                    )
-                )
-            }
-        }
-
-        users["Juan"]!!.apply {
-                addTicket(
-                    Ticket(
-                        smallshowGranrex,
-                        smallshowGranrex.dates.elementAt(0),
-                        pullman,
-                        smallshowGranrex.ticketPrice(pullman)
-                    )
-                )
-            repeat(2) {
-                addTicket(
-                    Ticket(
-                        bigShowRiver,
-                        bigShowRiver.dates.elementAt(0),
-                        pullman,
-                        bigShowRiver.ticketPrice(pullman)
-                    )
-                )
-            }
-        }
-
-        users["Denise"]!!.apply {
-            addTicket(
-                Ticket(
-                    smallshowGranrex,
-                    smallshowGranrex.dates.elementAt(0),
-                    pullman,
-                    smallshowGranrex.ticketPrice(pullman)
-                )
-            )
-            repeat(2) {
-                addTicket(
-                    Ticket(
-                        bigShowRiver,
-                        bigShowRiver.dates.elementAt(0),
-                        pullman,
-                        bigShowRiver.ticketPrice(pullman)
-                    )
-                )
-            }
-        }
-
-        users["Carolina"]!!.apply {
-            addTicket(
-                Ticket(
-                    smallshowGranrex,
-                    smallshowGranrex.dates.elementAt(0),
-                    pullman,
-                    smallshowGranrex.ticketPrice(pullman)
-                )
-            )
-            addTicket(
-                Ticket(
-                    bestSmallShowMovistarArena,
-                    bestSmallShowMovistarArena.dates.elementAt(0),
-                    lowerlevel,
-                    bestSmallShowMovistarArena.ticketPrice(lowerlevel)
-                )
-            )
-        }
-
-        users["Marcos"]!!.apply {
-            addTicket(
-                Ticket(
-                    smallshowGranrex,
-                    smallshowGranrex.dates.elementAt(0),
-                    pullman,
-                    smallshowGranrex.ticketPrice(pullman)
-                )
-            )
-            addTicket(
-                Ticket(
-                    bestSmallShowTeatroOpera,
-                    bestSmallShowTeatroOpera.dates.elementAt(0),
-                    pullman,
-                    bestSmallShowTeatroOpera.ticketPrice(pullman)
-                )
-            )
-        }
-
-        users["Ana"]!!.apply {
-            addTicket(
-                Ticket(
-                    smallshowGranrex,
-                    smallshowGranrex.dates.elementAt(0),
-                    pullman,
-                    smallshowGranrex.ticketPrice(pullman)
-                )
-            )
-            addTicket(
-                Ticket(
-                    losRedondosHipodromoDePalermo,
-                    losRedondosHipodromoDePalermo.dates.elementAt(0),
-                    field,
-                    losRedondosHipodromoDePalermo.ticketPrice(field)
-                )
-            )
-        }
+    fun addCredits() {
+        users.values.forEach{ it.addCredit(100000.0) }
     }
-
-            fun addAttendees() {
-                smallshowGranrex.apply {
-                    dates.elementAt(0).addAttendee(users["Pablo"]!!)
-                    dates.elementAt(0).addAttendee(users["Sol"]!!)
-                    dates.elementAt(0).addAttendee(users["Denise"]!!)
-                    dates.elementAt(0).addAttendee(users["Juan"]!!)
-                    dates.elementAt(0).addAttendee(users["Ana"]!!)
-                    dates.elementAt(0).addAttendee(users["Marcos"]!!)
-                    dates.elementAt(0).addAttendee(users["Carolina"]!!)
-                }
-                smallShowTeatroColon.apply {
-                    dates.elementAt(1).addAttendee(users["Pablo"]!!)
-                }
-                bigShowRiver.apply {
-                    dates.elementAt(1).addAttendee(users["Pablo"]!!)
-                    dates.elementAt(1).addAttendee(users["Sol"]!!)
-                    dates.elementAt(1).addAttendee(users["Juan"]!!)
-                    dates.elementAt(1).addAttendee(users["Denise"]!!)
-                }
-                bigShowLaBombonera.apply {
-                    dates.elementAt(0).addAttendee(users["Pablo"]!!)
-                }
-                bestSmallShowMovistarArena.apply {
-                    dates.elementAt(0).addAttendee(users["Carolina"]!!)
-                }
-                bestSmallShowTeatroOpera.apply {
-                    dates.elementAt(0).addAttendee(users["Marcos"]!!)
-                }
-                losRedondosHipodromoDePalermo.apply {
-                    dates.elementAt(0).addAttendee(users["Ana"]!!)
-                }
-            }
 
             override fun afterPropertiesSet() {
                 println("User creation process starts")
                 createUsers()
                 addFriends()
-                addAttendees()
-                buyTickets()
+                addCredits()
                 println("User creation process ends")
             }
         }
