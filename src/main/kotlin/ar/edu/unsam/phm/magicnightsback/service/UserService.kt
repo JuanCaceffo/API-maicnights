@@ -31,9 +31,9 @@ class UserService {
         }
     }
 
-    fun getUserPurchasedTickets(userId: Long): List<PurchasedTicketDTO>{
+    fun getUserPurchasedTickets(userId: Long): List<PurchasedTicketDTO> {
         val user = userRepository.getById(userId)
-        return getTicketsGroupedByShowDate(user,user.tickets).map { it.toPurchasedTicketDTO() }
+        return getTicketsGroupedByShowDate(user, user.tickets).map { it.toPurchasedTicketDTO() }
     }
 
     fun getUserFriends(id: Long): List<FriendDTO> {
@@ -43,8 +43,8 @@ class UserService {
 
     fun getUserComments(id: Long): List<CommentDTO> {
         val user = userRepository.getById(id)
-        
-        return user.comments.map { comment -> comment.toUserCommentDTO()  }
+
+        return user.comments.map { comment -> comment.toUserCommentDTO() }
     }
 
     fun loginUser(loginUser: LoginUserDTO): Long {
@@ -58,6 +58,10 @@ class UserService {
 
     fun deleteUserFriend(userId: Long, friendId: Long) {
         this.userRepository.getById(userId).removeFriendById(friendId)
+    }
+
+    fun validateUser(userId: Long): Boolean {
+        return this.userRepository.getById(userId).isAdmin
     }
 
     fun getUserCredit(id: Long): Double {
@@ -81,10 +85,10 @@ class UserService {
 
     fun deleteComment(commentId: Long, id: Long) {
         val user = userRepository.getById(id)
-        try{
+        try {
             val comment = user.comments[commentId.toInt()]
             user.removeComment(comment)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             throw BusinessException(UserError.NONEXISTENT_USER_COMMENT)
         }
     }
@@ -92,9 +96,9 @@ class UserService {
     fun createComment(id: Long, commentCreat: CommentCreateDTO) {
         val user = userRepository.getById(id)
         val ticket = user.tickets.distinctBy { it.showDate }[commentCreat.groupTicketId.toInt()]
-        val comment = Comment(ticket.show,commentCreat.text,commentCreat.rating)
+        val comment = Comment(ticket.show, commentCreat.text, commentCreat.rating)
 
-        user.addComment(comment,ticket.show)
+        user.addComment(comment, ticket.show)
     }
 
     fun isAdmin(id: Long) = userRepository.getById(id).throwIfNotAdmin(UserError.USER_IS_NOT_ADMIN)
