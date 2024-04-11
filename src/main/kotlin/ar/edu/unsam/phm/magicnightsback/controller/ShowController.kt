@@ -1,6 +1,5 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
-import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.service.ShowService
