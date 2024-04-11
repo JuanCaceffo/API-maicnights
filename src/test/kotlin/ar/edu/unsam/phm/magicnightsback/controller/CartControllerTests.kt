@@ -172,7 +172,7 @@ class CartControllerTests(
     @Test
     fun `Dado un endpoint para reservar tickets para un usuario al reservar un ticket funciona bien`() {
         val show = showRepository.getById(0)
-        val data = TicketCreateDTO(0, 0, show.ticketPrice(TheaterSeatType.PULLMAN), AllSetTypeNames.PULLMAN, 1)
+        val data = TicketCreateDTO(0, LocalDate.now(), show.ticketPrice(TheaterSeatType.PULLMAN), AllSetTypeNames.PULLMAN, 1)
         mockMvc.perform(
             MockMvcRequestBuilders
                 .put("/cart/user/0/reserve-tickets")
@@ -186,7 +186,7 @@ class CartControllerTests(
     @Test
     fun `Al llamar al endpoint apra reservar un cantidad tickets no permitida para un usario falla`() {
         val show = showRepository.getById(0)
-        val data = TicketCreateDTO(0, 0, show.ticketPrice(TheaterSeatType.PULLMAN), AllSetTypeNames.PULLMAN, 1000)
+        val data = TicketCreateDTO(0, LocalDate.now(), show.ticketPrice(TheaterSeatType.PULLMAN), AllSetTypeNames.PULLMAN, 1000)
         mockMvc.perform(
             MockMvcRequestBuilders
                 .put("/cart/user/0/reserve-tickets")
@@ -200,7 +200,7 @@ class CartControllerTests(
     @Test
     fun `Al llamar al endpoint para reservar un ticket para una ubicacion donde no hay disponibilidad falla`() {
         val show = showRepository.getById(0)
-        val data = TicketCreateDTO(0, 0, show.ticketPrice(TheaterSeatType.PULLMAN), AllSetTypeNames.UPPERLEVEL, 1000)
+        val data = TicketCreateDTO(0, LocalDate.now(), show.ticketPrice(TheaterSeatType.PULLMAN), AllSetTypeNames.UPPERLEVEL, 1000)
         mockMvc.perform(
             MockMvcRequestBuilders
                 .put("/cart/user/0/reserve-tickets")
