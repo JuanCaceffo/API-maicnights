@@ -11,7 +11,8 @@ data class ShowAdminDTO(
     val bandName: String,
     val facilityName: String,
     val dates: List<LocalDateTime>,
-    val prices: List<Double>
+    val prices: List<Double>,
+    val details: Map<String, String>
 )
 
 fun Show.toShowAdminDTO() =
@@ -22,7 +23,13 @@ fun Show.toShowAdminDTO() =
         this.band.name,
         this.facility.name,
         this.allDates(),
-        this.allTicketPrices()
+        this.allTicketPrices(),
+        mapOf("Entradas vendidas totales: " to this.totalTicketsSold().toString())+
+            this.getSeatTypes().associateBy({ "Entradas vendidas " + it.name }, { this.ticketsSoldOfSeatType(it).toString() })+
+            mapOf("Recaudacion total: " to this.totalSales().toString(),
+            "Costo Total: " to this.baseCost().toString(),
+            "Gente en espera: " to this.pendingAttendees.size.toString()
+            )
     )
 
 data class ShowStatsDTO (

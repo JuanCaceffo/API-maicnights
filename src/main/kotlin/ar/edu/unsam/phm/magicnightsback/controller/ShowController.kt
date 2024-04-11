@@ -42,7 +42,6 @@ class ShowController {
         @RequestParam(required = false, defaultValue = "-1") userId: Long
     ): ShowDTO {
         val show = showService.getById(id)
-
         val comments = show.allCommentsDTO()
         return show.toShowDTO(showService.getAPossibleUserById(userId),comments)
     }
@@ -83,6 +82,7 @@ class ShowController {
         ]
     )
     fun createShowDate(@PathVariable showId: Long, @RequestBody body: ShowDateDTO) {
+        println(body)
         userService.isAdmin(body.userId)
         showService.createShowDate(showId, body.userId, parseLocalDateTime(body.date))
     }

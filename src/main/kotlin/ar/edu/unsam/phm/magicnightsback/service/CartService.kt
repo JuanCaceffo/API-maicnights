@@ -29,7 +29,7 @@ class CartService(
     fun reserveTicket(userId: Long, ticketData: TicketCreateDTO) {
         val cart = cartRepo.getCardFor(userId)
         val show = showRepo.getById(ticketData.showId)
-        val showDate = show.dates.elementAtOrNull(ticketData.showDateId.toInt()) ?: throw NotFoundException(
+        val showDate = show.getShowDate(ticketData.date) ?: throw NotFoundException(
             showError.TICKET_CART_NOT_FOUND
         )
         val seatType = show.facility.getSeat(ticketData.seatTypeName).seatType

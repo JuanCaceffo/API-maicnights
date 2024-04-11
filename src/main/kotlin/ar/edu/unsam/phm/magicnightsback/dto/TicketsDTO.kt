@@ -1,6 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.dto
 
 import ar.edu.unsam.phm.magicnightsback.domain.*
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class TicketDTO(
@@ -66,7 +67,7 @@ data class PurchasedTicketDTO(
 
 data class TicketCreateDTO(
     val showId: Long,
-    val showDateId: Long,
+    val date: LocalDate,
     val seatPrice: Double,
     val seatTypeName: AllSetTypeNames,
     val quantity: Int
