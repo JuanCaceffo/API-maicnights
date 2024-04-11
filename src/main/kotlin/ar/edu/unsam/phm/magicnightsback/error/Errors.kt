@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 object UserError {
     const val MSG_NOT_ENOUGH_CREDIT = "No tiene saldo suficiente para realizar la compra"
     const val BAD_CREDENTIALS = "El usuario o la contraseña no son validos"
-    const val USER_NOT_AUTHORIZED_CREATE_DATE = "El usuario debe ser administrador para crear una nueva funcion"
+    const val USER_IS_NOT_ADMIN = "Usuario sin privilegios"
     const val NONEXISTENT_USER_COMMENT = "El comentario que intenta eliminar no existe"
 }
 
@@ -23,6 +23,7 @@ object showError {
 object showDateError{
     const val EXCEEDED_CAPACITY = "Excedio la capacidad maxima de asientos para esta ubicacion"
     const val MSG_DATE_NOT_FOUND = "La fecha que intento buscar no existe"
+    const val NEW_SHOW_INVALID_CONDITIONS = "Las condiciones no permiten agregar una nueva fecha para el show"
 
 }
 object RepositoryError {

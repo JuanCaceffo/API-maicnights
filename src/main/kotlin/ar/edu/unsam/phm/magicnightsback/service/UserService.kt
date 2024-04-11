@@ -96,4 +96,6 @@ class UserService {
 
         user.addComment(comment,ticket.show)
     }
+
+    fun isAdmin(id: Long) = userRepository.getById(id).throwIfNotAdmin(UserError.USER_IS_NOT_ADMIN)
 }

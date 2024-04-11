@@ -1,8 +1,10 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
+import ar.edu.unsam.phm.magicnightsback.domain.AdminStats
 import ar.edu.unsam.phm.magicnightsback.dto.*
-import ar.edu.unsam.phm.magicnightsback.error.UserError
+import ar.edu.unsam.phm.magicnightsback.error.showDateError
 import ar.edu.unsam.phm.magicnightsback.service.ShowService
+import ar.edu.unsam.phm.magicnightsback.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -18,6 +20,8 @@ import java.time.format.DateTimeFormatter
 class ShowController {
     @Autowired
     lateinit var showService: ShowService
+    @Autowired
+    lateinit var userService: UserService
 
     @GetMapping("/shows")
     @Operation(summary = "Devuelve todos los disponibles")
@@ -70,37 +74,16 @@ class ShowController {
         return LocalDateTime.parse(dateString, formatter)
     }
 
-
-//    @GetMapping("/showDates/{id}/")
-//    @Operation(summary = "Devuelve los datos por cada fecha de un show según su id")
-//    fun getShowDatesById(@PathVariable id: Long, @RequestParam date: LocalDate): ShowDateDetailsDTO {
-//        val show = showService.getById(id)
-//        val showDate = show.dates.find { it.date.toLocalDate() == date }
-//            ?: throw NotFoundException("No hay datos disponibles para la fecha proporcionada.")
-//
-//        val dateSeats = DateSeatsDTO(
-//            showDate.date,
-//            show.facility.seats.map { seat ->
-//                SeatsDTO(
-//                    seat.seatType.toString(),
-//                    show.fullTicketPrice(seat.seatType),
-//                    show.getShowDate(showDate.date.toLocalDate())?.availableSeatsOf(seat.seatType) ?: 0
-//                )
-//            }
-//        )
-//
-//        return show.toShowDateDetailsDTO(listOf(dateSeats))
-//    }
-
     @PostMapping("/show/{showId}/create-show-date")
     @Operation(summary = "Permite agregar una fecha si el usuario es administrador")
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "Ok"),
-            ApiResponse(responseCode = "400", description = UserError.USER_NOT_AUTHORIZED_CREATE_DATE),
+            ApiResponse(responseCode = "400", description = showDateError.NEW_SHOW_INVALID_CONDITIONS),
         ]
     )
     fun createShowDate(@PathVariable showId: Long, @RequestBody body: ShowDateDTO) {
+        userService.isAdmin(body.userId)
         showService.createShowDate(showId, body.userId, parseLocalDateTime(body.date))
     }
 
@@ -109,6 +92,7 @@ class ShowController {
     fun getAllforAdmin(@RequestParam(required = false, defaultValue = "-1") userId: Long,
                        @RequestParam(name = "bandKeyword", required = false, defaultValue = "") bandKeyword: String,
                        @RequestParam(name = "facilityKeyword", required = false, defaultValue = "") facilityKeyword: String): List<ShowAdminDTO> {
+        userService.isAdmin(userId)
         val params = BaseFilterParams(userId, bandKeyword, facilityKeyword)
         return showService.getAll(params)
             .map { it.toShowAdminDTO() }
@@ -116,8 +100,9 @@ class ShowController {
 
     @GetMapping("/admin_dashboard/shows/{id}")
     @Operation(summary = "Devuelve los stats de un show según su id")
-    fun getShowStatsById(@PathVariable id: Long): ShowStatsDTO {
+    fun getShowStatsById(@PathVariable id: Long, @RequestParam(required = true, defaultValue = "-1") userId: Long): List<ShowStatsDTO> {
+        userService.isAdmin(userId)
         val show = showService.getById(id)
-        return show.toShowStatsDTO()
+        return AdminStats.getAllStats(show)
     }
 }

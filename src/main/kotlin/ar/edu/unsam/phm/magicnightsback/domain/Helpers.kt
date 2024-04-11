@@ -13,7 +13,7 @@ fun Number.throwErrorIfNegative(error: RuntimeException): Number {
     return this
 }
 
-fun Double.truncar(): Double {
+fun Double.truncate(): Double {
     return String.format("%.2f", this).toDouble()
 }
 

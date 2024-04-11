@@ -16,8 +16,7 @@ class Show(
     val dates = mutableSetOf<ShowDate>()
     var rentabilityType: RentabilityType = BasePrice()
 
-    fun rentability() = if (totalSales() != 0.0) (((totalSales() - baseCost()) / totalSales()) * 100) else 0.0
-
+    fun rentability() = (((totalSales() - baseCost()) / totalSales()) * 100).coerceAtLeast(0.0)
     fun comments() = allAttendees().flatMap { it.comments }.filter{ it.show == this }
     fun totalRating() = if (comments().isNotEmpty()) comments().sumOf { it.rating } / comments().size else 0.0
 
