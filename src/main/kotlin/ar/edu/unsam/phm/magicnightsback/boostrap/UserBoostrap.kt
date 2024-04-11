@@ -145,7 +145,6 @@ class UserBoostrap(
     fun addCredits() {
         users.values.forEach{ it.addCredit(100000.0) }
     }
-
             override fun afterPropertiesSet() {
                 println("User creation process starts")
                 createUsers()

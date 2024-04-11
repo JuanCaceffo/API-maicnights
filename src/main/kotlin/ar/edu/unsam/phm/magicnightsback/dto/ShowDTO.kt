@@ -19,7 +19,8 @@ data class ShowDTO(
     val dates: List<LocalDateTime>,
     val userImageNames: List<String>,
     val comments: List<CommentDTO>,
-    val geolocation: String
+    val geolocation: String,
+    val details: Map<String, String>
 )
 
 fun pointToDMS(point: Point): String {
@@ -76,5 +77,11 @@ fun Show.toShowDTO(user: User?, comments: List<CommentDTO> = emptyList(), price:
         this.allDates(),
         if(user != null) this.friendsAttendeesProfileImages(user) else listOf(),
         comments,
-        pointToDMS(this.facility.location)
+        pointToDMS(this.facility.location),
+        mapOf("Entradas vendidas totales: " to this.totalTicketsSold().toString())+
+            this.getSeatTypes().associateBy({ "Entradas vendidas " + it.name }, { this.ticketsSoldOfSeatType(it).toString() })+
+            mapOf("Recaudacion total: " to this.totalSales().toString(),
+                "Costo Total: " to this.baseCost().toString(),
+                "Gente en espera: " to this.pendingAttendees.size.toString()
+            )
     )
