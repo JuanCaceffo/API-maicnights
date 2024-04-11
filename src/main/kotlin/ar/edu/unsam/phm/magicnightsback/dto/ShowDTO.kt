@@ -20,7 +20,12 @@ data class ShowDTO(
     val userImageNames: List<String>,
     val comments: List<CommentDTO>,
     val geolocation: String,
-    val details: Map<String, String>
+    val details: List<Details>
+)
+
+data class Details(
+    val title: String,
+    val description: String
 )
 
 fun pointToDMS(point: Point): String {
@@ -42,6 +47,7 @@ fun decimalToDMS(decimal: Double): String {
 
     return "$degrees° $minutes' $seconds''"
 }
+
 data class SeatDTO(
     val seatType: String,
     val price: Double,
@@ -50,8 +56,8 @@ data class SeatDTO(
 
 
 fun Show.allCommentsDTO(): List<CommentDTO> {
-    return allAttendees().flatMap {user ->
-        user.comments.filter{ it.show == this }.map {
+    return allAttendees().flatMap { user ->
+        user.comments.filter { it.show == this }.map {
             CommentDTO(
                 user.profileImage,
                 user.username,
@@ -75,13 +81,17 @@ fun Show.toShowDTO(user: User?, comments: List<CommentDTO> = emptyList(), price:
         price,
         this.allTicketPrices(),
         this.allDates(),
-        if(user != null) this.friendsAttendeesProfileImages(user) else listOf(),
+        if (user != null) this.friendsAttendeesProfileImages(user) else listOf(),
         comments,
         pointToDMS(this.facility.location),
-        mapOf("Entradas vendidas totales: " to this.totalTicketsSold().toString())+
-            this.getSeatTypes().associateBy({ "Entradas vendidas " + it.name }, { this.ticketsSoldOfSeatType(it).toString() })+
-            mapOf("Recaudacion total: " to this.totalSales().toString(),
-                "Costo Total: " to this.baseCost().toString(),
-                "Gente en espera: " to this.pendingAttendees.size.toString()
-            )
+        listOf(
+            Details("Entradas vendidas totales: ", this.totalTicketsSold().toString())
+        ) +
+                this.getSeatTypes()
+                    .map { Details("Entradas Vendidas " + it.name, ticketsSoldOfSeatType(it).toString()) } +
+                listOf(
+                    Details("Recaudación total: ", this.totalSales().toString()),
+                    Details("Costo total: ", this.baseCost().toString()),
+                    Details("Personas en espera: ", this.pendingAttendees.size.toString())
+                )
     )
