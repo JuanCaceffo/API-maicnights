@@ -3,35 +3,56 @@ package ar.edu.unsam.phm.magicnightsback.boostrap
 import ar.edu.unsam.phm.magicnightsback.domain.Band
 import ar.edu.unsam.phm.magicnightsback.repository.BandRepository
 import org.springframework.beans.factory.InitializingBean
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.annotation.Order
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
-@Component
+@Service
 @Order(0)
-class BandBoostrap(
-    val bandRepository: BandRepository,
-) : InitializingBean {
+class BandBoostrap : InitializingBean {
+    @Autowired
+    lateinit var bandRepository: BandRepository
+
     val bands = mapOf(
-        "LaVelaPuerca" to Band("La Vela Puerca",
-            10000.0),
-        "PearlJam" to Band("Pearl Jam",
-            20000.0),
-        "AcDc" to Band("AcDc",
-            30000.0),
-        "LosRedondos" to Band("Los Redondos",
-            10000.0),
-        "OneDirection" to Band("One Direction",
-            20000.0),
-        "Queen" to Band("Queen",
-            30000.0)
+        "LaVelaPuerca" to Band().apply {
+            name = "La Vela Puerca"
+            cost = 10000.0
+        },
+        "PearlJam" to Band().apply {
+            name = "Pearl Jam"
+            cost = 20000.0
+        },
+        "AcDc" to Band().apply {
+            name = "Ac/Dc"
+            cost = 30000.0
+        },
+        "LosRedondos" to Band().apply {
+            name = "Los Redondos"
+            cost = 10.0
+        },
+        "OneDirection" to Band().apply {
+            name = "One Direction"
+            cost = 20000.0
+        },
+        "Queen" to Band().apply {
+            name = "Queen"
+            cost = 30000.0
+        }
     )
 
     fun createBands() {
-        bands.values.forEach { band -> bandRepository.create(band) } }
+        bands.values.forEach{
+//            val bandInRepo = bandRepository.findByName(it.name)
+//            if (bandInRepo.isPresent) {
+//                it.id = bandInRepo.get().id
+//            } else {
+                bandRepository.save(it)
+//            }
+        }
+    }
 
     override fun afterPropertiesSet() {
         println("Band creation process starts")
         createBands()
-        println("Band creation process ends")
     }
 }

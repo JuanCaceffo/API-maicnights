@@ -5,6 +5,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.4"
 	kotlin("jvm") version "1.9.22"
 	kotlin("plugin.spring") version "1.9.22"
+	kotlin("plugin.jpa") version "1.9.22"
 	jacoco
 }
 
@@ -47,7 +48,7 @@ dependencies {
 	testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
 
 	// esto ni idea.....
-	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr31 0")
+//	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr31 0")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.springdoc:springdoc-openapi-starter-common:2.2.0")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")

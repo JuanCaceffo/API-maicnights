@@ -1,5 +1,19 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import ar.edu.unsam.phm.magicnightsback.repository.Iterable
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.Id
 
-data class Band(val name: String, val cost: Double) : Iterable()
+@Entity
+class Band {
+    @Id
+    @GeneratedValue
+    var id: Long? = null
+
+    @Column(length = 40)
+    var name: String = ""
+
+    @Column
+    var cost: Double = 0.0
+}
