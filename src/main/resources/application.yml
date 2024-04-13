@@ -1,0 +1,21 @@
+spring:
+  #   base de datos posta
+  datasource:
+    url: jdbc:postgresql://0.0.0.0:5432/magicnights
+    username: mad
+    password: asdf
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+
+# Para activar el Trace
+logging:
+  level:
+    root: INFO

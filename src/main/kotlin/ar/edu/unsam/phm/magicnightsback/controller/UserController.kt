@@ -97,5 +97,4 @@ class UserController {
     fun addUserCredit(@PathVariable id: Long, @RequestBody creditToAdd: Double): Double {
         return userService.addCreditToUser(id, creditToAdd)
     }
-
 }
