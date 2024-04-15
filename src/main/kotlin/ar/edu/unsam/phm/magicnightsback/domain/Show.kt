@@ -32,17 +32,19 @@ class Show(
     @Column(length = 40)
     var rentabilityType: Rentability = Rentability.BASE_PRICE
 
+    // Cost methods
     fun baseCost(): Double = (band?.cost ?: 0.0) + (facility?.cost() ?: 0.0)
 
     fun baseTicketPrice(seat: Seat): Double = (facility?.let { baseCost()/it.getTotalSeatCapacity() } ?: 0.0) + seat.price
 
     fun ticketPrice(seat: Seat): Double = (baseTicketPrice(seat) * rentabilityType.factor).truncate()
 
+
 //    fun rentability() = (((totalSales() - baseCost()) / totalSales()) * 100).coerceAtLeast(0.0)
 
-//    fun getCommentBy(user: User) = comments.filter { it.user == user }
 
-    fun totalRating() = if (comments.isEmpty()) 0.0 else comments.sumOf { it.rating } / comments.size
+
+
 
     //fun canBeCommented(user: User) = !isAlreadyCommented(user) && anyShowDatesPassedFor(user)
 
