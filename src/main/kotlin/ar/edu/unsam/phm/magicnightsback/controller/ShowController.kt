@@ -1,25 +1,27 @@
-//package ar.edu.unsam.phm.magicnightsback.controller
+package ar.edu.unsam.phm.magicnightsback.controller
 //
 //import ar.edu.unsam.phm.magicnightsback.domain.AdminStats
 //import ar.edu.unsam.phm.magicnightsback.dto.*
 //import ar.edu.unsam.phm.magicnightsback.error.showDateError
-//import ar.edu.unsam.phm.magicnightsback.service.ShowService
+import ar.edu.unsam.phm.magicnightsback.dto.CommentDTO
+import ar.edu.unsam.phm.magicnightsback.service.ShowService
 //import ar.edu.unsam.phm.magicnightsback.service.UserService
-//import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Operation
 //import io.swagger.v3.oas.annotations.responses.ApiResponse
 //import io.swagger.v3.oas.annotations.responses.ApiResponses
-//import org.springframework.beans.factory.annotation.Autowired
-//import org.springframework.web.bind.annotation.*
-//import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.beans.factory.annotation.Autowired
+import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.web.bind.annotation.*
 //import java.time.LocalDateTime
 //import java.time.LocalDate
 //import java.time.format.DateTimeFormatter
 //
-//@RestController
-//@CrossOrigin(origins = ["*"])
-//class ShowController {
-//    @Autowired
-//    lateinit var showService: ShowService
+@CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
+@RestController
+@Tag(name = "Show", description = "Show related operations")
+class ShowController {
+    @Autowired
+    lateinit var showService: ShowService
 //    @Autowired
 //    lateinit var userService: UserService
 //
@@ -34,6 +36,11 @@
 //        return showService.getAll(params)
 //            .map { it.toShowDTO(showService.getAPossibleUserById(userId)) }
 //    }
+@GetMapping("/{id}/comments")
+@Operation(summary = "Devuelve los comentarios de un show")
+fun getUserComments(@PathVariable id: Long): List<CommentDTO> {
+    return showService.getShowComments(id)
+}
 //
 //    @GetMapping("/show/{id}")
 //    @Operation(summary = "Devuelve un show según su id")
@@ -105,4 +112,4 @@
 //        val show = showService.getById(id)
 //        return AdminStats.getAllStats(show)
 //    }
-//}
+}

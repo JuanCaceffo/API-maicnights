@@ -11,7 +11,7 @@ import ar.edu.unsam.phm.magicnightsback.dto.*
 //import ar.edu.unsam.phm.magicnightsback.error.showError
 import ar.edu.unsam.phm.magicnightsback.service.*
 import io.swagger.v3.oas.annotations.tags.Tag
-//import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Operation
 //import io.swagger.v3.oas.annotations.media.Content
 //import io.swagger.v3.oas.annotations.responses.ApiResponse
 //import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -21,12 +21,13 @@ import org.springframework.web.bind.annotation.*
 @CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
 @RestController
 @RequestMapping("/user")
-@Tag(name = "User Controller", description = "User related operations")
+@Tag(name = "User", description = "User related operations")
 class UserController {
     @Autowired
     lateinit var userService: UserService
 
     @GetMapping("/{id}/comments")
+    @Operation(summary = "Devuelve los comentarios de un usuario")
     fun getUserComments(@PathVariable id: Long): List<CommentDTO> {
         return userService.getUserComments(id)
     }

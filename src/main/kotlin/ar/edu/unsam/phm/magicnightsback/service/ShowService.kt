@@ -3,11 +3,15 @@ package ar.edu.unsam.phm.magicnightsback.service
 import ar.edu.unsam.phm.magicnightsback.domain.Show
 import ar.edu.unsam.phm.magicnightsback.controller.BaseFilterParams
 import ar.edu.unsam.phm.magicnightsback.domain.*
+import ar.edu.unsam.phm.magicnightsback.dto.CommentDTO
+import ar.edu.unsam.phm.magicnightsback.dto.toShowCommentDto
+import ar.edu.unsam.phm.magicnightsback.dto.toUserCommentDto
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.RepositoryError
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.error.showDateError
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -19,6 +23,14 @@ class ShowService {
 //    lateinit var userRepository: UserRepository
     @Autowired
     lateinit var showRepository: ShowRepository
+
+    @Autowired
+    lateinit var commentService: CommentService
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun getShowComments(id: Long): List<CommentDTO> {
+        return commentService.getShowComments(id).map { it.toShowCommentDto() }
+    }
 
     //
 //    fun getAll(params: BaseFilterParams): Iterable<Show> {

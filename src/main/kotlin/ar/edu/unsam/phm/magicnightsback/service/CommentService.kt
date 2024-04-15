@@ -29,6 +29,10 @@ class CommentService {
 
     @Transactional(Transactional.TxType.NEVER)
     fun getUserComments(id:Long): Iterable<Comment> = commentsRepository.findByUserId(id)
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun getShowComments(id:Long): Iterable<Comment> = commentsRepository.findByShowId(id)
+
     @Transactional(Transactional.TxType.NEVER)
     fun findCommentByShowId(id: Long, sid: Long): Comment {
         return validateOptionalIsNotNull(commentsRepository.findById(id))
