@@ -27,62 +27,52 @@ class ShowBoostrap(
 
 
     val shows = mapOf(
-        "LaVelaPuerca_GranRex" to Show(
-            name = "Cachenged!!"
-        )
-            .apply {
-                band = bandRepository.findByName("La Vela Puerca").getOrNull()
-                facility = facilityRepository.findByName("Gran Rex").getOrNull()
-                validate()
-            },
-//        "LaVelaPuerca_TeatroColon" to Show().apply {
-//            name = "Bailanta!!"
-//            band = bandRepository.findByName("La Vela Puerca").getOrNull()
-//            facility = facilityRepository.findByName("Teatro Colon").getOrNull()
-//        },
-//        "PearlJam_River" to Show().apply {
-//            name = "4 You"
-//            band = bandRepository.findByName("Pearl Jam").getOrNull()
-//            facility = facilityRepository.findByName("River Plate").getOrNull()
-//        },
-//        "PearlJam_LaBombonera" to Show().apply {
-//            name = "4 You"
-//            band = bandRepository.findByName("Pearl Jam").getOrNull()
-//            facility = facilityRepository.findByName("La Bombonera").getOrNull()
-//        },
-//        "AcDc_MovistarArena" to Show().apply {
-//            name = "Demon of Hell Rise Tour"
-//            band = bandRepository.findByName("Ac/Dc").getOrNull()
-//            facility = facilityRepository.findByName("Movistar Arena").getOrNull()
-//        },
-//        "AcDc_TeatroOpera" to Show().apply {
-//            name = "Demon of Hell Rise Tour"
-//            band = bandRepository.findByName("Ac/Dc").getOrNull()
-//            facility = facilityRepository.findByName("Teatro Opera").getOrNull()
-//        },
-//        "LosRedondos_ClubDePolo" to Show().apply {
-//            name = "De ricota"
-//            band = bandRepository.findByName("Los Redondos").getOrNull()
-//            facility = facilityRepository.findByName("Club De Polo").getOrNull()
-//        },
-//        "OneDirection_LunaPark" to Show().apply {
-//            name = "nameMidnight"
-//            band = bandRepository.findByName("One Direction").getOrNull()
-//            facility = facilityRepository.findByName("Luna Park").getOrNull()
-//        },
-//        "Queen_GranRex" to Show().apply {
-//            name = "Love of my life"
-//            band = bandRepository.findByName("Queen").getOrNull()
-//            facility = facilityRepository.findByName("Gran Rex").getOrNull()
-//        },
-//        "LaVelaPuerca_SmallFacility" to Show().apply {
-//            name = "Arriba!"
-//            band = bandRepository.findByName("La Vela Puerca").getOrNull()
-//            facility = facilityRepository.findByName("Teatro Poker").getOrNull()
+        "LaVelaPuerca_GranRex" to Show(name = "Cachenged!!").apply {
+            band = bandRepository.findByName("La Vela Puerca").getOrNull()
+            facility = facilityRepository.findByName("Gran Rex").getOrNull()
+        },
+        "LaVelaPuerca_TeatroColon" to Show(name = "Bailanta!!").apply {
+            band = bandRepository.findByName("La Vela Puerca").getOrNull()
+            facility = facilityRepository.findByName("Teatro Colon").getOrNull()
+        },
+        "PearlJam_River" to Show(name = "4 You").apply {
+            band = bandRepository.findByName("Pearl Jam").getOrNull()
+            facility = facilityRepository.findByName("River Plate").getOrNull()
+        },
+        "PearlJam_LaBombonera" to Show(name = "4 You").apply {
+            band = bandRepository.findByName("Pearl Jam").getOrNull()
+            facility = facilityRepository.findByName("La Bombonera").getOrNull()
+        },
+        "AcDc_MovistarArena" to Show(name = "Demon of Hell Rise Tour").apply {
+            band = bandRepository.findByName("Ac/Dc").getOrNull()
+            facility = facilityRepository.findByName("Movistar Arena").getOrNull()
+        },
+        "AcDc_TeatroOpera" to Show(name = "Demon of Hell Rise Tour").apply {
+
+            band = bandRepository.findByName("Ac/Dc").getOrNull()
+            facility = facilityRepository.findByName("Teatro Opera").getOrNull()
+        },
+        "LosRedondos_ClubDePolo" to Show(name = "Le ricote").apply {
+            band = bandRepository.findByName("Los Redondos").getOrNull()
+            facility = facilityRepository.findByName("Club De Polo").getOrNull()
+        },
+        "OneDirection_LunaPark" to Show(name = "nameMidnight").apply {
+            band = bandRepository.findByName("One Direction").getOrNull()
+            facility = facilityRepository.findByName("Luna Park").getOrNull()
+        },
+        "Queen_GranRex" to Show(name = "Love of my life").apply {
+            band = bandRepository.findByName("Queen").getOrNull()
+            facility = facilityRepository.findByName("Gran Rex").getOrNull()
+        },
+        "LaVelaPuerca_SmallFacility" to Show(name = "Arriba!").apply {
+            band = bandRepository.findByName("La Vela Puerca").getOrNull()
+            facility = facilityRepository.findByName("Teatro Poker").getOrNull()
+        }
     )
 
     fun createShows() {
         shows.values.forEach {
+            it.validate()
             val showInRepo = showRepository.findByName(it.name).getOrNull()
             if (showInRepo != null) {
                 it.id = showInRepo.id

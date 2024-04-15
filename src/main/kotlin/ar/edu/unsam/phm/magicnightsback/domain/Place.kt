@@ -6,7 +6,7 @@ import jakarta.persistence.*
 
 @Entity
 data class Place(
-    @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @ManyToOne
     val seat: Seat,
     var capacity: Int = 0
 ) {
@@ -21,14 +21,15 @@ data class Place(
 
 @Entity
 data class Seat(
-    @Enumerated(EnumType.STRING)
-    @Column(length = 50)
+    @Transient
     val type: SeatTypes
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
     val price: Double = type.price
+    @Column(length = 50)
+    val name: String = type.name
 
     init {
         require(price >= 0) { throw BusinessException(FacilityError.NEGATIVE_PRICE) }
@@ -37,10 +38,10 @@ data class Seat(
 
 enum class SeatTypes(val price:Double){
     UPPERLEVEL(10000.0),
-    FIELD(150000.0),
+    FIELD(15000.0),
     BOX(20000.0),
     LOWERLEVEL(10000.0),
-    PULLMAN(150000.0)
+    PULLMAN(15000.0)
 }
 
 

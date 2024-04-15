@@ -3,6 +3,8 @@ package ar.edu.unsam.phm.magicnightsback.domain
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import java.time.LocalDate
 import java.time.Period
+import kotlin.math.floor
+import kotlin.math.pow
 
 fun LocalDate.calculateAge(): Int = Period.between(this, LocalDate.now()).years
 
@@ -14,7 +16,8 @@ fun Number.throwErrorIfNegative(error: RuntimeException): Number {
 }
 
 fun Double.truncate(): Double {
-    return String.format("%.2f", this).toDouble()
+    val factor = 10.0.pow(2.0)
+    return floor(this * factor) / factor
 }
 
 object Comparar {

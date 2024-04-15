@@ -6,13 +6,13 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.Id
 
 @Entity
-class Band {
+data class Band(
+    @Column(length = 40)
+    var name: String
+) {
     @Id
     @GeneratedValue
     var id: Long? = null
-
-    @Column(length = 40)
-    var name: String = ""
 
     @Column
     var cost: Double = 0.0

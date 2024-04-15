@@ -13,13 +13,11 @@ class Show(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
 
-
     @ManyToOne
     var band: Band? = null
 
     @ManyToOne
     var facility: Facility? = null
-
 
 //    @Column(length = 50)
 //    var showImg = "${band!!.name.removeSpaces().lowercase()}.jpg"
@@ -31,8 +29,14 @@ class Show(
 //    val dates = mutableSetOf<ShowDate>()
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 40)
     var rentabilityType: Rentability = Rentability.BASE_PRICE
 
+    fun baseCost(): Double = (band?.cost ?: 0.0) + (facility?.cost() ?: 0.0)
+
+    fun baseTicketPrice(seat: Seat): Double = (facility?.let { baseCost()/it.getTotalSeatCapacity() } ?: 0.0) + seat.price
+
+    fun ticketPrice(seat: Seat): Double = (baseTicketPrice(seat) * rentabilityType.factor).truncate()
 
 //    fun rentability() = (((totalSales() - baseCost()) / totalSales()) * 100).coerceAtLeast(0.0)
 
@@ -49,7 +53,6 @@ class Show(
 //    private fun anyShowDatesPassedFor(user: User) =
 //        dates.filter { date -> date.attendees.contains(user) }.any { date -> date.datePassed() }
 
-
     fun changeRentability(newShowStatus: Rentability) {
         this.rentabilityType = newShowStatus
     }
@@ -59,11 +62,6 @@ class Show(
         facility?.let {} ?: throw BusinessException(ShowError.FACILITY_ERROR)
     }
 
-//    private fun cost(seatType: SeatTypes): Double =
-//        if (facility.getTotalSeatCapacity() != 0) ((baseCost() / facility.getTotalSeatCapacity()) + seatType.price) else (baseCost() / seatType.price)
-//
-//    fun ticketPrice(seatType: SeatTypes): Double = cost(seatType) * rentabilityType.getRentability()
-
 //    fun addDate(date: LocalDateTime) {
 //        dates.add(ShowDate(date, facility))
 //    }
@@ -72,9 +70,6 @@ class Show(
 //    fun friendsAttending(userId: Long) = allAttendees().filter { it.isMyFriend(userId) }
 
     //fun getSeatTypes() = facility.seats.map { it.seatType }
-
-//    fun baseCost(): Double = band?.cost ?: 0.0 + (facility?.cost() ?: 0.0)
-
 
 //    fun allTicketPrices() = facility.seats.map { ticketPrice(it.seatType) }
 

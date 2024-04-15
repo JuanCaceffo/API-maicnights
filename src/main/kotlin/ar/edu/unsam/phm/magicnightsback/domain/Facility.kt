@@ -18,18 +18,18 @@ abstract class Facility(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val places: MutableList<Place> = mutableListOf()
 
     @Transient
-    lateinit var validSeatTypes: List<SeatTypes>
+    lateinit var validSeatTypes: List<String>
 
     abstract var fixedPrice: Double
     abstract fun fixedCostVariant(): Double
     fun cost() = fixedPrice + fixedCostVariant()
 
     fun addPlace(seat: Seat, capacity: Int) {
-        validateSeatType(seat.type)
+        validateSeatType(seat.name)
         places.add(Place(seat, capacity = capacity))
     }
 
@@ -37,8 +37,8 @@ abstract class Facility(
     fun getPlaceCapacity(seatType: SeatTypes) = getPlaceBySeatType(seatType)?.let { it.capacity } ?: 0
 
     fun getTotalSeatCapacity() = places.sumOf { it.capacity }
-    fun validateSeatType(type: SeatTypes) {
-        if (type !in validSeatTypes) {
+    fun validateSeatType(name: String) {
+        if (name !in validSeatTypes) {
             throw BusinessException(FacilityError.INVALID_SEAT_TYPE)
         }
     }
@@ -52,7 +52,7 @@ class Stadium(
     override var fixedPrice: Double
 ) : Facility(name, location) {
     init {
-        validSeatTypes = listOf(SeatTypes.BOX, SeatTypes.UPPERLEVEL, SeatTypes.FIELD)
+        validSeatTypes = listOf(SeatTypes.BOX.name, SeatTypes.UPPERLEVEL.name, SeatTypes.FIELD.name)
         require(fixedPrice >= 0) { throw BusinessException(FacilityError.NEGATIVE_PRICE) }
     }
 
@@ -63,7 +63,7 @@ class Stadium(
 @DiscriminatorValue("Theater")
 class Theater(name: String, location: Point) : Facility(name, location) {
     init {
-        validSeatTypes = listOf(SeatTypes.PULLMAN, SeatTypes.LOWERLEVEL)
+        validSeatTypes = listOf(SeatTypes.PULLMAN.name, SeatTypes.LOWERLEVEL.name)
     }
 
     @Nullable

@@ -16,28 +16,22 @@ class BandBoostrap: InitializingBean {
     lateinit var bandRepository: BandRepository
 
     val bands = mapOf(
-        "LaVelaPuerca" to Band().apply {
-            name = "La Vela Puerca"
+        "LaVelaPuerca" to Band(name = "La Vela Puerca").apply {
             cost = 10000.0
         },
-        "PearlJam" to Band().apply {
-            name = "Pearl Jam"
+        "PearlJam" to Band(name = "Pearl Jam").apply {
             cost = 20000.0
         },
-        "AcDc" to Band().apply {
-            name = "Ac/Dc"
+        "AcDc" to Band(name = "Ac/Dc").apply {
             cost = 30000.0
         },
-        "LosRedondos" to Band().apply {
-            name = "Los Redondos"
+        "LosRedondos" to Band(name = "Los Redondos").apply {
             cost = 10.0
         },
-        "OneDirection" to Band().apply {
-            name = "One Direction"
+        "OneDirection" to Band(name = "One Direction").apply {
             cost = 20000.0
         },
-        "Queen" to Band().apply {
-            name = "Queen"
+        "Queen" to Band(name = "Queen").apply {
             cost = 30000.0
         }
     )
