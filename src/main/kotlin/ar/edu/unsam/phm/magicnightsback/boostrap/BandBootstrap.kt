@@ -5,13 +5,11 @@ import ar.edu.unsam.phm.magicnightsback.repository.BandRepository
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
-import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
-import org.springframework.stereotype.Service
 import kotlin.jvm.optionals.getOrNull
 
 @Component
-class BandBoostrap: InitializingBean {
+class BandBootstrap: InitializingBean {
     @Autowired
     lateinit var bandRepository: BandRepository
 

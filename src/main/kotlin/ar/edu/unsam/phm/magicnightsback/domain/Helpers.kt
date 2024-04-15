@@ -2,6 +2,7 @@ package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.RepositoryError
+//import ar.edu.unsam.phm.magicnightsback.repository.CommentRepository
 import java.time.LocalDate
 import java.time.Period
 import java.util.*
@@ -42,6 +43,7 @@ fun Number.throwIfGreaterThan(number: Number, msg: String): Number {
 }
 
 fun <T> validateOptionalIsNotNull(optional: Optional<T>):T{
-    if(optional.isEmpty) { throw BusinessException(RepositoryError.ID_NOT_FOUND)}
+    if(optional.isEmpty) {
+        throw BusinessException(RepositoryError.ID_NOT_FOUND)}
     return optional.get()
 }

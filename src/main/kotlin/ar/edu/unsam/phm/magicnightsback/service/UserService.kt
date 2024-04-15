@@ -1,5 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
+//import ar.edu.unsam.phm.magicnightsback.domain.Comment
 import ar.edu.unsam.phm.magicnightsback.domain.Comment
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.domain.validateOptionalIsNotNull
@@ -11,17 +12,30 @@ import ar.edu.unsam.phm.magicnightsback.error.UserError
 import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Autowired
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
+import jakarta.transaction.Transactional
 
 @Service
 class UserService {
     @Autowired
     lateinit var userRepository: UserRepository
-//
+
+    @Autowired
+    lateinit var commentService: CommentService
+
 //    @Autowired
 //    lateinit var showRepository: ShowRepository
 
-        fun findById(id: Long): User = validateOptionalIsNotNull(userRepository.findById(id))
+    @Transactional(Transactional.TxType.NEVER)
+    fun findById(id: Long): User = validateOptionalIsNotNull(userRepository.findById(id))
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun findByUsername(username: String): User = validateOptionalIsNotNull(userRepository.findByUsername(username))
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun getUserComments(id: Long): List<CommentDTO> {
+        return commentService.getUserComments(id).map { it.toUserCommentDto() }
     }
+}
 
 
 //    /*Mapeo todos los tickets en uno solo por showDate juntando el precio total*/
@@ -103,4 +117,3 @@ class UserService {
 //    }
 //
 //    fun isAdmin(id: Long) = userRepository.getById(id).throwIfNotAdmin(UserError.USER_IS_NOT_ADMIN)
-}

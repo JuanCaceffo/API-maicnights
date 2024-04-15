@@ -1,6 +1,6 @@
-//package ar.edu.unsam.phm.magicnightsback.controller
-//
-//import ar.edu.unsam.phm.magicnightsback.dto.*
+package ar.edu.unsam.phm.magicnightsback.controller
+
+import ar.edu.unsam.phm.magicnightsback.dto.*
 //import ar.edu.unsam.phm.magicnightsback.error.UserError
 //import ar.edu.unsam.phm.magicnightsback.dto.UserDTO
 //import ar.edu.unsam.phm.magicnightsback.dto.FriendDTO
@@ -9,21 +9,29 @@
 //import ar.edu.unsam.phm.magicnightsback.dto.PurchasedTicketDTO
 //import ar.edu.unsam.phm.magicnightsback.error.showDateError
 //import ar.edu.unsam.phm.magicnightsback.error.showError
-//import ar.edu.unsam.phm.magicnightsback.service.*
+import ar.edu.unsam.phm.magicnightsback.service.*
+import io.swagger.v3.oas.annotations.tags.Tag
 //import io.swagger.v3.oas.annotations.Operation
 //import io.swagger.v3.oas.annotations.media.Content
 //import io.swagger.v3.oas.annotations.responses.ApiResponse
 //import io.swagger.v3.oas.annotations.responses.ApiResponses
-//import org.springframework.beans.factory.annotation.Autowired
-//import org.springframework.web.bind.annotation.*
-//
-//@RestController
-//@CrossOrigin(origins = ["*"])
-//@RequestMapping("/user")
-//class UserController {
-//    @Autowired
-//    lateinit var userService: UserService
-//
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.*
+
+@CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
+@RestController
+@RequestMapping("/user")
+@Tag(name = "User Controller", description = "User related operations")
+class UserController {
+    @Autowired
+    lateinit var userService: UserService
+
+    @GetMapping("/{id}/comments")
+    fun getUserComments(@PathVariable id: Long): List<CommentDTO> {
+        return userService.getUserComments(id)
+    }
+}
+
 //    @GetMapping("/validate")
 //    @Operation(summary = "Valida el tipo de usuario")
 //    fun isAdmin(@RequestParam(required = true) userId: Long):Boolean{

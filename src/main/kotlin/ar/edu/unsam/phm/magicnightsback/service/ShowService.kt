@@ -47,6 +47,8 @@ class ShowService {
 //        }
 //    }
     fun findById(id: Long): Show = validateOptionalIsNotNull(showRepository.findById(id))
+
+    fun findByName(name: String): Show = validateOptionalIsNotNull(showRepository.findByName(name))
 //
 //    fun getAPossibleUserById(userId: Long) = if (userId > -1) userRepository.getById(userId) else null
 }

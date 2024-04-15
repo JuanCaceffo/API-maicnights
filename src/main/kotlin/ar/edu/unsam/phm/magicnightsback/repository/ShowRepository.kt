@@ -2,8 +2,8 @@ package ar.edu.unsam.phm.magicnightsback.repository
 
 import ar.edu.unsam.phm.magicnightsback.domain.Show
 import org.springframework.data.repository.CrudRepository
-import java.util.Optional
+import java.util.*
 
 interface ShowRepository : CrudRepository<Show, Long>{
-    fun findByName(show: String): Optional<Show>
+    fun findByName(name: String): Optional<Show>
 }

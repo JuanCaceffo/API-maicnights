@@ -6,9 +6,10 @@ import org.springframework.stereotype.Repository
 import java.util.Optional
 
 @Repository
-interface UserRepository : CrudRepository<User, Long> {
-    fun findByName(name: String): Optional<User>
+interface UserRepository : CrudRepository<User, Long>{
+    fun findByUsername(username: String): Optional<User>
 }
+
 
 
 //    fun getLoginUser(loginUser: LoginUserDTO): Long? {

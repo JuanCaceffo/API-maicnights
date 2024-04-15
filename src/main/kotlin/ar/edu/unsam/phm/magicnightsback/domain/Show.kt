@@ -8,23 +8,20 @@ import java.time.LocalDateTime
 @Entity
 class Show(
     @Column(length = 40)
-    var name: String
+    var name: String,
+
+    @ManyToOne
+    var band: Band,
+
+    @ManyToOne
+    var facility: Facility,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
 
-    @ManyToOne
-    var band: Band? = null
-
-    @ManyToOne
-    var facility: Facility? = null
-
-//    @Column(length = 50)
-//    var showImg = "${band!!.name.removeSpaces().lowercase()}.jpg"
-
-    @OneToMany
-    val comments = mutableListOf<Comment>()
+    @Column(length = 100)
+    var imgUrl = "${band.name.removeSpaces().lowercase()}.jpg"
 
 //    val pendingAttendees = mutableListOf<User>()
 //    val dates = mutableSetOf<ShowDate>()
@@ -40,7 +37,6 @@ class Show(
 
     fun ticketPrice(seat: Seat): Double = (baseTicketPrice(seat) * rentabilityType.factor).truncate()
 
-    fun isReadyToComment ( date: LocalDateTime): Boolean = true
 //    fun rentability() = (((totalSales() - baseCost()) / totalSales()) * 100).coerceAtLeast(0.0)
 
 
@@ -60,10 +56,10 @@ class Show(
         this.rentabilityType = newShowStatus
     }
 
-    fun validate() {
-        band?.let {} ?: throw BusinessException(ShowError.BAND_ERROR)
-        facility?.let {} ?: throw BusinessException(ShowError.FACILITY_ERROR)
-    }
+//    fun validate() {
+//        band?.let {} ?: throw BusinessException(ShowError.BAND_ERROR)
+//        facility?.let {} ?: throw BusinessException(ShowError.FACILITY_ERROR)
+//    }
 
 //    fun addDate(date: LocalDateTime) {
 //        dates.add(ShowDate(date, facility))

@@ -5,11 +5,12 @@ import ar.edu.unsam.phm.magicnightsback.domain.SeatTypes
 import ar.edu.unsam.phm.magicnightsback.repository.SeatRepository
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
 import kotlin.jvm.optionals.getOrNull
 
 @Component
-class SeatBoostrap : InitializingBean {
+class SeatBootstrap : InitializingBean {
     @Autowired
     lateinit var seatRepository: SeatRepository
 
@@ -33,6 +34,7 @@ class SeatBoostrap : InitializingBean {
             }
         }
     }
+    @Bean("seat")
     override fun afterPropertiesSet() {
         println("Seats creation process starts")
         createSeats()

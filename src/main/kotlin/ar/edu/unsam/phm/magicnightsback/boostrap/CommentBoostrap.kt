@@ -1,18 +1,114 @@
-//package ar.edu.unsam.phm.magicnightsback.boostrap
-//
+package ar.edu.unsam.phm.magicnightsback.boostrap
+
 //import ar.edu.unsam.phm.magicnightsback.domain.Comment
 //import ar.edu.unsam.phm.magicnightsback.domain.StadiumSeatType
 //import ar.edu.unsam.phm.magicnightsback.domain.Ticket
-//import org.springframework.beans.factory.InitializingBean
+import ar.edu.unsam.phm.magicnightsback.domain.Comment
+import ar.edu.unsam.phm.magicnightsback.repository.BandRepository
+import ar.edu.unsam.phm.magicnightsback.repository.CommentRepository
+import ar.edu.unsam.phm.magicnightsback.service.ShowService
+import ar.edu.unsam.phm.magicnightsback.service.UserService
+import org.springframework.beans.factory.InitializingBean
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.DependsOn
 //import org.springframework.context.annotation.DependsOn
 //import org.springframework.core.annotation.Order
 //import org.springframework.stereotype.Component
-//import org.springframework.stereotype.Service
+import org.springframework.stereotype.Service
+
+import kotlin.jvm.optionals.getOrNull
+
+@Service
+class CommentBoostrap(
+    @Autowired
+    userBoostrap: UserBoostrap,
+    @Autowired
+    showBoostrap: ShowBoostrap,
+    @Autowired
+    userService: UserService,
+    @Autowired
+    showService: ShowService
+) : InitializingBean {
+    @Autowired
+    lateinit var commentRepository: CommentRepository
+
+    val madescoces = userService.findByUsername("madescoces")
+    val forYou = showService.findByName("4 You")
+    val comentarioPearlJam = """La noche con Pearl Jam fue simplemente espectacular. Desde el primer acorde hasta
+        |el último, la banda nos llevó en un viaje emocionante a través de su música icónica. Eddie Vedder irradiaba
+        |energía en el escenario, y cada canción resonaba en lo más profundo de mi ser. La atmósfera estaba cargada
+        |de emoción y camaradería, y el público se entregó por completo. 🎸🎶 #PearlJam #ConciertoInolvidable""".trimMargin()
+
+
+    val comments = listOf<Comment>(
+        Comment(madescoces, forYou, comentarioPearlJam, 5.0)
+    )
+
+    //        "GrandRexComment1" to Comment(
+//            showBoostrap.shows["LaVelaPuerca_GranRex"]!!,
+//            "Que divertido estuvo, la pase re bien con mis amigos.",
+//            4.0
+//        ),
 //
-//@Service
-//@Order(5)
-//@DependsOn("showBoostrap", "userBoostrap")
-//class CommentBoostrap(
+//        "GrandRexComment2" to Comment(
+//            showBoostrap.shows["LaVelaPuerca_GranRex"]!!,
+//            "genial!!! Ame!! A parte los chicos re copados, al finalizar el show se quedaron para darnos autografos! <3",
+//            5.0
+//        ),
+//
+//        "GrandRexComment3" to Comment(
+//            showBoostrap.shows["LaVelaPuerca_GranRex"]!!,
+//            "Buenardo. Fue el regalo de cumple de mi pareja y quede re bien.",
+//            5.0
+//        ),
+//
+//        "GrandRexComment4" to Comment(
+//            showBoostrap.shows["LaVelaPuerca_GranRex"]!!,
+//            "Estuvo safable",
+//            3.0
+//        ),
+//        "RiverComment1" to Comment(
+//            showBoostrap.shows["PearlJam_River"]!!,
+//            "¡Espectáculo impresionante! Los artistas dieron lo mejor de sí mismos en el escenario, creando una experiencia inolvidable para el público.",
+//            4.0
+//        ),
+//
+//        "RiverComment2" to Comment(
+//            showBoostrap.shows["PearlJam_River"]!!,
+//            "Una noche llena de energía y emoción. La combinación perfecta de música, luces y talento hizo que este show fuera realmente especial.",
+//            5.0
+//        ),
+//
+//        "RiverComment3" to Comment(
+//            showBoostrap.shows["PearlJam_River"]!!,
+//            "Increíblemente entretenido. Desde el momento en que comenzó hasta el último bis, cada momento estuvo lleno de sorpresas y diversión.",
+//            5.0
+//        ),
+//
+//        "RiverComment4" to Comment(
+//            showBoostrap.shows["PearlJam_River"]!!,
+//            "¡No te lo pierdas! Este show es una obra maestra de creatividad y habilidad. Una experiencia que te dejará con ganas de más.",
+//            4.0
+//        ),
+//        "ColonComments" to Comment(
+//            showBoostrap.shows["LaVelaPuerca_TeatroColon"]!!,
+//            "Una mezcla perfecta de nostalgia y modernidad. Este show combina clásicos atemporales con elementos frescos e innovadores, atrayendo a audiencias de todas las edades.",
+//            4.0
+//        ),
+//    )
+    private fun addComments() {
+        comments.forEach {
+            commentRepository.save(it)
+            println("Comment ${it.id} created")
+        }
+    }
+
+    override fun afterPropertiesSet() {
+        println("Comment creation process starts")
+        addComments()
+    }
+}
+
 //    showBoostrap: ShowBoostrap,
 //    userBoostrap: UserBoostrap,
 //) : InitializingBean {

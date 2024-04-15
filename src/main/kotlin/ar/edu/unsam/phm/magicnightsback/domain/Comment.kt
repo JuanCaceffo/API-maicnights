@@ -12,13 +12,13 @@ data class Comment(
     val user: User,
     @ManyToOne(fetch = FetchType.LAZY)
     val show: Show,
-    @Column(length = 280)
-    val text: String = "",
+    @Column(length = 400)
+    var text: String = "",
     val rating: Double = 0.0
 ) {
     @Id
-    @GeneratedValue
-    val id: Long? = null
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null
 
     var date: LocalDateTime = LocalDateTime.now()
 
@@ -28,6 +28,11 @@ data class Comment(
         text = dto.text,
         rating = dto.rating
     ) {
+        id = dto.id
         require(rating in 0.0..5.0) { throw BusinessException(ShowCommentError.INVALID_RATTING) }
+    }
+
+    init {
+        if (text.length > 400) text =  text.take(400)
     }
 }
