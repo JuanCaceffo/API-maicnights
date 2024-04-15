@@ -2,115 +2,72 @@ package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.FacilityError
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.Id
-import org.uqbar.geodds.Point
+import jakarta.annotation.Nullable
+import jakarta.persistence.*
 
-interface SeatTypes {
-    val price: Double
-    val name: String
-}
-
-/*
-TODO: podria llegar a hacerse un refactor en como esta pensado esto ya que UPPERLEVEL Y FIELD tienen
-el mismo precio que PULLMAN Y LOWERLEVEL
-*/
-
-enum class TheaterSeatType(override val price: Double,) : SeatTypes {
-    LOWERLEVEL(15000.0),
-    PULLMAN(10000.0)
-}
-
-enum class StadiumSeatType(override val price: Double) : SeatTypes {
-    UPPERLEVEL(10000.0),
-    FIELD(15000.0),
-    BOX(20000.0)
-}
-
-//TODO: buscar una forma mas adecuada
-enum class AllSetTypeNames {
-    UPPERLEVEL,
-    FIELD,
-    BOX,
-    LOWERLEVEL,
-    PULLMAN
-}
-
-class SeatType(
-    val seatType: SeatTypes,
-    val quantity: Int
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type")
+abstract class Facility(
+    @Column(length = 100)
+    val name: String,
+    @Embedded
+    val location: Point
 ) {
-    val name = seatType.name
-    fun price() = seatType.price
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    val places: MutableList<Place> = mutableListOf()
+
+    @Transient
+    lateinit var validSeatTypes: List<SeatTypes>
+
+    abstract var fixedPrice: Double
+    abstract fun fixedCostVariant(): Double
+    fun cost() = fixedPrice + fixedCostVariant()
+
+    fun addPlace(seat: Seat, capacity: Int) {
+        validateSeatType(seat.type)
+        places.add(Place(seat, capacity = capacity))
+    }
+
+    private fun getPlaceBySeatType(seatType: SeatTypes) = places.find { it.seat.type == seatType }
+    fun getPlaceCapacity(seatType: SeatTypes) = getPlaceBySeatType(seatType)?.let { it.capacity } ?: 0
+
+    fun getTotalSeatCapacity() = places.sumOf { it.capacity }
+    fun validateSeatType(type: SeatTypes) {
+        if (type !in validSeatTypes) {
+            throw BusinessException(FacilityError.INVALID_SEAT_TYPE)
+        }
+    }
 }
 
 @Entity
-class Facility{
-    @Id
-    @GeneratedValue
-    var id: Long? = null
+@DiscriminatorValue("Stadium")
+class Stadium(
+    name: String,
+    location: Point,
+    override var fixedPrice: Double
+) : Facility(name, location) {
+    init {
+        validSeatTypes = listOf(SeatTypes.BOX, SeatTypes.UPPERLEVEL, SeatTypes.FIELD)
+        require(fixedPrice >= 0) { throw BusinessException(FacilityError.NEGATIVE_PRICE) }
+    }
 
-    @Column(length = 40)
-    var name: String = ""
-
-//    @Column
-//    val location: Point = Point(0,0)
-
-//    val seatStrategy: SeatStrategy
-//
-//    val seats: MutableSet<SeatType> = mutableSetOf()
-    fun cost() = 0.0//seatStrategy.totalCost()
-//    fun getSeat(seatTypeName: AllSetTypeNames): SeatType =
-//        seats.find { it.name == seatTypeName.name } ?: throw BusinessException(FacilityError.INVALID_SEAT_TYPE)
-//
-//    fun getAllSeatTypes() = seats.map {it.seatType}
-//
-//    fun getSeatCapacity(seatType: SeatTypes) = getSeat(AllSetTypeNames.valueOf(seatType.name)).quantity
-//    fun getTotalSeatCapacity(): Int = seats.sumOf { it.quantity }
-//    fun addSeatType(seat: SeatType) {
-//        thorwInvalidSeatType(seat.name, BusinessException(FacilityError.INVALID_SEAT_TYPE))
-//        seats.add(seat)
-//    }
-//
-//    fun removeSeatType(type: SeatType) {
-//        seats.remove(type)
-//    }
-//
-//    //VALIDATIONS
-//    fun thorwInvalidSeatType(seatTypeName: String, ex: RuntimeException) {
-//        if (!seatStrategy.allowedSeat(seatTypeName)) {
-//            throw ex
-//        }
-//    }
+    override fun fixedCostVariant(): Double = 0.0
 }
 
-interface SeatStrategy {
-    val fixedPrice: Double
-    fun allowedSeat(seatTypeName: String): Boolean
-    fun allowedSeatsNames(): List<String>
-    fun seatPrice(seatType: SeatType) = seatType.price()
-    fun totalCost(): Double = fixedPrice + fixedCostVariant()
-    fun fixedCostVariant(): Double = 0.0
-}
+@Entity
+@DiscriminatorValue("Theater")
+class Theater(name: String, location: Point) : Facility(name, location) {
+    init {
+        validSeatTypes = listOf(SeatTypes.PULLMAN, SeatTypes.LOWERLEVEL)
+    }
 
-class StadiumStrategy(
-    override val fixedPrice: Double
-) : SeatStrategy {
-    override fun allowedSeat(seatTypeName: String) = StadiumSeatType.entries.any { it.name == seatTypeName }
-    override fun allowedSeatsNames(): List<String> = StadiumSeatType.entries.map { it.name }
-
-}
-
-class TheaterStrategy(
+    @Nullable
     var hasGoodAcoustics: Boolean = false
-) : SeatStrategy {
-    override fun allowedSeat(seatTypeName: String) = TheaterSeatType.entries.any { it.name == seatTypeName }
-    override fun allowedSeatsNames(): List<String> = TheaterSeatType.entries.map { it.name }
-
-    override val fixedPrice: Double = 100000.0
+    override var fixedPrice: Double = 100000.0
     override fun fixedCostVariant(): Double = if (hasGoodAcoustics) 50000.0 else 0.0
-
 }
-

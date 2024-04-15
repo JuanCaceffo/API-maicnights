@@ -15,7 +15,9 @@ object ShowCommentError {
     const val SHOWDATE_NOT_PASSED = "No se puede agregar una opinion a un showdate si este no ocurrió"
 }
 
-object showError {
+object ShowError {
+    const val BAND_ERROR = "El show debe tener una banda"
+    const val FACILITY_ERROR = "El show debe tener un lugar"
     const val USER_CANT_COMMENT = "El usaurio no puede comentar el show"
     const val MSG_SETS_UNAVILABLES = "Excedio la cantidad de asientos disponibles"
     const val TICKET_CART_NOT_FOUND = "No se encontró la fecha en el show especificado"
@@ -32,6 +34,8 @@ object RepositoryError {
 
 object FacilityError {
     const val INVALID_SEAT_TYPE = "El tipo de asiento ingresado no es valido para este tipo de instalacion"
+    const val NEGATIVE_CAPACITY = "El área no puede tener una cantidad de asientos negativa"
+    const val NEGATIVE_PRICE = "El precio no puede ser un valor negativo"
 }
 
 object cartError {

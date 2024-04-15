@@ -4,12 +4,14 @@ import ar.edu.unsam.phm.magicnightsback.domain.Band
 import ar.edu.unsam.phm.magicnightsback.repository.BandRepository
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Bean
 import org.springframework.core.annotation.Order
+import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
+import kotlin.jvm.optionals.getOrNull
 
-@Service
-@Order(0)
-class BandBoostrap : InitializingBean {
+@Component
+class BandBoostrap: InitializingBean {
     @Autowired
     lateinit var bandRepository: BandRepository
 
@@ -42,12 +44,13 @@ class BandBoostrap : InitializingBean {
 
     fun createBands() {
         bands.values.forEach{
-//            val bandInRepo = bandRepository.findByName(it.name)
-//            if (bandInRepo.isPresent) {
-//                it.id = bandInRepo.get().id
-//            } else {
+            val bandInRepo = bandRepository.findByName(it.name).getOrNull()
+            if (bandInRepo != null) {
+                it.id = bandInRepo.id
+            } else {
                 bandRepository.save(it)
-//            }
+                println("Band ${it.name} created")
+            }
         }
     }
 

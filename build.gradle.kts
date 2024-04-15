@@ -9,6 +9,10 @@ plugins {
 	jacoco
 }
 
+allOpen {
+	annotation("jakarta.persistence.Entity")
+}
+
 group = "ar.edu.unsam.phm"
 version = "0.0.1-SNAPSHOT"
 

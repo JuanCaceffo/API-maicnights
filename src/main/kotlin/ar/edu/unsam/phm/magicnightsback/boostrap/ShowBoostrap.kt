@@ -1,92 +1,110 @@
-//package ar.edu.unsam.phm.magicnightsback.boostrap
-//
-//import ar.edu.unsam.phm.magicnightsback.domain.AllSetTypeNames
-//import ar.edu.unsam.phm.magicnightsback.domain.Comment
-//import ar.edu.unsam.phm.magicnightsback.domain.Show
-//import ar.edu.unsam.phm.magicnightsback.domain.TheaterSeatType
-//import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
-//import org.springframework.beans.factory.InitializingBean
-//import org.springframework.context.annotation.DependsOn
-//import org.springframework.core.annotation.Order
-//import org.springframework.stereotype.Component
-//import org.springframework.stereotype.Service
-//import java.time.LocalDate
-//import java.time.LocalDateTime
-//
-//@Service
-//@Order(2)
-//@DependsOn("facilityBoostrap", "bandBoostrap")
-//
-//class ShowBoostrap(
-//    val showRepository: ShowRepository,
-//    bandBoostrap: BandBoostrap,
-//    facilityBoostrap: FacilityBoostrap,
-//) : InitializingBean {
-//
-//    val shows = mapOf(
-//        "LaVelaPuerca_GranRex" to Show().apply {
-//            name = "Cachenged!!"
-//            band = bandBoostrap.bands["LaVelaPuerca"]
-//            facility = facilityBoostrap.facilities["GranRex"]
-//        },
+package ar.edu.unsam.phm.magicnightsback.boostrap
+
+import ar.edu.unsam.phm.magicnightsback.domain.Show
+import ar.edu.unsam.phm.magicnightsback.repository.BandRepository
+import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
+import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
+import org.springframework.beans.factory.InitializingBean
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.DependsOn
+import org.springframework.stereotype.Service
+import kotlin.jvm.optionals.getOrNull
+
+@Service
+class ShowBoostrap(
+    @Autowired
+    bandRepository: BandRepository,
+    @Autowired
+    facilityRepository: FacilityRepository,
+    @Autowired
+    bandBoostrap: BandBoostrap,
+    @Autowired
+    facilityBoostrap: FacilityBoostrap
+) : InitializingBean {
+
+    @Autowired
+    lateinit var showRepository: ShowRepository
+
+
+    val shows = mapOf(
+        "LaVelaPuerca_GranRex" to Show(
+            name = "Cachenged!!"
+        )
+            .apply {
+                band = bandRepository.findByName("La Vela Puerca").getOrNull()
+                facility = facilityRepository.findByName("Gran Rex").getOrNull()
+                validate()
+            },
 //        "LaVelaPuerca_TeatroColon" to Show().apply {
 //            name = "Bailanta!!"
-//            band = bandBoostrap.bands["LaVelaPuerca"]
-//            facility = facilityBoostrap.facilities["TeatroColon"]
+//            band = bandRepository.findByName("La Vela Puerca").getOrNull()
+//            facility = facilityRepository.findByName("Teatro Colon").getOrNull()
 //        },
 //        "PearlJam_River" to Show().apply {
 //            name = "4 You"
-//            band = bandBoostrap.bands["PearlJam"]
-//            facility = facilityBoostrap.facilities["River"]
+//            band = bandRepository.findByName("Pearl Jam").getOrNull()
+//            facility = facilityRepository.findByName("River Plate").getOrNull()
 //        },
 //        "PearlJam_LaBombonera" to Show().apply {
 //            name = "4 You"
-//            band = bandBoostrap.bands["PearlJam"]
-//            facility = facilityBoostrap.facilities["LaBombonera"]
+//            band = bandRepository.findByName("Pearl Jam").getOrNull()
+//            facility = facilityRepository.findByName("La Bombonera").getOrNull()
 //        },
 //        "AcDc_MovistarArena" to Show().apply {
 //            name = "Demon of Hell Rise Tour"
-//            band = bandBoostrap.bands["AcDc"]
-//            facility = facilityBoostrap.facilities["MovistarArena"]
+//            band = bandRepository.findByName("Ac/Dc").getOrNull()
+//            facility = facilityRepository.findByName("Movistar Arena").getOrNull()
 //        },
 //        "AcDc_TeatroOpera" to Show().apply {
 //            name = "Demon of Hell Rise Tour"
-//            band = bandBoostrap.bands["AcDc"]
-//            facility = facilityBoostrap.facilities["TeatroOpera"]
+//            band = bandRepository.findByName("Ac/Dc").getOrNull()
+//            facility = facilityRepository.findByName("Teatro Opera").getOrNull()
 //        },
 //        "LosRedondos_ClubDePolo" to Show().apply {
 //            name = "De ricota"
-//            band = bandBoostrap.bands["LosRedondos"]
-//            facility = facilityBoostrap.facilities["ClubDePolo"]
+//            band = bandRepository.findByName("Los Redondos").getOrNull()
+//            facility = facilityRepository.findByName("Club De Polo").getOrNull()
 //        },
 //        "OneDirection_LunaPark" to Show().apply {
 //            name = "nameMidnight"
-//            band = bandBoostrap.bands["OneDirection"]
-//            facility = facilityBoostrap.facilities["LunaPark"]
+//            band = bandRepository.findByName("One Direction").getOrNull()
+//            facility = facilityRepository.findByName("Luna Park").getOrNull()
 //        },
 //        "Queen_GranRex" to Show().apply {
 //            name = "Love of my life"
-//            band = bandBoostrap.bands["Queen"]
-//            facility = facilityBoostrap.facilities["GranRex"]
+//            band = bandRepository.findByName("Queen").getOrNull()
+//            facility = facilityRepository.findByName("Gran Rex").getOrNull()
 //        },
 //        "LaVelaPuerca_SmallFacility" to Show().apply {
 //            name = "Arriba!"
-//            band = bandBoostrap.bands["LaVelaPuerca"]
-//            facility = facilityBoostrap.facilities["smallFacility"]
-//        }
-//    )
+//            band = bandRepository.findByName("La Vela Puerca").getOrNull()
+//            facility = facilityRepository.findByName("Teatro Poker").getOrNull()
+    )
+
+    fun createShows() {
+        shows.values.forEach {
+            val showInRepo = showRepository.findByName(it.name).getOrNull()
+            if (showInRepo != null) {
+                it.id = showInRepo.id
+            } else {
+                showRepository.save(it)
+                println("Show ${it.name} created")
+            }
+        }
+    }
+
+    @DependsOn("bandBoostrap", "facilityBoostrap")
+    override fun afterPropertiesSet() {
+        println("Show creation process starts")
+        createShows()
+//        createShowDates()
+//        addAttendees()
+    }
+}
+
+
 //
-//
-//    fun createShows() {
-//        shows.values.forEach{
-//            val showInRepo = showRepository.getByName(it.name)
-//            if (showInRepo.isPresent) {
-//                it.id = showInRepo.get().id
-//            } else {
-//                showRepository.save(it)
-//            }
-//        }
-//    }
+
 //
 ////    fun createShowDates() {
 ////        val generalDateTime = LocalDateTime.parse("2024-03-30T16:57:04.074472231")
@@ -143,13 +161,5 @@
 ////                reservedSeats[AllSetTypeNames.LOWERLEVEL.name] = 300
 ////            }
 ////        }
-////    }
-//
-//
-//    override fun afterPropertiesSet() {
-//        println("Show creation process starts")
-//        createShows()
-////        createShowDates()
-////        addAttendees()
 //    }
-//}
+
