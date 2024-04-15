@@ -1,25 +1,29 @@
-//package ar.edu.unsam.phm.magicnightsback.service
-//
-//import ar.edu.unsam.phm.magicnightsback.domain.Comment
-//import ar.edu.unsam.phm.magicnightsback.domain.Ticket
-//import ar.edu.unsam.phm.magicnightsback.domain.User
-//import ar.edu.unsam.phm.magicnightsback.dto.*
-//import ar.edu.unsam.phm.magicnightsback.error.*
-//import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
-//import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
-//import ar.edu.unsam.phm.magicnightsback.error.UserError
-//import org.springframework.stereotype.Service
-//import org.springframework.beans.factory.annotation.Autowired
-//import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
-//
-//@Service
-//class UserService {
-//    @Autowired
-//    lateinit var userRepository: UserRepository
+package ar.edu.unsam.phm.magicnightsback.service
+
+import ar.edu.unsam.phm.magicnightsback.domain.Comment
+import ar.edu.unsam.phm.magicnightsback.domain.User
+import ar.edu.unsam.phm.magicnightsback.domain.validateOptionalIsNotNull
+import ar.edu.unsam.phm.magicnightsback.dto.*
+import ar.edu.unsam.phm.magicnightsback.error.*
+import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
+import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
+import ar.edu.unsam.phm.magicnightsback.error.UserError
+import org.springframework.stereotype.Service
+import org.springframework.beans.factory.annotation.Autowired
+import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
+
+@Service
+class UserService {
+    @Autowired
+    lateinit var userRepository: UserRepository
 //
 //    @Autowired
 //    lateinit var showRepository: ShowRepository
-//
+
+        fun findById(id: Long): User = validateOptionalIsNotNull(userRepository.findById(id))
+    }
+
+
 //    /*Mapeo todos los tickets en uno solo por showDate juntando el precio total*/
 //    fun getTicketsGroupedByShowDate(user: User, ticketList: List<Ticket>): List<TicketDTO> {
 //        val distinctTickets = ticketList.distinctBy { it.showDate }
@@ -52,10 +56,7 @@
 //            ?: throw AuthenticationException(UserError.BAD_CREDENTIALS)
 //    }
 //
-//    fun getUser(id: Long): UserDTO {
-//        return this.userRepository.getById(id).toDTO()
-//    }
-//
+
 //    fun deleteUserFriend(userId: Long, friendId: Long) {
 //        this.userRepository.getById(userId).removeFriendById(friendId)
 //    }
@@ -102,4 +103,4 @@
 //    }
 //
 //    fun isAdmin(id: Long) = userRepository.getById(id).throwIfNotAdmin(UserError.USER_IS_NOT_ADMIN)
-//}
+}

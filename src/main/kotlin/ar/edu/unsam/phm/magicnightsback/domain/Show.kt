@@ -3,6 +3,7 @@ package ar.edu.unsam.phm.magicnightsback.domain
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.ShowError
 import jakarta.persistence.*
+import java.time.LocalDateTime
 
 @Entity
 class Show(
@@ -39,7 +40,7 @@ class Show(
 
     fun ticketPrice(seat: Seat): Double = (baseTicketPrice(seat) * rentabilityType.factor).truncate()
 
-
+    fun isReadyToComment ( date: LocalDateTime): Boolean = true
 //    fun rentability() = (((totalSales() - baseCost()) / totalSales()) * 100).coerceAtLeast(0.0)
 
 

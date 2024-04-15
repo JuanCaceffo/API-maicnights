@@ -1,5 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
+import ar.edu.unsam.phm.magicnightsback.dto.CommentDTO
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.ShowCommentError
 import jakarta.persistence.*
@@ -21,7 +22,12 @@ data class Comment(
 
     var date: LocalDateTime = LocalDateTime.now()
 
-    init {
+    constructor(user: User, show: Show, dto: CommentDTO) : this(
+        user = user,
+        show = show,
+        text = dto.text,
+        rating = dto.rating
+    ) {
         require(rating in 0.0..5.0) { throw BusinessException(ShowCommentError.INVALID_RATTING) }
     }
 }
