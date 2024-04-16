@@ -27,6 +27,11 @@ data class CommentDTO(
     val date: LocalDateTime
 )
 
+data class CommentRatingDTO(
+    val rating: Double = 0.0,
+    val totalComments: Int = 0
+)
+
 private fun Comment.toDto(): CommentDTO = CommentDTO(
     id = this.id ?: 0,
     text = this.text,

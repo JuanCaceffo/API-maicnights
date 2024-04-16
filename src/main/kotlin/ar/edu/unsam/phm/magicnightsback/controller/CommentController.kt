@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 
 @CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
 @RestController
-@RequestMapping("comment")
+@RequestMapping("/api/comment")
 @Tag(name = "Comment", description = "Comments related operations")
 class CommentController {
     @Autowired

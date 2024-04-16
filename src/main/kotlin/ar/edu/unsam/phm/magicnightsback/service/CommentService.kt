@@ -41,6 +41,12 @@ class CommentService {
     }
 
     @Transactional(Transactional.TxType.NEVER)
+    fun showRating(id: Long) = if (totalShowComments(id) != 0) getShowComments(id).sumOf { it.rating } / totalShowComments(id) else 0.0
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun totalShowComments(id: Long) = getShowComments(id).size
+
+    @Transactional(Transactional.TxType.NEVER)
     fun findCommentByUserId(id: Long, sid: Long): Comment {
         return validateOptionalIsNotNull(commentsRepository.findById(id))
     }

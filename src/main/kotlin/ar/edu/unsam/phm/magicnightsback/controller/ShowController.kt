@@ -4,6 +4,7 @@ package ar.edu.unsam.phm.magicnightsback.controller
 //import ar.edu.unsam.phm.magicnightsback.dto.*
 //import ar.edu.unsam.phm.magicnightsback.error.showDateError
 import ar.edu.unsam.phm.magicnightsback.dto.CommentDTO
+import ar.edu.unsam.phm.magicnightsback.dto.ShowDTO
 import ar.edu.unsam.phm.magicnightsback.service.CommentService
 import ar.edu.unsam.phm.magicnightsback.service.ShowService
 //import ar.edu.unsam.phm.magicnightsback.service.UserService
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*
 //
 @CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
 @RestController
+@RequestMapping("/api/show")
 @Tag(name = "Show", description = "Show related operations")
 class ShowController {
     @Autowired
@@ -31,17 +33,16 @@ class ShowController {
     //    @Autowired
 //    lateinit var userService: UserService
 //
-//    @GetMapping("/shows")
-//    @Operation(summary = "Devuelve todos los disponibles")
-//    fun getAll(@RequestParam(required = false, defaultValue = "-1") userId: Long,
-//               @RequestParam(name = "bandKeyword", required = false, defaultValue = "") bandKeyword: String,
-//               @RequestParam(name = "facilityKeyword", required = false, defaultValue = "") facilityKeyword: String,
-//               @RequestParam(name = "withFriends", required = false, defaultValue = "false") withFriends: Boolean): List<ShowDTO> {
-//
-//        val params = BaseFilterParams(userId, bandKeyword, facilityKeyword, withFriends)
-//        return showService.getAll(params)
-//            .map { it.toShowDTO(showService.getAPossibleUserById(userId)) }
-//    }
+    @GetMapping("/shows")
+    @Operation(summary = "Devuelve todos los disponibles")
+    fun getAll(@RequestParam(required = false, defaultValue = "-1") userId: Long,
+               @RequestParam(name = "bandKeyword", required = false, defaultValue = "") bandKeyword: String,
+               @RequestParam(name = "facilityKeyword", required = false, defaultValue = "") facilityKeyword: String,
+               @RequestParam(name = "withFriends", required = false, defaultValue = "false") withFriends: Boolean): List<ShowDTO> {
+
+        val params = BaseFilterParams(userId, bandKeyword, facilityKeyword, withFriends)
+        return showService.findAll(params)
+    }
 
 //
 //    @GetMapping("/show/{id}")

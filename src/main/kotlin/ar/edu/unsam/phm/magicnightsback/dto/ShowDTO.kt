@@ -1,32 +1,61 @@
-//package ar.edu.unsam.phm.magicnightsback.dto
-//
-//import ar.edu.unsam.phm.magicnightsback.domain.Show
+package ar.edu.unsam.phm.magicnightsback.dto
+
+import ar.edu.unsam.phm.magicnightsback.domain.Show
+import java.time.LocalDateTime
+
 //import ar.edu.unsam.phm.magicnightsback.domain.User
 //import org.uqbar.geodds.Point
 //import java.time.LocalDateTime
 //import kotlin.math.ceil
-//
-//data class ShowDTO(
-//    val id: Long,
-//    val showImg: String,
-//    val showName: String,
-//    val bandName: String,
-//    val facilityName: String,
-//    val rating: Double,
-//    val totalComments: Int,
-//    val price: Double,
-//    val prices: List<Double>,
-//    val dates: List<LocalDateTime>,
-//    val userImageNames: List<String>,
-//    val comments: List<CommentDTO>,
-//    val geolocation: String,
-//    val details: List<Details>
-//)
-//
-//data class Details(
-//    val title: String,
-//    val description: String
-//)
+
+data class ShowDTO(
+    val id: Long,
+    val showImg: String,
+    val showName: String,
+    val bandName: String,
+    val facilityName: String,
+    val rating: Double,
+    val totalComments: Int,
+    val prices: List<Double>,
+    val dates: List<LocalDateTime>,
+    val userImageNames: List<String>
+)
+
+data class ShowDetailsDTO(
+    val showDto: ShowDTO,
+    val comments: List<CommentDTO>,
+    val geolocation: String,
+)
+
+data class ShowAdminDTO(
+    val showDto: ShowDTO,
+    val details: List<AdminSummaryDTO>
+)
+
+data class AdminSummaryDTO(
+    val title: String,
+    val description: String
+)
+
+data class TicketDTO(
+    val showDto: ShowDTO,
+    val price: Double,
+)
+
+fun Show.toShowDTO(commentSummary:CommentRatingDTO) =
+    ShowDTO(
+        this.id,
+        this.imgUrl,
+        this.name,
+        this.band.name,
+        this.facility.name,
+        commentSummary.rating,
+        commentSummary.totalComments,
+        this.allTicketPrices(),
+        listOf(),
+        listOf(),
+    )
+
 //
 //fun pointToDMS(point: Point): String {
 //    val latitude = point.x

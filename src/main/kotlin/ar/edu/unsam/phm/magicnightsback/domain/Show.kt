@@ -18,7 +18,7 @@ class Show(
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
+    var id: Long = 0
 
     @Column(length = 100)
     var imgUrl = "${band.name.removeSpaces().lowercase()}.jpg"
@@ -33,14 +33,14 @@ class Show(
     // Cost methods
     fun baseCost(): Double = (band?.cost ?: 0.0) + (facility?.cost() ?: 0.0)
 
-    fun baseTicketPrice(seat: Seat): Double = (facility?.let { baseCost()/it.getTotalSeatCapacity() } ?: 0.0) + seat.price
+    fun baseTicketPrice(seat: Seat): Double =
+        (facility?.let { baseCost() / it.getTotalSeatCapacity() } ?: 0.0) + seat.price
 
     fun ticketPrice(seat: Seat): Double = (baseTicketPrice(seat) * rentabilityType.factor).truncate()
 
+    fun allTicketPrices() = facility.places.map { ticketPrice(it.seat) }
+
 //    fun rentability() = (((totalSales() - baseCost()) / totalSales()) * 100).coerceAtLeast(0.0)
-
-
-
 
 
     //fun canBeCommented(user: User) = !isAlreadyCommented(user) && anyShowDatesPassedFor(user)

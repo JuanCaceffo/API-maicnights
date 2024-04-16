@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*
 
 @CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 @Tag(name = "User", description = "User related operations")
 class UserController {
     @Autowired
