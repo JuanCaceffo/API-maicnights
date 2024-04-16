@@ -2,7 +2,7 @@ package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.dto.CommentDTO
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
-import ar.edu.unsam.phm.magicnightsback.error.ShowCommentError
+import ar.edu.unsam.phm.magicnightsback.error.CommentError
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -29,8 +29,10 @@ data class Comment(
         rating = dto.rating
     ) {
         id = dto.id
-        require(rating in 0.0..5.0) { throw BusinessException(ShowCommentError.INVALID_RATTING) }
+        require(rating in 0.0..5.0) { throw BusinessException(CommentError.INVALID_RATTING) }
     }
+
+    fun canBeDeletedBy( userId: Long) = user.id == userId
 
     init {
         if (text.length > 400) text =  text.take(400)

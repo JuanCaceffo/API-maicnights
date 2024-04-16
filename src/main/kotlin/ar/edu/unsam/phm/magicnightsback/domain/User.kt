@@ -34,8 +34,6 @@ class User(
 //    val friends = mutableListOf<User>()
 //    @OneToMany(fetch= FetchType.LAZY)
 //    val tickets = mutableListOf<Ticket>()
-//    @OneToMany(fetch= FetchType.LAZY)
-//    val comments = mutableListOf<Comment>()
 //    var credit = 0.0
 
 //    fun addFriend(user: User) {

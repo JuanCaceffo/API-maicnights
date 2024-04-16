@@ -10,9 +10,10 @@ object UserError {
     const val NONEXISTENT_USER_COMMENT = "El comentario que intenta eliminar no existe"
 }
 
-object ShowCommentError {
+object CommentError {
     const val INVALID_RATTING = "El rating debe estar entre 1 y 5"
     const val SHOWDATE_NOT_PASSED = "No se puede agregar una opinion a un showdate si este no ocurrió"
+    const val INVALID_DELETE = "No se puede borrar un comentario que no le pertenece"
 }
 
 object ShowError {

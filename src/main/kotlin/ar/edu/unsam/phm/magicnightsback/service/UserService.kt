@@ -19,9 +19,6 @@ class UserService {
     @Autowired
     lateinit var userRepository: UserRepository
 
-    @Autowired
-    lateinit var commentService: CommentService
-
 //    @Autowired
 //    lateinit var showRepository: ShowRepository
 
@@ -30,12 +27,6 @@ class UserService {
 
     @Transactional(Transactional.TxType.NEVER)
     fun findByUsername(username: String): User = validateOptionalIsNotNull(userRepository.findByUsername(username))
-
-    @Transactional(Transactional.TxType.NEVER)
-    fun getUserComments(id: Long): List<CommentDTO> {
-        return commentService.getUserComments(id).map { it.toUserCommentDto() }
-    }
-}
 
 
 //    /*Mapeo todos los tickets en uno solo por showDate juntando el precio total*/
@@ -59,11 +50,6 @@ class UserService {
 //        return friends.map { userFriend -> userFriend.toFriendDTO() }
 //    }
 //
-//    fun getUserComments(id: Long): List<CommentDTO> {
-//        val user = userRepository.getById(id)
-//
-//        return user.comments.map { comment -> comment.toUserCommentDTO() }
-//    }
 //
 //    fun loginUser(loginUser: LoginUserDTO): Long {
 //        return this.userRepository.getLoginUser(loginUser)
@@ -98,7 +84,8 @@ class UserService {
 //        this.userRepository.update(userToUpdate)
 //    }
 //
-//    fun deleteComment(commentId: Long, id: Long) {
+
+
 //        val user = userRepository.getById(id)
 //        try {
 //            val comment = user.comments[commentId.toInt()]
@@ -106,7 +93,7 @@ class UserService {
 //        } catch (e: Exception) {
 //            throw BusinessException(UserError.NONEXISTENT_USER_COMMENT)
 //        }
-//    }
+
 //
 //    fun createComment(id: Long, commentCreat: CommentCreateDTO) {
 //        val user = userRepository.getById(id)
@@ -117,3 +104,4 @@ class UserService {
 //    }
 //
 //    fun isAdmin(id: Long) = userRepository.getById(id).throwIfNotAdmin(UserError.USER_IS_NOT_ADMIN)
+}

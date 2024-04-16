@@ -33,6 +33,7 @@ data class Seat(
 
     init {
         require(price >= 0) { throw BusinessException(FacilityError.NEGATIVE_PRICE) }
+        SeatTypes.entries.map { it.name }
     }
 }
 

@@ -32,8 +32,8 @@ fun Comment.toUserCommentDto(): CommentDTO = this.toDto().apply {
 
 fun Comment.toShowCommentDto(): CommentDTO = this.toDto().apply {
     showId = this@toShowCommentDto.show.id!!
-    showImgSrc = this@toShowCommentDto.user.profileImgUrl
-    showName = this@toShowCommentDto.user.name
+    showImgSrc = this@toShowCommentDto.show.imgUrl
+    showName = this@toShowCommentDto.show.name
 }
 
 

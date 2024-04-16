@@ -3,8 +3,10 @@ package ar.edu.unsam.phm.magicnightsback.service
 import ar.edu.unsam.phm.magicnightsback.domain.Comment
 import ar.edu.unsam.phm.magicnightsback.domain.validateOptionalIsNotNull
 import ar.edu.unsam.phm.magicnightsback.dto.CommentDTO
+import ar.edu.unsam.phm.magicnightsback.dto.toShowCommentDto
+import ar.edu.unsam.phm.magicnightsback.dto.toUserCommentDto
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
-import ar.edu.unsam.phm.magicnightsback.error.ShowCommentError
+import ar.edu.unsam.phm.magicnightsback.error.CommentError
 import ar.edu.unsam.phm.magicnightsback.repository.CommentRepository
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
@@ -28,10 +30,10 @@ class CommentService {
     fun findAll(): Iterable<Comment> = commentsRepository.findAll()
 
     @Transactional(Transactional.TxType.NEVER)
-    fun getUserComments(id:Long): Iterable<Comment> = commentsRepository.findByUserId(id)
+    fun getUserComments(id: Long): List<CommentDTO> = commentsRepository.findByUserId(id).map { it.toUserCommentDto() }
 
     @Transactional(Transactional.TxType.NEVER)
-    fun getShowComments(id:Long): Iterable<Comment> = commentsRepository.findByShowId(id)
+    fun getShowComments(id: Long): List<CommentDTO> = commentsRepository.findByShowId(id).map { it.toShowCommentDto() }
 
     @Transactional(Transactional.TxType.NEVER)
     fun findCommentByShowId(id: Long, sid: Long): Comment {
@@ -55,14 +57,15 @@ class CommentService {
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    fun removeComment(id:Long){
-        val comment = validateOptionalIsNotNull(commentsRepository.findById(id))
+    fun removeComment(userId: Long, commentId: Long) {
+        val comment = validateOptionalIsNotNull(commentsRepository.findById(commentId))
+        if (!comment.canBeDeletedBy(userId)) throw BusinessException(CommentError.INVALID_DELETE)
         commentsRepository.delete(comment)
     }
 
     private fun validateShowAvaiableToComment(date: LocalDateTime) {
         if (date > LocalDateTime.now()) {
-            throw BusinessException(ShowCommentError.SHOWDATE_NOT_PASSED)
+            throw BusinessException(CommentError.SHOWDATE_NOT_PASSED)
         }
     }
 }

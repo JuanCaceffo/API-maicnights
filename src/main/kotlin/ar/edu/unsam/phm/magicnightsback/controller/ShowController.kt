@@ -4,6 +4,7 @@ package ar.edu.unsam.phm.magicnightsback.controller
 //import ar.edu.unsam.phm.magicnightsback.dto.*
 //import ar.edu.unsam.phm.magicnightsback.error.showDateError
 import ar.edu.unsam.phm.magicnightsback.dto.CommentDTO
+import ar.edu.unsam.phm.magicnightsback.service.CommentService
 import ar.edu.unsam.phm.magicnightsback.service.ShowService
 //import ar.edu.unsam.phm.magicnightsback.service.UserService
 import io.swagger.v3.oas.annotations.Operation
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation
 import org.springframework.beans.factory.annotation.Autowired
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
+
 //import java.time.LocalDateTime
 //import java.time.LocalDate
 //import java.time.format.DateTimeFormatter
@@ -22,7 +24,11 @@ import org.springframework.web.bind.annotation.*
 class ShowController {
     @Autowired
     lateinit var showService: ShowService
-//    @Autowired
+
+    @Autowired
+    lateinit var commentService: CommentService
+
+    //    @Autowired
 //    lateinit var userService: UserService
 //
 //    @GetMapping("/shows")
@@ -36,11 +42,11 @@ class ShowController {
 //        return showService.getAll(params)
 //            .map { it.toShowDTO(showService.getAPossibleUserById(userId)) }
 //    }
-@GetMapping("/{id}/comments")
-@Operation(summary = "Devuelve los comentarios de un show")
-fun getUserComments(@PathVariable id: Long): List<CommentDTO> {
-    return showService.getShowComments(id)
-}
+    @GetMapping("/{showId}/comments")
+    @Operation(summary = "Devuelve los comentarios de un show")
+    fun getShowComments(@PathVariable showId: Long): List<CommentDTO> {
+        return commentService.getShowComments(showId)
+    }
 //
 //    @GetMapping("/show/{id}")
 //    @Operation(summary = "Devuelve un show según su id")
