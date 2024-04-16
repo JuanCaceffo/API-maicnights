@@ -36,6 +36,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-rest")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 
 	// conexión a la base de datos
@@ -51,15 +52,13 @@ dependencies {
 	testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
 	testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
 
-	// esto ni idea.....
-//	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr31 0")
-	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+	// Swagger
 	implementation("org.springdoc:springdoc-openapi-starter-common:2.2.0")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
-	implementation(kotlin("stdlib"))
 
-	// varios
-	implementation("org.uqbar-project:geodds-xtend:1.0.3")
+	// Kotlin
+	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+	implementation(kotlin("stdlib"))
 }
 
 tasks.withType<KotlinCompile> {
