@@ -42,11 +42,7 @@ class ShowController {
 //        return showService.getAll(params)
 //            .map { it.toShowDTO(showService.getAPossibleUserById(userId)) }
 //    }
-    @GetMapping("/{showId}/comments")
-    @Operation(summary = "Devuelve los comentarios de un show")
-    fun getShowComments(@PathVariable showId: Long): List<CommentDTO> {
-        return commentService.getShowComments(showId)
-    }
+
 //
 //    @GetMapping("/show/{id}")
 //    @Operation(summary = "Devuelve un show según su id")

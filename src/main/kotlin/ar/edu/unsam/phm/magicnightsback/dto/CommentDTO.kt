@@ -3,37 +3,47 @@ package ar.edu.unsam.phm.magicnightsback.dto
 import ar.edu.unsam.phm.magicnightsback.domain.Comment
 import java.time.LocalDateTime
 
+//class CommentDTO(
+//    val id: Long = 0,
+//    var userId: Long = 0,
+//    var showId: Long = 0,
+//    var showImgSrc: String = "",
+//    var userImgSrc: String = "",
+//    var showName: String = "",
+//    var userName: String = "",
+//    val text: String = "",
+//    val rating: Double = 0.0,
+//    val date: LocalDateTime = LocalDateTime.of(0,-1,0,0,0,0)
+//)
 
 data class CommentDTO(
-    val id: Long = 0,
+    val id: Long,
     var userId: Long = 0,
     var showId: Long = 0,
-    var showImgSrc: String = "",
-    var userImgSrc: String = "",
-    var showName: String = "",
-    var userName: String = "",
-    val text: String = "",
-    val rating: Double = 0.0,
-    val date: LocalDateTime = LocalDateTime.of(0,-1,0,0,0,0)
+    var imgSrc: String = "",
+    var name: String = "",
+    val text: String,
+    val rating: Double,
+    val date: LocalDateTime
 )
 
 private fun Comment.toDto(): CommentDTO = CommentDTO(
-    id = this.id!!,
+    id = this.id ?: 0,
     text = this.text,
     rating = this.rating,
     date = this.date
 )
 
 fun Comment.toUserCommentDto(): CommentDTO = this.toDto().apply {
-    userId = this@toUserCommentDto.user.id!!
-    userImgSrc = this@toUserCommentDto.user.profileImgUrl
-    userName = this@toUserCommentDto.user.name
+    userId = this@toUserCommentDto.user.id ?: 0
+    imgSrc = this@toUserCommentDto.user.profileImgUrl
+    name = this@toUserCommentDto.user.name
 }
 
 fun Comment.toShowCommentDto(): CommentDTO = this.toDto().apply {
-    showId = this@toShowCommentDto.show.id!!
-    showImgSrc = this@toShowCommentDto.show.imgUrl
-    showName = this@toShowCommentDto.show.name
+    showId = this@toShowCommentDto.show.id ?: 0
+    imgSrc = this@toShowCommentDto.show.imgUrl
+    name = this@toShowCommentDto.show.name
 }
 
 

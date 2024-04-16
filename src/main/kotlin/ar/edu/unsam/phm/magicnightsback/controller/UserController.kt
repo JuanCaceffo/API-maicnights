@@ -26,15 +26,6 @@ class UserController {
     @Autowired
     lateinit var userService: UserService
 
-    @Autowired
-    lateinit var commentService: CommentService
-
-    @GetMapping("/comments")
-    @Operation(summary = "Devuelve todos los comentarios disponibles para un usuario")
-    fun getUserComments(@RequestParam(required = true) id: Long): List<CommentDTO> {
-        return commentService.getUserComments(id)
-    }
-
 
 //    @GetMapping("/validate")
 //    @Operation(summary = "Valida el tipo de usuario")
@@ -62,11 +53,7 @@ class UserController {
 //        return userService.getUserComments(id)
 //    }
 //
-    @DeleteMapping("/comment/{commentId}/delete")
-    @Operation(summary = "Permite eliminar un comentario de un usuario")
-    fun deleteComment(@RequestParam(required = true) userId: Long, @PathVariable commentId: Long) {
-        commentService.removeComment(userId, commentId)
-    }
+
 //
 //    @PutMapping("/{id}/create-comment")
 //    @Operation(summary = "Permite crear un comentario hacia un show")
