@@ -7,7 +7,4 @@ import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.repository.CrudRepository
 import java.util.*
 
-interface FacilityRepository : CrudRepository<Facility, Long>, CustomCrudRepository<Facility>{
-    @EntityGraph(attributePaths = ["places"])
-    override fun findAll(): Iterable<Facility>
-}
+interface FacilityRepository : CrudRepository<Facility, Long>, CustomCrudRepository<Facility>

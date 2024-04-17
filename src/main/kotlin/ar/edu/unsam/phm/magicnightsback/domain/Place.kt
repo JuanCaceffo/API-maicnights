@@ -21,7 +21,6 @@ data class Place(
 
 @Entity
 data class Seat(
-    @Transient
     val type: SeatTypes
 ) {
     @Id

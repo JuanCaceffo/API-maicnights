@@ -18,8 +18,8 @@ abstract class Facility(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    val places: MutableList<Place> = mutableListOf()
+    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    val places: MutableSet<Place> = mutableSetOf()
 
     @Transient
     lateinit var validSeatTypes: List<String>
@@ -28,9 +28,9 @@ abstract class Facility(
     abstract fun fixedCostVariant(): Double
     fun cost() = fixedPrice + fixedCostVariant()
 
-    fun addPlace(place: Place) {
-        validateSeatType(place.seat.name)
-        places.add(place)
+    fun addPlace(seat: Seat, capacity: Int) {
+        validateSeatType(seat.name)
+        places.add(Place(seat, capacity = capacity))
     }
 
     private fun getPlaceBySeatType(seatType: SeatTypes) = places.find { it.seat.type == seatType }
