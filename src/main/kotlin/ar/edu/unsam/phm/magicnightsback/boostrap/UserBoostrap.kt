@@ -91,6 +91,68 @@ class UserBoostrap : InitializingBean {
         }
     )
 
+        fun addFriends() {
+        val pablo = users[0]
+        val juan = users[1]
+        val sol = users[2]
+        val denise = users[3]
+        val carolina = users[4]
+        val marcos = users[5]
+        val ana = users[6]
+
+        pablo.apply {
+            addFriend(juan)
+            addFriend(sol)
+        }
+
+        juan.apply {
+            addFriend(pablo)
+            addFriend(sol)
+            addFriend(denise)
+            addFriend(carolina)
+            addFriend(marcos)
+            addFriend(ana)
+        }
+
+        sol.apply {
+            addFriend(pablo)
+            addFriend(juan)
+            addFriend(denise)
+            addFriend(carolina)
+            addFriend(marcos)
+            addFriend(ana)
+        }
+
+        denise.apply {
+            addFriend(juan)
+            addFriend(sol)
+        }
+
+        carolina.apply {
+            addFriend(juan)
+            addFriend(sol)
+            addFriend(marcos)
+            addFriend(ana)
+        }
+
+        marcos.apply {
+            addFriend(juan)
+            addFriend(sol)
+            addFriend(carolina)
+        }
+
+        ana.apply {
+            addFriend(juan)
+            addFriend(sol)
+            addFriend(carolina)
+        }
+
+    }
+
+    fun addCredits() {
+        users.forEach{ it.addCredit(100000.0) }
+    }
+
     fun createUsers() {
         users.forEach {
             val userInRepo = userRepository.findByUsername(it.name).getOrNull()
@@ -105,80 +167,9 @@ class UserBoostrap : InitializingBean {
 
     override fun afterPropertiesSet() {
         println("User creation process starts")
+        addFriends()
+        addCredits()
         createUsers()
+        println("User creation process ends")
     }
 }
-
-
-
-//    fun addFriends() {
-//        val pablo = users["Pablo"]!!
-//        val juan = users["Juan"]!!
-//        val sol = users["Sol"]!!
-//        val denise = users["Denise"]!!
-//        val carolina = users["Carolina"]!!
-//        val marcos = users["Marcos"]!!
-//        val ana = users["Ana"]!!
-//
-//        pablo.apply {
-//            addFriend(juan)
-//            addFriend(sol)
-//        }
-//
-//        juan.apply {
-//            addFriend(pablo)
-//            addFriend(sol)
-//            addFriend(denise)
-//            addFriend(carolina)
-//            addFriend(marcos)
-//            addFriend(ana)
-//        }
-//
-//        sol.apply {
-//            addFriend(pablo)
-//            addFriend(juan)
-//            addFriend(denise)
-//            addFriend(carolina)
-//            addFriend(marcos)
-//            addFriend(ana)
-//        }
-//
-//        denise.apply {
-//            addFriend(juan)
-//            addFriend(sol)
-//        }
-//
-//        carolina.apply {
-//            addFriend(juan)
-//            addFriend(sol)
-//            addFriend(marcos)
-//            addFriend(ana)
-//        }
-//
-//        marcos.apply {
-//            addFriend(juan)
-//            addFriend(sol)
-//            addFriend(carolina)
-//        }
-//
-//        ana.apply {
-//            addFriend(juan)
-//            addFriend(sol)
-//            addFriend(carolina)
-//        }
-//
-//        // Actualizar los usuarios en el repositorio
-//        users.values.forEach { userRepository.update(it) }
-//    }
-//
-//    fun addCredits() {
-//        users.values.forEach{ it.addCredit(100000.0) }
-//    }
-//            override fun afterPropertiesSet() {
-//                println("User creation process starts")
-//                createUsers()
-//                addFriends()
-//                addCredits()
-//                println("User creation process ends")
-//            }
-//        }
