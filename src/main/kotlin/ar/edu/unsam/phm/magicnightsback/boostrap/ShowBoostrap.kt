@@ -6,17 +6,16 @@ import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.DependsOn
+import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import kotlin.jvm.optionals.getOrNull
 
 
-@Service
+@Component
+@DependsOn("bandBootstrap", "facilityBootstrap")
 class ShowBoostrap(
-    @Autowired
-    bandBootstrap: BandBootstrap,
-    @Autowired
-    facilityBootstrap: FacilityBootstrap,
     @Autowired
     bandRepository: BandRepository,
     @Autowired
@@ -113,7 +112,7 @@ class ShowBoostrap(
             repeat(1) { addDate(generalDateTime.plusDays(17 + it.toLong())) }
         }
     }
-//RARI ESTO
+// Quizas conviene mas hacer el proceso normal de compra de tickets por medio del boostrap del usuario
 //    fun addAttendees() {
 //        shows["LaVelaPuerca_SmallFacility"].apply {
 //            dates.first().apply{

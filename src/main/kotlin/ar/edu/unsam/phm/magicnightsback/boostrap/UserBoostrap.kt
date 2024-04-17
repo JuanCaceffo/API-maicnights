@@ -1,16 +1,8 @@
 package ar.edu.unsam.phm.magicnightsback.boostrap
-
-//import ar.edu.unsam.phm.magicnightsback.domain.StadiumSeatType
-//import ar.edu.unsam.phm.magicnightsback.domain.TheaterSeatType
-//import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
-//import ar.edu.unsam.phm.magicnightsback.service.UserService
-//import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
-//import org.springframework.core.annotation.Order
-//import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import kotlin.jvm.optionals.getOrNull

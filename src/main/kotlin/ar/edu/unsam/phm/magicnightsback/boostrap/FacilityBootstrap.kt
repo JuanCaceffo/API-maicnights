@@ -6,16 +6,17 @@ import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
 import ar.edu.unsam.phm.magicnightsback.repository.SeatRepository
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.DependsOn
+import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 import kotlin.jvm.optionals.getOrNull
 
 
-@Service
+@Component
+@DependsOn("seatBootstrap")
 class FacilityBootstrap(
     @Autowired
-    seatRepository: SeatRepository,
-    @Autowired
-    seatBootstrap: SeatBootstrap
+    seatRepository: SeatRepository
 ) : InitializingBean {
     @Autowired
     lateinit var facilityRepository: FacilityRepository
