@@ -70,7 +70,6 @@ class ShowBoostrap(
     }
 
     fun createShowDates() {
-        println(granrex.validSeatTypes())
         val generalDateTime = LocalDateTime.parse("2024-03-30T16:57:04.074472231")
         shows[0].apply {
             repeat(2) { addDate(generalDateTime.minusDays(3 + it.toLong())) }
@@ -136,7 +135,6 @@ class ShowBoostrap(
 
         println("Show creation process starts")
         createShows()
-        println("finish added showdates")
         println("Show creation process end")
 
         println("Boostrap show finished")

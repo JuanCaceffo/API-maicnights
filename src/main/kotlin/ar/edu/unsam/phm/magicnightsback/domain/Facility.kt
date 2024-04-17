@@ -67,5 +67,5 @@ class Theater(name: String, location: Point) : Facility(name, location) {
     var hasGoodAcoustics: Boolean = false
     override var fixedPrice: Double = 100000.0
     override fun fixedCostVariant(): Double = if (hasGoodAcoustics) 50000.0 else 0.0
-    override fun validSeatTypes() = listOf("PULLMAN", "LOWERLEVEL")
+    override fun validSeatTypes() = listOf(SeatTypes.PULLMAN.name, SeatTypes.LOWERLEVEL.name)
 }
