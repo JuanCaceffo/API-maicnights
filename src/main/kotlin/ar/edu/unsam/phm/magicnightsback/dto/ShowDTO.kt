@@ -22,7 +22,7 @@ data class ShowDTO(
 )
 
 data class ShowDetailsDTO(
-    val showDto: ShowDTO,
+    val show: ShowDTO,
     val comments: List<CommentDTO>,
     val geolocation: String,
 )
@@ -56,6 +56,12 @@ fun Show.toShowDTO(commentSummary:CommentRatingDTO) =
         listOf(),
     )
 
+fun Show.toShowDetailsDTO(commentSummary:CommentRatingDTO, comments:List<CommentDTO>) = ShowDetailsDTO(
+    this.toShowDTO(commentSummary),
+    comments,
+    this.geoLocationString()
+)
+
 //
 //fun pointToDMS(point: Point): String {
 //    val latitude = point.x
@@ -67,14 +73,7 @@ fun Show.toShowDTO(commentSummary:CommentRatingDTO) =
 //    return "Latitude: ${decimalToDMS(latitude)} $latitudeDirection, Longitude: ${decimalToDMS(longitude)} $longitudeDirection"
 //}
 //
-//fun decimalToDMS(decimal: Double): String {
-//    val degrees = decimal.toInt()
-//    val minutesDouble = (decimal - degrees) * 60
-//    val minutes = minutesDouble.toInt()
-//    val secondsDouble = (minutesDouble - minutes) * 60
-//    val seconds = ceil(secondsDouble).toInt()
-//
-//    return "$degrees° $minutes' $seconds''"
+
 //}
 //
 //data class SeatDTO(

@@ -3,9 +3,7 @@ package ar.edu.unsam.phm.magicnightsback.service
 import ar.edu.unsam.phm.magicnightsback.controller.BaseFilterParams
 import ar.edu.unsam.phm.magicnightsback.domain.Show
 import ar.edu.unsam.phm.magicnightsback.domain.*
-import ar.edu.unsam.phm.magicnightsback.dto.CommentRatingDTO
-import ar.edu.unsam.phm.magicnightsback.dto.ShowDTO
-import ar.edu.unsam.phm.magicnightsback.dto.toShowDTO
+import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,11 +22,7 @@ class ShowService {
         val shows = showRepository.findAll()
         val filteredShows = filter(shows, params)
 
-        return filteredShows.map {
-            val totalRating = commentService.showRating(it.id)
-            val totalComments = commentService.totalShowComments(it.id)
-            it.toShowDTO(CommentRatingDTO(totalRating, totalComments))
-        }
+        return filteredShows.map { it.toShowDTO(getShowRatingDetails(it.id)) }
     }
 //
 //    fun createShowDate(showId: Long, userId: Long, date: LocalDateTime) {
@@ -40,9 +34,20 @@ class ShowService {
 //    }
 //
 
-    fun findById(id: Long): Show = validateOptionalIsNotNull(showRepository.findById(id))
+    fun findById(showId: Long, userId: Long): ShowDetailsDTO {
+//        return show.toShowDTO(showService.getAPossibleUserById(userId),comments)
+        val comments = commentService.getUserComments(userId)
+        val show = validateOptionalIsNotNull(showRepository.findById(showId))
+        return show.toShowDetailsDTO(commentSummary = getShowRatingDetails(showId), comments = comments)
+    }
 
     fun findByName(name: String): Show = validateOptionalIsNotNull(showRepository.findByName(name))
+
+    private fun getShowRatingDetails(id: Long): CommentRatingDTO {
+        val totalRating = commentService.showRating(id)
+        val totalComments = commentService.totalShowComments(id)
+        return CommentRatingDTO(totalRating, totalComments)
+    }
 
     private fun filter(shows: Iterable<Show>, params: BaseFilterParams): List<Show> {
         val filter = createFilter(params)
