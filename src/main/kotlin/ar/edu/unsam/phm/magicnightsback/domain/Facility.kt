@@ -49,7 +49,7 @@ abstract class Facility(
 class Stadium(
     name: String,
     location: Point,
-    final override var fixedPrice: Double
+    override var fixedPrice: Double
 ) : Facility(name, location) {
     init {
         require(fixedPrice >= 0) { throw BusinessException(FacilityError.NEGATIVE_PRICE) }

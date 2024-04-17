@@ -12,6 +12,7 @@ class ShowDate(
     val facility: Facility
 ) {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
 
     @OneToMany(fetch = FetchType.LAZY)
