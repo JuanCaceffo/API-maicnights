@@ -45,8 +45,8 @@ class ShowBoostrap(
 //    val pocker = facilityRepository.findByName("Teatro Poker").get()
 
     val shows = listOf(
-        Show(name = "Cachenged!!", lavela, granrex),
-//        Show(name = "Bailanta!!", lavela, colon),
+        Show(name = "Cachenged", lavela, granrex),
+//        Show(name = "Bailanta", lavela, colon),
 //        Show(name = "4 You", pearljam, river),
 //        Show(name = "4 You", pearljam, boca),
 //        Show(name = "Demon of Hell Rise Tour", acdc, marena),
@@ -70,51 +70,52 @@ class ShowBoostrap(
     }
 
     fun createShowDates() {
+        println(granrex.validSeatTypes())
         val generalDateTime = LocalDateTime.parse("2024-03-30T16:57:04.074472231")
-        shows[0]!!.apply {
+        shows[0].apply {
             repeat(2) { addDate(generalDateTime.minusDays(3 + it.toLong())) }
             repeat(3) { addDate(generalDateTime.minusDays(11 + it.toLong())) }
         }
-        shows[1]!!.apply {
-            repeat(2) { addDate(generalDateTime.minusDays(5 + it.toLong())) }
-            repeat(3) { addDate(generalDateTime.plusDays(14 + it.toLong())) }
-        }
-        shows[2]!!.apply {
-            repeat(1) { addDate(generalDateTime.minusDays(7 + it.toLong())) }
-            repeat(1) { addDate(generalDateTime.plusDays(10 + it.toLong())) }
-        }
-        shows[3]!!.apply {
-            repeat(3) { addDate(generalDateTime.minusDays(10 + it.toLong())) }
-            repeat(3) { addDate(generalDateTime.plusDays(12 + it.toLong())) }
-        }
-        shows[4]!!.apply {
-            repeat(2) { addDate(generalDateTime.minusDays(2 + it.toLong())) }
-            repeat(1) { addDate(generalDateTime.plusDays(13 + it.toLong())) }
-        }
-        shows[5]!!.apply {
-            repeat(2) { addDate(generalDateTime.minusDays(4 + it.toLong())) }
-            repeat(3) { addDate(generalDateTime.plusDays(15 + it.toLong())) }
-        }
-        shows[6]!!.apply {
-            repeat(1) { addDate(generalDateTime.minusDays(8 + it.toLong())) }
-            repeat(3) { addDate(generalDateTime.plusDays(9 + it.toLong())) }
-        }
-        shows[7]!!.apply {
-            repeat(2) { addDate(generalDateTime.minusDays(6 + it.toLong())) }
-            repeat(4) { addDate(generalDateTime.plusDays(16 + it.toLong())) }
-        }
-        shows[8]!!.apply {
-            repeat(2) { addDate(generalDateTime.minusDays(1 + it.toLong())) }
-            repeat(3) { addDate(generalDateTime.minusDays(17 + it.toLong())) }
-        }
-        shows[9]!!.apply {
-            repeat(1) { addDate(generalDateTime.minusDays(1 + it.toLong())) }
-            repeat(1) { addDate(generalDateTime.plusDays(17 + it.toLong())) }
-        }
+//        shows[1].apply {
+//            repeat(2) { addDate(generalDateTime.minusDays(5 + it.toLong())) }
+//            repeat(3) { addDate(generalDateTime.plusDays(14 + it.toLong())) }
+//        }
+//        shows[2].apply {
+//            repeat(1) { addDate(generalDateTime.minusDays(7 + it.toLong())) }
+//            repeat(1) { addDate(generalDateTime.plusDays(10 + it.toLong())) }
+//        }
+//        shows[3].apply {
+//            repeat(3) { addDate(generalDateTime.minusDays(10 + it.toLong())) }
+//            repeat(3) { addDate(generalDateTime.plusDays(12 + it.toLong())) }
+//        }
+//        shows[4].apply {
+//            repeat(2) { addDate(generalDateTime.minusDays(2 + it.toLong())) }
+//            repeat(1) { addDate(generalDateTime.plusDays(13 + it.toLong())) }
+//        }
+//        shows[5].apply {
+//            repeat(2) { addDate(generalDateTime.minusDays(4 + it.toLong())) }
+//            repeat(3) { addDate(generalDateTime.plusDays(15 + it.toLong())) }
+//        }
+//        shows[6].apply {
+//            repeat(1) { addDate(generalDateTime.minusDays(8 + it.toLong())) }
+//            repeat(3) { addDate(generalDateTime.plusDays(9 + it.toLong())) }
+//        }
+//        shows[7].apply {
+//            repeat(2) { addDate(generalDateTime.minusDays(6 + it.toLong())) }
+//            repeat(4) { addDate(generalDateTime.plusDays(16 + it.toLong())) }
+//        }
+//        shows[8].apply {
+//            repeat(2) { addDate(generalDateTime.minusDays(1 + it.toLong())) }
+//            repeat(3) { addDate(generalDateTime.minusDays(17 + it.toLong())) }
+//        }
+//        shows[9].apply {
+//            repeat(1) { addDate(generalDateTime.minusDays(1 + it.toLong())) }
+//            repeat(1) { addDate(generalDateTime.plusDays(17 + it.toLong())) }
+//        }
     }
 //RARI ESTO
 //    fun addAttendees() {
-//        shows["LaVelaPuerca_SmallFacility"]!!.apply {
+//        shows["LaVelaPuerca_SmallFacility"].apply {
 //            dates.first().apply{
 //                reservedSeats[AllSetTypeNames.PULLMAN.name] = 100
 //                reservedSeats[AllSetTypeNames.LOWERLEVEL.name] = 50

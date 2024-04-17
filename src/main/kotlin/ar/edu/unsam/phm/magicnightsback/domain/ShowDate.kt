@@ -17,7 +17,7 @@ class ShowDate(
     @OneToMany(fetch = FetchType.LAZY)
     val attendees = mutableSetOf<User>()
     @ElementCollection(fetch = FetchType.LAZY)
-    val reservedSeats = facility.validSeatTypes.associateWith { 0 }.toMutableMap()
+    val reservedSeats = facility.validSeatTypes().associateWith { 0 }.toMutableMap()
 
     fun addAttendee(user: User) {
         attendees.add(user)

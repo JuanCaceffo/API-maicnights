@@ -21,12 +21,12 @@ abstract class Facility(
     @ManyToMany(fetch = FetchType.LAZY)
     val places: MutableList<Place> = mutableListOf()
 
-    @Transient
-    lateinit var validSeatTypes: List<String>
 
     abstract var fixedPrice: Double
     abstract fun fixedCostVariant(): Double
     fun cost() = fixedPrice + fixedCostVariant()
+
+    abstract fun validSeatTypes(): List<String>
 
     fun addPlace(place: Place) {
         validateSeatType(place.seat.name)
@@ -34,11 +34,11 @@ abstract class Facility(
     }
 
     private fun getPlaceBySeatType(seatType: SeatTypes) = places.find { it.seat.type == seatType }
-    fun getPlaceCapacity(seatType: SeatTypes) = getPlaceBySeatType(seatType)?.let { it.capacity } ?: 0
+    fun getPlaceCapacity(seatType: SeatTypes) = getPlaceBySeatType(seatType)?.capacity ?: 0
 
     fun getTotalSeatCapacity() = places.sumOf { it.capacity }
     fun validateSeatType(name: String) {
-        if (name !in validSeatTypes) {
+        if (name !in validSeatTypes()) {
             throw BusinessException(FacilityError.INVALID_SEAT_TYPE)
         }
     }
@@ -49,12 +49,13 @@ abstract class Facility(
 class Stadium(
     name: String,
     location: Point,
-    override var fixedPrice: Double
+    final override var fixedPrice: Double
 ) : Facility(name, location) {
     init {
-        validSeatTypes = listOf(SeatTypes.BOX.name, SeatTypes.UPPERLEVEL.name, SeatTypes.FIELD.name)
         require(fixedPrice >= 0) { throw BusinessException(FacilityError.NEGATIVE_PRICE) }
     }
+
+    override fun validSeatTypes() = listOf(SeatTypes.BOX.name, SeatTypes.UPPERLEVEL.name, SeatTypes.FIELD.name)
 
     override fun fixedCostVariant(): Double = 0.0
 }
@@ -62,12 +63,9 @@ class Stadium(
 @Entity
 @DiscriminatorValue("Theater")
 class Theater(name: String, location: Point) : Facility(name, location) {
-    init {
-        validSeatTypes = listOf(SeatTypes.PULLMAN.name, SeatTypes.LOWERLEVEL.name)
-    }
-
     @Nullable
     var hasGoodAcoustics: Boolean = false
     override var fixedPrice: Double = 100000.0
     override fun fixedCostVariant(): Double = if (hasGoodAcoustics) 50000.0 else 0.0
+    override fun validSeatTypes() = listOf("PULLMAN", "LOWERLEVEL")
 }
