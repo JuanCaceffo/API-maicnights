@@ -51,7 +51,7 @@ fun Show.toShowDTO(commentSummary:CommentRatingDTO) =
         this.facility.name,
         commentSummary.rating,
         commentSummary.totalComments,
-        this.allTicketPrices(),
+        listOf(),//this.allTicketPrices(),
         listOf(),
         listOf(),
     )
