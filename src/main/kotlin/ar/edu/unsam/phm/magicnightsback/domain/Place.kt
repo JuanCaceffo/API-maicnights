@@ -6,7 +6,7 @@ import jakarta.persistence.*
 
 @Entity
 data class Place(
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     val seat: Seat,
     var capacity: Int = 0
 ) {

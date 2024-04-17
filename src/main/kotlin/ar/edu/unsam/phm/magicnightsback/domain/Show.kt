@@ -10,10 +10,10 @@ class Show(
     @Column(length = 40)
     var name: String,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     var band: Band,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     var facility: Facility,
 ) {
     @Id

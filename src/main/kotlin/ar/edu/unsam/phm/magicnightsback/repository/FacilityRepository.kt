@@ -8,6 +8,6 @@ import org.springframework.data.repository.CrudRepository
 import java.util.*
 
 interface FacilityRepository : CrudRepository<Facility, Long>, CustomCrudRepository<Facility>{
-    @EntityGraph(attributePaths = ["seats"])
+    @EntityGraph(attributePaths = ["places"])
     override fun findAll(): Iterable<Facility>
 }

@@ -35,26 +35,26 @@ class ShowBoostrap(
 
     // Places
     val granrex = facilityRepository.findByName("Gran Rex").get()
-    val colon = facilityRepository.findByName("Teatro Colon").get()
-    val river = facilityRepository.findByName("River Plate").get()
-    val boca = facilityRepository.findByName("La Bombonera").get()
-    val marena = facilityRepository.findByName("Movistar Arena").get()
-    val opera = facilityRepository.findByName("Teatro Opera").get()
-    val polo = facilityRepository.findByName("Club De Polo").get()
-    val luna = facilityRepository.findByName("Luna Park").get()
-    val pocker = facilityRepository.findByName("Teatro Poker").get()
+//    val colon = facilityRepository.findByName("Teatro Colon").get()
+//    val river = facilityRepository.findByName("River Plate").get()
+//    val boca = facilityRepository.findByName("La Bombonera").get()
+//    val marena = facilityRepository.findByName("Movistar Arena").get()
+//    val opera = facilityRepository.findByName("Teatro Opera").get()
+//    val polo = facilityRepository.findByName("Club De Polo").get()
+//    val luna = facilityRepository.findByName("Luna Park").get()
+//    val pocker = facilityRepository.findByName("Teatro Poker").get()
 
     val shows = listOf(
         Show(name = "Cachenged!!", lavela, granrex),
-        Show(name = "Bailanta!!", lavela, colon),
-        Show(name = "4 You", pearljam, river),
-        Show(name = "4 You", pearljam, boca),
-        Show(name = "Demon of Hell Rise Tour", acdc, marena),
-        Show(name = "Demon of Hell Rise Tour", acdc, opera),
-        Show(name = "Le ricote", redondos, polo),
-        Show(name = "Midnight", oned, luna),
-        Show(name = "Love of my life", queen, granrex),
-        Show(name = "Midnight", lavela, pocker)
+//        Show(name = "Bailanta!!", lavela, colon),
+//        Show(name = "4 You", pearljam, river),
+//        Show(name = "4 You", pearljam, boca),
+//        Show(name = "Demon of Hell Rise Tour", acdc, marena),
+//        Show(name = "Demon of Hell Rise Tour", acdc, opera),
+//        Show(name = "Le ricote", redondos, polo),
+//        Show(name = "Midnight", oned, luna),
+//        Show(name = "Love of my life", queen, granrex),
+//        Show(name = "Midnight", lavela, pocker)
     )
 
     fun createShows() {
