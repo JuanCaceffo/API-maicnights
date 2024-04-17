@@ -24,7 +24,8 @@ class Show(
     var imgUrl = "${band.name.removeSpaces().lowercase()}.jpg"
 
 //    val pendingAttendees = mutableListOf<User>()
-//    val dates = mutableSetOf<ShowDate>()
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    val dates = mutableSetOf<ShowDate>()
 
     @Enumerated(EnumType.STRING)
     @Column(length = 40)
@@ -61,9 +62,9 @@ class Show(
 //        facility?.let {} ?: throw BusinessException(ShowError.FACILITY_ERROR)
 //    }
 
-//    fun addDate(date: LocalDateTime) {
-//        dates.add(ShowDate(date, facility))
-//    }
+    fun addDate(date: LocalDateTime) {
+        dates.add(ShowDate(date, facility))
+    }
 
 //    fun friendsAttendeesProfileImages(user: User) = friendsAttending(user.id).map { it.profileImage }
 //    fun friendsAttending(userId: Long) = allAttendees().filter { it.isMyFriend(userId) }
@@ -72,11 +73,11 @@ class Show(
 
 //    fun allTicketPrices() = facility.seats.map { ticketPrice(it.seatType) }
 
-//    fun allDates() = dates.map { it.date }.toList().sortedBy { it }
+    fun allDates() = dates.map { it.date }.toList().sortedBy { it }
 
-//    fun allAttendees() = dates.flatMap { it.attendees }
-//    fun soldOutDates() = dates.filter { it.isSoldOut() }.size
-//    fun ticketsSoldOfSeatType(seatType: SeatTypes) = dates.sumOf { it.getReservedSeatsOf(seatType) }
+    fun allAttendees() = dates.flatMap { it.attendees }
+    fun soldOutDates() = dates.filter { it.isSoldOut() }.size
+    fun ticketsSoldOfSeatType(seatType: SeatTypes) = dates.sumOf { it.getReservedSeatsOf(seatType) }
 //    fun totalTicketsSold() = facility.getAllSeatTypes().sumOf { ticketsSoldOfSeatType(it) }
 //    fun totalSales(): Double = facility.getAllSeatTypes().sumOf { ticketPrice(it) * ticketsSoldOfSeatType(it) }
 //    fun getShowDate(date: LocalDate) = dates.find { it.date.toLocalDate() == date }

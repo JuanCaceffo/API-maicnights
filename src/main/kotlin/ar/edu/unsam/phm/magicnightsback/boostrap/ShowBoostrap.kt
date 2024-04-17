@@ -7,6 +7,7 @@ import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 import kotlin.jvm.optionals.getOrNull
 
 
@@ -68,72 +69,80 @@ class ShowBoostrap(
         }
     }
 
+    fun createShowDates() {
+        val generalDateTime = LocalDateTime.parse("2024-03-30T16:57:04.074472231")
+        shows[0]!!.apply {
+            repeat(2) { addDate(generalDateTime.minusDays(3 + it.toLong())) }
+            repeat(3) { addDate(generalDateTime.minusDays(11 + it.toLong())) }
+        }
+        shows[1]!!.apply {
+            repeat(2) { addDate(generalDateTime.minusDays(5 + it.toLong())) }
+            repeat(3) { addDate(generalDateTime.plusDays(14 + it.toLong())) }
+        }
+        shows[2]!!.apply {
+            repeat(1) { addDate(generalDateTime.minusDays(7 + it.toLong())) }
+            repeat(1) { addDate(generalDateTime.plusDays(10 + it.toLong())) }
+        }
+        shows[3]!!.apply {
+            repeat(3) { addDate(generalDateTime.minusDays(10 + it.toLong())) }
+            repeat(3) { addDate(generalDateTime.plusDays(12 + it.toLong())) }
+        }
+        shows[4]!!.apply {
+            repeat(2) { addDate(generalDateTime.minusDays(2 + it.toLong())) }
+            repeat(1) { addDate(generalDateTime.plusDays(13 + it.toLong())) }
+        }
+        shows[5]!!.apply {
+            repeat(2) { addDate(generalDateTime.minusDays(4 + it.toLong())) }
+            repeat(3) { addDate(generalDateTime.plusDays(15 + it.toLong())) }
+        }
+        shows[6]!!.apply {
+            repeat(1) { addDate(generalDateTime.minusDays(8 + it.toLong())) }
+            repeat(3) { addDate(generalDateTime.plusDays(9 + it.toLong())) }
+        }
+        shows[7]!!.apply {
+            repeat(2) { addDate(generalDateTime.minusDays(6 + it.toLong())) }
+            repeat(4) { addDate(generalDateTime.plusDays(16 + it.toLong())) }
+        }
+        shows[8]!!.apply {
+            repeat(2) { addDate(generalDateTime.minusDays(1 + it.toLong())) }
+            repeat(3) { addDate(generalDateTime.minusDays(17 + it.toLong())) }
+        }
+        shows[9]!!.apply {
+            repeat(1) { addDate(generalDateTime.minusDays(1 + it.toLong())) }
+            repeat(1) { addDate(generalDateTime.plusDays(17 + it.toLong())) }
+        }
+    }
+//RARI ESTO
+//    fun addAttendees() {
+//        shows["LaVelaPuerca_SmallFacility"]!!.apply {
+//            dates.first().apply{
+//                reservedSeats[AllSetTypeNames.PULLMAN.name] = 100
+//                reservedSeats[AllSetTypeNames.LOWERLEVEL.name] = 50
+//            }
+//            dates.last().apply{
+//                reservedSeats[AllSetTypeNames.PULLMAN.name] = 500
+//                reservedSeats[AllSetTypeNames.LOWERLEVEL.name] = 300
+//            }
+//        }
+//    }
+
     override fun afterPropertiesSet() {
+        println("Boostrap show started")
+
+        println("adding showdates..")
+        createShowDates()
+        println("finish added showdates")
+
         println("Show creation process starts")
         createShows()
-//        createShowDates()
+        println("finish added showdates")
+        println("Show creation process end")
+
+        println("Boostrap show finished")
 //        addAttendees()
     }
 }
 
 
-//
 
-//
-////    fun createShowDates() {
-////        val generalDateTime = LocalDateTime.parse("2024-03-30T16:57:04.074472231")
-////        shows["LaVelaPuerca_GranRex"]!!.apply {
-////            repeat(2) { addDate(generalDateTime.minusDays(3 + it.toLong())) }
-////            repeat(3) { addDate(generalDateTime.minusDays(11 + it.toLong())) }
-////        }
-////        shows["LaVelaPuerca_TeatroColon"]!!.apply {
-////            repeat(2) { addDate(generalDateTime.minusDays(5 + it.toLong())) }
-////            repeat(3) { addDate(generalDateTime.plusDays(14 + it.toLong())) }
-////        }
-////        shows["PearlJam_River"]!!.apply {
-////            repeat(1) { addDate(generalDateTime.minusDays(7 + it.toLong())) }
-////            repeat(1) { addDate(generalDateTime.plusDays(10 + it.toLong())) }
-////        }
-////        shows["PearlJam_LaBombonera"]!!.apply {
-////            repeat(3) { addDate(generalDateTime.minusDays(10 + it.toLong())) }
-////            repeat(3) { addDate(generalDateTime.plusDays(12 + it.toLong())) }
-////        }
-////        shows["AcDc_MovistarArena"]!!.apply {
-////            repeat(2) { addDate(generalDateTime.minusDays(2 + it.toLong())) }
-////            repeat(1) { addDate(generalDateTime.plusDays(13 + it.toLong())) }
-////        }
-////        shows["AcDc_TeatroOpera"]!!.apply {
-////            repeat(2) { addDate(generalDateTime.minusDays(4 + it.toLong())) }
-////            repeat(3) { addDate(generalDateTime.plusDays(15 + it.toLong())) }
-////        }
-////        shows["LosRedondos_ClubDePolo"]!!.apply {
-////            repeat(1) { addDate(generalDateTime.minusDays(8 + it.toLong())) }
-////            repeat(3) { addDate(generalDateTime.plusDays(9 + it.toLong())) }
-////        }
-////        shows["OneDirection_LunaPark"]!!.apply {
-////            repeat(2) { addDate(generalDateTime.minusDays(6 + it.toLong())) }
-////            repeat(4) { addDate(generalDateTime.plusDays(16 + it.toLong())) }
-////        }
-////        shows["Queen_GranRex"]!!.apply {
-////            repeat(2) { addDate(generalDateTime.minusDays(1 + it.toLong())) }
-////            repeat(3) { addDate(generalDateTime.minusDays(17 + it.toLong())) }
-////        }
-////        shows["LaVelaPuerca_SmallFacility"]!!.apply {
-////            repeat(1) { addDate(generalDateTime.minusDays(1 + it.toLong())) }
-////            repeat(1) { addDate(generalDateTime.plusDays(17 + it.toLong())) }
-////        }
-////    }
-////
-////    fun addAttendees() {
-////        shows["LaVelaPuerca_SmallFacility"]!!.apply {
-////            dates.first().apply{
-////                reservedSeats[AllSetTypeNames.PULLMAN.name] = 100
-////                reservedSeats[AllSetTypeNames.LOWERLEVEL.name] = 50
-////            }
-////            dates.last().apply{
-////                reservedSeats[AllSetTypeNames.PULLMAN.name] = 500
-////                reservedSeats[AllSetTypeNames.LOWERLEVEL.name] = 300
-////            }
-////        }
-//    }
 
