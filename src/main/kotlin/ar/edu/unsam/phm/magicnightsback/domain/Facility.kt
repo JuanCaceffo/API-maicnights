@@ -21,9 +21,6 @@ abstract class Facility(
     @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val places: MutableSet<Place> = mutableSetOf()
 
-    @Transient
-    lateinit var validSeatTypes: List<String>
-
     abstract var fixedPrice: Double
     abstract fun fixedCostVariant(): Double
     fun cost() = fixedPrice + fixedCostVariant()
@@ -37,8 +34,11 @@ abstract class Facility(
     fun getPlaceCapacity(seatType: SeatTypes) = getPlaceBySeatType(seatType)?.let { it.capacity } ?: 0
 
     fun getTotalSeatCapacity() = places.sumOf { it.capacity }
+
+    abstract fun validSeatTypes(): List<String>
+
     fun validateSeatType(name: String) {
-        if (name !in validSeatTypes) {
+        if (name !in validSeatTypes()) {
             throw BusinessException(FacilityError.INVALID_SEAT_TYPE)
         }
     }
@@ -52,9 +52,10 @@ class Stadium(
     override var fixedPrice: Double
 ) : Facility(name, location) {
     init {
-        validSeatTypes = listOf(SeatTypes.BOX.name, SeatTypes.UPPERLEVEL.name, SeatTypes.FIELD.name)
         require(fixedPrice >= 0) { throw BusinessException(FacilityError.NEGATIVE_PRICE) }
     }
+
+    override fun validSeatTypes() = listOf(SeatTypes.BOX.name, SeatTypes.UPPERLEVEL.name, SeatTypes.FIELD.name)
 
     override fun fixedCostVariant(): Double = 0.0
 }
@@ -62,9 +63,8 @@ class Stadium(
 @Entity
 @DiscriminatorValue("Theater")
 class Theater(name: String, location: Point) : Facility(name, location) {
-    init {
-        validSeatTypes = listOf(SeatTypes.PULLMAN.name, SeatTypes.LOWERLEVEL.name)
-    }
+
+    override fun validSeatTypes() = listOf(SeatTypes.PULLMAN.name, SeatTypes.LOWERLEVEL.name)
 
     @Nullable
     var hasGoodAcoustics: Boolean = false

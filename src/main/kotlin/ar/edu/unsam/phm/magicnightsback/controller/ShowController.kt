@@ -5,6 +5,7 @@ package ar.edu.unsam.phm.magicnightsback.controller
 //import ar.edu.unsam.phm.magicnightsback.error.showDateError
 import ar.edu.unsam.phm.magicnightsback.dto.CommentDTO
 import ar.edu.unsam.phm.magicnightsback.dto.ShowDTO
+import ar.edu.unsam.phm.magicnightsback.dto.ShowDetailsDTO
 import ar.edu.unsam.phm.magicnightsback.service.CommentService
 import ar.edu.unsam.phm.magicnightsback.service.ShowService
 //import ar.edu.unsam.phm.magicnightsback.service.UserService
@@ -27,34 +28,30 @@ class ShowController {
     @Autowired
     lateinit var showService: ShowService
 
-    @Autowired
-    lateinit var commentService: CommentService
-
     //    @Autowired
 //    lateinit var userService: UserService
 //
     @GetMapping("/shows")
     @Operation(summary = "Devuelve todos los disponibles")
-    fun getAll(@RequestParam(required = false, defaultValue = "-1") userId: Long,
-               @RequestParam(name = "bandKeyword", required = false, defaultValue = "") bandKeyword: String,
-               @RequestParam(name = "facilityKeyword", required = false, defaultValue = "") facilityKeyword: String,
-               @RequestParam(name = "withFriends", required = false, defaultValue = "false") withFriends: Boolean): List<ShowDTO> {
+    fun getAll(
+        @RequestParam(required = false, defaultValue = "-1") userId: Long,
+        @RequestParam(name = "bandKeyword", required = false, defaultValue = "") bandKeyword: String,
+        @RequestParam(name = "facilityKeyword", required = false, defaultValue = "") facilityKeyword: String,
+        @RequestParam(name = "withFriends", required = false, defaultValue = "false") withFriends: Boolean
+    ): List<ShowDTO> {
 
         val params = BaseFilterParams(userId, bandKeyword, facilityKeyword, withFriends)
         return showService.findAll(params)
     }
 
-//
-//    @GetMapping("/show/{id}")
-//    @Operation(summary = "Devuelve un show según su id")
-//    fun getShowById(
-//        @PathVariable id: Long,
-//        @RequestParam(required = false, defaultValue = "-1") userId: Long
-//    ): ShowDTO {
-//        val show = showService.getById(id)
-//        val comments = show.allCommentsDTO()
-//        return show.toShowDTO(showService.getAPossibleUserById(userId),comments)
-//    }
+    @GetMapping("/{id}")
+    @Operation(summary = "Devuelve un show según su id")
+    fun getShowById(
+        @PathVariable id: Long,
+        @RequestParam(required = false, defaultValue = "-1") userId: Long
+    ): ShowDetailsDTO = showService.findById(id, userId)
+
+
 //
 //    @GetMapping("/show_dates/{id}")
 //    @Operation(summary = "Devuelve los datos por cada fecha de un show según su id")
