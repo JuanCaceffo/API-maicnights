@@ -32,8 +32,8 @@ class User(
     var profileImgUrl: String = "default.jpg"
 //    @OneToMany(fetch= FetchType.LAZY)
 //    val friends = mutableListOf<User>()
-//    @OneToMany(fetch= FetchType.LAZY)
-//    val tickets = mutableListOf<Ticket>()
+    @OneToMany(fetch= FetchType.LAZY)
+    val tickets = mutableListOf<Ticket>()
 //    var credit = 0.0
 
 //    fun addFriend(user: User) {

@@ -1,14 +1,26 @@
-//package ar.edu.unsam.phm.magicnightsback.domain
-//
-//import ar.edu.unsam.phm.magicnightsback.repository.Iterable
-//
-//data class Ticket(
-//    val show: Show,
-//    val showDate: ShowDate,
-//    val seatType: SeatTypes,
-//    val seatPrice: Double,
-//    val quantity: Int = 1,
-//) : Iterable() {
-//    fun price() = seatPrice*quantity
-//}
-//
+package ar.edu.unsam.phm.magicnightsback.domain
+
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.ManyToOne
+
+@Entity
+data class Ticket(
+    @ManyToOne
+    val show: Show,
+    @ManyToOne
+    val showDate: ShowDate,
+    @ManyToOne
+    val placeType: Place,
+    @Column
+    val placePrice: Double,
+    @Column
+    val quantity: Int = 1,
+) {
+    @Id
+    var id: Long = 0
+
+    fun price() = placePrice*quantity
+}
+
