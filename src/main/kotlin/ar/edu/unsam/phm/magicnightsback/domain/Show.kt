@@ -10,10 +10,10 @@ class Show(
     @Column(length = 40)
     var name: String,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     var band: Band,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     var facility: Facility,
 ) {
     @Id
@@ -38,7 +38,7 @@ class Show(
 
     fun ticketPrice(seat: Seat): Double = (baseTicketPrice(seat) * rentabilityType.factor).truncate()
 
-    //fun allTicketPrices() = facility.places.map { ticketPrice(it.seat) }
+    fun allTicketPrices() = facility.places.map { ticketPrice(it.seat) }
 
 //    fun rentability() = (((totalSales() - baseCost()) / totalSales()) * 100).coerceAtLeast(0.0)
 

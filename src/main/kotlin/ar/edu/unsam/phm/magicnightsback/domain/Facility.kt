@@ -29,12 +29,12 @@ abstract class Facility(
     fun cost() = fixedPrice + fixedCostVariant()
 
     fun addPlace(place: Place) {
-        //validateSeatType(place.seat.name)
+        validateSeatType(place.seat.name)
         places.add(place)
     }
 
-    //private fun getPlaceBySeatType(seatType: SeatTypes) = places.find { it.seat.type == seatType }
-    //fun getPlaceCapacity(seatType: SeatTypes) = getPlaceBySeatType(seatType)?.let { it.capacity } ?: 0
+    private fun getPlaceBySeatType(seatType: SeatTypes) = places.find { it.seat.type == seatType }
+    fun getPlaceCapacity(seatType: SeatTypes) = getPlaceBySeatType(seatType)?.let { it.capacity } ?: 0
 
     fun getTotalSeatCapacity() = places.sumOf { it.capacity }
     fun validateSeatType(name: String) {
