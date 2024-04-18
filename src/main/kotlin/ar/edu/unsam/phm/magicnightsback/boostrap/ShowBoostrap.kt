@@ -45,7 +45,6 @@ class ShowBoostrap(
 
     val shows = listOf(
         Show(name = "Cachenged!!", lavela, granrex),
-
         Show(name = "Bailanta!!", lavela, colon),
         Show(name = "4 You", pearljam, river),
         Show(name = "4 You", pearljam, boca),

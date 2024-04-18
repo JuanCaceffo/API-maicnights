@@ -12,15 +12,15 @@ data class Ticket(
     @ManyToOne
     val showDate: ShowDate,
     @ManyToOne
-    val placeType: Place,
+    val seat: Seat,
     @Column
-    val placePrice: Double,
+    val seatPrice: Double,
     @Column
     val quantity: Int = 1,
 ) {
     @Id
     var id: Long = 0
 
-    fun price() = placePrice*quantity
+    fun price() = seatPrice*quantity
 }
 
