@@ -34,7 +34,7 @@ class FacilityTests : DescribeSpec({
 
         it("Should return total seat capacy by seat type ") {
             //Assert
-            stadium.getPlaceCapacity(SeatTypes.BOX) shouldBe 15000
+            stadium.getPlaceCapacity(box) shouldBe 15000
         }
 
         it("El metodo getSeatCapacity devuelve la suma de capacidades de todos los tipos de asientos") {
