@@ -1,9 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.Id
+import jakarta.persistence.*
 
 @Entity
 data class Band(
@@ -11,7 +8,7 @@ data class Band(
     var name: String
 ) {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
 
     @Column

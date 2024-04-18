@@ -24,10 +24,7 @@ class ShowTest: DescribeSpec({
             addPlace(lower, 3000)
         }
 
-        val show = Show(name = "Cachenged!!").apply {
-            band = vela
-            facility = theater
-        }
+        val show = Show(name = "Cachenged!!", vela, theater)
 
         it("A show has a base cost"){
             show.baseCost() shouldBe 160000.0
