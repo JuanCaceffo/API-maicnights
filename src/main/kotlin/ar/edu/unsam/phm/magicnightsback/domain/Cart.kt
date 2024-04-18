@@ -14,12 +14,12 @@ class Cart(@ManyToOne val user: User) {
     fun getAllTickets() = reservedTickets
 
     fun reserveTicket(ticket: Ticket) {
-        ticket.showDate.reserveSeat(ticket.seat.type, ticket.quantity)
+        ticket.showDate.reserveSeat(ticket.seat, ticket.quantity)
         reservedTickets.add(ticket)
     }
 
     fun removeTickets(){
-        reservedTickets.forEach { ticket -> ticket.showDate.releaseSeat(ticket.seat.type,ticket.quantity) }
+        reservedTickets.forEach { ticket -> ticket.showDate.releaseSeat(ticket.seat,ticket.quantity) }
         reservedTickets.clear()
     }
 
