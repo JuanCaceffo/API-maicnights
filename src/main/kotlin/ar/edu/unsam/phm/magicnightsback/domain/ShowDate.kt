@@ -15,7 +15,7 @@ class ShowDate(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val attendees = mutableSetOf<User>()
     @ElementCollection(fetch = FetchType.LAZY)
     val reservedSeats = facility.validSeatTypes().associateWith { 0 }.toMutableMap()
@@ -24,21 +24,21 @@ class ShowDate(
         attendees.add(user)
     }
 
-    fun reserveSeat(seatType: SeatTypes, quantity: Int) {
-        quantity.throwIfGreaterThan(availableSeatsOf(seatType),showDateError.EXCEEDED_CAPACITY)
-        reservedSeats[seatType.name] = (reservedSeats[seatType.name]!! + quantity)
+    fun reserveSeat(seat: Seat, quantity: Int) {
+        quantity.throwIfGreaterThan(availableSeatsOf(seat),showDateError.EXCEEDED_CAPACITY)
+        reservedSeats[seat.name] = (reservedSeats[seat.name]!! + quantity)
     }
 
-    fun releaseSeat(seatType: SeatTypes, quantity: Int) {
-        reservedSeats[seatType.name] = (reservedSeats[seatType.name]!! - quantity)
+    fun releaseSeat(seat: Seat, quantity: Int) {
+        reservedSeats[seat.name] = (reservedSeats[seat.name]!! - quantity)
     }
 
-    fun getReservedSeatsOf(seatType: SeatTypes) = reservedSeats[seatType.name] ?: 0
+    fun getReservedSeatsOf(seat: Seat) = reservedSeats[seat.name] ?: 0
 
     fun getAllReservedSeats() = reservedSeats.map { it.value }.sum()
 
-    fun availableSeatsOf(seatType: SeatTypes): Int {
-        return facility.getPlaceCapacity(seatType) - getReservedSeatsOf(seatType)
+    fun availableSeatsOf(seat: Seat): Int {
+        return facility.getPlaceCapacity(seat) - getReservedSeatsOf(seat)
     }
 
     fun totalAvailableSeats(): Int {

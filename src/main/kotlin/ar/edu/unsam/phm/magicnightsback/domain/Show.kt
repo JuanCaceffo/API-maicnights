@@ -10,10 +10,10 @@ class Show(
     @Column(length = 40)
     var name: String,
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     var band: Band,
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     var facility: Facility,
 ) {
     @Id
@@ -80,7 +80,7 @@ class Show(
 
     fun allAttendees() = dates.flatMap { it.attendees }
     fun soldOutDates() = dates.filter { it.isSoldOut() }.size
-    fun ticketsSoldOfSeatType(seatType: SeatTypes) = dates.sumOf { it.getReservedSeatsOf(seatType) }
+//    fun ticketsSoldOfSeatType(seatType: SeatTypes) = dates.sumOf { it.getReservedSeatsOf(seatType) }
 //    fun totalTicketsSold() = facility.getAllSeatTypes().sumOf { ticketsSoldOfSeatType(it) }
 //    fun totalSales(): Double = facility.getAllSeatTypes().sumOf { ticketPrice(it) * ticketsSoldOfSeatType(it) }
 //    fun getShowDate(date: LocalDate) = dates.find { it.date.toLocalDate() == date }

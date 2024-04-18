@@ -11,6 +11,7 @@ import ar.edu.unsam.phm.magicnightsback.service.UserService
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.DependsOn
+import org.springframework.stereotype.Component
 //import org.springframework.context.annotation.DependsOn
 //import org.springframework.core.annotation.Order
 //import org.springframework.stereotype.Component
@@ -18,12 +19,9 @@ import org.springframework.stereotype.Service
 
 import kotlin.jvm.optionals.getOrNull
 
-@Service
+@Component
+@DependsOn("userBoostrap", "showBoostrap")
 class CommentBoostrap(
-    @Autowired
-    userBoostrap: UserBoostrap,
-    @Autowired
-    showBoostrap: ShowBoostrap,
     @Autowired
     userService: UserService,
     @Autowired
