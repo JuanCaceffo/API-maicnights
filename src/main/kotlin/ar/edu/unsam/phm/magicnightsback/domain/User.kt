@@ -22,7 +22,7 @@ class User(
 ){
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
+    var id: Long = 0
 
     var birthday: LocalDate = LocalDate.now()
     var dni: Int = 0
@@ -84,8 +84,8 @@ class User(
 //        credit = (credit - amount).throwErrorIfNegative(BusinessException(UserError.MSG_NOT_ENOUGH_CREDIT)).toDouble()
 //    }
 //
-//    ///// VALIDATORS ///////////////////////////////////////////
-//    fun throwIfNotAdmin(msg: String) {
-//        if (!isAdmin) throw AuthenticationException(msg)
-//    }
+    ///// VALIDATORS ///////////////////////////////////////////
+    fun validateAdminStatus(msg: String) {
+        if (!isAdmin) throw AuthenticationException(msg)
+    }
 }

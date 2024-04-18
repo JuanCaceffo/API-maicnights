@@ -27,9 +27,10 @@ data class CommentDTO(
     val date: LocalDateTime
 )
 
-data class CommentRatingDTO(
+data class CommentStadisticsDTO(
     val rating: Double = 0.0,
-    val totalComments: Int = 0
+    val totalComments: Int = 0,
+    val comments: List<CommentDTO> = listOf()
 )
 
 private fun Comment.toDto(): CommentDTO = CommentDTO(

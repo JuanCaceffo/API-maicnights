@@ -14,15 +14,19 @@ data class ShowDTO(
     val showName: String,
     val bandName: String,
     val facilityName: String,
+    val prices: List<Double>,
+    val dates: List<LocalDateTime>
+)
+
+data class ShowUserDTO(
+    val show: ShowDTO,
     val rating: Double,
     val totalComments: Int,
-    val prices: List<Double>,
-    val dates: List<LocalDateTime>,
     val userImageNames: List<String>
 )
 
 data class ShowDetailsDTO(
-    val showDto: ShowDTO,
+    val show: ShowUserDTO,
     val comments: List<CommentDTO>,
     val geolocation: String,
 )
@@ -42,19 +46,35 @@ data class TicketDTO(
     val price: Double,
 )
 
-fun Show.toShowDTO(commentSummary:CommentRatingDTO) =
-    ShowDTO(
-        this.id,
-        this.imgUrl,
-        this.name,
-        this.band.name,
-        this.facility.name,
-        commentSummary.rating,
-        commentSummary.totalComments,
-        this.allTicketPrices(),
-        listOf(),
+fun Show.toShowDTO() = ShowDTO(
+    this.id,
+    this.imgUrl,
+    this.name,
+    this.band.name,
+    this.facility.name,
+    this.allTicketPrices(),
+    listOf(),
+)
+
+fun Show.toShowUserDTO(commentStadistics: CommentStadisticsDTO) =
+    ShowUserDTO(
+        this.toShowDTO(),
+        commentStadistics.rating,
+        commentStadistics.totalComments,
         listOf(),
     )
+
+fun Show.toShowDetailsDTO(commentStadistics: CommentStadisticsDTO) = ShowDetailsDTO(
+    this.toShowUserDTO(commentStadistics),
+    commentStadistics.comments,
+    this.geoLocationString()
+)
+
+fun Show.toShowAdminDTO(summary: List<AdminSummaryDTO>) = ShowAdminDTO(
+    this.toShowDTO(),
+    summary
+)
+
 
 //
 //fun pointToDMS(point: Point): String {
@@ -67,14 +87,7 @@ fun Show.toShowDTO(commentSummary:CommentRatingDTO) =
 //    return "Latitude: ${decimalToDMS(latitude)} $latitudeDirection, Longitude: ${decimalToDMS(longitude)} $longitudeDirection"
 //}
 //
-//fun decimalToDMS(decimal: Double): String {
-//    val degrees = decimal.toInt()
-//    val minutesDouble = (decimal - degrees) * 60
-//    val minutes = minutesDouble.toInt()
-//    val secondsDouble = (minutesDouble - minutes) * 60
-//    val seconds = ceil(secondsDouble).toInt()
-//
-//    return "$degrees° $minutes' $seconds''"
+
 //}
 //
 //data class SeatDTO(

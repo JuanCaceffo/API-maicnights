@@ -47,3 +47,4 @@ fun <T> validateOptionalIsNotNull(optional: Optional<T>):T{
         throw BusinessException(RepositoryError.ID_NOT_FOUND)}
     return optional.get()
 }
+

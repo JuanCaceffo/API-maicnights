@@ -57,6 +57,9 @@ class Show(
         this.rentabilityType = newShowStatus
     }
 
+    fun geoLocationString() = facility.location.toGeolocation()
+
+
 //    fun validate() {
 //        band?.let {} ?: throw BusinessException(ShowError.BAND_ERROR)
 //        facility?.let {} ?: throw BusinessException(ShowError.FACILITY_ERROR)

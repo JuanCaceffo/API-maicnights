@@ -2,9 +2,7 @@ package ar.edu.unsam.phm.magicnightsback.service
 
 import ar.edu.unsam.phm.magicnightsback.domain.Comment
 import ar.edu.unsam.phm.magicnightsback.domain.validateOptionalIsNotNull
-import ar.edu.unsam.phm.magicnightsback.dto.CommentDTO
-import ar.edu.unsam.phm.magicnightsback.dto.toShowCommentDto
-import ar.edu.unsam.phm.magicnightsback.dto.toUserCommentDto
+import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.CommentError
 import ar.edu.unsam.phm.magicnightsback.repository.CommentRepository
@@ -38,6 +36,13 @@ class CommentService {
     @Transactional(Transactional.TxType.NEVER)
     fun findCommentByShowId(id: Long, sid: Long): Comment {
         return validateOptionalIsNotNull(commentsRepository.findById(id))
+    }
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun getCommentStadisticsOfShow(id: Long): CommentStadisticsDTO {
+        val totalRating = showRating(id)
+        val totalComments = totalShowComments(id)
+        return CommentStadisticsDTO(totalRating, totalComments)
     }
 
     @Transactional(Transactional.TxType.NEVER)

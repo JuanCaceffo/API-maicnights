@@ -3,16 +3,17 @@ package ar.edu.unsam.phm.magicnightsback.controller
 //import ar.edu.unsam.phm.magicnightsback.domain.AdminStats
 //import ar.edu.unsam.phm.magicnightsback.dto.*
 //import ar.edu.unsam.phm.magicnightsback.error.showDateError
-import ar.edu.unsam.phm.magicnightsback.dto.CommentDTO
-import ar.edu.unsam.phm.magicnightsback.dto.ShowDTO
+import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.service.CommentService
 import ar.edu.unsam.phm.magicnightsback.service.ShowService
+import ar.edu.unsam.phm.magicnightsback.service.UserService
 //import ar.edu.unsam.phm.magicnightsback.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 //import io.swagger.v3.oas.annotations.responses.ApiResponse
 //import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.*
 
 //import java.time.LocalDateTime
@@ -28,33 +29,63 @@ class ShowController {
     lateinit var showService: ShowService
 
     @Autowired
+    lateinit var userService: UserService
+
+    @Autowired
     lateinit var commentService: CommentService
 
-    //    @Autowired
-//    lateinit var userService: UserService
-//
     @GetMapping("/shows")
-    @Operation(summary = "Devuelve todos los disponibles")
-    fun getAll(@RequestParam(required = false, defaultValue = "-1") userId: Long,
-               @RequestParam(name = "bandKeyword", required = false, defaultValue = "") bandKeyword: String,
-               @RequestParam(name = "facilityKeyword", required = false, defaultValue = "") facilityKeyword: String,
-               @RequestParam(name = "withFriends", required = false, defaultValue = "false") withFriends: Boolean): List<ShowDTO> {
-
-        val params = BaseFilterParams(userId, bandKeyword, facilityKeyword, withFriends)
-        return showService.findAll(params)
+    @Operation(summary = "Devuelve todos los shows disponibles")
+    fun getAll(@ModelAttribute request: ShowRequest): List<ShowUserDTO> {
+        return showService.findAll(request).map {
+            val commentsStats = commentService.getCommentStadisticsOfShow(it.id)
+            it.toShowUserDTO(commentsStats)
+        }
     }
 
-//
-//    @GetMapping("/show/{id}")
-//    @Operation(summary = "Devuelve un show según su id")
-//    fun getShowById(
+    @GetMapping("/{id}")
+    @Operation(summary = "Devuelve un show según su id")
+    fun getShowById(
+        @PathVariable id: Long,
+        @RequestParam userId: Long? = 0
+    ): ShowDetailsDTO {
+        val commentsStats = commentService.getCommentStadisticsOfShow(id)
+        return showService.findById(id).toShowDetailsDTO(commentsStats)
+    }
+
+    @GetMapping("/admin_dashboard/shows/")
+    @Operation(summary = "Devuelve todos los shows disponibles para dashboard Admin")
+    fun getAllforAdmin(@ModelAttribute request: ShowAdminRequest): List<ShowDTO> {
+        return showService.findAllAdmin(request).map { it.toShowDTO() }
+    }
+
+    class ShowRequest(
+        @RequestParam val userId: Long = 0,
+        @RequestParam val bandKeyword: String = "",
+        @RequestParam val facilityKeyword: String = "",
+        @RequestParam(required = false, defaultValue = "false") val withFriends: Boolean = false
+    )
+
+    class ShowAdminRequest(
+        @RequestParam val userId: Long = 0,
+        @RequestParam val bandKeyword: String = "",
+        @RequestParam val facilityKeyword: String = "",
+    ) {
+        fun toShowRequest(): ShowRequest = ShowRequest(userId, bandKeyword, facilityKeyword)
+    }
+
+//    @GetMapping("/admin_dashboard/shows/{id}")
+//    @Operation(summary = "Devuelve los stats de un show según su id")
+//    fun getShowStatsById(
 //        @PathVariable id: Long,
-//        @RequestParam(required = false, defaultValue = "-1") userId: Long
-//    ): ShowDTO {
-//        val show = showService.getById(id)
-//        val comments = show.allCommentsDTO()
-//        return show.toShowDTO(showService.getAPossibleUserById(userId),comments)
+//        @RequestParam(required = true, defaultValue = "-1") userId: Long
+//    ): List<ShowStatsDTO> {
+//        userService.validateAdmin(userId)
+//        val show = showService.findById(id)
+//        return AdminStats.getAllStats(show)
 //    }
+
+
 //
 //    @GetMapping("/show_dates/{id}")
 //    @Operation(summary = "Devuelve los datos por cada fecha de un show según su id")
@@ -97,22 +128,7 @@ class ShowController {
 //        showService.createShowDate(showId, body.userId, parseLocalDateTime(body.date))
 //    }
 //
-//    @GetMapping("/admin_dashboard/shows/")
-//    @Operation(summary = "Devuelve todos los shows disponibles para dashboard Admin")
-//    fun getAllforAdmin(@RequestParam(required = false, defaultValue = "-1") userId: Long,
-//                       @RequestParam(name = "bandKeyword", required = false, defaultValue = "") bandKeyword: String,
-//                       @RequestParam(name = "facilityKeyword", required = false, defaultValue = "") facilityKeyword: String): List<ShowAdminDTO> {
-//        userService.isAdmin(userId)
-//        val params = BaseFilterParams(userId, bandKeyword, facilityKeyword)
-//        return showService.getAll(params)
-//            .map { it.toShowAdminDTO() }
-//    }
+
 //
-//    @GetMapping("/admin_dashboard/shows/{id}")
-//    @Operation(summary = "Devuelve los stats de un show según su id")
-//    fun getShowStatsById(@PathVariable id: Long, @RequestParam(required = true, defaultValue = "-1") userId: Long): List<ShowStatsDTO> {
-//        userService.isAdmin(userId)
-//        val show = showService.getById(id)
-//        return AdminStats.getAllStats(show)
-//    }
+
 }
