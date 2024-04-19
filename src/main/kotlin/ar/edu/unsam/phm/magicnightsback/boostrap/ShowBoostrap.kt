@@ -58,12 +58,7 @@ class ShowBoostrap(
 
     fun createShows() {
         shows.forEach {
-            //TODO: buscar una forma para no volver a persisitir shows ya persisitidos
             val showInRepo = showRepository.findByName(it.name)
-
-//            if (showInRepo != null) {
-//
-//            } else {
             if (!showInRepo.isEmpty && showInRepo.get().facility.name == it.facility.name) {
                 it.id = showInRepo.get().id
             } else {
