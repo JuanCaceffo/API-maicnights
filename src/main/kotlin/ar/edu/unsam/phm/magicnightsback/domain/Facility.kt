@@ -31,8 +31,11 @@ abstract class Facility(
     }
 
     //TODO: validar si el asiento existe dentro de la facility
-    private fun getPlaceBySeatName(seat: Seat) = places.find { it.seat.name == seat.name }
-    fun getPlaceCapacity(seat: Seat) = getPlaceBySeatName(seat)?.capacity ?: 0
+    fun getPlaceBySeatName(seatName: String): Place {
+        validateSeatType(seatName)
+        return places.find { it.seat.name == seatName }!!
+    }
+    fun getPlaceCapacity(seat: Seat) = getPlaceBySeatName(seat.name).capacity
 
     fun getTotalSeatCapacity() = places.sumOf { it.capacity }
 

@@ -1,7 +1,8 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
-import ar.edu.unsam.phm.magicnightsback.error.ShowError
+import ar.edu.unsam.phm.magicnightsback.error.NotFoundException
+import ar.edu.unsam.phm.magicnightsback.error.showError
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -83,7 +84,7 @@ class Show(
 //    fun ticketsSoldOfSeatType(seatType: SeatTypes) = dates.sumOf { it.getReservedSeatsOf(seatType) }
 //    fun totalTicketsSold() = facility.getAllSeatTypes().sumOf { ticketsSoldOfSeatType(it) }
 //    fun totalSales(): Double = facility.getAllSeatTypes().sumOf { ticketPrice(it) * ticketsSoldOfSeatType(it) }
-//    fun getShowDate(date: LocalDate) = dates.find { it.date.toLocalDate() == date }
+    fun getShowDate(showDateId:Long) = dates.find { it.id == showDateId } ?: throw NotFoundException(showError.TICKET_CART_NOT_FOUND)
 
     //Validations
 //    private fun validateComment(showDate: ShowDate) {
