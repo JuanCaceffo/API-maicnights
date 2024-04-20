@@ -12,6 +12,7 @@ import ar.edu.unsam.phm.magicnightsback.error.UserError
 import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Autowired
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
+import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
 
 @Service
@@ -86,11 +87,16 @@ class UserService {
 //        return this.userRepository.getById(id).credit
 //    }
 //
-//    fun addCreditToUser(id: Long, creditToAdd: Double): Double {
-//        this.userRepository.addCredit(id, creditToAdd)
-//
-//        return userRepository.getById(id).credit
-//    }
+
+    fun updateUserCredit(userId: Long, creditToAdd: Double): Double {
+        val user = userRepository.findById(userId)
+            .orElseThrow { EntityNotFoundException("User not found with id: $userId") }
+
+        user.credit += creditToAdd
+        userRepository.save(user)
+
+        return user.credit
+    }
 //
 //    fun updateUser(id: Long, loginUser: UserDTO) {
 //        val userToUpdate = this.userRepository.getById(id)

@@ -99,4 +99,9 @@ class UserController {
 //    fun addUserCredit(@PathVariable id: Long, @RequestBody creditToAdd: Double): Double {
 //        return userService.addCreditToUser(id, creditToAdd)
 //    }
+    @PutMapping("/{id}/add_credit")
+    @Operation(summary = "Permite actualizar los creditos del usuario")
+    fun updateUserCredit(@PathVariable id: Long, @RequestBody creditToAdd: Double): Double {
+        return userService.updateUserCredit(id, creditToAdd)
+    }
 }
