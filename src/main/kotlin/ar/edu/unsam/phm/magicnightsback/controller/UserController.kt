@@ -1,7 +1,8 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
+import AuthenticationRequest
 import ar.edu.unsam.phm.magicnightsback.dto.*
-//import ar.edu.unsam.phm.magicnightsback.error.UserError
+import ar.edu.unsam.phm.magicnightsback.error.UserError
 //import ar.edu.unsam.phm.magicnightsback.dto.UserDTO
 //import ar.edu.unsam.phm.magicnightsback.dto.FriendDTO
 //import ar.edu.unsam.phm.magicnightsback.dto.TicketCreateDTO
@@ -12,9 +13,9 @@ import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.service.*
 import io.swagger.v3.oas.annotations.tags.Tag
 import io.swagger.v3.oas.annotations.Operation
-//import io.swagger.v3.oas.annotations.media.Content
-//import io.swagger.v3.oas.annotations.responses.ApiResponse
-//import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
@@ -25,7 +26,6 @@ import org.springframework.web.bind.annotation.*
 class UserController {
     @Autowired
     lateinit var userService: UserService
-
 
 //    @GetMapping("/validate")
 //    @Operation(summary = "Valida el tipo de usuario")
@@ -61,17 +61,20 @@ class UserController {
 //        userService.createComment(id, commentCreat)
 //    }
 //
-//    @PostMapping("/login")
-//    @Operation(summary = "Permite logear un usuario registrado en el sistema")
-//    @ApiResponses(
-//        value = [
-//            ApiResponse(responseCode = "200", description = "Ok"),
-//            ApiResponse(responseCode = "400", description = UserError.BAD_CREDENTIALS, content = arrayOf(Content())),
-//        ]
-//    )
-//    fun loginUser(@RequestBody userToLogin: LoginUserDTO): Long {
-//        return userService.loginUser(userToLogin)
-//    }
+
+    @Operation(summary = "Permite logear un usuario registrado en el sistema")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Ok"),
+            ApiResponse(responseCode = "400", description = UserError.BAD_CREDENTIALS, content = arrayOf(Content())),
+        ]
+    )
+    @PostMapping("/login")
+    fun authenticate(@RequestBody request: AuthenticationRequest): Long {
+        val user = userService.authenticate(request.username, request.password)
+        return user.id
+    }
+
 //
 //    @GetMapping("/{id}/data")
 //    @Operation(summary = "Permite obtener la data del perfil del usuario")

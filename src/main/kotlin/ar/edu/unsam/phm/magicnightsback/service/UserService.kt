@@ -1,12 +1,10 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
 //import ar.edu.unsam.phm.magicnightsback.domain.Comment
-import ar.edu.unsam.phm.magicnightsback.domain.Comment
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.domain.validateOptionalIsNotNull
 import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.error.*
-import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import org.springframework.stereotype.Service
@@ -28,6 +26,16 @@ class UserService {
     @Transactional(Transactional.TxType.NEVER)
     fun findByUsername(username: String): User = validateOptionalIsNotNull(userRepository.findByUsername(username))
 
+    fun authenticate(username: String, password: String): User {
+        val optionalLoginUser = userRepository.findByUsername(username)
+        val user = optionalLoginUser.orElseThrow { AuthenticationException(UserError.BAD_CREDENTIALS) }
+
+        if (user.password != password) {
+            throw AuthenticationException(UserError.BAD_CREDENTIALS)
+        }
+
+        return user
+    }
 
 //    /*Mapeo todos los tickets en uno solo por showDate juntando el precio total*/
 //    fun getTicketsGroupedByShowDate(user: User, ticketList: List<Ticket>): List<TicketDTO> {
