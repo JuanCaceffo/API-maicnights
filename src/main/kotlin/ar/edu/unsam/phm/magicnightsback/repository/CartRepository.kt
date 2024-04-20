@@ -12,5 +12,7 @@ import java.util.*
 
 interface CartRepository: CrudRepository<Cart, Long> {
 //    fun getCardFor(userId: Long) = getAll().find { cart -> cart.user.id == userId } ?: throw NotFoundException(cartError.CART_FOR_USER_NOT_FOUND)
+    //TODO: Fijarse que se puede pasar a EAGER
+    @EntityGraph(attributePaths = ["reservedTickets.show.facility.places","reservedTickets.showDate","reservedTickets.show.band"])
     override fun findById(id: Long): Optional<Cart>
 }

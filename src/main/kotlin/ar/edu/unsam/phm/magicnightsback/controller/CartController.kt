@@ -5,17 +5,19 @@ import ar.edu.unsam.phm.magicnightsback.dto.TicketDTO
 import ar.edu.unsam.phm.magicnightsback.error.FacilityError
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.error.showDateError
+import ar.edu.unsam.phm.magicnightsback.error.showError
 import ar.edu.unsam.phm.magicnightsback.service.CartService
-//import ar.edu.unsam.phm.magicnightsback.error.showError
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @CrossOrigin(origins = ["*"])
 @RequestMapping("api/cart/user")
+@Tag(name = "Cart", description = "Cart related operations")
 class CartController(
     @Autowired val cartService: CartService
 ) {
@@ -50,18 +52,18 @@ class CartController(
 //        cartService.buyReservedTickets(userId)
 //    }
 
-//    @PutMapping("/{userId}/reserve-tickets")
-//    @Operation(summary = "Permite reservar x cantidad de tiquets de un show para una funcion de ese show y para un tipo de asiento")
-//    @ApiResponses(
-//        value = [
-//            ApiResponse(responseCode = "200", description = "Ok"),
-//            ApiResponse(responseCode = "404", description = showError.TICKET_CART_NOT_FOUND),
-//            ApiResponse(responseCode = "400", description = showDateError.EXCEEDED_CAPACITY + "<br>"+ FacilityError.INVALID_SEAT_TYPE),
-//        ]
-//    )
-//    fun addReservedTicket(@PathVariable userId: Long, @RequestBody ticketData: TicketCreateDTO){
-//        cartService.reserveTicket(userId, ticketData)
-//    }
+    @PostMapping("/{userId}/reserve-tickets")
+    @Operation(summary = "Permite reservar x cantidad de tiquets de un show para una funcion de ese show y para un tipo de asiento")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Ok"),
+            ApiResponse(responseCode = "404", description = showError.TICKET_CART_NOT_FOUND),
+            ApiResponse(responseCode = "400", description = showDateError.EXCEEDED_CAPACITY + "<br>"+ FacilityError.INVALID_SEAT_TYPE),
+        ]
+    )
+    fun addReservedTicket(@PathVariable userId: Long, @RequestBody ticketData: TicketCreateDTO){
+        cartService.reserveTicket(userId, ticketData)
+    }
 
 //    @GetMapping("/{userid}/tickets-reserved-size")
 //    @Operation(summary = "Permite obtener la cantidad de tickets que hay en el carrito de un usuario")

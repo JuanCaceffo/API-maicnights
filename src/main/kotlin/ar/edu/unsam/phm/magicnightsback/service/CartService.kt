@@ -1,13 +1,15 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
+import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.domain.validateOptionalIsNotNull
+import ar.edu.unsam.phm.magicnightsback.dto.TicketCreateDTO
 import ar.edu.unsam.phm.magicnightsback.dto.TicketDTO
-//import ar.edu.unsam.phm.magicnightsback.error.showError
 import ar.edu.unsam.phm.magicnightsback.repository.CartRepository
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.stereotype.Service
 
 @Service
@@ -19,23 +21,26 @@ class CartService(
 ) {
 
     @Transactional(Transactional.TxType.NEVER)
+    fun getcartByUserId(userId:Long) = validateOptionalIsNotNull(cartRepo.findById(userId),"El carrito para el usuario de id ${userId} no fue encontrado")
+
+
+    @Transactional(Transactional.TxType.NEVER)
     fun getTicketsCart(userId: Long): List<TicketDTO> {
-        val cart = validateOptionalIsNotNull(cartRepo.findById(userId),"El carrito para el usuario de id ${userId} no fue encontrado")
-        val user = validateOptionalIsNotNull(userRepo.findById(userId), "El usuario de id ${userId} no fue encontrado")
+        val cart = getcartByUserId(userId)
+        val user = userService.getUserById(userId)
         return  userService.getTicketsGroupedByShowDate(user,cart.getAllTickets())
     }
 
-//    fun reserveTicket(userId: Long, ticketData: TicketCreateDTO) {
-//        val cart = cartRepo.getCardFor(userId)
-//        val show = showRepo.getById(ticketData.showId)
-//        val showDate = show.getShowDate(ticketData.date) ?: throw NotFoundException(
-//            showError.TICKET_CART_NOT_FOUND
-//        )
-//        val seatType = show.facility.getSeat(ticketData.seatTypeName).seatType
-//
-//        showDate.reserveSeat(seatType, ticketData.quantity)
-//        cart.reserveTicket(Ticket(show, showDate, seatType, ticketData.seatPrice,ticketData.quantity))
-//    }
+    @Transactional(Transactional.TxType.REQUIRED)
+    fun reserveTicket(userId: Long, ticketData: TicketCreateDTO) {
+        val cart = getcartByUserId(userId)
+        val show = validateOptionalIsNotNull(showRepo.findById(ticketData.showId))
+        val showDate = show.getShowDate(ticketData.showDateId)
+        val seat = show.facility.getPlaceBySeatName(ticketData.seatTypeName.name).seat
+
+        cart.reserveTicket(Ticket(show, showDate, seat, ticketData.seatPrice,ticketData.quantity))
+        cartRepo.save(cart)
+    }
 //
 //    fun removeReserveTickets(userId: Long) {
 //        val cart = cartRepo.getCardFor(userId)

@@ -32,6 +32,8 @@ class UserService {
     @Transactional(Transactional.TxType.NEVER)
     fun findByUsername(username: String): User = validateOptionalIsNotNull(userRepository.findByUsername(username))
 
+    @Transactional(Transactional.TxType.NEVER)
+    fun getUserById(userId: Long) = validateOptionalIsNotNull(userRepository.findById(userId), "El usuario de id ${userId} no fue encontrado")
 
     /*Mapeo todos los tickets en uno solo por showDate juntando el precio total*/
     fun getTicketsGroupedByShowDate(user: User, ticketList: List<Ticket>): List<TicketDTO> {
