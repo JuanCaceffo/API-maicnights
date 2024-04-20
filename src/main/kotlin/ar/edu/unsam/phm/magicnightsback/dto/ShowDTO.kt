@@ -90,11 +90,7 @@ fun Show.toShowAdminDTO(summary: List<AdminSummaryDTO>) = ShowAdminDTO(
 
 //}
 //
-//data class SeatDTO(
-//    val seatType: String,
-//    val price: Double,
-//    val maxToSell: Int,
-//)
+
 //
 //
 //fun Show.allCommentsDTO(): List<CommentDTO> {

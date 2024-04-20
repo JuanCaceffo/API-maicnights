@@ -35,13 +35,14 @@ class Show(
 
     // Cost methods
     fun baseCost(): Double = (band.cost ?: 0.0) + (facility.cost() ?: 0.0)
-
     fun baseTicketPrice(seat: Seat): Double =
         (facility.let { baseCost() / it.getTotalSeatCapacity() } ?: 0.0) + seat.price
-
     fun ticketPrice(seat: Seat): Double = (baseTicketPrice(seat) * rentabilityType.factor).truncate()
-
     fun allTicketPrices() = facility.places.map { ticketPrice(it.seat) }
+
+    // ShowDate methods
+    fun getSeatTypes() = facility.places.map { it.seat }
+    fun getShowDateById (showDateId: Long) = dates.find { it.id == showDateId }
 
     // Admin Methods
     fun sales(): List<Double> = facility.places.map { ticketPrice(it.seat) * totalTicketsSoldOf(it.seat) }
@@ -90,7 +91,7 @@ class Show(
 //  fun ticketsSoldOfSeatType(seatType: SeatTypes) = dates.sumOf { it.getReservedSeatsOf(seatType) }
 //  fun totalTicketsSold() = facility.getAllSeatTypes().sumOf { ticketsSoldOfSeatType(it) }
 //    fun totalSales(): Double = facility.getAllSeatTypes().sumOf { ticketPrice(it) * ticketsSoldOfSeatType(it) }
-//    fun getShowDate(date: LocalDate) = dates.find { it.date.toLocalDate() == date }
+
 
     //Validations
 //    private fun validateComment(showDate: ShowDate) {

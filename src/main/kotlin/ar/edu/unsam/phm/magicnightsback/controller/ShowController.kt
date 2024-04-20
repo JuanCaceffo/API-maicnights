@@ -1,6 +1,5 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 //
-//import ar.edu.unsam.phm.magicnightsback.domain.AdminStats
 //import ar.edu.unsam.phm.magicnightsback.dto.*
 //import ar.edu.unsam.phm.magicnightsback.error.showDateError
 import ar.edu.unsam.phm.magicnightsback.domain.AdminStats
@@ -8,7 +7,6 @@ import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.service.CommentService
 import ar.edu.unsam.phm.magicnightsback.service.ShowService
 import ar.edu.unsam.phm.magicnightsback.service.UserService
-//import ar.edu.unsam.phm.magicnightsback.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 //import io.swagger.v3.oas.annotations.responses.ApiResponse
 //import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -75,7 +73,7 @@ class ShowController {
         fun toShowRequest(): ShowRequest = ShowRequest(userId, bandKeyword, facilityKeyword)
     }
 
-    @GetMapping("/admin_dashboard/shows/stats")
+    @GetMapping("/admin_dashboard/{id}/stats")
     @Operation(summary = "Devuelve los stats de un show según su id")
     fun getShowStatsById(
         @PathVariable id: Long,
@@ -86,23 +84,25 @@ class ShowController {
         return AdminStats.getAllStats(show)
     }
 
-//
-//    @GetMapping("/show_dates/{id}")
-//    @Operation(summary = "Devuelve los datos por cada fecha de un show según su id")
-//    fun getShowDatesById(@PathVariable id: Long, @RequestParam date: String): List<SeatDTO> {
-//        val show = showService.getById(id)
-//        val seats = show.getSeatTypes()
-//        val showDate = show.getShowDate(parseLocalDate(date))
-//
-//        val toSeatsDto = seats.map {
-//            SeatDTO(
-//                it.toString(),
-//                show.ticketPrice(it),
-//                showDate!!.availableSeatsOf(it)
-//            )
-//        }
-//        return toSeatsDto
-//    }
+
+    @GetMapping("/show_dates/{showId}/date/{dateId}")
+    @Operation(summary = "Devuelve los asientos por cada fecha de un show")
+    fun getShowDatesById(
+        @PathVariable showId: Long,
+        @PathVariable dateId: Long
+    ): List<SeatDTO> {
+        val show = showService.findById(showId)
+        val seats = show.getSeatTypes()
+        val showDate = show.getShowDateById(dateId)
+
+        return seats.map {
+            SeatDTO(
+                it.toString(),
+                show.ticketPrice(it),
+                showDate!!.availableSeatsOf(it)
+            )
+        }
+    }
 //
 //    fun parseLocalDate(dateString: String): LocalDate {
 //        val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
