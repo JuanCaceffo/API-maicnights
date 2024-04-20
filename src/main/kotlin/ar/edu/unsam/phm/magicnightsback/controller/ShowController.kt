@@ -3,6 +3,7 @@ package ar.edu.unsam.phm.magicnightsback.controller
 //import ar.edu.unsam.phm.magicnightsback.domain.AdminStats
 //import ar.edu.unsam.phm.magicnightsback.dto.*
 //import ar.edu.unsam.phm.magicnightsback.error.showDateError
+import ar.edu.unsam.phm.magicnightsback.domain.AdminStats
 import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.service.CommentService
 import ar.edu.unsam.phm.magicnightsback.service.ShowService
@@ -74,17 +75,16 @@ class ShowController {
         fun toShowRequest(): ShowRequest = ShowRequest(userId, bandKeyword, facilityKeyword)
     }
 
-//    @GetMapping("/admin_dashboard/shows/{id}")
-//    @Operation(summary = "Devuelve los stats de un show según su id")
-//    fun getShowStatsById(
-//        @PathVariable id: Long,
-//        @RequestParam(required = true, defaultValue = "-1") userId: Long
-//    ): List<ShowStatsDTO> {
-//        userService.validateAdmin(userId)
-//        val show = showService.findById(id)
-//        return AdminStats.getAllStats(show)
-//    }
-
+    @GetMapping("/admin_dashboard/shows/stats")
+    @Operation(summary = "Devuelve los stats de un show según su id")
+    fun getShowStatsById(
+        @PathVariable id: Long,
+        @RequestParam(required = true, defaultValue = "-1") userId: Long
+    ): List<ShowStatsDTO> {
+        userService.validateAdmin(userId)
+        val show = showService.findById(id)
+        return AdminStats.getAllStats(show)
+    }
 
 //
 //    @GetMapping("/show_dates/{id}")

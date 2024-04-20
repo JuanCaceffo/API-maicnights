@@ -1,5 +1,7 @@
-//package ar.edu.unsam.phm.magicnightsback.dto
-//
+package ar.edu.unsam.phm.magicnightsback.dto
+
+import ar.edu.unsam.phm.magicnightsback.domain.States
+
 //import ar.edu.unsam.phm.magicnightsback.domain.Colors
 //import ar.edu.unsam.phm.magicnightsback.domain.Show
 //import java.time.LocalDateTime
@@ -25,8 +27,9 @@
 //        this.allTicketPrices()
 //    )
 //
-//data class ShowStatsDTO (
-//    val id: Long,
-//    val value: Double,
-//    val color: Colors
-//)
+
+data class ShowStatsDTO (
+    val id: Long,
+    val value: Double,
+    val state: States
+)

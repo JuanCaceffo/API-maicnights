@@ -23,7 +23,6 @@ class Show(
     @Column(length = 100)
     var imgUrl = "${band.name.removeSpaces().lowercase()}.jpg"
 
-//    val pendingAttendees = mutableListOf<User>()
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val dates = mutableSetOf<ShowDate>()
 
@@ -31,17 +30,25 @@ class Show(
     @Column(length = 40)
     var rentabilityType: Rentability = Rentability.BASE_PRICE
 
+    @ElementCollection(fetch = FetchType.LAZY)
+    val pendingAttendeesIds = mutableListOf<Long>()
+
     // Cost methods
-    fun baseCost(): Double = (band?.cost ?: 0.0) + (facility?.cost() ?: 0.0)
+    fun baseCost(): Double = (band.cost ?: 0.0) + (facility.cost() ?: 0.0)
 
     fun baseTicketPrice(seat: Seat): Double =
-        (facility?.let { baseCost() / it.getTotalSeatCapacity() } ?: 0.0) + seat.price
+        (facility.let { baseCost() / it.getTotalSeatCapacity() } ?: 0.0) + seat.price
 
     fun ticketPrice(seat: Seat): Double = (baseTicketPrice(seat) * rentabilityType.factor).truncate()
 
     fun allTicketPrices() = facility.places.map { ticketPrice(it.seat) }
 
-//    fun rentability() = (((totalSales() - baseCost()) / totalSales()) * 100).coerceAtLeast(0.0)
+    // Admin Methods
+    fun sales(): List<Double> = facility.places.map { ticketPrice(it.seat) * totalTicketsSoldOf(it.seat) }
+    fun totalSales(): Double = sales().sumOf { it }
+    fun totalTicketsSoldOf(seat: Seat) = dates.sumOf { it.getReservedSeatsOf(seat) }
+    fun totalPendingAttendees() = pendingAttendeesIds.size
+    fun rentability() = (((totalSales() - baseCost()) / totalSales()) * 100).coerceAtLeast(0.0)
 
 
     //fun canBeCommented(user: User) = !isAlreadyCommented(user) && anyShowDatesPassedFor(user)
@@ -69,19 +76,19 @@ class Show(
         dates.add(ShowDate(date, facility))
     }
 
-//    fun friendsAttendeesProfileImages(user: User) = friendsAttending(user.id).map { it.profileImage }
-//    fun friendsAttending(userId: Long) = allAttendees().filter { it.isMyFriend(userId) }
+//   fun friendsAttendeesProfileImages(user: User) = friendsAttending(user.id).map { it.profileImage }
+//   fun friendsAttending(userId: Long) = allAttendees().filter { it.isMyFriend(userId) }
 
-    //fun getSeatTypes() = facility.seats.map { it.seatType }
+//   fun getSeatTypes() = facility.seats.map { it.seatType }
 
-//    fun allTicketPrices() = facility.seats.map { ticketPrice(it.seatType) }
+//   fun allTicketPrices() = facility.seats.map { ticketPrice(it.seatType) }
 
     fun allDates() = dates.map { it.date }.toList().sortedBy { it }
 
     fun allAttendees() = dates.flatMap { it.attendees }
     fun soldOutDates() = dates.filter { it.isSoldOut() }.size
-//    fun ticketsSoldOfSeatType(seatType: SeatTypes) = dates.sumOf { it.getReservedSeatsOf(seatType) }
-//    fun totalTicketsSold() = facility.getAllSeatTypes().sumOf { ticketsSoldOfSeatType(it) }
+//  fun ticketsSoldOfSeatType(seatType: SeatTypes) = dates.sumOf { it.getReservedSeatsOf(seatType) }
+//  fun totalTicketsSold() = facility.getAllSeatTypes().sumOf { ticketsSoldOfSeatType(it) }
 //    fun totalSales(): Double = facility.getAllSeatTypes().sumOf { ticketPrice(it) * ticketsSoldOfSeatType(it) }
 //    fun getShowDate(date: LocalDate) = dates.find { it.date.toLocalDate() == date }
 

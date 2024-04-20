@@ -64,9 +64,9 @@ fun Show.toShowUserDTO(commentStadistics: CommentStadisticsDTO) =
         listOf(),
     )
 
-fun Show.toShowDetailsDTO(commentStadistics: CommentStadisticsDTO) = ShowDetailsDTO(
-    this.toShowUserDTO(commentStadistics),
-    commentStadistics.comments,
+fun Show.toShowDetailsDTO(commentStats: CommentStadisticsDTO) = ShowDetailsDTO(
+    this.toShowUserDTO(commentStats),
+    commentStats.comments,
     this.geoLocationString()
 )
 
