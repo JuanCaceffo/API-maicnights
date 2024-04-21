@@ -19,15 +19,16 @@ class UserService {
     @Autowired
     lateinit var userRepository: UserRepository
 
-//    @Autowired
-//    lateinit var showRepository: ShowRepository
-
     @Transactional(Transactional.TxType.NEVER)
     fun findById(id: Long): User = validateOptionalIsNotNull(userRepository.findById(id))
 
     @Transactional(Transactional.TxType.NEVER)
     fun findByUsername(username: String): User = validateOptionalIsNotNull(userRepository.findByUsername(username))
 
+    fun validateAdminStatus(userId: Long) {
+        val user = validateOptionalIsNotNull(userRepository.findById(userId))
+        if (!user.isAdmin) throw AuthenticationException(UserError.USER_IS_NOT_ADMIN)
+    }
 
 //    /*Mapeo todos los tickets en uno solo por showDate juntando el precio total*/
 //    fun getTicketsGroupedByShowDate(user: User, ticketList: List<Ticket>): List<TicketDTO> {
