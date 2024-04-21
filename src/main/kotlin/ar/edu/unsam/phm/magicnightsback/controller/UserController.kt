@@ -26,6 +26,9 @@ class UserController {
     @Autowired
     lateinit var userService: UserService
 
+    @Autowired
+    lateinit var commentService: CommentService
+
     @GetMapping("/validate")
     @Operation(summary = "Valida el tipo de usuario")
     fun isAdmin(@RequestParam(required = true) userId: Long):Boolean{
@@ -46,12 +49,12 @@ class UserController {
     fun deleteUserFriend(@PathVariable userId: Long, @PathVariable friendId: Long): List<FriendDTO> {
         return userService.deleteUserFriend(userId, friendId)
     }
-//
-//    @GetMapping("/{id}/comments")
-//    fun getUserComments(@PathVariable id: Long): List<CommentDTO> {
-//        return userService.getUserComments(id)
-//    }
-//
+
+    @GetMapping("/{userId}/comments")
+    fun getUserComments(@PathVariable userId: Long): List<CommentDTO> {
+        return commentService.getUserComments(userId)
+    }
+
 
 //
 //    @PutMapping("/{id}/create-comment")
