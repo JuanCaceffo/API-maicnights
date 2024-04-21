@@ -67,7 +67,6 @@ class Show(
     fun totalTicketsSold() = getSeatTypes().sumOf { totalTicketsSoldOf(it) }
     fun totalPendingAttendees() = pendingAttendeesIds.size
     fun rentability() = (((totalSales() - baseCost()) / totalSales()) * 100).coerceAtLeast(0.0)
-
     fun changeRentability(newShowStatus: Rentability) {
         this.rentabilityType = newShowStatus
     }
