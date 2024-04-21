@@ -1,11 +1,14 @@
 package ar.edu.unsam.phm.magicnightsback.boostrap
 import ar.edu.unsam.phm.magicnightsback.domain.User
+import ar.edu.unsam.phm.magicnightsback.dto.toDTO
+import ar.edu.unsam.phm.magicnightsback.dto.toFriendDTO
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import kotlin.jvm.optionals.getOrNull
+
 
 @Service
 class UserBoostrap : InitializingBean {
@@ -83,14 +86,14 @@ class UserBoostrap : InitializingBean {
         }
     )
 
-        fun addFriends() {
-        val pablo = users[0]
-        val juan = users[1]
-        val sol = users[2]
-        val denise = users[3]
-        val carolina = users[4]
-        val marcos = users[5]
-        val ana = users[6]
+    fun addFriends() {
+        val pablo = userRepository.findById(1).get()
+        val juan = userRepository.findById(2).get()
+        val sol = userRepository.findById(3).get()
+        val denise = userRepository.findById(4).get()
+        val carolina = userRepository.findById(5).get()
+        val marcos = userRepository.findById(6).get()
+        val ana = userRepository.findById(7).get()
 
         pablo.apply {
             addFriend(juan)
@@ -139,6 +142,9 @@ class UserBoostrap : InitializingBean {
             addFriend(carolina)
         }
 
+        val usersWithFriends = mutableListOf<User>(pablo, juan, sol, denise, carolina, marcos, ana)
+
+        userRepository.saveAll(usersWithFriends)
     }
 
     fun addCredits() {
@@ -152,16 +158,16 @@ class UserBoostrap : InitializingBean {
                 it.id = userInRepo.id
             } else {
                 userRepository.save(it)
-                println("Band ${it.name} created")
+                println("User ${it.name} created")
             }
         }
     }
 
     override fun afterPropertiesSet() {
         println("User creation process starts")
-        addFriends()
         addCredits()
         createUsers()
+        addFriends()
         println("User creation process ends")
     }
 }
