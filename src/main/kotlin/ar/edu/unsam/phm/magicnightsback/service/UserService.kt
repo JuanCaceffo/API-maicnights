@@ -66,10 +66,16 @@ class UserService {
         return user.friends.map { userFriend -> userFriend.toFriendDTO() }
     }
 
+    @Transactional
+    fun deleteUserFriend(userId: Long, friendId: Long): List<FriendDTO> {
+        val user = findById(userId)
+        val friendToDelete = findById(friendId)
 
-    //    fun deleteUserFriend(userId: Long, friendId: Long) {
-//        this.userRepository.getById(userId).removeFriendById(friendId)
-//    }
+        user.removeFriend(friendToDelete)
+        userRepository.save(user)
+
+        return user.friends.map { it.toFriendDTO() }
+}
 //
 //    fun validateUser(userId: Long): Boolean {
 //        return this.userRepository.getById(userId).isAdmin
