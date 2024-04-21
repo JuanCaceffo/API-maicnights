@@ -76,11 +76,11 @@ class UserService {
 
         return user.friends.map { it.toFriendDTO() }
 }
-//
-//    fun validateUser(userId: Long): Boolean {
-//        return this.userRepository.getById(userId).isAdmin
-//    }
-//
+
+    fun validateUser(userId: Long): Boolean {
+        return findById(userId).isAdmin
+    }
+
     fun getUserCredit(userId: Long): Double {
         val user = findById(userId)
 

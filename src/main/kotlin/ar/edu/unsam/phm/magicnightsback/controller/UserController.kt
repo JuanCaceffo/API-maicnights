@@ -26,11 +26,11 @@ class UserController {
     @Autowired
     lateinit var userService: UserService
 
-//    @GetMapping("/validate")
-//    @Operation(summary = "Valida el tipo de usuario")
-//    fun isAdmin(@RequestParam(required = true) userId: Long):Boolean{
-//        return userService.validateUser(userId)
-//    }
+    @GetMapping("/validate")
+    @Operation(summary = "Valida el tipo de usuario")
+    fun isAdmin(@RequestParam(required = true) userId: Long):Boolean{
+        return userService.validateUser(userId)
+    }
 //
 //    @GetMapping("/{userId}/purchased_tickets")
 //    @Operation(summary = "Permite obtener todos los tickets por funcion comprados por el usuario")
