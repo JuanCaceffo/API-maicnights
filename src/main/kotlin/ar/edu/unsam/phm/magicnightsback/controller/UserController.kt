@@ -1,9 +1,8 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
-import AuthenticationRequest
 import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.error.UserError
-//import ar.edu.unsam.phm.magicnightsback.dto.UserDTO
+import ar.edu.unsam.phm.magicnightsback.dto.UserDTO
 //import ar.edu.unsam.phm.magicnightsback.dto.FriendDTO
 //import ar.edu.unsam.phm.magicnightsback.dto.TicketCreateDTO
 //import ar.edu.unsam.phm.magicnightsback.error.FacilityError
@@ -70,7 +69,7 @@ class UserController {
         ]
     )
     @PostMapping("/login")
-    fun authenticate(@RequestBody request: AuthenticationRequest): Long {
+    fun authenticate(@RequestBody request: LoginUserDTO): Long {
         val user = userService.authenticate(request.username, request.password)
         return user.id
     }
@@ -81,12 +80,14 @@ class UserController {
 //    fun getUser(@PathVariable id: Long): UserDTO {
 //        return userService.getUser(id)
 //    }
-//
-//    @PutMapping("/{id}/update")
-//    @Operation(summary = "Permite actualizar la data del usuario")
-//    fun updateUser(@PathVariable id: Long, @RequestBody user: UserDTO) {
-//        return userService.updateUser(id, user)
-//    }
+
+    @PutMapping("/{id}/update")
+    @Operation(summary = "Permite actualizar la data del usuario")
+    fun updateUser(@PathVariable id: Long, @RequestBody user: UserDTO): UserDTO {
+        val updatedUser = userService.updateUser(id, user)
+
+        return updatedUser.toDTO()
+    }
 //
 //    @GetMapping("/{id}/credit")
 //    @Operation(summary = "Permite obtener los creditos del usuario")

@@ -97,16 +97,18 @@ class UserService {
 
         return user.credit
     }
-//
-//    fun updateUser(id: Long, loginUser: UserDTO) {
-//        val userToUpdate = this.userRepository.getById(id)
-//
-//        userToUpdate.name = loginUser.name
-//        userToUpdate.surname = loginUser.surname
-//
-//        this.userRepository.update(userToUpdate)
-//    }
-//
+
+    fun updateUser(id: Long, userDTO: UserDTO): User {
+        val user = userRepository.findById(id)
+            .orElseThrow { EntityNotFoundException("User not found with id: $id") }
+
+        user.name = userDTO.name
+        user.surname = userDTO.surname
+
+        userRepository.save(user)
+
+        return user
+    }
 
 
 //        val user = userRepository.getById(id)
