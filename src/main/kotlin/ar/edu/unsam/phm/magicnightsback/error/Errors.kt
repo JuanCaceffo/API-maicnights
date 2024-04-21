@@ -23,9 +23,10 @@ object ShowError {
     const val MSG_SETS_UNAVILABLES = "Excedio la cantidad de asientos disponibles"
     const val TICKET_CART_NOT_FOUND = "No se encontró la fecha en el show especificado"
 }
-object showDateError{
+object ShowDateError{
     const val EXCEEDED_CAPACITY = "Excedio la capacidad maxima de asientos para esta ubicacion"
     const val MSG_DATE_NOT_FOUND = "La fecha que intento buscar no existe"
+    const val DATE_ALREADY_EXISTS = "La fecha que desea agregar ya existe"
     const val NEW_SHOW_INVALID_CONDITIONS = "Las condiciones no permiten agregar una nueva fecha para el show"
 
 }

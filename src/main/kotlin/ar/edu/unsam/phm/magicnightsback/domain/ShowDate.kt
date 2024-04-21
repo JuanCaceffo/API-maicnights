@@ -1,6 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import ar.edu.unsam.phm.magicnightsback.error.showDateError
+import ar.edu.unsam.phm.magicnightsback.error.ShowDateError
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -26,7 +26,7 @@ class ShowDate(
     }
 
     fun reserveSeat(seat: Seat, quantity: Int) {
-        quantity.throwIfGreaterThan(availableSeatsOf(seat),showDateError.EXCEEDED_CAPACITY)
+        quantity.throwIfGreaterThan(availableSeatsOf(seat),ShowDateError.EXCEEDED_CAPACITY)
         reservedSeats[seat.name] = (reservedSeats[seat.name]!! + quantity)
     }
 
