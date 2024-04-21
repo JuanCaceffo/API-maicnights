@@ -50,10 +50,10 @@ fun <T> validateOptionalIsNotNull(optional: Optional<T>):T{
     return optional.get()
 }
 
-fun parseLocalDate(dateString: String): LocalDate {
-    val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
-    return LocalDate.parse(dateString, formatter)
-}
+//fun parseLocalDate(dateString: String): LocalDate {
+//    val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+//    return LocalDate.parse(dateString, formatter)
+//}
 
 fun parseLocalDateTime(dateString: String): LocalDateTime {
     val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
