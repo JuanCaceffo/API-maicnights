@@ -12,7 +12,6 @@ import ar.edu.unsam.phm.magicnightsback.error.UserError
 import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Autowired
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
-import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
 
 @Service
@@ -33,8 +32,7 @@ class UserService {
     fun findByUsername(username: String): User = validateOptionalIsNotNull(userRepository.findByUsername(username))
 
     fun authenticate(username: String, password: String): User {
-        val optionalLoginUser = userRepository.findByUsername(username)
-        val user = optionalLoginUser.orElseThrow { AuthenticationException(UserError.BAD_CREDENTIALS) }
+        val user = validateOptionalIsNotNull(userRepository.findByUsername(username), "No se encontró un usuario con username '${username}'.")
 
         if (user.password != password) {
             throw AuthenticationException(UserError.BAD_CREDENTIALS)
@@ -43,7 +41,7 @@ class UserService {
         return user
     }
     @Transactional(Transactional.TxType.NEVER)
-    fun getUserById(userId: Long) = validateOptionalIsNotNull(userRepository.findById(userId), "El usuario de id ${userId} no fue encontrado")
+    fun getUserById(userId: Long) = validateOptionalIsNotNull(userRepository.findById(userId), "El usuario de id ${userId} no fue encontrado.")
 
     /*Mapeo todos los tickets en uno solo por showDate juntando el precio total*/
     fun getTicketsGroupedByShowDate(user: User, ticketList: List<Ticket>): List<TicketDTO> {
@@ -89,8 +87,7 @@ class UserService {
 //
 
     fun updateUserCredit(userId: Long, creditToAdd: Double): Double {
-        val user = userRepository.findById(userId)
-            .orElseThrow { EntityNotFoundException("User not found with id: $userId") }
+        val user = validateOptionalIsNotNull(userRepository.findById(userId) , "El usuario con id '${userId}' no fue encontrado.")
 
         user.credit += creditToAdd
         userRepository.save(user)
@@ -98,9 +95,8 @@ class UserService {
         return user.credit
     }
 
-    fun updateUser(id: Long, userDTO: UserDTO): User {
-        val user = userRepository.findById(id)
-            .orElseThrow { EntityNotFoundException("User not found with id: $id") }
+    fun updateUser(userId: Long, userDTO: UserDTO): User {
+        val user = validateOptionalIsNotNull(userRepository.findById(userId), "El usuario con id '${userId}' no fue encontrado.")
 
         user.name = userDTO.name
         user.surname = userDTO.surname
@@ -130,8 +126,8 @@ class UserService {
 //
 //
 
-    fun validateAdmin(id: Long) {
-        val user = validateOptionalIsNotNull(userRepository.findById(id))
+    fun validateAdmin(userId: Long) {
+        val user = validateOptionalIsNotNull(userRepository.findById(userId), "El usuario con id '${userId}' no fue encontrado.")
         if (!user.isAdmin) throw AuthenticationException(UserError.USER_IS_NOT_ADMIN)
     }
 
