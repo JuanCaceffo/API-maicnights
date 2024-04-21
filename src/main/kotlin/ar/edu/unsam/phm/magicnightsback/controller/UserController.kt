@@ -88,13 +88,13 @@ class UserController {
 
         return updatedUser.toDTO()
     }
-//
-//    @GetMapping("/{id}/credit")
-//    @Operation(summary = "Permite obtener los creditos del usuario")
-//    fun getUserCredit(@PathVariable id: Long): Double {
-//        return userService.getUserCredit(id)
-//    }
-//
+
+    @GetMapping("/{id}/credit")
+    @Operation(summary = "Permite obtener los creditos del usuario")
+    fun getUserCredit(@PathVariable id: Long): Double {
+        return userService.getUserCredit(id)
+    }
+
 
     @PutMapping("/{id}/add_credit")
     @Operation(summary = "Permite actualizar los creditos del usuario")

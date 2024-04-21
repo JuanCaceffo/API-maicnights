@@ -1,7 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
 //import ar.edu.unsam.phm.magicnightsback.domain.Comment
-import ar.edu.unsam.phm.magicnightsback.domain.Comment
 import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.domain.validateOptionalIsNotNull
@@ -32,7 +31,7 @@ class UserService {
     fun findByUsername(username: String): User = validateOptionalIsNotNull(userRepository.findByUsername(username))
 
     fun authenticate(username: String, password: String): User {
-        val user = validateOptionalIsNotNull(userRepository.findByUsername(username), "No se encontró un usuario con username '${username}'.")
+        val user = findByUsername(username)
 
         if (user.password != password) {
             throw AuthenticationException(UserError.BAD_CREDENTIALS)
@@ -41,7 +40,7 @@ class UserService {
         return user
     }
     @Transactional(Transactional.TxType.NEVER)
-    fun getUserById(userId: Long) = validateOptionalIsNotNull(userRepository.findById(userId), "El usuario de id ${userId} no fue encontrado.")
+    fun getUserById(userId: Long) = findById(userId)
 
     /*Mapeo todos los tickets en uno solo por showDate juntando el precio total*/
     fun getTicketsGroupedByShowDate(user: User, ticketList: List<Ticket>): List<TicketDTO> {
@@ -66,14 +65,8 @@ class UserService {
 //        return friends.map { userFriend -> userFriend.toFriendDTO() }
 //    }
 //
-//
-//    fun loginUser(loginUser: LoginUserDTO): Long {
-//        return this.userRepository.getLoginUser(loginUser)
-//            ?: throw AuthenticationException(UserError.BAD_CREDENTIALS)
-//    }
-//
 
-//    fun deleteUserFriend(userId: Long, friendId: Long) {
+    //    fun deleteUserFriend(userId: Long, friendId: Long) {
 //        this.userRepository.getById(userId).removeFriendById(friendId)
 //    }
 //
@@ -81,13 +74,15 @@ class UserService {
 //        return this.userRepository.getById(userId).isAdmin
 //    }
 //
-//    fun getUserCredit(id: Long): Double {
-//        return this.userRepository.getById(id).credit
-//    }
-//
+    fun getUserCredit(userId: Long): Double {
+        val user = findById(userId)
+
+        return user.credit
+    }
+
 
     fun updateUserCredit(userId: Long, creditToAdd: Double): Double {
-        val user = validateOptionalIsNotNull(userRepository.findById(userId) , "El usuario con id '${userId}' no fue encontrado.")
+        val user = findById(userId)
 
         user.credit += creditToAdd
         userRepository.save(user)
@@ -96,7 +91,7 @@ class UserService {
     }
 
     fun updateUser(userId: Long, userDTO: UserDTO): User {
-        val user = validateOptionalIsNotNull(userRepository.findById(userId), "El usuario con id '${userId}' no fue encontrado.")
+        val user = findById(userId)
 
         user.name = userDTO.name
         user.surname = userDTO.surname
@@ -127,7 +122,7 @@ class UserService {
 //
 
     fun validateAdmin(userId: Long) {
-        val user = validateOptionalIsNotNull(userRepository.findById(userId), "El usuario con id '${userId}' no fue encontrado.")
+        val user = findById(userId)
         if (!user.isAdmin) throw AuthenticationException(UserError.USER_IS_NOT_ADMIN)
     }
 
