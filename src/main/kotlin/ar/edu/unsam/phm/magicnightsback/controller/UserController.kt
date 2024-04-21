@@ -37,10 +37,10 @@ class UserController {
 //    fun getUserPurchasedTickets(@PathVariable userId: Long): List<PurchasedTicketDTO> {
 //        return userService.getUserPurchasedTickets(userId)
 //    }
-//    @GetMapping("/{id}/friends")
-//    fun getUserFriends(@PathVariable id: Long): List<FriendDTO> {
-//        return userService.getUserFriends(id)
-//    }
+    @GetMapping("/{id}/friends")
+    fun getUserFriends(@PathVariable id: Long): List<FriendDTO> {
+        return userService.getUserFriends(id)
+    }
 //
 //    @DeleteMapping("/{userId}/remove-friend/{friendId}")
 //    fun deleteUserFriend(@PathVariable userId: Long, @PathVariable friendId: Long) {
@@ -74,19 +74,20 @@ class UserController {
         return user.id
     }
 
-//
-//    @GetMapping("/{id}/data")
-//    @Operation(summary = "Permite obtener la data del perfil del usuario")
-//    fun getUser(@PathVariable id: Long): UserDTO {
-//        return userService.getUser(id)
-//    }
+
+    @GetMapping("/{id}/data")
+    @Operation(summary = "Permite obtener la data del perfil del usuario")
+    fun getUser(@PathVariable id: Long): UserDTO {
+        val user = userService.findById(id)
+        return user.toDTO()
+    }
 
     @PutMapping("/{id}/update")
     @Operation(summary = "Permite actualizar la data del usuario")
     fun updateUser(@PathVariable id: Long, @RequestBody user: UserDTO): UserDTO {
-        val updatedUser = userService.updateUser(id, user)
+        val updatedUserDTO = userService.updateUser(id, user)
 
-        return updatedUser.toDTO()
+        return updatedUserDTO
     }
 
     @GetMapping("/{id}/credit")

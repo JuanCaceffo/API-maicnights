@@ -60,11 +60,12 @@ class UserService {
 //        return getTicketsGroupedByShowDate(user, user.tickets).map { it.toPurchasedTicketDTO() }
 //    }
 //
-//    fun getUserFriends(id: Long): List<FriendDTO> {
-//        val friends = this.userRepository.getFriends(id)
-//        return friends.map { userFriend -> userFriend.toFriendDTO() }
-//    }
-//
+    @Transactional
+    fun getUserFriends(id: Long): List<FriendDTO> {
+        val user: User = findById(id)
+        return user.friends.map { userFriend -> userFriend.toFriendDTO() }
+    }
+
 
     //    fun deleteUserFriend(userId: Long, friendId: Long) {
 //        this.userRepository.getById(userId).removeFriendById(friendId)
@@ -90,7 +91,7 @@ class UserService {
         return user.credit
     }
 
-    fun updateUser(userId: Long, userDTO: UserDTO): User {
+    fun updateUser(userId: Long, userDTO: UserDTO): UserDTO {
         val user = findById(userId)
 
         user.name = userDTO.name
@@ -98,7 +99,7 @@ class UserService {
 
         userRepository.save(user)
 
-        return user
+        return user.toDTO()
     }
 
 

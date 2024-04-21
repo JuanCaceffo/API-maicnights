@@ -29,4 +29,3 @@ fun User.toDTO(): UserDTO {
         this.dni
     )
 }
-
