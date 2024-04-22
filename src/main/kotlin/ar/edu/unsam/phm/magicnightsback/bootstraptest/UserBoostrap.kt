@@ -1,13 +1,15 @@
-package ar.edu.unsam.phm.magicnightsback.boostrap
+package ar.edu.unsam.phm.magicnightsback.bootstraptest
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
+import org.springframework.context.annotation.Profile
+import org.springframework.stereotype.Component
 import java.time.LocalDate
 import kotlin.jvm.optionals.getOrNull
 
-@Service
+@Component
+@Profile("app")
 class UserBoostrap : InitializingBean {
     @Autowired
     lateinit var userRepository: UserRepository

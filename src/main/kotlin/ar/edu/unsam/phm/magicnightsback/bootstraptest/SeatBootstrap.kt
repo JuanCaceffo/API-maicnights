@@ -1,4 +1,4 @@
-package ar.edu.unsam.phm.magicnightsback.boostrap
+package ar.edu.unsam.phm.magicnightsback.bootstraptest
 
 import ar.edu.unsam.phm.magicnightsback.domain.Seat
 import ar.edu.unsam.phm.magicnightsback.domain.SeatTypes
@@ -6,10 +6,12 @@ import ar.edu.unsam.phm.magicnightsback.repository.SeatRepository
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import kotlin.jvm.optionals.getOrNull
 
 @Component
+@Profile("app")
 class SeatBootstrap : InitializingBean {
     @Autowired
     lateinit var seatRepository: SeatRepository

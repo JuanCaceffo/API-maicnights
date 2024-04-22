@@ -1,18 +1,19 @@
-package ar.edu.unsam.phm.magicnightsback.boostrap
+package ar.edu.unsam.phm.magicnightsback.bootstraptest
 
 import ar.edu.unsam.phm.magicnightsback.domain.Show
-import ar.edu.unsam.phm.magicnightsback.domain.ShowDate
 import ar.edu.unsam.phm.magicnightsback.repository.BandRepository
 import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.DependsOn
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 
 
 @Component
+@Profile("app")
 @DependsOn("bandBootstrap", "facilityBootstrap")
 class ShowBoostrap(
     @Autowired

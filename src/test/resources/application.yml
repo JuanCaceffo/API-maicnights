@@ -1,4 +1,8 @@
 spring:
+  profiles:
+    exclude: app
+    active: test
+
   h2:
     console:
       enabled: true
@@ -11,7 +15,6 @@ spring:
     driverClassName: org.h2.Driver
 
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     open-in-view: false
     show-sql: true
     properties:

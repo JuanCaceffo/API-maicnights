@@ -1,25 +1,23 @@
-package ar.edu.unsam.phm.magicnightsback.boostrap
+package ar.edu.unsam.phm.magicnightsback.bootstraptest
 
 //import ar.edu.unsam.phm.magicnightsback.domain.Comment
 //import ar.edu.unsam.phm.magicnightsback.domain.StadiumSeatType
 //import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.domain.Comment
-import ar.edu.unsam.phm.magicnightsback.repository.BandRepository
 import ar.edu.unsam.phm.magicnightsback.repository.CommentRepository
 import ar.edu.unsam.phm.magicnightsback.service.ShowService
 import ar.edu.unsam.phm.magicnightsback.service.UserService
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.DependsOn
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 //import org.springframework.context.annotation.DependsOn
 //import org.springframework.core.annotation.Order
 //import org.springframework.stereotype.Component
-import org.springframework.stereotype.Service
-
-import kotlin.jvm.optionals.getOrNull
 
 @Component
+@Profile("app")
 @DependsOn("userBoostrap", "showBoostrap")
 class CommentBoostrap(
     @Autowired
