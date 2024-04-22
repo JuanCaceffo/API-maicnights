@@ -37,22 +37,7 @@ class ShowControllerTest(@Autowired val mockMvc: MockMvc) {
     @Autowired
     lateinit var bandRepository: BandRepository
 
-//    lateinit var show: Show
-//    lateinit var band: Band
-//    lateinit var theater: Theater
-//    lateinit var admin: User
-//    lateinit var normalUser: User
-
     val mapper = ObjectMapper()
-
-//    @BeforeEach
-//    fun init() {
-//        admin = User("admin", "amin", "admin", "asdf").apply { isAdmin = true }
-//        normalUser = User("user", "user", "user", "asdf")
-//        theater = Theater("test_theater", Point(1.0, 1.0))
-//        band = Band("test_band")
-//        show = Show("test_show", band, theater)
-//    }
 
     @Test
     fun `The initial values of the DB are as expected`(){
@@ -73,17 +58,17 @@ class ShowControllerTest(@Autowired val mockMvc: MockMvc) {
         val newDate = """
             {
                 "showId": 1,
-                "userId": 2,                
+                "userId": 1,                
                 "fecha": "2024-04-18T12:30:45Z",                
             }
         """.trimIndent()
 
-//        mockMvc.perform(
-//            MockMvcRequestBuilders
-//                .post("/api/admin_dashboard/show/new-show-date")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(mapper.writeValueAsString(newDate))
-//        )
-//            .andExpect(status().is4xxClientError)
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .post("/api/admin_dashboard/show/new-show-date")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(newDate))
+        )
+            .andExpect(status().is4xxClientError)
     }
 }
