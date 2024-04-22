@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @SpringBootTest
-@ActiveProfiles("test")
 @AutoConfigureMockMvc
 @DisplayName("Show Controller Tests")
 class ShowControllerTest(@Autowired val mockMvc: MockMvc) {
