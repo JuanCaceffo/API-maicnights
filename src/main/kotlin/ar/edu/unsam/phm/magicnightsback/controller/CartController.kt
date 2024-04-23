@@ -34,25 +34,25 @@ class CartController(
         return cartService.getTicketsCart(userId)
     }
 
-//    @PutMapping("/{userId}/remove-reserved-tickets")
-//    @Operation(summary = "Permite eliminar todos los tiquets reservados para un usuario")
-//    fun removeReservedTickets(@PathVariable userId: Long){
-//        cartService.removeReserveTickets(userId)
-//    }
+    @DeleteMapping("/{userId}/remove-reserved-tickets")
+    @Operation(summary = "Permite eliminar todos los tiquets reservados para un usuario")
+    fun removeReservedTickets(@PathVariable userId: Long){
+        cartService.removeReserveTickets(userId)
+    }
 
-//    @PutMapping("/{userId}/purchase-reserved-tickets")
-//    @Operation(summary = "Permite comprar todos los tickets reservados para un usuario")
-//    @ApiResponses(
-//        value = [
-//            ApiResponse(responseCode = "200", description = "Ok"),
-//            ApiResponse(responseCode = "400", description = UserError.MSG_NOT_ENOUGH_CREDIT),
-//        ]
-//    )
-//    fun purchaseReservedTickets(@PathVariable userId: Long){
-//        cartService.buyReservedTickets(userId)
-//    }
+    @PatchMapping("/{userId}/purchase-reserved-tickets")
+    @Operation(summary = "Permite comprar todos los tickets reservados para un usuario")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Ok"),
+            ApiResponse(responseCode = "400", description = UserError.MSG_NOT_ENOUGH_CREDIT),
+        ]
+    )
+    fun purchaseReservedTickets(@PathVariable userId: Long){
+        cartService.buyReservedTickets(userId)
+    }
 
-    @PostMapping("/{userId}/reserve-tickets")
+    @PatchMapping("/{userId}/reserve-tickets")
     @Operation(summary = "Permite reservar x cantidad de tiquets de un show para una funcion de ese show y para un tipo de asiento")
     @ApiResponses(
         value = [

@@ -40,16 +40,21 @@ class CartService(
         cart.reserveTicket(Ticket(show, showDate, seat, ticketData.seatPrice,ticketData.quantity))
         cartRepo.save(cart)
     }
-//
-//    fun removeReserveTickets(userId: Long) {
-//        val cart = cartRepo.getCardFor(userId)
-//        cart.removeTickets()
-//    }
-//
-//    fun buyReservedTickets(userId: Long) {
-//        val cart = cartRepo.getCardFor(userId)
-//        cart.buyReservedTickets()
-//    }
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    fun removeReserveTickets(userId: Long) {
+        val cart = getCartByUserId(userId)
+        cart.removeTickets()
+        cartRepo.save(cart)
+    }
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    fun buyReservedTickets(userId: Long) {
+        val cart = getCartByUserId(userId)
+        cart.buyReservedTickets()
+        cartRepo.save(cart)
+    }
+
 
     @Transactional(Transactional.TxType.NEVER)
     fun reservedTicketsPrice(userId: Long): Double {
