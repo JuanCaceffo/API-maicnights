@@ -2,26 +2,40 @@ package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
-import ar.edu.unsam.phm.magicnightsback.error.showError
+//import ar.edu.unsam.phm.magicnightsback.error.showError
 import ar.edu.unsam.phm.magicnightsback.error.UserError
-import ar.edu.unsam.phm.magicnightsback.repository.Iterable
+import jakarta.persistence.*
+//import ar.edu.unsam.phm.magicnightsback.repository.Iterable
 import java.time.LocalDate
 
+@Entity
+@Table(name = "spectator")
 class User(
+    @Column(length = 100)
     var name: String,
+    @Column(length = 100)
     var surname: String,
+    @Column(length = 100)
     val username: String,
-    val birthday: LocalDate,
-    val dni: Int,
+    @Column(length = 20)
     var password: String,
-    //TODO: analizar la posibilidad de un strategy de roles
-    var isAdmin: Boolean = false,
-    val profileImage: String = "default.jpg"
-) : Iterable() {
+) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long = 0
+
+    var birthday: LocalDate = LocalDate.now()
+    var dni: Int = 0
+    var isAdmin: Boolean = false
+
+    @Column(length = 100)
+    var profileImgUrl: String = "default.jpg"
+
+    @OneToMany(fetch = FetchType.LAZY)
     val friends = mutableListOf<User>()
-    val reservedTickets = mutableListOf<Ticket>()
+
+    @OneToMany(fetch = FetchType.LAZY)
     val tickets = mutableListOf<Ticket>()
-    val comments = mutableListOf<Comment>()
     var credit = 0.0
 
     fun addFriend(user: User) {
@@ -34,23 +48,11 @@ class User(
         friends.remove(user)
     }
 
-    fun removeFriendById(id: Long) {
-        friends.removeIf { friend -> friend.id == id }
-    }
-
-    fun addComment(comment: Comment, show: Show) {
-        validComment(show)
-        comments.add(comment)
-    }
-
-    private fun validComment(show: Show){
-        if (!show.canBeCommented(this)) throw BusinessException(showError.USER_CANT_COMMENT)
-    }
     fun isMyFriend(user: User) = friends.contains(user)
 
-    fun removeComment(comment: Comment) {
-        comments.remove(comment)
-    }
+//    private fun validComment(show: Show){
+//        if (!show.canBeCommented(this)) throw BusinessException(showError.USER_CANT_COMMENT)
+//    }
 
     fun addTicket(ticket: Ticket) {
         ticket.showDate.addAttendee(this)
@@ -68,16 +70,7 @@ class User(
 
     fun age(): Int = birthday.calculateAge()
 
-    fun decreaseCredits(qunatity: Double){
-        credit = (credit - qunatity).throwErrorIfNegative(BusinessException(UserError.MSG_NOT_ENOUGH_CREDIT)).toDouble()
-    }
-
-    ///// VALIDATORS ///////////////////////////////////////////
-    override fun validSearchCondition(value: String): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    fun throwIfNotAdmin(msg: String) {
-        if (!isAdmin) throw AuthenticationException(msg)
+    fun decreaseCredits(amount: Double) {
+        credit = (credit - amount).throwErrorIfNegative(BusinessException(UserError.MSG_NOT_ENOUGH_CREDIT)).toDouble()
     }
 }

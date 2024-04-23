@@ -1,9 +1,16 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import ar.edu.unsam.phm.magicnightsback.repository.Iterable
+import jakarta.persistence.*
 
-data class Band(val name: String, val cost: Double) : Iterable() {
-    override fun validSearchCondition(value: String): Boolean {
-        TODO("Not yet implemented")
-    }
+@Entity
+data class Band(
+    @Column(length = 40)
+    var name: String
+) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null
+
+    @Column
+    var cost: Double = 0.0
 }

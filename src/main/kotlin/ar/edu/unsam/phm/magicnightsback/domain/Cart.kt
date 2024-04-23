@@ -1,20 +1,25 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import ar.edu.unsam.phm.magicnightsback.repository.Iterable
+import jakarta.persistence.*
 
-class Cart(val user: User): Iterable() {
+@Entity
+class Cart(@ManyToOne val user: User) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long = 0
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val reservedTickets: MutableList<Ticket> = mutableListOf()
-
 
     fun getAllTickets() = reservedTickets
 
     fun reserveTicket(ticket: Ticket) {
-        ticket.showDate.reserveSeat(ticket.seatType, ticket.quantity)
+        ticket.showDate.reserveSeat(ticket.seat, ticket.quantity)
         reservedTickets.add(ticket)
     }
 
     fun removeTickets(){
-        reservedTickets.forEach { ticket -> ticket.showDate.releaseSeat(ticket.seatType,ticket.quantity) }
+        reservedTickets.forEach { ticket -> ticket.showDate.releaseSeat(ticket.seat,ticket.quantity) }
         reservedTickets.clear()
     }
 
@@ -27,7 +32,4 @@ class Cart(val user: User): Iterable() {
     }
 
     fun totalPrice() = reservedTickets.sumOf { ticket -> ticket.price() }
-    override fun validSearchCondition(value: String): Boolean {
-        TODO("Not yet implemented")
-    }
 }

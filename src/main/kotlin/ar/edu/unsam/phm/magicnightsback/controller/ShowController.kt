@@ -2,96 +2,125 @@ package ar.edu.unsam.phm.magicnightsback.controller
 
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.dto.*
-import ar.edu.unsam.phm.magicnightsback.error.UserError
+import ar.edu.unsam.phm.magicnightsback.error.ShowDateError
+import ar.edu.unsam.phm.magicnightsback.service.CommentService
 import ar.edu.unsam.phm.magicnightsback.service.ShowService
+import ar.edu.unsam.phm.magicnightsback.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.bind.annotation.CrossOrigin
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
+
+@CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
 @RestController
-@CrossOrigin(origins = ["*"])
+@RequestMapping("/api")
+@Tag(name = "Show", description = "Show related operations")
 class ShowController {
     @Autowired
     lateinit var showService: ShowService
 
+    @Autowired
+    lateinit var userService: UserService
+
+    @Autowired
+    lateinit var commentService: CommentService
+
     @GetMapping("/shows")
-    @Operation(summary = "Devuelve todos shows los disponibles")
-    fun getAll(@RequestParam(required = false, defaultValue = "-1") userId: Long): List<ShowDTO> {
-        return showService.getAll()
-            .map { it.toShowDTO(showService.getAPossibleUserById(userId)) }
+    @Operation(summary = "Devuelve todos los shows disponibles")
+    fun getAll(@ModelAttribute request: ShowRequest): List<ShowUserDTO> {
+        return showService.findAll(request).map {
+            val commentsStats = commentService.getCommentStadisticsOfShow(it.id)
+            it.toShowUserDTO(commentsStats, userOrNull(request.userId))
+        }
     }
 
     @GetMapping("/show/{id}")
     @Operation(summary = "Devuelve un show según su id")
     fun getShowById(
         @PathVariable id: Long,
-        @RequestParam(required = false, defaultValue = "-1") userId: Long
-    ): ShowDTO {
-        val show = showService.getById(id)
-
-        val comments = show.allCommentsDTO()
-        return show.toShowDTO(showService.getAPossibleUserById(userId),comments)
+        @RequestParam userId: Long = 0
+    ): ShowDetailsDTO {
+        val commentsStats = commentService.getCommentStadisticsOfShow(id)
+        return showService.findById(id).toShowDetailsDTO(commentsStats, userOrNull(userId))
     }
 
-    @GetMapping("/show_dates/{id}")
-    @Operation(summary = "Devuelve los datos por cada fecha de un show según su id")
-    fun getShowDatesById(@PathVariable id: Long, @RequestParam date: String): List<SeatDTO> {
-        val show = showService.getById(id)
+    @GetMapping("/show_dates/{showId}/date/{dateId}")
+    @Operation(summary = "Devuelve los asientos por cada fecha de un show")
+    fun getShowDatesById(
+        @PathVariable showId: Long,
+        @PathVariable dateId: Long
+    ): List<SeatDTO> {
+        val show = showService.findById(showId)
         val seats = show.getSeatTypes()
-        val showDate = show.getShowDate(parseLocalDate(date))
+        val showDate = show.getShowDateById(dateId)
 
-        val toSeatsDto = seats.map {
+        return seats.map {
             SeatDTO(
-                it.toString(),
+                it.name,
                 show.ticketPrice(it),
                 showDate!!.availableSeatsOf(it)
             )
         }
-        return toSeatsDto
     }
 
-    fun parseLocalDate(dateString: String): LocalDate {
-        val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
-        return LocalDate.parse(dateString, formatter)
+    @GetMapping("/admin_dashboard/shows")
+    @Operation(summary = "Devuelve todos los shows disponibles (dashboard Admin)")
+    fun getAllforAdmin(@ModelAttribute request: ShowAdminRequest): List<ShowDTO> {
+        return showService.findAllAdmin(request).map { it.toShowDTO() }
     }
 
+    @GetMapping("/admin_dashboard/show/{id}/stats")
+    @Operation(summary = "Devuelve los stats de un show según su id (dashboard Admin)")
+    fun getShowStatsById(
+        @PathVariable id: Long,
+        @RequestParam(required = true, defaultValue = "-1") userId: Long
+    ): List<ShowStatsDTO> {
+        userService.validateAdmin(userId)
+        val show = showService.findById(id)
+        return show.getAllStats(show)
+    }
 
-//    @GetMapping("/showDates/{id}/")
-//    @Operation(summary = "Devuelve los datos por cada fecha de un show según su id")
-//    fun getShowDatesById(@PathVariable id: Long, @RequestParam date: LocalDate): ShowDateDetailsDTO {
-//        val show = showService.getById(id)
-//        val showDate = show.dates.find { it.date.toLocalDate() == date }
-//            ?: throw NotFoundException("No hay datos disponibles para la fecha proporcionada.")
-//
-//        val dateSeats = DateSeatsDTO(
-//            showDate.date,
-//            show.facility.seats.map { seat ->
-//                SeatsDTO(
-//                    seat.seatType.toString(),
-//                    show.fullTicketPrice(seat.seatType),
-//                    show.getShowDate(showDate.date.toLocalDate())?.availableSeatsOf(seat.seatType) ?: 0
-//                )
-//            }
-//        )
-//
-//        return show.toShowDateDetailsDTO(listOf(dateSeats))
-//    }
+    @GetMapping("/admin_dashboard/show/{showId}")
+    @Operation(summary = "Detalles de un show (dashboard Admin)")
+    fun getShowByIdForAdmin(@PathVariable showId: Long, @RequestParam userId: Long): ShowAdminDetailsDTO {
+        return showService.findByIdAdmin(showId, userId).toShowAdminDetailsDTO()
+    }
 
-    @PostMapping("/show/{showId}/create-date/user/{userId}")
-    @Operation(summary = "Permite agregar un show si el usuario es administrador")
+    @PostMapping("/admin_dashboard/show/new-show-date")
+    @Operation(summary = "Permite agregar una fecha")
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "Ok"),
-            ApiResponse(responseCode = "400", description = UserError.USER_NOT_AUTHORIZED_CREATE_DATE),
+            ApiResponse(responseCode = "400", description = ShowDateError.NEW_SHOW_INVALID_CONDITIONS),
         ]
     )
-    fun createShowDate(@PathVariable showId: Long, @PathVariable userId: Long, @RequestBody date: LocalDateTime) {
-        showService.createShowDate(showId, userId, date)
+    fun createShowDate(@RequestBody body: ShowDateDTO) {
+        showService.createShowDate(body)
+    }
+
+    fun userOrNull(id: Long): User? {
+        return if (id != 0.toLong()) {
+            userService.findById(id)
+        } else {
+            null
+        }
+    }
+
+    class ShowRequest(
+        @RequestParam val userId: Long = 0,
+        @RequestParam val bandKeyword: String = "",
+        @RequestParam val facilityKeyword: String = "",
+        @RequestParam(required = false, defaultValue = "false") val withFriends: Boolean = false
+    )
+
+    class ShowAdminRequest(
+        @RequestParam val userId: Long = 0,
+        @RequestParam val bandKeyword: String = "",
+        @RequestParam val facilityKeyword: String = "",
+    ) {
+        fun toShowRequest(): ShowRequest = ShowRequest(userId, bandKeyword, facilityKeyword)
     }
 }

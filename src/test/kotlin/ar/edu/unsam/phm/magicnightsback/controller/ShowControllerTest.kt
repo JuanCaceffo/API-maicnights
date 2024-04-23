@@ -1,92 +1,72 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
-import ar.edu.unsam.phm.magicnightsback.boostrap.FacilityBoostrap
-import ar.edu.unsam.phm.magicnightsback.boostrap.ShowBoostrap
-import ar.edu.unsam.phm.magicnightsback.boostrap.UserBoostrap
 import ar.edu.unsam.phm.magicnightsback.domain.*
+import ar.edu.unsam.phm.magicnightsback.repository.BandRepository
 import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.kotest.core.annotation.DisplayName
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import org.uqbar.geodds.Point
-import java.time.LocalDate
-
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@DisplayName("Controller de show")
-class ShowControllerTest(
-    @Autowired val mockMvc: MockMvc,
-    @Autowired val userRepository: UserRepository,
-    @Autowired val showsRepository: ShowRepository,
-    @Autowired val facilityRepository: FacilityRepository,
-    @Autowired val facilityBoostrap: FacilityBoostrap,
-    @Autowired val showBoostrap: ShowBoostrap,
-    @Autowired val userBoostrap: UserBoostrap
-) {
-    val baseFacility = Facility(
-        name = "Gran Rex",
-        location = Point(-34.60356, -58.38013),
-        seatStrategy = TheaterStrategy()
-    )
+@DisplayName("Show Controller Tests")
+class ShowControllerTest(@Autowired val mockMvc: MockMvc) {
 
-    val baseShow = Show(
-        "Show de la Vela Puerca", Band("La Vela Puerca", 10000.0), baseFacility
-    )
+    @Autowired
+    lateinit var facilityRepository: FacilityRepository
 
+    @Autowired
+    lateinit var showRepository: ShowRepository
 
-    val baseUser = User(
-        name = "Pablo",
-        surname = "Foglia",
-        username = "MadEscoces",
-        dni = 26765114,
-        birthday = LocalDate.of(1978, 10, 20),
-        password = "asdf"
-    )
+    @Autowired
+    lateinit var userRepository: UserRepository
 
-    @BeforeEach
-    fun init() {
-        userRepository.clear()
-        showsRepository.clear()
-        facilityRepository.clear()
+    @Autowired
+    lateinit var bandRepository: BandRepository
 
-        userRepository.create(baseUser)
-        showsRepository.create(baseShow)
-        facilityRepository.create(baseFacility)
-    }
-
-    @AfterAll
-    fun end() {
-        userBoostrap.afterPropertiesSet()
-        facilityBoostrap.afterPropertiesSet()
-        showBoostrap.afterPropertiesSet()
-    }
+    lateinit var show: Show
+    lateinit var band: Band
+    lateinit var theater: Theater
+    lateinit var admin: User
+    lateinit var normalUser: User
 
     val mapper = ObjectMapper()
 
-    //TODO: agregar caso feliz cuando este implementado
+    @BeforeEach
+    fun init() {
+        admin = User("admin", "amin", "admin", "asdf").apply { isAdmin = true }
+        normalUser = User("user", "user", "user", "asdf")
+        theater = Theater("test_theater", Point(1.0, 1.0))
+        band = Band("test_band")
+        show = Show("test_show", band, theater)
+    }
+
     @Test
     fun `llamada al metodo post para crear una funcion por un usuario que no es admin falla`() {
+        val newDate = """
+            {
+                "showId": 1,
+                "userId": 2,                
+                "fecha": "2024-04-18T12:30:45Z",                
+            }
+        """.trimIndent()
+
         mockMvc.perform(
             MockMvcRequestBuilders
-                .post("/show/0/create-date/user/0")
+                .post("/api/admin_dashboard/show/new-show-date")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString("2024/05/13"))
+                .content(mapper.writeValueAsString(newDate))
         )
-            .andExpect(MockMvcResultMatchers.status().is4xxClientError)
+            .andExpect(status().is4xxClientError)
     }
 }

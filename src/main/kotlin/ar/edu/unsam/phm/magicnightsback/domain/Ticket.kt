@@ -1,18 +1,24 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import ar.edu.unsam.phm.magicnightsback.repository.Iterable
+import jakarta.persistence.*
 
+@Entity
 data class Ticket(
+    @ManyToOne
     val show: Show,
+    @ManyToOne
     val showDate: ShowDate,
-    val seatType: SeatTypes,
+    @ManyToOne
+    val seat: Seat,
+    @Column
     val seatPrice: Double,
+    @Column
     val quantity: Int = 1,
-) : Iterable() {
+) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long = 0
 
     fun price() = seatPrice*quantity
-
-    override fun validSearchCondition(value: String): Boolean {
-        TODO("Not yet implemented")
-    }
 }
+

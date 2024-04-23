@@ -1,41 +1,52 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import ar.edu.unsam.phm.magicnightsback.error.showDateError
+import ar.edu.unsam.phm.magicnightsback.error.ShowDateError
+import jakarta.persistence.*
 import java.time.LocalDateTime
 
+@Entity
 class ShowDate(
+    @Column
     val date: LocalDateTime,
+    @ManyToOne
     val facility: Facility
 ) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long = 0
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val attendees = mutableSetOf<User>()
-    val reservedSeats = facility.seatStrategy.allowedSeatsNames().associateWith { 0 }.toMutableMap()
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    val reservedSeats = facility.validSeatTypes().associateWith { 0 }.toMutableMap()
 
     fun addAttendee(user: User) {
         attendees.add(user)
     }
 
-    fun reserveSeat(seatType: SeatTypes, quantity: Int) {
-        reservedSeats[seatType.name] = (reservedSeats[seatType.name]!! + quantity).throwIfGreaterThan(availableSeatsOf(seatType),showDateError.EXCEEDED_CAPACITY).toInt()
+    fun reserveSeat(seat: Seat, quantity: Int) {
+        quantity.throwIfGreaterThan(availableSeatsOf(seat),ShowDateError.EXCEEDED_CAPACITY)
+        reservedSeats[seat.name] = (reservedSeats[seat.name]!! + quantity)
     }
 
-    fun releaseSeat(SeatType: SeatTypes, quantity: Int) {
-        reservedSeats[SeatType.name] = (reservedSeats[SeatType.name]!! - quantity)
+    fun releaseSeat(seat: Seat, quantity: Int) {
+        reservedSeats[seat.name] = (reservedSeats[seat.name]!! - quantity)
     }
 
-    fun getReservedSeatsOf(seatType: SeatTypes) = reservedSeats[seatType.name] ?: 0
+    fun getReservedSeatsOf(seat: Seat) = reservedSeats[seat.name] ?: 0
 
     fun getAllReservedSeats() = reservedSeats.map { it.value }.sum()
 
-    fun availableSeatsOf(seatType: SeatTypes): Int {
-        return facility.getSeatCapacity(seatType) - getReservedSeatsOf(seatType)
+    fun availableSeatsOf(seat: Seat): Int {
+        return facility.getPlaceCapacity(seat) - getReservedSeatsOf(seat)
     }
 
-    fun totalAvailableSeatsOf(): Int {
+    fun totalAvailableSeats(): Int {
         return facility.getTotalSeatCapacity() - getAllReservedSeats()
     }
 
-    fun datePassed(): Boolean = date.isBefore(LocalDateTime.now()) as Boolean
+    fun datePassed(): Boolean = date.isBefore(LocalDateTime.now())
 
-
-    fun isSoldOut() = totalAvailableSeatsOf() == 0
+    fun isSoldOut() = totalAvailableSeats() == 0
 }

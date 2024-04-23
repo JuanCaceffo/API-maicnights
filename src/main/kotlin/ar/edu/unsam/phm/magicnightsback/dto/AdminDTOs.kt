@@ -1,0 +1,34 @@
+package ar.edu.unsam.phm.magicnightsback.dto
+
+import ar.edu.unsam.phm.magicnightsback.domain.Show
+import ar.edu.unsam.phm.magicnightsback.domain.States
+
+data class ShowAdminDetailsDTO(
+    val showDto: ShowDTO,
+    val totalTicketsSold: Int,
+    val ticketsSoldPerSeatType: List<TicketsPerSeatType>,
+    val totalSales: Double,
+    val showCost: Double,
+    val pendingAttendees: Int
+)
+
+data class ShowStatsDTO (
+    val id: Long,
+    val value: Double,
+    val state: States
+)
+
+data class TicketsPerSeatType(
+    val name: String,
+    val tickets: Int
+)
+
+fun Show.toShowAdminDetailsDTO() = ShowAdminDetailsDTO(
+    this.toShowDTO(),
+    this.totalTicketsSold(),
+    this.getSeatTypes().map { TicketsPerSeatType(it.name, totalTicketsSoldOf(it)) },
+    this.totalSales(),
+    this.baseCost(),
+    this.totalPendingAttendees()
+)
+

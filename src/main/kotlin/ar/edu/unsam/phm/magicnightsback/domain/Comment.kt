@@ -1,23 +1,40 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
+import ar.edu.unsam.phm.magicnightsback.dto.CommentDTO
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
-import ar.edu.unsam.phm.magicnightsback.error.ShowCommentError
-import ar.edu.unsam.phm.magicnightsback.repository.Iterable
+import ar.edu.unsam.phm.magicnightsback.error.CommentError
+import jakarta.persistence.*
 import java.time.LocalDateTime
 
-class Comment(
+@Entity
+data class Comment(
+    @ManyToOne(fetch = FetchType.LAZY)
+    val user: User,
+    @ManyToOne(fetch = FetchType.LAZY)
     val show: Show,
-    val text: String,
-    val rating: Double,
-) : Iterable() {
-    val date: LocalDateTime
+    @Column(length = 400)
+    var text: String = "",
+    val rating: Double = 0.0
+) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null
 
-    init {
-        require(rating in 0.0..5.0) { BusinessException(ShowCommentError.INVALID_RATTING) }
-        date = LocalDateTime.now()
+    var date: LocalDateTime = LocalDateTime.now()
+
+    constructor(user: User, show: Show, dto: CommentDTO) : this(
+        user = user,
+        show = show,
+        text = dto.text,
+        rating = dto.rating
+    ) {
+        id = dto.id
+        require(rating in 0.0..5.0) { throw BusinessException(CommentError.INVALID_RATTING) }
     }
 
-    override fun validSearchCondition(value: String): Boolean {
-        TODO("Not yet implemented")
+    fun canBeDeletedBy( userId: Long) = user.id == userId
+
+    init {
+        if (text.length > 400) text =  text.take(400)
     }
 }
