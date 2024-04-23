@@ -22,11 +22,11 @@ class CartController(
     @Autowired val cartService: CartService
 ) {
 
-//    @GetMapping("/{userId}/reserved-tickets-price")
-//    @Operation(summary = "Permite obtener el precio total de los tickets reservados para un usario")
-//    fun getResrvedTicketsTotalPrice(@PathVariable userId: Long): Double{
-//        return cartService.reservedTicketsPrice(userId)
-//    }
+    @GetMapping("/{userId}/reserved-tickets-price")
+    @Operation(summary = "Permite obtener el precio total de los tickets reservados para un usario")
+    fun getResrvedTicketsTotalPrice(@PathVariable userId: Long): Double{
+        return cartService.reservedTicketsPrice(userId)
+    }
 
     @GetMapping("/{userId}/reserved-tickets")
     @Operation(summary = "Permite obtener los tickets reservados agrupados por funcion para un usuario ")

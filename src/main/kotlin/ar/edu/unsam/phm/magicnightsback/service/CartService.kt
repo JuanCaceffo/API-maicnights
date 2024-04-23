@@ -9,7 +9,6 @@ import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.stereotype.Service
 
 @Service
@@ -21,19 +20,19 @@ class CartService(
 ) {
 
     @Transactional(Transactional.TxType.NEVER)
-    fun getcartByUserId(userId:Long) = validateOptionalIsNotNull(cartRepo.findById(userId),"El carrito para el usuario de id ${userId} no fue encontrado")
+    fun getCartByUserId(userId:Long) = validateOptionalIsNotNull(cartRepo.findById(userId),"El carrito para el usuario de id ${userId} no fue encontrado")
 
 
     @Transactional(Transactional.TxType.NEVER)
     fun getTicketsCart(userId: Long): List<TicketDTO> {
-        val cart = getcartByUserId(userId)
+        val cart = getCartByUserId(userId)
         val user = userService.getUserById(userId)
         return  userService.getTicketsGroupedByShowDate(user,cart.getAllTickets())
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
     fun reserveTicket(userId: Long, ticketData: TicketCreateDTO) {
-        val cart = getcartByUserId(userId)
+        val cart = getCartByUserId(userId)
         val show = validateOptionalIsNotNull(showRepo.findById(ticketData.showId))
         val showDate = show.getShowDate(ticketData.showDateId)
         val seat = show.facility.getPlaceBySeatName(ticketData.seatTypeName.name).seat
@@ -52,11 +51,11 @@ class CartService(
 //        cart.buyReservedTickets()
 //    }
 
-//    fun reservedTicketsPrice(userId: Long): Double {
-//        val cart = cartRepo.getCardFor(userId)
-//
-//        return cart.getAllTickets().sumOf { ticket -> ticket.price() }
-//    }
+    @Transactional(Transactional.TxType.NEVER)
+    fun reservedTicketsPrice(userId: Long): Double {
+        val cart = getCartByUserId(userId)
+        return cart.totalPrice()
+    }
 //
 //    fun getTicketsSize(userId: Long): Int {
 //        val cart = cartRepo.getCardFor(userId)
