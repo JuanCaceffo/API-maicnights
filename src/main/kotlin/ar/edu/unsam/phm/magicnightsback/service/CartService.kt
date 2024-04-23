@@ -61,10 +61,11 @@ class CartService(
         val cart = getCartByUserId(userId)
         return cart.totalPrice()
     }
-//
-//    fun getTicketsSize(userId: Long): Int {
-//        val cart = cartRepo.getCardFor(userId)
-//
-//        return cart.ticketsSize()
-//    }
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun getTicketsSize(userId: Long): Int {
+        val cart = getCartByUserId(userId)
+
+        return cart.ticketsSize()
+    }
 }

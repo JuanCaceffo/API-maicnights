@@ -65,9 +65,9 @@ class CartController(
         cartService.reserveTicket(userId, ticketData)
     }
 
-//    @GetMapping("/{userid}/tickets-reserved-size")
-//    @Operation(summary = "Permite obtener la cantidad de tickets que hay en el carrito de un usuario")
-//    fun getReservedTicketSize(@PathVariable userId: Long): Int{
-//        return cartService.getTicketsSize(userId)
-//    }
+    @GetMapping("/{userId}/tickets-reserved-size")
+    @Operation(summary = "Permite obtener la cantidad de tickets que hay en el carrito de un usuario")
+    fun getReservedTicketSize(@PathVariable userId: Long): Int{
+        return cartService.getTicketsSize(userId)
+    }
 }
