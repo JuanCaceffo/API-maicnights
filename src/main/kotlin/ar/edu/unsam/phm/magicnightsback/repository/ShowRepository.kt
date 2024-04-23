@@ -10,6 +10,6 @@ interface ShowRepository : CrudRepository<Show, Long>, CustomCrudRepository<Show
     @EntityGraph(attributePaths = ["facility", "band", "facility.places", "dates", "dates.reservedSeats", "dates.attendees", "pendingAttendeesIds"])
     override fun findById(id: Long): Optional<Show>
 
-    @EntityGraph(attributePaths = ["facility", "band", "facility.places", "dates"])
+    @EntityGraph(attributePaths = ["facility", "band", "facility.places", "dates", "dates.attendees"])
     override fun findAll(): MutableIterable<Show>
 }
