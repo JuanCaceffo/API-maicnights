@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
 @Component
-@Profile("baseBoostrap")
+@Profile("baseBootstrap")
 class SeatBootstrap : InitializingBean {
     @Autowired
     lateinit var seatRepository: SeatRepository

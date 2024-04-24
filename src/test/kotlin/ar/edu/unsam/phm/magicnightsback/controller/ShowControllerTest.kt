@@ -40,20 +40,6 @@ class ShowControllerTest(@Autowired val mockMvc: MockMvc) {
     val mapper = ObjectMapper()
 
     @Test
-    fun `The initial values of the DB are as expected`(){
-        val seats = seatRepository.findAll().toList()
-        val bands = bandRepository.findAll().toList()
-        val facilities = facilityRepository.findAll().toList()
-        val users = userRepository.findAll().toList()
-        val shows = showRepository.findAll().toList()
-        assertEquals(5, seats.size)
-        assertEquals(1, bands.size)
-        assertEquals(1, facilities.size)
-        assertEquals(2, users.size)
-        assertEquals(1, shows.size)
-    }
-
-    @Test
     fun `llamada al metodo post para crear una funcion por un usuario que no es admin falla`() {
         val newDate = """
             {

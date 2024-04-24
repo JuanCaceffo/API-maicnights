@@ -1,5 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
+import ar.edu.unsam.phm.magicnightsback.domain.ShowDate
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.error.ShowDateError
@@ -97,8 +98,8 @@ class ShowController {
             ApiResponse(responseCode = "400", description = ShowDateError.NEW_SHOW_INVALID_CONDITIONS),
         ]
     )
-    fun createShowDate(@RequestBody body: ShowDateDTO) {
-        showService.createShowDate(body)
+    fun createShowDate(@RequestParam userId: Long, @RequestBody body: ShowDateDTO): ShowDateDTO {
+        return showService.createShowDate(userId, body).toShowDateDTO()
     }
 
     fun userOrNull(id: Long): User? {

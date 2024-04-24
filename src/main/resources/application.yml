@@ -10,7 +10,8 @@ server:
 
 spring:
   profiles:
-    active: baseBoostrap
+    active: baseBootstrap
+    exclude: testBootstrap
 
   #   base de datos posta
   datasource:

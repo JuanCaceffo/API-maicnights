@@ -9,7 +9,7 @@ import java.time.LocalDate
 import kotlin.jvm.optionals.getOrNull
 
 @Component
-@Profile("baseBoostrap")
+@Profile("baseBootstrap")
 class UserBoostrap : InitializingBean {
     @Autowired
     lateinit var userRepository: UserRepository
