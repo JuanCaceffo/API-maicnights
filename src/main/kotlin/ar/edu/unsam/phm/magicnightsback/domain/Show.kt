@@ -84,6 +84,7 @@ class Show(
 
     //Validations
     fun validNewDate(date: LocalDate) {
+        if (date < LocalDate.now()) throw BusinessException(ShowDateError.INVALID_DATE)
         if (dates.any { it.date.toLocalDate() == date }) throw BusinessException(ShowDateError.DATE_ALREADY_EXISTS)
         if (!newDateAvailable(this)) throw BusinessException(ShowDateError.NEW_SHOW_INVALID_CONDITIONS)
     }

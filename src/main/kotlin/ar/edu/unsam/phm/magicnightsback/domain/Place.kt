@@ -5,7 +5,7 @@ import ar.edu.unsam.phm.magicnightsback.error.FacilityError
 import jakarta.persistence.*
 
 @Entity
-data class Place(
+class Place(
     @ManyToOne(fetch = FetchType.EAGER)
     val seat: Seat,
     var capacity: Int = 0
@@ -20,7 +20,7 @@ data class Place(
 }
 
 @Entity
-data class Seat(
+class Seat(
     val type: SeatTypes
 ) {
     @Id
