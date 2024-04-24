@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 import kotlin.jvm.optionals.getOrNull
 
 @Component
-@Profile("app")
+@Profile("baseBoostrap")
 class BandBootstrap: InitializingBean {
     @Autowired
     lateinit var bandRepository: BandRepository

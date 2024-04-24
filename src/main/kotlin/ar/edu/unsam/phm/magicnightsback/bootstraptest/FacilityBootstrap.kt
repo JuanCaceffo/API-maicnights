@@ -13,7 +13,7 @@ import kotlin.jvm.optionals.getOrNull
 
 
 @Component
-@Profile("app")
+@Profile("baseBoostrap")
 @DependsOn("seatBootstrap")
 class FacilityBootstrap(
     @Autowired

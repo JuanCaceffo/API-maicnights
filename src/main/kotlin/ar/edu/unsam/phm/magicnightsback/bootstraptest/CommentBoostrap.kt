@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component
 //import org.springframework.stereotype.Component
 
 @Component
-@Profile("app")
+@Profile("baseBoostrap")
 @DependsOn("userBoostrap", "showBoostrap")
 class CommentBoostrap(
     @Autowired

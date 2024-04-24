@@ -1,7 +1,6 @@
 spring:
   profiles:
-    exclude: app
-    active: test
+    exclude: baseBoostrap
 
   h2:
     console:

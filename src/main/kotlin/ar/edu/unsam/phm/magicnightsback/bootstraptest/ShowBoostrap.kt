@@ -13,7 +13,7 @@ import java.time.LocalDateTime
 
 
 @Component
-@Profile("app")
+@Profile("baseBoostrap")
 @DependsOn("bandBootstrap", "facilityBootstrap")
 class ShowBoostrap(
     @Autowired

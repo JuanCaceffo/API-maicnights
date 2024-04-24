@@ -10,8 +10,8 @@ server:
 
 spring:
   profiles:
-    active: app
-    exclude: test
+    active: baseBoostrap
+
   #   base de datos posta
   datasource:
     url: jdbc:postgresql://0.0.0.0:5432/magicnights
