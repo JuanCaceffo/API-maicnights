@@ -26,7 +26,7 @@ object ShowError {
 object ShowDateError{
     const val EXCEEDED_CAPACITY = "Excedio la capacidad maxima de asientos para esta ubicacion"
     const val MSG_DATE_NOT_FOUND = "La fecha que intento buscar no existe"
-    const val INVALID_DATE = "La fecha debe ser superior a la actual"
+    const val INVALID_DATE = "La fecha debe ser posterior a la actual"
     const val DATE_ALREADY_EXISTS = "La fecha que desea agregar ya existe"
     const val NEW_SHOW_INVALID_CONDITIONS = "Las condiciones no permiten agregar una nueva fecha para el show"
 
