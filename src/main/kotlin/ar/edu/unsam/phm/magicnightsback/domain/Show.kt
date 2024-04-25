@@ -2,8 +2,9 @@ package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.NotFoundException
-import ar.edu.unsam.phm.magicnightsback.error.showError
+import ar.edu.unsam.phm.magicnightsback.error.ShowDateError
 import jakarta.persistence.*
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Entity
@@ -24,72 +25,67 @@ class Show(
     @Column(length = 100)
     var imgUrl = "${band.name.removeSpaces().lowercase()}.jpg"
 
-//    val pendingAttendees = mutableListOf<User>()
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val dates = mutableSetOf<ShowDate>()
+    var dates = mutableSetOf<ShowDate>()
 
     @Enumerated(EnumType.STRING)
     @Column(length = 40)
     var rentabilityType: Rentability = Rentability.BASE_PRICE
 
-    // Cost methods
-    fun baseCost(): Double = (band?.cost ?: 0.0) + (facility?.cost() ?: 0.0)
+    @ElementCollection(fetch = FetchType.LAZY)
+    val pendingAttendeesIds = mutableListOf<Long>()
+    fun geoLocationString() = facility.location.toGeolocation()
 
+    // Cost methods
+    fun baseCost(): Double = (band.cost) + (facility.cost())
     fun baseTicketPrice(seat: Seat): Double =
-        (facility?.let { baseCost() / it.getTotalSeatCapacity() } ?: 0.0) + seat.price
+        (facility.let { baseCost() / it.getTotalSeatCapacity() }) + seat.price
 
     fun ticketPrice(seat: Seat): Double = (baseTicketPrice(seat) * rentabilityType.factor).truncate()
-
     fun allTicketPrices() = facility.places.map { ticketPrice(it.seat) }
 
-//    fun rentability() = (((totalSales() - baseCost()) / totalSales()) * 100).coerceAtLeast(0.0)
+    // ShowDate methods
+    fun getSeatTypes() = facility.places.map { it.seat }
+    fun getShowDateById(showDateId: Long) = dates.find { it.id == showDateId } ?: throw NotFoundException(ShowDateError.MSG_DATE_NOT_FOUND)
 
+    fun initialDates(newDates: List<LocalDateTime>) {
+        newDates.forEach {
+            dates.add(ShowDate(it,facility))
+        }
+    }
 
-    //fun canBeCommented(user: User) = !isAlreadyCommented(user) && anyShowDatesPassedFor(user)
+    fun addDate(date: LocalDateTime): ShowDate {
+        validNewDate(date.toLocalDate())
+        val showDate = ShowDate(date, facility)
+        dates.add(showDate)
+        return showDate
+    }
 
-//    private fun isAlreadyCommented(user: User): Boolean =
-//        allAttendees().find { showUser -> showUser == user }?.comments?.any { comment -> comment.show == this }
-//            ?: false
-
-//    private fun anyShowDatesPassedFor(user: User) =
-//        dates.filter { date -> date.attendees.contains(user) }.any { date -> date.datePassed() }
-
+    // Admin Methods
+    fun sales(): List<Double> = facility.places.map { ticketPrice(it.seat) * totalTicketsSoldOf(it.seat) }
+    fun totalSales(): Double = sales().sumOf { it }
+    fun totalTicketsSoldOf(seat: Seat) = dates.sumOf { it.getReservedSeatsOf(seat) }
+    fun totalTicketsSold() = getSeatTypes().sumOf { totalTicketsSoldOf(it) }
+    fun totalPendingAttendees() = pendingAttendeesIds.size
+    fun rentability() = (((totalSales() - baseCost()) / totalSales()) * 100).coerceAtLeast(0.0)
     fun changeRentability(newShowStatus: Rentability) {
         this.rentabilityType = newShowStatus
     }
 
-    fun geoLocationString() = facility.location.toGeolocation()
+    fun newDateAvailable(show: Show) = PivotStats.stats.all { it.newDateCondition(show) }
+    fun getAllStats(show: Show) = PivotStats.stats.map { it.getStat(show) }
 
-
-//    fun validate() {
-//        band?.let {} ?: throw BusinessException(ShowError.BAND_ERROR)
-//        facility?.let {} ?: throw BusinessException(ShowError.FACILITY_ERROR)
-//    }
-
-    fun addDate(date: LocalDateTime) {
-        dates.add(ShowDate(date, facility))
-    }
-
-//    fun friendsAttendeesProfileImages(user: User) = friendsAttending(user.id).map { it.profileImage }
-//    fun friendsAttending(userId: Long) = allAttendees().filter { it.isMyFriend(userId) }
-
-    //fun getSeatTypes() = facility.seats.map { it.seatType }
-
-//    fun allTicketPrices() = facility.seats.map { ticketPrice(it.seatType) }
+   fun friendsAttendeesProfileImages(user: User) = friendsAttending(user).map { it.profileImgUrl }
+   fun friendsAttending(user: User) = allAttendees().filter { it.isMyFriend(user) }
 
     fun allDates() = dates.map { it.date }.toList().sortedBy { it }
 
     fun allAttendees() = dates.flatMap { it.attendees }
     fun soldOutDates() = dates.filter { it.isSoldOut() }.size
-//    fun ticketsSoldOfSeatType(seatType: SeatTypes) = dates.sumOf { it.getReservedSeatsOf(seatType) }
-//    fun totalTicketsSold() = facility.getAllSeatTypes().sumOf { ticketsSoldOfSeatType(it) }
-//    fun totalSales(): Double = facility.getAllSeatTypes().sumOf { ticketPrice(it) * ticketsSoldOfSeatType(it) }
-    fun getShowDate(showDateId:Long) = dates.find { it.id == showDateId } ?: throw NotFoundException(showError.TICKET_CART_NOT_FOUND)
 
     //Validations
-//    private fun validateComment(showDate: ShowDate) {
-//        if (!showDate.datePassed()) {
-//            throw BusinessException(showError.USER_CANT_COMMENT)
-//        }
-//    }
+    fun validNewDate(date: LocalDate) {
+        if (dates.any { it.date.toLocalDate() == date }) throw BusinessException(ShowDateError.DATE_ALREADY_EXISTS)
+        if (!newDateAvailable(this)) throw BusinessException(ShowDateError.NEW_SHOW_INVALID_CONDITIONS)
+    }
 }

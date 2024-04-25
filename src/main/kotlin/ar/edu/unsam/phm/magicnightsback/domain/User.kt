@@ -73,9 +73,4 @@ class User(
     fun decreaseCredits(amount: Double) {
         credit = (credit - amount).throwErrorIfNegative(BusinessException(UserError.MSG_NOT_ENOUGH_CREDIT)).toDouble()
     }
-
-    ///// VALIDATORS ///////////////////////////////////////////
-    fun validateAdminStatus(msg: String) {
-        if (!isAdmin) throw AuthenticationException(msg)
-    }
 }

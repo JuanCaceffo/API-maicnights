@@ -1,6 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import ar.edu.unsam.phm.magicnightsback.error.showDateError
+import ar.edu.unsam.phm.magicnightsback.error.ShowDateError
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -17,6 +17,7 @@ class ShowDate(
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val attendees = mutableSetOf<User>()
+
     @ElementCollection(fetch = FetchType.LAZY)
     val reservedSeats = facility.validSeatTypes().associateWith { 0 }.toMutableMap()
 
@@ -25,7 +26,7 @@ class ShowDate(
     }
 
     fun reserveSeat(seat: Seat, quantity: Int) {
-        quantity.throwIfGreaterThan(availableSeatsOf(seat),showDateError.EXCEEDED_CAPACITY)
+        quantity.throwIfGreaterThan(availableSeatsOf(seat),ShowDateError.EXCEEDED_CAPACITY)
         reservedSeats[seat.name] = (reservedSeats[seat.name]!! + quantity)
     }
 

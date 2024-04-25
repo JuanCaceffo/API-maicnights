@@ -11,7 +11,7 @@ data class TicketDTO(
 )
 
 fun Ticket.toTicketDTO(commentStadistics: CommentStadisticsDTO,user: User, price: Double, quantity: Int) = TicketDTO(
-    this.show.toShowUserDTO(commentStadistics, listOf(this.showDate.date)),
+    this.show.toShowUserDTO(commentStadistics, user, listOf(this.showDate.date)),
     price,
     quantity,
     false //TODO:Cambiar cuando este el metodo en el back

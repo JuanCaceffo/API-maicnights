@@ -2,10 +2,7 @@ package ar.edu.unsam.phm.magicnightsback.controller
 
 import ar.edu.unsam.phm.magicnightsback.dto.TicketCreateDTO
 import ar.edu.unsam.phm.magicnightsback.dto.TicketDTO
-import ar.edu.unsam.phm.magicnightsback.error.FacilityError
-import ar.edu.unsam.phm.magicnightsback.error.UserError
-import ar.edu.unsam.phm.magicnightsback.error.showDateError
-import ar.edu.unsam.phm.magicnightsback.error.showError
+import ar.edu.unsam.phm.magicnightsback.error.*
 import ar.edu.unsam.phm.magicnightsback.service.CartService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -58,7 +55,7 @@ class CartController(
         value = [
             ApiResponse(responseCode = "200", description = "Ok"),
             ApiResponse(responseCode = "404", description = showError.TICKET_CART_NOT_FOUND),
-            ApiResponse(responseCode = "400", description = showDateError.EXCEEDED_CAPACITY + "<br>"+ FacilityError.INVALID_SEAT_TYPE),
+            ApiResponse(responseCode = "400", description = ShowDateError.EXCEEDED_CAPACITY + "<br>"+ FacilityError.INVALID_SEAT_TYPE),
         ]
     )
     fun addReservedTicket(@PathVariable userId: Long, @RequestBody ticketData: TicketCreateDTO){

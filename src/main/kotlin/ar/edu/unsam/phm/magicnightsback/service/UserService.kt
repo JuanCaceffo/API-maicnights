@@ -1,13 +1,9 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
-//import ar.edu.unsam.phm.magicnightsback.domain.Comment
-import ar.edu.unsam.phm.magicnightsback.domain.Comment
 import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.domain.validateOptionalIsNotNull
 import ar.edu.unsam.phm.magicnightsback.dto.*
-import ar.edu.unsam.phm.magicnightsback.error.*
-import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import org.springframework.stereotype.Service
@@ -23,9 +19,6 @@ class UserService {
     lateinit var commentService: CommentService
 
 
-//    @Autowired
-//    lateinit var showRepository: ShowRepository
-
     @Transactional(Transactional.TxType.NEVER)
     fun findById(id: Long): User = validateOptionalIsNotNull(userRepository.findById(id))
 
@@ -34,6 +27,11 @@ class UserService {
 
     @Transactional(Transactional.TxType.NEVER)
     fun getUserById(userId: Long) = validateOptionalIsNotNull(userRepository.findById(userId), "El usuario de id ${userId} no fue encontrado")
+
+    fun validateAdminStatus(userId: Long) {
+        val user = getUserById(userId)
+        if (!user.isAdmin) throw AuthenticationException(UserError.USER_IS_NOT_ADMIN)
+    }
 
     /*Mapeo todos los tickets en uno solo por showDate juntando el precio total*/
     fun getTicketsGroupedByShowDate(user: User, ticketList: List<Ticket>): List<TicketDTO> {

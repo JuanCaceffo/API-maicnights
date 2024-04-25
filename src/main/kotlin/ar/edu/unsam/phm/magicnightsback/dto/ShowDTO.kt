@@ -1,6 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.dto
 
 import ar.edu.unsam.phm.magicnightsback.domain.Show
+import ar.edu.unsam.phm.magicnightsback.domain.User
 import java.time.LocalDateTime
 
 //import ar.edu.unsam.phm.magicnightsback.domain.User
@@ -31,10 +32,7 @@ data class ShowDetailsDTO(
     val geolocation: String,
 )
 
-data class ShowAdminDTO(
-    val showDto: ShowDTO,
-    val details: List<AdminSummaryDTO>
-)
+
 
 data class AdminSummaryDTO(
     val title: String,
@@ -51,24 +49,21 @@ fun Show.toShowDTO(dates: List<LocalDateTime>? = null) = ShowDTO(
     dates ?: this.allDates(),
 )
 
-fun Show.toShowUserDTO(commentStadistics: CommentStadisticsDTO,dates: List<LocalDateTime>? = null) =
+fun Show.toShowUserDTO(commentStadistics: CommentStadisticsDTO, user: User?, dates: List<LocalDateTime>? = null) =
     ShowUserDTO(
         this.toShowDTO(dates),
         commentStadistics.rating,
         commentStadistics.totalComments,
-        listOf(),
+        if (user != null) this.friendsAttendeesProfileImages(user) else listOf(),
     )
 
-fun Show.toShowDetailsDTO(commentStadistics: CommentStadisticsDTO) = ShowDetailsDTO(
-    this.toShowUserDTO(commentStadistics),
-    commentStadistics.comments,
+fun Show.toShowDetailsDTO(commentStats: CommentStadisticsDTO, user: User?) = ShowDetailsDTO(
+    this.toShowUserDTO(commentStats, user),
+    commentStats.comments,
     this.geoLocationString()
 )
 
-fun Show.toShowAdminDTO(summary: List<AdminSummaryDTO>) = ShowAdminDTO(
-    this.toShowDTO(),
-    summary
-)
+
 
 
 //
@@ -85,11 +80,7 @@ fun Show.toShowAdminDTO(summary: List<AdminSummaryDTO>) = ShowAdminDTO(
 
 //}
 //
-//data class SeatDTO(
-//    val seatType: String,
-//    val price: Double,
-//    val maxToSell: Int,
-//)
+
 //
 //
 //fun Show.allCommentsDTO(): List<CommentDTO> {

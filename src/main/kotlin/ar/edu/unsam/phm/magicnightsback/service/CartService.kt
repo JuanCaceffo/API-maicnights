@@ -34,7 +34,7 @@ class CartService(
     fun reserveTicket(userId: Long, ticketData: TicketCreateDTO) {
         val cart = getCartByUserId(userId)
         val show = validateOptionalIsNotNull(showRepo.findById(ticketData.showId))
-        val showDate = show.getShowDate(ticketData.showDateId)
+        val showDate = show.getShowDateById(ticketData.showDateId)
         val seat = show.facility.getPlaceBySeatName(ticketData.seatTypeName.name).seat
 
         cart.reserveTicket(Ticket(show, showDate, seat, ticketData.seatPrice,ticketData.quantity))
