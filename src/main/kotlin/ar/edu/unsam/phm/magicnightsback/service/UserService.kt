@@ -21,15 +21,17 @@ class UserService {
     lateinit var commentService: CommentService
 
 
-//    @Autowired
-//    lateinit var showRepository: ShowRepository
-
     @Transactional(Transactional.TxType.NEVER)
     fun findById(id: Long): User = validateOptionalIsNotNull(userRepository.findById(id))
 
     @Transactional(Transactional.TxType.NEVER)
     fun findByUsername(username: String): User = validateOptionalIsNotNull(userRepository.findByUsername(username))
 
+    fun validateAdminStatus(userId: Long) {
+        val user = validateOptionalIsNotNull(userRepository.findById(userId))
+        if (!user.isAdmin) throw AuthenticationException(UserError.USER_IS_NOT_ADMIN)
+    }
+    
     fun authenticate(username: String, password: String): User {
         val user = findByUsername(username)
 
@@ -39,6 +41,7 @@ class UserService {
 
         return user
     }
+    
     @Transactional(Transactional.TxType.NEVER)
     fun getUserById(userId: Long) = findById(userId)
 

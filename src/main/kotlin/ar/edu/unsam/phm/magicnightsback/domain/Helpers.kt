@@ -5,7 +5,9 @@ import ar.edu.unsam.phm.magicnightsback.error.InternalServerError
 import ar.edu.unsam.phm.magicnightsback.error.RepositoryError
 //import ar.edu.unsam.phm.magicnightsback.repository.CommentRepository
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.Period
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.math.floor
 import kotlin.math.pow
@@ -47,5 +49,15 @@ fun <T> validateOptionalIsNotNull(optional: Optional<T>, msg: String? = null):T{
     if(optional.isEmpty) {
         throw InternalServerError(msg ?: RepositoryError.ID_NOT_FOUND)}
     return optional.get()
+}
+
+//fun parseLocalDate(dateString: String): LocalDate {
+//    val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+//    return LocalDate.parse(dateString, formatter)
+//}
+
+fun parseLocalDateTime(dateString: String): LocalDateTime {
+    val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+    return LocalDateTime.parse(dateString, formatter)
 }
 
