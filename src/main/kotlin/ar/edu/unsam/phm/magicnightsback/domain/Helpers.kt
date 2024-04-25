@@ -2,6 +2,7 @@ package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.InternalServerError
+import ar.edu.unsam.phm.magicnightsback.error.NotFoundException
 import ar.edu.unsam.phm.magicnightsback.error.RepositoryError
 //import ar.edu.unsam.phm.magicnightsback.repository.CommentRepository
 import java.time.LocalDate
@@ -47,7 +48,7 @@ fun Number.throwIfGreaterThan(number: Number, msg: String): Number {
 
 fun <T> validateOptionalIsNotNull(optional: Optional<T>, msg: String? = null):T{
     if(optional.isEmpty) {
-        throw InternalServerError(msg ?: RepositoryError.ID_NOT_FOUND)}
+        throw NotFoundException(msg ?: RepositoryError.ELEMENT_NOT_FOUND)}
     return optional.get()
 }
 

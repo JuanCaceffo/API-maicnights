@@ -32,6 +32,7 @@ object ShowDateError{
 }
 object RepositoryError {
     const val ID_NOT_FOUND = "El ID no corresponde con ningún elemento del repositorio"
+    const val ELEMENT_NOT_FOUND = "Elemento no encontrado"
 }
 
 object FacilityError {
