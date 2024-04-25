@@ -1,12 +1,9 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
-//import ar.edu.unsam.phm.magicnightsback.domain.Comment
-import ar.edu.unsam.phm.magicnightsback.domain.Comment
+import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.domain.validateOptionalIsNotNull
 import ar.edu.unsam.phm.magicnightsback.dto.*
-import ar.edu.unsam.phm.magicnightsback.error.*
-import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import org.springframework.stereotype.Service
@@ -18,6 +15,9 @@ import jakarta.transaction.Transactional
 class UserService {
     @Autowired
     lateinit var userRepository: UserRepository
+    @Autowired
+    lateinit var commentService: CommentService
+
 
     @Transactional(Transactional.TxType.NEVER)
     fun findById(id: Long): User = validateOptionalIsNotNull(userRepository.findById(id))
@@ -25,21 +25,26 @@ class UserService {
     @Transactional(Transactional.TxType.NEVER)
     fun findByUsername(username: String): User = validateOptionalIsNotNull(userRepository.findByUsername(username))
 
+    @Transactional(Transactional.TxType.NEVER)
+    fun getUserById(userId: Long) = validateOptionalIsNotNull(userRepository.findById(userId), "El usuario de id ${userId} no fue encontrado")
+
     fun validateAdminStatus(userId: Long) {
-        val user = validateOptionalIsNotNull(userRepository.findById(userId))
+        val user = getUserById(userId)
         if (!user.isAdmin) throw AuthenticationException(UserError.USER_IS_NOT_ADMIN)
     }
 
-//    /*Mapeo todos los tickets en uno solo por showDate juntando el precio total*/
-//    fun getTicketsGroupedByShowDate(user: User, ticketList: List<Ticket>): List<TicketDTO> {
-//        val distinctTickets = ticketList.distinctBy { it.showDate }
-//        return distinctTickets.map { uniqueTicket ->
-//            val ticketsSameShowDate = ticketList.filter { ticket -> ticket.showDate == uniqueTicket.showDate }
-//            val totalPrice = ticketsSameShowDate.sumOf { ticket -> ticket.price() }
-//            val quantity = ticketsSameShowDate.sumOf { ticket -> ticket.quantity }
-//            uniqueTicket.toTicketDTO(user, totalPrice, quantity)
-//        }
-//    }
+    /*Mapeo todos los tickets en uno solo por showDate juntando el precio total*/
+    fun getTicketsGroupedByShowDate(user: User, ticketList: List<Ticket>): List<TicketDTO> {
+
+        val distinctTickets = ticketList.distinctBy { it.showDate }
+        return distinctTickets.map { uniqueTicket ->
+            val ticketsSameShowDate = ticketList.filter { ticket -> ticket.showDate == uniqueTicket.showDate }
+            val totalPrice = ticketsSameShowDate.sumOf { ticket -> ticket.price() }
+            val quantity = ticketsSameShowDate.sumOf { ticket -> ticket.quantity }
+            val commentsStats = commentService.getCommentStadisticsOfShow(uniqueTicket.show.id)
+            uniqueTicket.toTicketDTO(commentsStats,user, totalPrice, quantity)
+        }
+    }
 //
 //    fun getUserPurchasedTickets(userId: Long): List<PurchasedTicketDTO> {
 //        val user = userRepository.getById(userId)

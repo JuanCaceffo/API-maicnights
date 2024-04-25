@@ -4,11 +4,11 @@ import jakarta.persistence.*
 
 @Entity
 data class Ticket(
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     val show: Show,
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     val showDate: ShowDate,
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     val seat: Seat,
     @Column
     val seatPrice: Double,
