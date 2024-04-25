@@ -4,9 +4,9 @@ import jakarta.persistence.*
 
 @Entity
 data class Ticket(
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     val show: Show,
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     val showDate: ShowDate,
     @ManyToOne(fetch = FetchType.LAZY)
     val seat: Seat,
