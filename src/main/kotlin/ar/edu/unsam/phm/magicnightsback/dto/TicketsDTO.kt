@@ -7,14 +7,13 @@ data class TicketDTO(
     val showUserDTO: ShowUserDTO,
     val price: Double,
     val quantity: Int,
-    val canBeCommented: Boolean?
+    //val canBeCommented: Boolean? TODO: hablar con el profe sobre la validacion de el comentado de un show
 )
 
 fun Ticket.toTicketDTO(commentStadistics: CommentStadisticsDTO,user: User, price: Double, quantity: Int) = TicketDTO(
     this.show.toShowUserDTO(commentStadistics, user, listOf(this.showDate.date)),
     price,
     quantity,
-    false //TODO:Cambiar cuando este el metodo en el back
 )
 
 data class TicketCreateDTO(
