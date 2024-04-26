@@ -11,14 +11,12 @@ data class Ticket(
     @ManyToOne(fetch = FetchType.LAZY)
     val seat: Seat,
     @Column
-    val seatPrice: Double,
-    @Column
     val quantity: Int = 1,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
+    val price = show.ticketPrice(seat)*quantity
 
-    fun price() = seatPrice*quantity
 }
 

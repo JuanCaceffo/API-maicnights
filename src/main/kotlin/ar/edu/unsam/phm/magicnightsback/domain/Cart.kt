@@ -31,5 +31,5 @@ class Cart(@ManyToOne val user: User) {
         reservedTickets.clear()
     }
 
-    fun totalPrice() = reservedTickets.sumOf { ticket -> ticket.price() }
+    fun totalPrice() = reservedTickets.sumOf { ticket -> ticket.price }
 }

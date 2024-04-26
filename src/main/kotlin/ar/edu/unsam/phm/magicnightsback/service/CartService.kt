@@ -37,7 +37,7 @@ class CartService(
         val showDate = show.getShowDateById(ticketData.showDateId)
         val seat = show.facility.getPlaceBySeatName(ticketData.seatTypeName.name).seat
 
-        cart.reserveTicket(Ticket(show, showDate, seat, ticketData.seatPrice,ticketData.quantity))
+        cart.reserveTicket(Ticket(show, showDate, seat,ticketData.quantity))
         cartRepo.save(cart)
     }
 

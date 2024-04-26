@@ -19,7 +19,6 @@ fun Ticket.toTicketDTO(commentStadistics: CommentStadisticsDTO,user: User, price
 data class TicketCreateDTO(
     val showId: Long,
     val showDateId: Long,
-    val seatPrice: Double,
     val seatTypeName: SeatTypes,
     val quantity: Int
 )

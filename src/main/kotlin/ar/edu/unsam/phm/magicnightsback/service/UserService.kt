@@ -39,7 +39,7 @@ class UserService {
         val distinctTickets = ticketList.distinctBy { it.showDate }
         return distinctTickets.map { uniqueTicket ->
             val ticketsSameShowDate = ticketList.filter { ticket -> ticket.showDate == uniqueTicket.showDate }
-            val totalPrice = ticketsSameShowDate.sumOf { ticket -> ticket.price() }
+            val totalPrice = ticketsSameShowDate.sumOf { ticket -> ticket.price }
             val quantity = ticketsSameShowDate.sumOf { ticket -> ticket.quantity }
             val commentsStats = commentService.getCommentStadisticsOfShow(uniqueTicket.show.id)
             uniqueTicket.toTicketDTO(commentsStats,user, totalPrice, quantity)
