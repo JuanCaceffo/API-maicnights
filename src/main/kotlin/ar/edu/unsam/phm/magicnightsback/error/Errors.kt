@@ -1,7 +1,10 @@
 package ar.edu.unsam.phm.magicnightsback.error
 
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.bind.annotation.RestControllerAdvice
 
 object UserError {
     const val MSG_NOT_ENOUGH_CREDIT = "No tiene saldo suficiente para realizar la compra"
@@ -45,7 +48,6 @@ object cartError {
     const val CART_FOR_USER_NOT_FOUND = "El carrito para el usaurio especificado no fue encontrado"
 }
 
-@ResponseStatus(HttpStatus.BAD_REQUEST)
 class BusinessException(msg: String) : RuntimeException(msg)
 
 @ResponseStatus(HttpStatus.NOT_FOUND)

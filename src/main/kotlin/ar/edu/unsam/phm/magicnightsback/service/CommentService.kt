@@ -1,6 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
 import ar.edu.unsam.phm.magicnightsback.domain.Comment
+import ar.edu.unsam.phm.magicnightsback.domain.averageOrZero
 import ar.edu.unsam.phm.magicnightsback.domain.validateOptionalIsNotNull
 import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
@@ -46,7 +47,9 @@ class CommentService {
     }
 
     @Transactional(Transactional.TxType.NEVER)
-    fun showRating(id: Long) = if (totalShowComments(id) != 0) getShowComments(id).sumOf { it.rating } / totalShowComments(id) else 0.0
+    fun showRating(id: Long) = showRatings(id).averageOrZero()
+
+    private fun showRatings(id: Long) = getShowComments(id).map { it.rating }
 
     @Transactional(Transactional.TxType.NEVER)
     fun totalShowComments(id: Long) = getShowComments(id).size

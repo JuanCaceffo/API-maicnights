@@ -13,6 +13,8 @@ import kotlin.math.pow
 
 fun LocalDate.calculateAge(): Int = Period.between(this, LocalDate.now()).years
 
+fun List<Double>.averageOrZero() = if (isEmpty()) 0.0 else average()
+
 fun Number.throwErrorIfNegative(error: RuntimeException): Number {
     if (this.toFloat() < 0F) {
         throw error

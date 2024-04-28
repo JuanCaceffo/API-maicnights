@@ -1,6 +1,5 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
-
 import ar.edu.unsam.phm.magicnightsback.dto.ShowDateDTO
 import ar.edu.unsam.phm.magicnightsback.factory.ShowTypes
 import ar.edu.unsam.phm.magicnightsback.factory.TestFactory
@@ -9,8 +8,12 @@ import ar.edu.unsam.phm.magicnightsback.repository.*
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import io.mockk.every
+import io.mockk.mockkStatic
+import io.mockk.unmockkAll
 import jakarta.transaction.Transactional
 import org.hamcrest.CoreMatchers.containsString
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,7 +23,9 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @SpringBootTest
@@ -48,6 +53,22 @@ class ShowControllerTest(@Autowired val mockMvc: MockMvc) {
 
     val factory = TestFactory()
 
+    @BeforeEach
+    fun setup() {
+        mockkStatic(LocalDate::class)
+        mockkStatic(LocalDateTime::class)
+    }
+
+    @AfterEach
+    fun teardown() {
+        unmockkAll()
+    }
+
+    fun mockNow(expected: LocalDateTime) {
+        every { LocalDate.now() } returns expected.toLocalDate()
+        every { LocalDateTime.now() } returns expected
+    }
+
     @Test
     fun `llamada al metodo post para crear una funcion por un usuario que no es admin falla`() {
         val user = userRepository.save(factory.createUser(UserTypes.NORMAL))
@@ -66,7 +87,7 @@ class ShowControllerTest(@Autowired val mockMvc: MockMvc) {
 
     @Test
     fun `llamada al metodo post para crear una funcion por un usuario que es admin falla debido a que la fecha es anterior a la actual`() {
-        factory.createMockedDate()
+        mockNow(LocalDateTime.of(2020, 2, 2, 12, 30))
 
         val admin = userRepository.save(factory.createUser(UserTypes.ADMIN))
         val show = showRepository.save(factory.createShow(ShowTypes.BIGSHOW))
@@ -79,12 +100,13 @@ class ShowControllerTest(@Autowired val mockMvc: MockMvc) {
                 .content(mapper.writeValueAsString(newShowDate))
         )
             .andExpect(status().is4xxClientError)
-            .andExpect(status().reason(containsString("posterior")))
+            .andExpect(content().string(containsString("posterior")))
     }
+
 
     @Test
     fun `llamada al metodo post para crear una funcion por un usuario que es admin falla debido a que no se cumplen las condiciones del negocio`() {
-        factory.createMockedDate()
+        mockNow(LocalDateTime.of(2020, 2, 2, 12, 30))
 
         val admin = userRepository.save(factory.createUser(UserTypes.ADMIN))
         val show = showRepository.save(factory.createShow(ShowTypes.BIGSHOW))
@@ -98,12 +120,12 @@ class ShowControllerTest(@Autowired val mockMvc: MockMvc) {
                 .content(mapper.writeValueAsString(newShowDate))
         )
             .andExpect(status().is4xxClientError)
-            .andExpect(status().reason(containsString("condiciones")))
+            .andExpect(content().string(containsString("condiciones")))
     }
 
     @Test
     fun `llamada al metodo post para crear una funcion por un usuario que es admin falla debido a que ya existe la fecha`() {
-        factory.createMockedDate()
+        mockNow(LocalDateTime.of(2020, 2, 2, 12, 30))
 
         val newDate = LocalDateTime.now().plusDays(1)
 
@@ -121,6 +143,6 @@ class ShowControllerTest(@Autowired val mockMvc: MockMvc) {
                 .content(mapper.writeValueAsString(newShowDate))
         )
             .andExpect(status().is4xxClientError)
-            .andExpect(status().reason(containsString("ya existe")))
+            .andExpect(content().string(containsString("ya existe")))
     }
 }

@@ -20,7 +20,6 @@ enum class FacilityTypes {
 
 @Component
 class TestFactory {
-    fun createMockedDate() = every { LocalDateTime.now() } returns LocalDateTime.of(2024, 1, 1, 1, 1, 1, 100)
     fun createBand() = Band("Test Band", 100000.0)
     fun createSeat(type: SeatTypes) = Seat(type)
     fun createFacility(type: FacilityTypes): Facility {
