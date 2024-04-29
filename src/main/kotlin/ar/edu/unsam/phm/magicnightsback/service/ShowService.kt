@@ -32,10 +32,10 @@ class ShowService {
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    fun createShowDate(userId: Long, showDate: ShowDateDTO): ShowDate {
-        userService.validateAdminStatus(userId)
-        val show = validateOptionalIsNotNull(showRepository.findById(showDate.showId))
-        return show.addDate(showDate.date)
+    fun createShowDate(showId: Long, body: ShowDateDTO): ShowDate {
+        userService.validateAdminStatus(body.userId!!)
+        val show = validateOptionalIsNotNull(showRepository.findById(showId))
+        return show.addDate(body.date)
     }
 
     @Transactional(Transactional.TxType.NEVER)

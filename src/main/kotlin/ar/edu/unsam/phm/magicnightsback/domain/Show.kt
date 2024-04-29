@@ -1,5 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
+import ar.edu.unsam.phm.magicnightsback.dto.ShowDateDTO
+import ar.edu.unsam.phm.magicnightsback.dto.toShowDateDTO
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.NotFoundException
 import ar.edu.unsam.phm.magicnightsback.error.ShowDateError
@@ -79,6 +81,7 @@ class Show(
 
     // Dates Methods
     fun allDates() = dates.map { it.date }.toList().sortedBy { it }
+    fun allDatesWithIds() = dates.map { it.toShowDateDTO() }.sortedBy { it.date }
     fun allAttendees() = dates.flatMap { it.attendees }
     fun soldOutDates() = dates.filter { it.isSoldOut() }.size
     fun newDateAvailable(show: Show) = PivotStats.stats.all { it.newDateCondition(show) }

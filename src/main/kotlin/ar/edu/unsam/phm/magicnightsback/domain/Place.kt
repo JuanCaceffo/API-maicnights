@@ -21,7 +21,7 @@ class Place(
 
 @Entity
 class Seat(
-    val type: SeatTypes
+    type: SeatTypes
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

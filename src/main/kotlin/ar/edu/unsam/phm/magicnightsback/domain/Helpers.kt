@@ -38,7 +38,7 @@ object Comparar {
 }
 
 fun String.removeSpaces(): String {
-    return this.trim().replace("\\s+".toRegex(), "")
+    return this.trim().replace("\\s+|/".toRegex(), "")
 }
 
 fun Number.throwIfGreaterThan(number: Number, msg: String): Number {

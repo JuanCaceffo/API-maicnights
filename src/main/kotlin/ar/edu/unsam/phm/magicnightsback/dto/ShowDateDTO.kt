@@ -4,9 +4,10 @@ import ar.edu.unsam.phm.magicnightsback.domain.ShowDate
 import com.fasterxml.jackson.annotation.JsonFormat
 import java.time.LocalDateTime
 
-data class ShowDateDTO (
+data class ShowDateDTO(
     val id: Long = 0,
-    val showId: Long = 0,
+    var userId: Long? = null,
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     val date: LocalDateTime = LocalDateTime.MIN
 )
