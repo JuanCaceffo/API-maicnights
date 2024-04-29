@@ -1,6 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
+import ar.edu.unsam.phm.magicnightsback.error.NotFoundException
 import ar.edu.unsam.phm.magicnightsback.error.ShowDateError
 import jakarta.persistence.*
 import java.time.LocalDate
@@ -45,7 +46,7 @@ class Show(
 
     // ShowDate methods
     fun getSeatTypes() = facility.places.map { it.seat }
-    fun getShowDateById(showDateId: Long) = dates.find { it.id == showDateId }
+    fun getShowDateById(showDateId: Long) = dates.find { it.id == showDateId } ?: throw NotFoundException(ShowDateError.MSG_DATE_NOT_FOUND)
 
     fun initialDates(newDates: List<LocalDateTime>) {
         newDates.forEach {

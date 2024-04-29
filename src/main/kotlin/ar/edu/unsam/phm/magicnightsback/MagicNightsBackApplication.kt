@@ -12,15 +12,3 @@ class MagicNightsBackApplication
 fun main(args: Array<String>) {
     runApplication<MagicNightsBackApplication>(*args)
 }
-
-@Configuration
-class SwaggerConfig {
-    @Bean
-    fun springShopOpenApi(): GroupedOpenApi {
-        val paths = arrayOf("/api/**")
-        return GroupedOpenApi.builder()
-            .group("springdoc")
-            .pathsToMatch(*paths)
-            .build()
-    }
-}

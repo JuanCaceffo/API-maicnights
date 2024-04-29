@@ -15,7 +15,7 @@ data class ShowDTO(
     val showName: String,
     val bandName: String,
     val facilityName: String,
-    val prices: List<Double>,
+    val prices: List<Double>?,
     val dates: List<LocalDateTime>
 )
 
@@ -39,24 +39,19 @@ data class AdminSummaryDTO(
     val description: String
 )
 
-data class TicketDTO(
-    val showDto: ShowDTO,
-    val price: Double,
-)
-
-fun Show.toShowDTO() = ShowDTO(
+fun Show.toShowDTO(dates: List<LocalDateTime>? = null) = ShowDTO(
     this.id,
     this.imgUrl,
     this.name,
     this.band.name,
     this.facility.name,
     this.allTicketPrices(),
-    this.allDates()
+    dates ?: this.allDates(),
 )
 
-fun Show.toShowUserDTO(commentStadistics: CommentStadisticsDTO, user: User?) =
+fun Show.toShowUserDTO(commentStadistics: CommentStadisticsDTO, user: User?, dates: List<LocalDateTime>? = null) =
     ShowUserDTO(
-        this.toShowDTO(),
+        this.toShowDTO(dates),
         commentStadistics.rating,
         commentStadistics.totalComments,
         if (user != null) this.friendsAttendeesProfileImages(user) else listOf(),

@@ -60,7 +60,7 @@ class ShowController {
 
         return seats.map {
             SeatDTO(
-                it.toString(),
+                it.name,
                 show.ticketPrice(it),
                 showDate!!.availableSeatsOf(it)
             )

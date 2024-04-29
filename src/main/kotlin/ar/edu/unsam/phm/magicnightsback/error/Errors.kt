@@ -19,7 +19,7 @@ object CommentError {
     const val INVALID_DELETE = "No se puede borrar un comentario que no le pertenece"
 }
 
-object ShowError {
+object showError {
     const val BAND_ERROR = "El show debe tener una banda"
     const val FACILITY_ERROR = "El show debe tener un lugar"
     const val USER_CANT_COMMENT = "El usaurio no puede comentar el show"
@@ -36,6 +36,7 @@ object ShowDateError{
 }
 object RepositoryError {
     const val ID_NOT_FOUND = "El ID no corresponde con ningún elemento del repositorio"
+    const val ELEMENT_NOT_FOUND = "Elemento no encontrado"
 }
 
 object FacilityError {
