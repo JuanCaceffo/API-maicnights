@@ -8,10 +8,8 @@ import org.springframework.beans.factory.InitializingBean
 import org.springframework.context.annotation.DependsOn
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
-import kotlin.jvm.optionals.getOrNull
 
 @Component
-@Order(4)
 @DependsOn("seatBootstrap", "showBoostrap")
 class CartBoostrap(
     val cartRepository: CartRepository,
@@ -64,7 +62,6 @@ class CartBoostrap(
                     smallshowGranrex,
                     smallshowGranrex.dates.elementAt(0),
                     pullman,
-                    smallshowGranrex.ticketPrice(pullman)
                 )
             )
             reserveTicket(
@@ -72,7 +69,6 @@ class CartBoostrap(
                     smallShowTeatroColon,
                     smallShowTeatroColon.dates.elementAt(1),
                     pullman,
-                    smallShowTeatroColon.ticketPrice(pullman),
                     2
                 )
             )
@@ -81,7 +77,6 @@ class CartBoostrap(
                     bigShowRiver,
                     bigShowRiver.dates.elementAt(0),
                     upperlevel,
-                    bigShowRiver.ticketPrice(upperlevel),
                     2
                 )
             )
@@ -90,7 +85,6 @@ class CartBoostrap(
                     bigShowLaBombonera,
                     bigShowLaBombonera.dates.elementAt(0),
                     upperlevel,
-                    bigShowLaBombonera.ticketPrice(upperlevel)
                 )
             )
         }
@@ -100,7 +94,6 @@ class CartBoostrap(
                     smallshowGranrex,
                     smallshowGranrex.dates.elementAt(0),
                     lowerlevel,
-                    smallshowGranrex.ticketPrice(lowerlevel)
                 )
             )
             reserveTicket(
@@ -108,7 +101,6 @@ class CartBoostrap(
                     bigShowRiver,
                     bigShowRiver.dates.elementAt(0),
                     upperlevel,
-                    bigShowRiver.ticketPrice(upperlevel),
                     2
                 )
             )
@@ -119,7 +111,6 @@ class CartBoostrap(
                     smallshowGranrex,
                     smallshowGranrex.dates.elementAt(0),
                     pullman,
-                    smallshowGranrex.ticketPrice(pullman)
                 )
             )
             reserveTicket(
@@ -127,7 +118,6 @@ class CartBoostrap(
                     bigShowRiver,
                     bigShowRiver.dates.elementAt(0),
                     upperlevel,
-                    bigShowRiver.ticketPrice(upperlevel),
                     2
                 )
             )
@@ -138,7 +128,6 @@ class CartBoostrap(
                     smallshowGranrex,
                     smallshowGranrex.dates.elementAt(0),
                     pullman,
-                    smallshowGranrex.ticketPrice(pullman)
                 )
             )
             reserveTicket(
@@ -146,7 +135,6 @@ class CartBoostrap(
                     bigShowRiver,
                     bigShowRiver.dates.elementAt(0),
                     upperlevel,
-                    bigShowRiver.ticketPrice(upperlevel),
                     2
                 )
             )
@@ -157,7 +145,6 @@ class CartBoostrap(
                     smallshowGranrex,
                     smallshowGranrex.dates.elementAt(0),
                     pullman,
-                    smallshowGranrex.ticketPrice(pullman)
                 )
             )
             reserveTicket(
@@ -165,7 +152,6 @@ class CartBoostrap(
                     bestSmallShowMovistarArena,
                     bestSmallShowMovistarArena.dates.elementAt(0),
                     lowerlevel,
-                    bestSmallShowMovistarArena.ticketPrice(lowerlevel)
                 )
             )
         }
@@ -175,7 +161,6 @@ class CartBoostrap(
                     smallshowGranrex,
                     smallshowGranrex.dates.elementAt(0),
                     pullman,
-                    smallshowGranrex.ticketPrice(pullman)
                 )
             )
             reserveTicket(
@@ -183,7 +168,6 @@ class CartBoostrap(
                     bestSmallShowTeatroOpera,
                     bestSmallShowTeatroOpera.dates.elementAt(0),
                     pullman,
-                    bestSmallShowTeatroOpera.ticketPrice(pullman)
                 )
             )
         }
@@ -193,7 +177,6 @@ class CartBoostrap(
                     smallshowGranrex,
                     smallshowGranrex.dates.elementAt(0),
                     pullman,
-                    smallshowGranrex.ticketPrice(pullman)
                 )
             )
             reserveTicket(
@@ -201,7 +184,6 @@ class CartBoostrap(
                     losRedondosClubDePolo,
                     losRedondosClubDePolo.dates.elementAt(0),
                     field,
-                    losRedondosClubDePolo.ticketPrice(field)
                 )
             )
         }

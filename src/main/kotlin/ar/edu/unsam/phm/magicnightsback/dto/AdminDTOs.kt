@@ -1,32 +1,34 @@
-//package ar.edu.unsam.phm.magicnightsback.dto
-//
-//import ar.edu.unsam.phm.magicnightsback.domain.Colors
-//import ar.edu.unsam.phm.magicnightsback.domain.Show
-//import java.time.LocalDateTime
-//
-//data class ShowAdminDTO(
-//    val id: Long,
-//    val showImg: String,
-//    val showName: String,
-//    val bandName: String,
-//    val facilityName: String,
-//    val dates: List<LocalDateTime>,
-//    val prices: List<Double>
-//)
-//
-//fun Show.toShowAdminDTO() =
-//    ShowAdminDTO(
-//        this.id,
-//        this.showImg,
-//        this.name,
-//        this.band.name,
-//        this.facility.name,
-//        this.allDates(),
-//        this.allTicketPrices()
-//    )
-//
-//data class ShowStatsDTO (
-//    val id: Long,
-//    val value: Double,
-//    val color: Colors
-//)
+package ar.edu.unsam.phm.magicnightsback.dto
+
+import ar.edu.unsam.phm.magicnightsback.domain.Show
+import ar.edu.unsam.phm.magicnightsback.domain.States
+
+data class ShowAdminDetailsDTO(
+    val showDto: ShowDTO,
+    val totalTicketsSold: Int,
+    val ticketsSoldPerSeatType: List<TicketsPerSeatType>,
+    val totalSales: Double,
+    val showCost: Double,
+    val pendingAttendees: Int
+)
+
+data class ShowStatsDTO (
+    val id: Long,
+    val value: Double,
+    val state: States
+)
+
+data class TicketsPerSeatType(
+    val name: String,
+    val tickets: Int
+)
+
+fun Show.toShowAdminDetailsDTO() = ShowAdminDetailsDTO(
+    this.toShowDTO(),
+    this.totalTicketsSold(),
+    this.getSeatTypes().map { TicketsPerSeatType(it.name, totalTicketsSoldOf(it)) },
+    this.totalSales(),
+    this.baseCost(),
+    this.totalPendingAttendees()
+)
+

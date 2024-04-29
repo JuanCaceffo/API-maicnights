@@ -1,6 +1,5 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
-//import ar.edu.unsam.phm.magicnightsback.domain.Comment
 import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.domain.validateOptionalIsNotNull
@@ -21,15 +20,20 @@ class UserService {
     lateinit var commentService: CommentService
 
 
-//    @Autowired
-//    lateinit var showRepository: ShowRepository
-
     @Transactional(Transactional.TxType.NEVER)
     fun findById(id: Long): User = validateOptionalIsNotNull(userRepository.findById(id))
 
     @Transactional(Transactional.TxType.NEVER)
     fun findByUsername(username: String): User = validateOptionalIsNotNull(userRepository.findByUsername(username))
 
+    @Transactional(Transactional.TxType.NEVER)
+    fun getUserById(userId: Long) = validateOptionalIsNotNull(userRepository.findById(userId), "El usuario de id ${userId} no fue encontrado")
+
+    fun validateAdminStatus(userId: Long) {
+        val user = getUserById(userId)
+        if (!user.isAdmin) throw AuthenticationException(UserError.USER_IS_NOT_ADMIN)
+    }
+    
     fun authenticate(username: String, password: String): User {
         val user = findByUsername(username)
 
@@ -39,6 +43,7 @@ class UserService {
 
         return user
     }
+    
     @Transactional(Transactional.TxType.NEVER)
     fun getUserById(userId: Long) = findById(userId)
 
@@ -48,7 +53,7 @@ class UserService {
         val distinctTickets = ticketList.distinctBy { it.showDate }
         return distinctTickets.map { uniqueTicket ->
             val ticketsSameShowDate = ticketList.filter { ticket -> ticket.showDate == uniqueTicket.showDate }
-            val totalPrice = ticketsSameShowDate.sumOf { ticket -> ticket.price() }
+            val totalPrice = ticketsSameShowDate.sumOf { ticket -> ticket.price }
             val quantity = ticketsSameShowDate.sumOf { ticket -> ticket.quantity }
             val commentsStats = commentService.getCommentStadisticsOfShow(uniqueTicket.show.id)
             uniqueTicket.toTicketDTO(commentsStats,user, totalPrice, quantity)

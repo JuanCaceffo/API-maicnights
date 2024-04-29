@@ -1,6 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.boostrap
 
 import ar.edu.unsam.phm.magicnightsback.domain.Show
+import ar.edu.unsam.phm.magicnightsback.domain.ShowDate
 import ar.edu.unsam.phm.magicnightsback.repository.BandRepository
 import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
@@ -8,9 +9,7 @@ import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.DependsOn
 import org.springframework.stereotype.Component
-import org.springframework.stereotype.Service
 import java.time.LocalDateTime
-import kotlin.jvm.optionals.getOrNull
 
 
 @Component
@@ -53,7 +52,7 @@ class ShowBoostrap(
         Show(name = "Le ricote", redondos, polo),
         Show(name = "Midnight", oned, luna),
         Show(name = "Love of my life", queen, granrex),
-        Show(name = "Midnight", lavela, pocker)
+        Show(name = "Arriba!!", lavela, pocker)
     )
 
     fun createShows() {
@@ -69,48 +68,91 @@ class ShowBoostrap(
     }
 
     fun createShowDates() {
+
         val generalDateTime = LocalDateTime.parse("2024-03-30T16:57:04.074472231")
+
         shows[0].apply {
-            repeat(2) { addDate(generalDateTime.minusDays(3 + it.toLong())) }
-            repeat(3) { addDate(generalDateTime.minusDays(11 + it.toLong())) }
+            val dates: MutableList<LocalDateTime> = mutableListOf()
+            repeat(2) { index ->
+                dates.add(generalDateTime.minusDays(3 + index.toLong()))
+                dates.add(generalDateTime.plusDays(11 + index.toLong()))
+            }
+            initialDates(dates)
         }
         shows[1].apply {
-            repeat(2) { addDate(generalDateTime.minusDays(5 + it.toLong())) }
-            repeat(3) { addDate(generalDateTime.plusDays(14 + it.toLong())) }
+            val dates: MutableList<LocalDateTime> = mutableListOf()
+            repeat(2) { index ->
+                dates.add(generalDateTime.minusDays(5 + index.toLong()))
+                dates.add(generalDateTime.plusDays(14 + index.toLong()))
+            }
+            initialDates(dates)
         }
         shows[2].apply {
-            repeat(1) { addDate(generalDateTime.minusDays(7 + it.toLong())) }
-            repeat(1) { addDate(generalDateTime.plusDays(10 + it.toLong())) }
+            val dates: MutableList<LocalDateTime> = mutableListOf()
+            repeat(4) { index ->
+                dates.add(generalDateTime.minusDays(7 + index.toLong()))
+                dates.add(generalDateTime.plusDays(10 + index.toLong()))
+            }
+            initialDates(dates)
         }
         shows[3].apply {
-            repeat(3) { addDate(generalDateTime.minusDays(10 + it.toLong())) }
-            repeat(3) { addDate(generalDateTime.plusDays(12 + it.toLong())) }
+            val dates: MutableList<LocalDateTime> = mutableListOf()
+            repeat(3) { index ->
+                dates.add(generalDateTime.minusDays(10 + index.toLong()))
+                dates.add(generalDateTime.plusDays(12 + index.toLong()))
+            }
+            initialDates(dates)
         }
         shows[4].apply {
-            repeat(2) { addDate(generalDateTime.minusDays(2 + it.toLong())) }
-            repeat(1) { addDate(generalDateTime.plusDays(13 + it.toLong())) }
+            val dates: MutableList<LocalDateTime> = mutableListOf()
+            repeat(2) { index ->
+                dates.add(generalDateTime.minusDays(2 + index.toLong()))
+                dates.add(generalDateTime.plusDays(13 + index.toLong()))
+            }
+            initialDates(dates)
         }
         shows[5].apply {
-            repeat(2) { addDate(generalDateTime.minusDays(4 + it.toLong())) }
-            repeat(3) { addDate(generalDateTime.plusDays(15 + it.toLong())) }
+            val dates: MutableList<LocalDateTime> = mutableListOf()
+            repeat(1) { index ->
+                dates.add(generalDateTime.minusDays(4 + index.toLong()))
+                dates.add(generalDateTime.plusDays(15 + index.toLong()))
+            }
+            initialDates(dates)
         }
         shows[6].apply {
-            repeat(1) { addDate(generalDateTime.minusDays(8 + it.toLong())) }
-            repeat(3) { addDate(generalDateTime.plusDays(9 + it.toLong())) }
+            val dates: MutableList<LocalDateTime> = mutableListOf()
+            repeat(2) { index ->
+                dates.add(generalDateTime.minusDays(8 + index.toLong()))
+                dates.add(generalDateTime.plusDays(9 + index.toLong()))
+            }
+            initialDates(dates)
         }
         shows[7].apply {
-            repeat(2) { addDate(generalDateTime.minusDays(6 + it.toLong())) }
-            repeat(4) { addDate(generalDateTime.plusDays(16 + it.toLong())) }
+            val dates: MutableList<LocalDateTime> = mutableListOf()
+            repeat(2) { index ->
+                dates.add(generalDateTime.minusDays(6 + index.toLong()))
+                dates.add(generalDateTime.plusDays(16 + index.toLong()))
+            }
+            initialDates(dates)
         }
         shows[8].apply {
-            repeat(2) { addDate(generalDateTime.minusDays(1 + it.toLong())) }
-            repeat(3) { addDate(generalDateTime.minusDays(17 + it.toLong())) }
+            val dates: MutableList<LocalDateTime> = mutableListOf()
+            repeat(2) { index ->
+                dates.add(generalDateTime.minusDays(1 + index.toLong()))
+                dates.add(generalDateTime.plusDays(17 + index.toLong()))
+            }
+            initialDates(dates)
         }
         shows[9].apply {
-            repeat(1) { addDate(generalDateTime.minusDays(1 + it.toLong())) }
-            repeat(1) { addDate(generalDateTime.plusDays(17 + it.toLong())) }
+            val dates: MutableList<LocalDateTime> = mutableListOf()
+            repeat(2) { index ->
+                dates.add(generalDateTime.minusDays(1 + index.toLong()))
+                dates.add(generalDateTime.plusDays(17 + index.toLong()))
+            }
+            initialDates(dates)
         }
     }
+
 // Quizas conviene mas hacer el proceso normal de compra de tickets por medio del boostrap del usuario
 //    fun addAttendees() {
 //        shows["LaVelaPuerca_SmallFacility"].apply {
