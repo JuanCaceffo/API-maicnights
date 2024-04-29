@@ -46,10 +46,10 @@ fun Show.toShowDTO(dates: List<LocalDateTime>? = null) = ShowDTO(
     this.band.name,
     this.facility.name,
     this.allTicketPrices(),
-    this.allDates()
+    dates ?: this.allDates(),
 )
 
-fun Show.toShowUserDTO(commentStadistics: CommentStadisticsDTO, user: User?) =
+fun Show.toShowUserDTO(commentStadistics: CommentStadisticsDTO, user: User?, dates: List<LocalDateTime>? = null) =
     ShowUserDTO(
         this.toShowDTO(dates),
         commentStadistics.rating,
