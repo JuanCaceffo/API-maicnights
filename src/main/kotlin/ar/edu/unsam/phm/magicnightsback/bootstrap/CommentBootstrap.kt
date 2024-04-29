@@ -1,4 +1,4 @@
-package ar.edu.unsam.phm.magicnightsback.bootstraptest
+package ar.edu.unsam.phm.magicnightsback.bootstrap
 
 //import ar.edu.unsam.phm.magicnightsback.domain.Comment
 //import ar.edu.unsam.phm.magicnightsback.domain.StadiumSeatType
@@ -18,8 +18,8 @@ import org.springframework.stereotype.Component
 
 @Component
 @Profile("baseBootstrap")
-@DependsOn("userBoostrap", "showBoostrap")
-class CommentBoostrap(
+@DependsOn("userBootstrap", "showBootstrap")
+class CommentBootstrap(
     @Autowired
     userService: UserService,
     @Autowired

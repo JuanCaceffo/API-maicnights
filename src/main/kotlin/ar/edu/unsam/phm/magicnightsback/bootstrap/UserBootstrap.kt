@@ -1,4 +1,5 @@
-package ar.edu.unsam.phm.magicnightsback.bootstraptest
+package ar.edu.unsam.phm.magicnightsback.bootstrap
+
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import org.springframework.beans.factory.InitializingBean
@@ -10,7 +11,7 @@ import kotlin.jvm.optionals.getOrNull
 
 @Component
 @Profile("baseBootstrap")
-class UserBoostrap : InitializingBean {
+class UserBootstrap : InitializingBean {
     @Autowired
     lateinit var userRepository: UserRepository
 

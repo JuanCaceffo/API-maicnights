@@ -1,4 +1,4 @@
-package ar.edu.unsam.phm.magicnightsback.bootstraptest
+package ar.edu.unsam.phm.magicnightsback.bootstrap
 
 import ar.edu.unsam.phm.magicnightsback.domain.Show
 import ar.edu.unsam.phm.magicnightsback.repository.BandRepository
@@ -15,7 +15,7 @@ import java.time.LocalDateTime
 @Component
 @Profile("baseBootstrap")
 @DependsOn("bandBootstrap", "facilityBootstrap")
-class ShowBoostrap(
+class ShowBootstrap(
     @Autowired
     bandRepository: BandRepository,
     @Autowired
@@ -169,10 +169,9 @@ class ShowBoostrap(
 //    }
 
     override fun afterPropertiesSet() {
-        println("Boostrap show started")
+        println("Bootstrap show started")
         createShowDates()
         createShows()
-        println("Boostrap show finished")
 //        addAttendees()
     }
 }

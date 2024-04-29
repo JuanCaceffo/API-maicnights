@@ -1,19 +1,23 @@
-package ar.edu.unsam.phm.magicnightsback.boostrap
+package ar.edu.unsam.phm.magicnightsback.bootstrap
 
-import ar.edu.unsam.phm.magicnightsback.domain.*
+import ar.edu.unsam.phm.magicnightsback.domain.Cart
+import ar.edu.unsam.phm.magicnightsback.domain.SeatTypes
+import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.repository.CartRepository
 import ar.edu.unsam.phm.magicnightsback.repository.SeatRepository
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
+import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.context.annotation.DependsOn
-import org.springframework.core.annotation.Order
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
 @Component
-@DependsOn("seatBootstrap", "showBoostrap")
-class CartBoostrap(
+@Profile("baseBootstrap")
+@DependsOn("showBootstrap", "userBootstrap")
+class CartBootstrap(
     val cartRepository: CartRepository,
-    userBoostrap: UserBoostrap,
+    userRepository: UserRepository,
     showRepository: ShowRepository,
     seatRepository: SeatRepository
 ) : InitializingBean {
@@ -31,31 +35,26 @@ class CartBoostrap(
     val lowerlevel = seatRepository.findByName(SeatTypes.LOWERLEVEL.name).get()
     val field = seatRepository.findByName(SeatTypes.FIELD.name).get()
 
-
     val carts = mapOf(
-        "CartPablo" to Cart(userBoostrap.users[0]),
-        "CartSol" to Cart(userBoostrap.users[1]),
-        "CartJuan" to Cart(userBoostrap.users[2]),
-        "CartDenise" to Cart(userBoostrap.users[3]),
-        "CartCarolina" to Cart(userBoostrap.users[4]),
-        "CartMarcos" to Cart(userBoostrap.users[5]),
-        "CartAna" to Cart(userBoostrap.users[6])
+        "CartPablo" to Cart(userRepository.findByUsername("madescoces").get()),
+        "CartSol" to Cart(userRepository.findByUsername("mariasol").get()),
+        "CartJuan" to Cart(userRepository.findByUsername("juanceto01").get()),
+        "CartDenise" to Cart(userRepository.findByUsername("Denise123").get()),
+        "CartCarolina" to Cart(userRepository.findByUsername("CarolRodri").get()),
+        "CartMarcos" to Cart(userRepository.findByUsername("marcosg").get()),
+        "CartAna" to Cart(userRepository.findByUsername("anam").get())
     )
 
     //TODO: no persitir carritos de usaurio ya persitidos
     fun createCarts() {
         carts.values.forEach {
-//            val cartInRepo = cartRepository.findByUserId(it.user.id!!).getOrNull()
-//            if (cartInRepo != null) {
-//                it.id = cartInRepo.id
-//            } else {
-                cartRepository.save(it)
-                println("Cart for ${it.user.name} created")
-//            }
+            cartRepository.save(it)
+            println("Cart for ${it.user.name} created")
+
         }
     }
 
-    fun addTickets(){
+    fun addTickets() {
         carts["CartPablo"]!!.apply {
             reserveTicket(
                 Ticket(

@@ -1,4 +1,4 @@
-package ar.edu.unsam.phm.magicnightsback.bootstraptest
+package ar.edu.unsam.phm.magicnightsback.bootstrap
 
 
 import ar.edu.unsam.phm.magicnightsback.domain.*
