@@ -43,9 +43,6 @@ class UserService {
 
         return user
     }
-    
-    @Transactional(Transactional.TxType.NEVER)
-    fun getUserById(userId: Long) = findById(userId)
 
     /*Mapeo todos los tickets en uno solo por showDate juntando el precio total*/
     fun getTicketsGroupedByShowDate(user: User, ticketList: List<Ticket>): List<TicketDTO> {
