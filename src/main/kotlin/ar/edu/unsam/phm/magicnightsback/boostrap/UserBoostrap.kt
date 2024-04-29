@@ -1,19 +1,21 @@
 package ar.edu.unsam.phm.magicnightsback.boostrap
 import ar.edu.unsam.phm.magicnightsback.domain.User
-import ar.edu.unsam.phm.magicnightsback.dto.toDTO
-import ar.edu.unsam.phm.magicnightsback.dto.toFriendDTO
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
+import jakarta.transaction.Transactional
+import org.hibernate.SessionFactory
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import kotlin.jvm.optionals.getOrNull
 
-
 @Service
 class UserBoostrap : InitializingBean {
     @Autowired
     lateinit var userRepository: UserRepository
+
+    @Autowired
+    lateinit var sessionFactory: SessionFactory
 
     val users = listOf(
         User(
@@ -86,14 +88,18 @@ class UserBoostrap : InitializingBean {
         }
     )
 
+    @Transactional
     fun addFriends() {
-        val pablo = userRepository.findById(1).get()
-        val juan = userRepository.findById(2).get()
-        val sol = userRepository.findById(3).get()
-        val denise = userRepository.findById(4).get()
-        val carolina = userRepository.findById(5).get()
-        val marcos = userRepository.findById(6).get()
-        val ana = userRepository.findById(7).get()
+        val session = sessionFactory.openSession()
+
+        val pablo = session.get(User::class.java, 1L)
+        val juan = session.get(User::class.java, 2L)
+        val sol = session.get(User::class.java, 3L)
+        val denise = session.get(User::class.java, 4L)
+        val carolina = session.get(User::class.java, 5L)
+        val marcos = session.get(User::class.java, 6L)
+        val ana = session.get(User::class.java, 7L)
+
 
         pablo.apply {
             addFriend(juan)
@@ -142,9 +148,18 @@ class UserBoostrap : InitializingBean {
             addFriend(carolina)
         }
 
-        val usersWithFriends = mutableListOf<User>(pablo, juan, sol, denise, carolina, marcos, ana)
+        // Se guardan los usuarios actualizados
+        session.beginTransaction()
+        session.persist(pablo)
+        session.persist(juan)
+        session.persist(sol)
+        session.persist(denise)
+        session.persist(carolina)
+        session.persist(marcos)
+        session.persist(ana)
+        session.transaction.commit()
+        session.close()
 
-        userRepository.saveAll(usersWithFriends)
     }
 
     fun addCredits() {

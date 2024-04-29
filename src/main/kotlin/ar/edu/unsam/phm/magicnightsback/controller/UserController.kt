@@ -56,13 +56,12 @@ class UserController {
     }
 
 
-//
-//    @PutMapping("/{id}/create-comment")
-//    @Operation(summary = "Permite crear un comentario hacia un show")
-//    fun createComment(@RequestBody commentCreat: CommentCreateDTO,  @PathVariable id: Long){
-//        userService.createComment(id, commentCreat)
-//    }
-//
+    @PutMapping("/{userId}/create-comment")
+    @Operation(summary = "Permite crear un comentario hacia un show")
+    fun createComment(@RequestBody comment: CommentDTO,  @PathVariable userId: Long){
+        commentService.addComment(comment)
+    }
+
 
     @Operation(summary = "Permite logear un usuario registrado en el sistema")
     @ApiResponses(
