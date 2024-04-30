@@ -61,7 +61,7 @@ class ShowController {
             SeatDTO(
                 it.name,
                 show.ticketPrice(it),
-                showDate!!.availableSeatsOf(it)
+                showDate.availableSeatsOf(it)
             )
         }
     }
@@ -97,8 +97,8 @@ class ShowController {
             ApiResponse(responseCode = "400", description = ShowDateError.NEW_SHOW_INVALID_CONDITIONS),
         ]
     )
-    fun createShowDate(@PathVariable showId: Long, @RequestBody body: ShowDateDTO) {
-        showService.createShowDate(showId, body)
+    fun createShowDate(@PathVariable showId: Long, @RequestParam userId: Long,@RequestBody body: ShowDateDTO) {
+       showService.createShowDate(showId, userId, body)
     }
 
     fun userOrNull(id: Long): User? {

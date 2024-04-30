@@ -76,7 +76,7 @@ class ShowControllerTest(@Autowired val mockMvc: MockMvc) {
 
         mockMvc.perform(
             MockMvcRequestBuilders
-                .post("/api/admin_dashboard/show/new-show-date")
+                .post("/api/admin/show/{showId}/new-show-date", user.id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("userId", user.id.toString())
                 .content(mapper.writeValueAsString(newShowDate))
@@ -91,10 +91,10 @@ class ShowControllerTest(@Autowired val mockMvc: MockMvc) {
 
         val admin = userRepository.save(factory.createUser(UserTypes.ADMIN))
         val show = showRepository.save(factory.createShow(ShowTypes.BIGSHOW))
-        val newShowDate = ShowDateDTO(showId = show.id, date = LocalDateTime.now().minusDays(1))
+        val newShowDate = ShowDateDTO(date = LocalDateTime.now().minusDays(1))
 
         mockMvc.perform(
-            post("/api/admin_dashboard/show/new-show-date")
+            post("/api/admin/show/{showId}/new-show-date", show.id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("userId", admin.id.toString())
                 .content(mapper.writeValueAsString(newShowDate))
@@ -111,10 +111,10 @@ class ShowControllerTest(@Autowired val mockMvc: MockMvc) {
         val admin = userRepository.save(factory.createUser(UserTypes.ADMIN))
         val show = showRepository.save(factory.createShow(ShowTypes.BIGSHOW))
 
-        val newShowDate = ShowDateDTO(showId = show.id, date = LocalDateTime.now().plusDays(1))
+        val newShowDate = ShowDateDTO(date = LocalDateTime.now().plusDays(1))
 
         mockMvc.perform(
-            post("/api/admin_dashboard/show/new-show-date")
+            post("/api/admin/show/{showId}/new-show-date", show.id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("userId", admin.id.toString())
                 .content(mapper.writeValueAsString(newShowDate))
@@ -132,12 +132,12 @@ class ShowControllerTest(@Autowired val mockMvc: MockMvc) {
         val admin = userRepository.save(factory.createUser(UserTypes.ADMIN))
         val show = showRepository.save(factory.createShow(ShowTypes.BIGSHOW))
 
-        val newShowDate = ShowDateDTO(showId = show.id, date = newDate)
+        val newShowDate = ShowDateDTO(date = newDate)
 
         show.initialDates(listOf(newDate))
 
         mockMvc.perform(
-            post("/api/admin_dashboard/show/new-show-date")
+            post("/api/admin/show/{showId}/new-show-date", show.id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("userId", admin.id.toString())
                 .content(mapper.writeValueAsString(newShowDate))

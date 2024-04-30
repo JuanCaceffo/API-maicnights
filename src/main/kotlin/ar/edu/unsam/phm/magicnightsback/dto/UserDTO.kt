@@ -23,14 +23,13 @@ data class UserUpdateDTO(
     val surname: String,
 )
 
-fun User.toDTO(): UserDTO {
-    return UserDTO(
-        this.id,
-        this.profileImgUrl,
-        this.name,
-        this.surname,
-        this.username,
-        this.birthday,
-        this.dni
-    )
-}
+fun User.toDTO(): UserDTO = UserDTO(
+    this.id,
+    this.profileImgUrl,
+    this.name,
+    this.surname,
+    this.username,
+    this.birthday,
+    this.dni
+)
+
