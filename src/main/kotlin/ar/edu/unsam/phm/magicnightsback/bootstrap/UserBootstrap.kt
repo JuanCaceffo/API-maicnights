@@ -2,6 +2,8 @@ package ar.edu.unsam.phm.magicnightsback.bootstrap
 
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
+import jakarta.transaction.Transactional
+import org.hibernate.SessionFactory
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Profile
@@ -14,6 +16,9 @@ import kotlin.jvm.optionals.getOrNull
 class UserBootstrap : InitializingBean {
     @Autowired
     lateinit var userRepository: UserRepository
+
+    @Autowired
+    lateinit var sessionFactory: SessionFactory
 
     val users = listOf(
         User(
@@ -86,14 +91,18 @@ class UserBootstrap : InitializingBean {
         }
     )
 
-        fun addFriends() {
-        val pablo = users[0]
-        val juan = users[1]
-        val sol = users[2]
-        val denise = users[3]
-        val carolina = users[4]
-        val marcos = users[5]
-        val ana = users[6]
+    @Transactional
+    fun addFriends() {
+        val session = sessionFactory.openSession()
+
+        val pablo = session.get(User::class.java, 1L)
+        val juan = session.get(User::class.java, 2L)
+        val sol = session.get(User::class.java, 3L)
+        val denise = session.get(User::class.java, 4L)
+        val carolina = session.get(User::class.java, 5L)
+        val marcos = session.get(User::class.java, 6L)
+        val ana = session.get(User::class.java, 7L)
+
 
         pablo.apply {
             addFriend(juan)
@@ -142,6 +151,18 @@ class UserBootstrap : InitializingBean {
             addFriend(carolina)
         }
 
+        // Se guardan los usuarios actualizados
+        session.beginTransaction()
+        session.persist(pablo)
+        session.persist(juan)
+        session.persist(sol)
+        session.persist(denise)
+        session.persist(carolina)
+        session.persist(marcos)
+        session.persist(ana)
+        session.transaction.commit()
+        session.close()
+
     }
 
     fun addCredits() {
@@ -155,16 +176,16 @@ class UserBootstrap : InitializingBean {
                 it.id = userInRepo.id
             } else {
                 userRepository.save(it)
-                println("Band ${it.name} created")
+                println("User ${it.name} created")
             }
         }
     }
 
     override fun afterPropertiesSet() {
         println("User creation process starts")
-        addFriends()
         addCredits()
         createUsers()
+        addFriends()
         println("User creation process ends")
     }
 }

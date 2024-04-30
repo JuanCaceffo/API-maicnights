@@ -4,6 +4,7 @@ import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.domain.validateOptionalIsNotNull
 import ar.edu.unsam.phm.magicnightsback.dto.*
+import ar.edu.unsam.phm.magicnightsback.error.*
 import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import org.springframework.stereotype.Service
@@ -32,6 +33,16 @@ class UserService {
         val user = getUserById(userId)
         if (!user.isAdmin) throw AuthenticationException(UserError.USER_IS_NOT_ADMIN)
     }
+    
+    fun authenticate(username: String, password: String): User {
+        val user = findByUsername(username)
+
+        if (user.password != password) {
+            throw AuthenticationException(UserError.BAD_CREDENTIALS)
+        }
+
+        return user
+    }
 
     /*Mapeo todos los tickets en uno solo por showDate juntando el precio total*/
     fun getTicketsGroupedByShowDate(user: User, ticketList: List<Ticket>): List<TicketDTO> {
@@ -51,45 +62,53 @@ class UserService {
 //        return getTicketsGroupedByShowDate(user, user.tickets).map { it.toPurchasedTicketDTO() }
 //    }
 //
-//    fun getUserFriends(id: Long): List<FriendDTO> {
-//        val friends = this.userRepository.getFriends(id)
-//        return friends.map { userFriend -> userFriend.toFriendDTO() }
-//    }
-//
-//
-//    fun loginUser(loginUser: LoginUserDTO): Long {
-//        return this.userRepository.getLoginUser(loginUser)
-//            ?: throw AuthenticationException(UserError.BAD_CREDENTIALS)
-//    }
-//
+    @Transactional
+    fun getUserFriends(id: Long): List<FriendDTO> {
+        val user: User = findById(id)
+        return user.friends.map { userFriend -> userFriend.toFriendDTO() }
+    }
 
-//    fun deleteUserFriend(userId: Long, friendId: Long) {
-//        this.userRepository.getById(userId).removeFriendById(friendId)
-//    }
-//
-//    fun validateUser(userId: Long): Boolean {
-//        return this.userRepository.getById(userId).isAdmin
-//    }
-//
-//    fun getUserCredit(id: Long): Double {
-//        return this.userRepository.getById(id).credit
-//    }
-//
-//    fun addCreditToUser(id: Long, creditToAdd: Double): Double {
-//        this.userRepository.addCredit(id, creditToAdd)
-//
-//        return userRepository.getById(id).credit
-//    }
-//
-//    fun updateUser(id: Long, loginUser: UserDTO) {
-//        val userToUpdate = this.userRepository.getById(id)
-//
-//        userToUpdate.name = loginUser.name
-//        userToUpdate.surname = loginUser.surname
-//
-//        this.userRepository.update(userToUpdate)
-//    }
-//
+    @Transactional
+    fun deleteUserFriend(userId: Long, friendId: Long): List<FriendDTO> {
+        val user = findById(userId)
+        val friendToDelete = findById(friendId)
+
+        user.removeFriend(friendToDelete)
+        userRepository.save(user)
+
+        return user.friends.map { it.toFriendDTO() }
+}
+
+    fun validateUser(userId: Long): Boolean {
+        return findById(userId).isAdmin
+    }
+
+    fun getUserCredit(userId: Long): Double {
+        val user = findById(userId)
+
+        return user.credit
+    }
+
+
+    fun updateUserCredit(userId: Long, creditToAdd: Double): Double {
+        val user = findById(userId)
+
+        user.credit += creditToAdd
+        userRepository.save(user)
+
+        return user.credit
+    }
+
+    fun updateUser(userId: Long, userUpdate: UserUpdateDTO): UserDTO {
+        val user = findById(userId)
+
+        user.name = userUpdate.name
+        user.surname = userUpdate.surname
+
+        userRepository.save(user)
+
+        return user.toDTO()
+    }
 
 
 //        val user = userRepository.getById(id)
@@ -111,8 +130,8 @@ class UserService {
 //
 //
 
-    fun validateAdmin(id: Long) {
-        val user = validateOptionalIsNotNull(userRepository.findById(id))
+    fun validateAdmin(userId: Long) {
+        val user = findById(userId)
         if (!user.isAdmin) throw AuthenticationException(UserError.USER_IS_NOT_ADMIN)
     }
 
