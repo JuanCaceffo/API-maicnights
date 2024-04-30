@@ -99,11 +99,11 @@ class UserService {
         return user.credit
     }
 
-    fun updateUser(userId: Long, userDTO: UserDTO): UserDTO {
+    fun updateUser(userId: Long, userUpdate: UserUpdateDTO): UserDTO {
         val user = findById(userId)
 
-        user.name = userDTO.name
-        user.surname = userDTO.surname
+        user.name = userUpdate.name
+        user.surname = userUpdate.surname
 
         userRepository.save(user)
 

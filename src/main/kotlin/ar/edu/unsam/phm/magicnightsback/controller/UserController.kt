@@ -50,18 +50,6 @@ class UserController {
         return userService.deleteUserFriend(userId, friendId)
     }
 
-    @GetMapping("/{userId}/comments")
-    fun getUserComments(@PathVariable userId: Long): List<CommentDTO> {
-        return commentService.getUserComments(userId)
-    }
-
-
-    @PutMapping("/{userId}/create-comment")
-    @Operation(summary = "Permite crear un comentario hacia un show")
-    fun createComment(@RequestBody comment: CommentDTO,  @PathVariable userId: Long){
-        commentService.addComment(comment)
-    }
-
 
     @Operation(summary = "Permite logear un usuario registrado en el sistema")
     @ApiResponses(
@@ -84,9 +72,9 @@ class UserController {
         return user.toDTO()
     }
 
-    @PutMapping("/{id}/update")
+    @PatchMapping("/{id}/update")
     @Operation(summary = "Permite actualizar la data del usuario")
-    fun updateUser(@PathVariable id: Long, @RequestBody user: UserDTO): UserDTO {
+    fun updateUser(@PathVariable id: Long, @RequestBody user: UserUpdateDTO): UserDTO {
         val updatedUserDTO = userService.updateUser(id, user)
 
         return updatedUserDTO
@@ -99,7 +87,7 @@ class UserController {
     }
 
 
-    @PutMapping("/{id}/add_credit")
+    @PatchMapping("/{id}/add_credit")
     @Operation(summary = "Permite actualizar los creditos del usuario")
     fun updateUserCredit(@PathVariable id: Long, @RequestBody creditToAdd: Double): Double {
         return userService.updateUserCredit(id, creditToAdd)

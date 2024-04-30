@@ -18,6 +18,11 @@ data class UserDTO(
     val dni: Int,
 )
 
+data class UserUpdateDTO(
+    val name: String,
+    val surname: String,
+)
+
 fun User.toDTO(): UserDTO {
     return UserDTO(
         this.id,
