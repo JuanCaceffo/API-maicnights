@@ -1,5 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
+//import ar.edu.unsam.phm.magicnightsback.dto.toDTO
 import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 //import ar.edu.unsam.phm.magicnightsback.error.showError
@@ -31,7 +32,7 @@ class User(
     @Column(length = 100)
     var profileImgUrl: String = "default.jpg"
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     val friends = mutableListOf<User>()
 
     @OneToMany(fetch = FetchType.LAZY)
