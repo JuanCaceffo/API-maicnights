@@ -11,9 +11,11 @@ object UserError {
 }
 
 object CommentError {
+    const val IS_NOT_ATTENDEE = "No puede opinar sobre un show al que nunca fue"
     const val INVALID_RATTING = "El rating debe estar entre 1 y 5"
     const val SHOWDATE_NOT_PASSED = "No se puede agregar una opinion a un showdate si este no ocurrió"
     const val INVALID_DELETE = "No se puede borrar un comentario que no le pertenece"
+    const val SHOW_ALREADY_COMMENTED = "No se puede agregar mas de una opinion a un showdate"
 }
 
 object ShowError {

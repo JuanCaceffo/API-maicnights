@@ -34,30 +34,33 @@ data class CommentStadisticsDTO(
 )
 
 private fun Comment.toDto(): CommentDTO = CommentDTO(
-    id = this.id ?: 0,
+    id = this.id,
     text = this.text,
     rating = this.rating,
     date = this.date
 )
 
 fun Comment.toUserCommentDto(): CommentDTO = this.toDto().apply {
-    userId = this@toUserCommentDto.user.id ?: 0
+    userId = this@toUserCommentDto.user.id
+    showId = this@toUserCommentDto.show.id
     imgSrc = this@toUserCommentDto.user.profileImgUrl
     name = this@toUserCommentDto.user.name
 }
 
 fun Comment.toShowCommentDto(): CommentDTO = this.toDto().apply {
-    showId = this@toShowCommentDto.show.id ?: 0
+    showId = this@toShowCommentDto.show.id
     imgSrc = this@toShowCommentDto.show.imgUrl
     name = this@toShowCommentDto.show.name
 }
 
 
-//data class CommentCreateDTO(
-//    val groupTicketId: Long,
-//    val text: String,
-//    val rating: Double,
-//)
+data class CommentCreateDTO(
+    val userId: Long,
+    val showId: Long,
+    val showDateId: Long,
+    val text: String,
+    val rating: Double,
+)
 
 //fun Comment.toUserCommentDTO(): CommentDTO =
 //    CommentDTO(show.showImg, show.name, text, rating, date)
