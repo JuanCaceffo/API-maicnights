@@ -1,10 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.factory
 
 import ar.edu.unsam.phm.magicnightsback.domain.*
-import ar.edu.unsam.phm.magicnightsback.dto.ShowDateDTO
-import io.mockk.every
 import org.springframework.stereotype.Component
-import java.time.LocalDateTime
 
 enum class UserTypes {
     ADMIN, POOR, NORMAL
@@ -59,7 +56,7 @@ class TestFactory {
 
     fun createUser(type: UserTypes) = when (type) {
         UserTypes.ADMIN -> AdminUser().build()
-        UserTypes.POOR -> TODO()
+        UserTypes.POOR -> PoorUser().build()
         UserTypes.NORMAL -> CommonUser().build()
     }
 }
@@ -107,9 +104,18 @@ class BaseShow(override val name: String, override val band: Band, override val 
 }
 
 class AdminUser : TestObject<User> {
-    override fun build() = User("admin", "admin", "admin", "asdf").apply { isAdmin = true }
+    override fun build() = User("admin", "admin", "admin", "asdf").apply {
+        isAdmin = true
+        credit = 1000000.0
+    }
+}
+
+class PoorUser : TestObject<User> {
+    override fun build() = User("admin", "admin", "admin", "asdf").apply { credit = 0.0 }
 }
 
 class CommonUser : TestObject<User> {
-    override fun build() = User("admin", "admin", "admin", "asdf")
+    override fun build() = User("admin", "admin", "admin", "asdf").apply {
+        credit = 100000.0
+    }
 }
