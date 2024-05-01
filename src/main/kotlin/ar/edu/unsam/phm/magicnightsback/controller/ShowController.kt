@@ -30,10 +30,10 @@ class ShowController {
 
     @GetMapping("/shows")
     @Operation(summary = "Devuelve todos los shows disponibles")
-    fun getAll(@ModelAttribute request: ShowRequest): List<ShowUserDTO> {
+    fun getAll(@ModelAttribute request: ShowRequest): List<ShowDTO> {
         return showService.findAll(request).map {
             val commentsStats = commentService.getCommentStadisticsOfShow(it.id)
-            it.toShowUserDTO(commentsStats, userOrNull(request.userId))
+            it.toShowDTO(commentsStats, userOrNull(request.userId))
         }
     }
 
@@ -42,9 +42,9 @@ class ShowController {
     fun getShowById(
         @PathVariable id: Long,
         @RequestParam userId: Long = 0
-    ): ShowDetailsDTO {
+    ): ShowDTO {
         val commentsStats = commentService.getCommentStadisticsOfShow(id)
-        return showService.findById(id).toShowDetailsDTO(commentsStats, userOrNull(userId))
+        return showService.findById(id).toShowDetailsDTO(commentsStats)
     }
 
     @GetMapping("/show_dates/{showId}/date/{dateId}")
@@ -61,18 +61,18 @@ class ShowController {
             SeatDTO(
                 it.name,
                 show.ticketPrice(it),
-                showDate!!.availableSeatsOf(it)
+                showDate.availableSeatsOf(it)
             )
         }
     }
 
-    @GetMapping("/admin_dashboard/shows")
+    @GetMapping("/admin/shows")
     @Operation(summary = "Devuelve todos los shows disponibles (dashboard Admin)")
     fun getAllforAdmin(@ModelAttribute request: ShowAdminRequest): List<ShowDTO> {
         return showService.findAllAdmin(request).map { it.toShowDTO() }
     }
 
-    @GetMapping("/admin_dashboard/show/{id}/stats")
+    @GetMapping("/admin/show/{id}/stats")
     @Operation(summary = "Devuelve los stats de un show según su id (dashboard Admin)")
     fun getShowStatsById(
         @PathVariable id: Long,
@@ -83,13 +83,13 @@ class ShowController {
         return show.getAllStats(show)
     }
 
-    @GetMapping("/admin_dashboard/show/{showId}")
+    @GetMapping("/admin/show/{showId}")
     @Operation(summary = "Detalles de un show (dashboard Admin)")
     fun getShowByIdForAdmin(@PathVariable showId: Long, @RequestParam userId: Long): ShowAdminDetailsDTO {
         return showService.findByIdAdmin(showId, userId).toShowAdminDetailsDTO()
     }
 
-    @PostMapping("/admin_dashboard/show/new-show-date")
+    @PostMapping("/admin/show/{showId}/new-show-date")
     @Operation(summary = "Permite agregar una fecha")
     @ApiResponses(
         value = [
@@ -97,8 +97,8 @@ class ShowController {
             ApiResponse(responseCode = "400", description = ShowDateError.NEW_SHOW_INVALID_CONDITIONS),
         ]
     )
-    fun createShowDate(@RequestBody body: ShowDateDTO) {
-        showService.createShowDate(body)
+    fun createShowDate(@PathVariable showId: Long, @RequestParam userId: Long,@RequestBody body: ShowDateDTO) {
+       showService.createShowDate(showId, userId, body)
     }
 
     fun userOrNull(id: Long): User? {

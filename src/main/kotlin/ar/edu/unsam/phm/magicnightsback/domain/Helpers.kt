@@ -15,6 +15,8 @@ import kotlin.math.pow
 
 fun LocalDate.calculateAge(): Int = Period.between(this, LocalDate.now()).years
 
+fun List<Double>.averageOrZero() = if (isEmpty()) 0.0 else average()
+
 fun Number.throwErrorIfNegative(error: RuntimeException): Number {
     if (this.toFloat() < 0F) {
         throw error
@@ -36,7 +38,7 @@ object Comparar {
 }
 
 fun String.removeSpaces(): String {
-    return this.trim().replace("\\s+".toRegex(), "")
+    return this.trim().replace("\\s+|/".toRegex(), "")
 }
 
 fun Number.throwIfGreaterThan(number: Number, msg: String): Number {

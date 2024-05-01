@@ -2,124 +2,55 @@ package ar.edu.unsam.phm.magicnightsback.dto
 
 import ar.edu.unsam.phm.magicnightsback.domain.Show
 import ar.edu.unsam.phm.magicnightsback.domain.User
-import java.time.LocalDateTime
 
-//import ar.edu.unsam.phm.magicnightsback.domain.User
-//import org.uqbar.geodds.Point
-//import java.time.LocalDateTime
-//import kotlin.math.ceil
-
-data class ShowDTO(
+data class ShowData(
     val id: Long,
     val showImg: String,
     val showName: String,
     val bandName: String,
     val facilityName: String,
-    val prices: List<Double>?,
-    val dates: List<LocalDateTime>
 )
 
-data class ShowUserDTO(
-    val show: ShowDTO,
-    val rating: Double,
-    val totalComments: Int,
-    val userImageNames: List<String>
+data class ShowDTO(
+    val data: ShowData,
+    val prices: List<Double>? = null,
+    val dates: List<ShowDateDTO>? = null,
+    val rating: Double? = null,
+    val totalComments: Int? = null,
+    val userImageNames: List<String>? = null,
+    val comments: List<CommentDTO>? = null,
+    val geolocation: String? = null,
+    val price: Double? = null,
 )
-
-data class ShowDetailsDTO(
-    val show: ShowUserDTO,
-    val comments: List<CommentDTO>,
-    val geolocation: String,
-)
-
-
 
 data class AdminSummaryDTO(
-    val title: String,
-    val description: String
+    val title: String, val description: String
 )
 
-fun Show.toShowDTO(dates: List<LocalDateTime>? = null) = ShowDTO(
+fun Show.data() = ShowData(
     this.id,
     this.imgUrl,
     this.name,
     this.band.name,
     this.facility.name,
-    this.allTicketPrices(),
-    dates ?: this.allDates(),
 )
 
-fun Show.toShowUserDTO(commentStadistics: CommentStadisticsDTO, user: User?, dates: List<LocalDateTime>? = null) =
-    ShowUserDTO(
-        this.toShowDTO(dates),
-        commentStadistics.rating,
-        commentStadistics.totalComments,
-        if (user != null) this.friendsAttendeesProfileImages(user) else listOf(),
-    )
+fun Show.toShowDTO(commentStats: CommentStadisticsDTO? = null, user: User? = null) = ShowDTO(
+    this.data(),
+    this.allTicketPrices(),
+    this.allDatesWithIds(),
+    commentStats?.rating,
+    commentStats?.totalComments,
+    if (user != null) this.friendsAttendeesProfileImages(user) else null,
+)
 
-fun Show.toShowDetailsDTO(commentStats: CommentStadisticsDTO, user: User?) = ShowDetailsDTO(
-    this.toShowUserDTO(commentStats, user),
-    commentStats.comments,
+fun Show.toShowDetailsDTO(commentStats: CommentStadisticsDTO? = null) = ShowDTO(
+    this.data(),
+    null,
+    this.allDatesWithIds(),
+    commentStats?.rating,
+    commentStats?.totalComments,
+    null,
+    commentStats?.comments,
     this.geoLocationString()
 )
-
-
-
-
-//
-//fun pointToDMS(point: Point): String {
-//    val latitude = point.x
-//    val longitude = point.y
-//
-//    val latitudeDirection = if (latitude >= 0) "N" else "S"
-//    val longitudeDirection = if (longitude >= 0) "E" else "W"
-//
-//    return "Latitude: ${decimalToDMS(latitude)} $latitudeDirection, Longitude: ${decimalToDMS(longitude)} $longitudeDirection"
-//}
-//
-
-//}
-//
-
-//
-//
-//fun Show.allCommentsDTO(): List<CommentDTO> {
-//    return allAttendees().flatMap { user ->
-//        user.comments.filter { it.show == this }.map {
-//            CommentDTO(
-//                user.profileImage,
-//                user.username,
-//                it.text,
-//                it.rating,
-//                it.date
-//            )
-//        }
-//    }
-//}
-//
-//fun Show.toShowDTO(user: User?, comments: List<CommentDTO> = emptyList(), price: Double = 0.0) =
-//    ShowDTO(
-//        this.id,
-//        this.showImg,
-//        this.name,
-//        this.band.name,
-//        this.facility.name,
-//        this.totalRating(),
-//        this.comments().size,
-//        price,
-//        this.allTicketPrices(),
-//        this.allDates(),
-//        if (user != null) this.friendsAttendeesProfileImages(user) else listOf(),
-//        comments,
-//        pointToDMS(this.facility.location),
-//        listOf(
-//            Details("Entradas vendidas totales: ", this.totalTicketsSold().toString())
-//        ) +
-//                this.getSeatTypes()
-//                    .map { Details("Entradas Vendidas " + it.name, ticketsSoldOfSeatType(it).toString()) } +
-//                listOf(
-//                    Details("Recaudación total: ", this.totalSales().toString()),
-//                    Details("Costo total: ", this.baseCost().toString()),
-//                    Details("Personas en espera: ", this.pendingAttendees.size.toString())
-//                )
-//    )

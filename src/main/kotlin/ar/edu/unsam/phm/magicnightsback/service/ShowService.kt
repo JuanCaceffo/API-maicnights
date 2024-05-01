@@ -1,17 +1,13 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
-import ar.edu.unsam.phm.magicnightsback.controller.ShowController.*
-
-import ar.edu.unsam.phm.magicnightsback.domain.Show
+import ar.edu.unsam.phm.magicnightsback.controller.ShowController.ShowAdminRequest
+import ar.edu.unsam.phm.magicnightsback.controller.ShowController.ShowRequest
 import ar.edu.unsam.phm.magicnightsback.domain.*
 import ar.edu.unsam.phm.magicnightsback.dto.ShowDateDTO
-import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
-import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.PathVariable
 
 @Service
 class ShowService {
@@ -35,22 +31,26 @@ class ShowService {
         return validateOptionalIsNotNull(showRepository.findById(showId))
     }
 
-    fun createShowDate(showDate: ShowDateDTO): ShowDate {
-        userService.validateAdminStatus(showDate.userId)
-        val show = validateOptionalIsNotNull(showRepository.findById(showDate.showId))
-        return show.addDate(parseLocalDateTime(showDate.date))
+    @Transactional(Transactional.TxType.REQUIRED)
+    fun createShowDate(showId: Long, userId: Long,  body: ShowDateDTO): ShowDate {
+        userService.validateAdminStatus(userId)
+        val show = validateOptionalIsNotNull(showRepository.findById(showId))
+        return show.addDate(body.date)
     }
 
+    @Transactional(Transactional.TxType.NEVER)
     fun findAllAdmin(params: ShowAdminRequest): List<Show> {
         userService.validateAdminStatus(params.userId)
         return findAll(params.toShowRequest())
     }
 
-    fun findByIdAdmin(showId: Long, userId: Long): Show{
+    @Transactional(Transactional.TxType.NEVER)
+    fun findByIdAdmin(showId: Long, userId: Long): Show {
         userService.validateAdminStatus(userId)
         return validateOptionalIsNotNull(showRepository.findById(showId))
     }
 
+    @Transactional(Transactional.TxType.NEVER)
     fun findByName(name: String): Show = validateOptionalIsNotNull(showRepository.findByName(name))
 
     private fun filter(shows: Iterable<Show>, params: ShowRequest): List<Show> {

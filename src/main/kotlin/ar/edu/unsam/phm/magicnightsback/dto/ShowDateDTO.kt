@@ -1,7 +1,17 @@
 package ar.edu.unsam.phm.magicnightsback.dto
 
-data class ShowDateDTO (
-    val showId: Long,
-    val userId: Long,
-    val date: String
+import ar.edu.unsam.phm.magicnightsback.domain.ShowDate
+import com.fasterxml.jackson.annotation.JsonFormat
+import java.time.LocalDateTime
+
+data class ShowDateDTO(
+    val id: Long = 0,
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    val date: LocalDateTime = LocalDateTime.MIN
+)
+
+fun ShowDate.toShowDateDTO() = ShowDateDTO(
+    id = this.id,
+    date = this.date,
 )

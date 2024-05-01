@@ -9,6 +9,9 @@ server:
     include-stacktrace: never
 
 spring:
+  profiles:
+    active: baseBootstrap
+
   #   base de datos posta
   datasource:
     url: jdbc:postgresql://0.0.0.0:5432/magicnights

@@ -1,11 +1,19 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
-import ar.edu.unsam.phm.magicnightsback.domain.*
-import ar.edu.unsam.phm.magicnightsback.repository.BandRepository
-import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
-import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
-import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
+import ar.edu.unsam.phm.magicnightsback.dto.ShowDateDTO
+import ar.edu.unsam.phm.magicnightsback.error.ShowDateError
+import ar.edu.unsam.phm.magicnightsback.factory.ShowTypes
+import ar.edu.unsam.phm.magicnightsback.factory.TestFactory
+import ar.edu.unsam.phm.magicnightsback.factory.UserTypes
+import ar.edu.unsam.phm.magicnightsback.repository.*
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import io.mockk.every
+import io.mockk.mockkStatic
+import io.mockk.unmockkAll
+import jakarta.transaction.Transactional
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -15,12 +23,19 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @DisplayName("Show Controller Tests")
+@Transactional
 class ShowControllerTest(@Autowired val mockMvc: MockMvc) {
+
+    @Autowired
+    lateinit var seatRepository: SeatRepository
 
     @Autowired
     lateinit var facilityRepository: FacilityRepository
@@ -34,39 +49,105 @@ class ShowControllerTest(@Autowired val mockMvc: MockMvc) {
     @Autowired
     lateinit var bandRepository: BandRepository
 
-    lateinit var show: Show
-    lateinit var band: Band
-    lateinit var theater: Theater
-    lateinit var admin: User
-    lateinit var normalUser: User
+    val mapper: ObjectMapper = ObjectMapper().registerModule(JavaTimeModule())
 
-    val mapper = ObjectMapper()
+    val factory = TestFactory()
 
     @BeforeEach
-    fun init() {
-        admin = User("admin", "amin", "admin", "asdf").apply { isAdmin = true }
-        normalUser = User("user", "user", "user", "asdf")
-        theater = Theater("test_theater", Point(1.0, 1.0))
-        band = Band("test_band")
-        show = Show("test_show", band, theater)
+    fun setup() {
+        mockkStatic(LocalDate::class)
+        mockkStatic(LocalDateTime::class)
+    }
+
+    @AfterEach
+    fun teardown() {
+        unmockkAll()
+    }
+
+    fun mockNow(expected: LocalDateTime) {
+        every { LocalDate.now() } returns expected.toLocalDate()
+        every { LocalDateTime.now() } returns expected
     }
 
     @Test
     fun `llamada al metodo post para crear una funcion por un usuario que no es admin falla`() {
-        val newDate = """
-            {
-                "showId": 1,
-                "userId": 2,                
-                "fecha": "2024-04-18T12:30:45Z",                
-            }
-        """.trimIndent()
+        val user = userRepository.save(factory.createUser(UserTypes.NORMAL))
+        val newShowDate = ShowDateDTO()
 
         mockMvc.perform(
             MockMvcRequestBuilders
-                .post("/api/admin_dashboard/show/new-show-date")
+                .post("/api/admin/show/{showId}/new-show-date", user.id)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(newDate))
+                .param("userId", user.id.toString())
+                .content(mapper.writeValueAsString(newShowDate))
         )
             .andExpect(status().is4xxClientError)
+            .andExpect(status().isUnauthorized())
+    }
+
+    @Test
+    fun `llamada al metodo post para crear una funcion por un usuario que es admin falla debido a que la fecha es anterior a la actual`() {
+        mockNow(LocalDateTime.of(2020, 2, 2, 12, 30))
+
+        val admin = userRepository.save(factory.createUser(UserTypes.ADMIN))
+        val show = showRepository.save(factory.createShow(ShowTypes.BIGSHOW))
+        val newShowDate = ShowDateDTO(date = LocalDateTime.now().minusDays(1))
+
+        val result = mockMvc.perform(
+            post("/api/admin/show/{showId}/new-show-date", show.id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("userId", admin.id.toString())
+                .content(mapper.writeValueAsString(newShowDate))
+        )
+            .andExpect(status().is4xxClientError)
+            .andReturn()
+
+        assertEquals(ShowDateError.INVALID_DATE, result.resolvedException?.message)
+    }
+
+    @Test
+    fun `llamada al metodo post para crear una funcion por un usuario que es admin falla debido a que no se cumplen las condiciones del negocio`() {
+        mockNow(LocalDateTime.of(2020, 2, 2, 12, 30))
+
+        val admin = userRepository.save(factory.createUser(UserTypes.ADMIN))
+        val show = showRepository.save(factory.createShow(ShowTypes.BIGSHOW))
+
+        val newShowDate = ShowDateDTO(date = LocalDateTime.now().plusDays(1))
+
+        val result = mockMvc.perform(
+            post("/api/admin/show/{showId}/new-show-date", show.id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("userId", admin.id.toString())
+                .content(mapper.writeValueAsString(newShowDate))
+        )
+            .andExpect(status().isBadRequest)
+            .andReturn()
+
+            assertEquals(ShowDateError.NEW_SHOW_INVALID_CONDITIONS, result.resolvedException?.message)
+    }
+
+    @Test
+    fun `llamada al metodo post para crear una funcion por un usuario que es admin falla debido a que ya existe la fecha`() {
+        mockNow(LocalDateTime.of(2020, 2, 2, 12, 30))
+
+        val newDate = LocalDateTime.now().plusDays(1)
+
+        val admin = userRepository.save(factory.createUser(UserTypes.ADMIN))
+        val show = showRepository.save(factory.createShow(ShowTypes.BIGSHOW))
+
+        val newShowDate = ShowDateDTO(date = newDate)
+
+        show.initialDates(listOf(newDate))
+
+        val result = mockMvc.perform(
+            post("/api/admin/show/{showId}/new-show-date", show.id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("userId", admin.id.toString())
+                .content(mapper.writeValueAsString(newShowDate))
+        )
+            .andExpect(status().isBadRequest)
+            .andReturn()
+
+        assertEquals(ShowDateError.DATE_ALREADY_EXISTS, result.resolvedException?.message)
     }
 }

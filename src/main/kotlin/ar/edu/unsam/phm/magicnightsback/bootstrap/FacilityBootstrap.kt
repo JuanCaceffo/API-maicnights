@@ -1,4 +1,4 @@
-package ar.edu.unsam.phm.magicnightsback.boostrap
+package ar.edu.unsam.phm.magicnightsback.bootstrap
 
 
 import ar.edu.unsam.phm.magicnightsback.domain.*
@@ -7,12 +7,13 @@ import ar.edu.unsam.phm.magicnightsback.repository.SeatRepository
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.DependsOn
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
-import org.springframework.stereotype.Service
 import kotlin.jvm.optionals.getOrNull
 
 
 @Component
+@Profile("baseBootstrap")
 @DependsOn("seatBootstrap")
 class FacilityBootstrap(
     @Autowired

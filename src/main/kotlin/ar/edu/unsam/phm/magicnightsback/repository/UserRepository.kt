@@ -1,13 +1,18 @@
 package ar.edu.unsam.phm.magicnightsback.repository
 
 import ar.edu.unsam.phm.magicnightsback.domain.User
+import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 import java.util.Optional
 
 @Repository
 interface UserRepository : CrudRepository<User, Long>{
+    @EntityGraph(attributePaths = ["tickets"])
     fun findByUsername(username: String): Optional<User>
+
+    @EntityGraph(attributePaths = ["friends"])
+    override fun findById(id: Long): Optional<User>
 }
 
 

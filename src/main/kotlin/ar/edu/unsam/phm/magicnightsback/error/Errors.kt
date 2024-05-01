@@ -16,7 +16,7 @@ object CommentError {
     const val INVALID_DELETE = "No se puede borrar un comentario que no le pertenece"
 }
 
-object showError {
+object ShowError {
     const val BAND_ERROR = "El show debe tener una banda"
     const val FACILITY_ERROR = "El show debe tener un lugar"
     const val USER_CANT_COMMENT = "El usaurio no puede comentar el show"
@@ -26,10 +26,11 @@ object showError {
 object ShowDateError{
     const val EXCEEDED_CAPACITY = "Excedio la capacidad maxima de asientos para esta ubicacion"
     const val MSG_DATE_NOT_FOUND = "La fecha que intento buscar no existe"
+    const val INVALID_DATE = "La fecha debe ser posterior a la actual"
     const val DATE_ALREADY_EXISTS = "La fecha que desea agregar ya existe"
     const val NEW_SHOW_INVALID_CONDITIONS = "Las condiciones no permiten agregar una nueva fecha para el show"
-
 }
+
 object RepositoryError {
     const val ID_NOT_FOUND = "El ID no corresponde con ningún elemento del repositorio"
     const val ELEMENT_NOT_FOUND = "Elemento no encontrado"
@@ -41,7 +42,7 @@ object FacilityError {
     const val NEGATIVE_PRICE = "El precio no puede ser un valor negativo"
 }
 
-object cartError {
+object CartError {
     const val CART_FOR_USER_NOT_FOUND = "El carrito para el usaurio especificado no fue encontrado"
 }
 

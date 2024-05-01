@@ -1,12 +1,8 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-//import ar.edu.unsam.phm.magicnightsback.dto.toDTO
-import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
-//import ar.edu.unsam.phm.magicnightsback.error.showError
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import jakarta.persistence.*
-//import ar.edu.unsam.phm.magicnightsback.repository.Iterable
 import java.time.LocalDate
 
 @Entity
@@ -32,7 +28,7 @@ class User(
     @Column(length = 100)
     var profileImgUrl: String = "default.jpg"
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val friends = mutableListOf<User>()
 
     @OneToMany(fetch = FetchType.LAZY)
@@ -40,7 +36,7 @@ class User(
     var credit = 0.0
 
     fun addFriend(user: User) {
-        if (id != user.id) {
+        if (user != this) {
             friends.add(user)
         }
     }
@@ -50,10 +46,6 @@ class User(
     }
 
     fun isMyFriend(user: User) = friends.contains(user)
-
-//    private fun validComment(show: Show){
-//        if (!show.canBeCommented(this)) throw BusinessException(showError.USER_CANT_COMMENT)
-//    }
 
     fun addTicket(ticket: Ticket) {
         ticket.showDate.addAttendee(this)

@@ -1,20 +1,21 @@
-package ar.edu.unsam.phm.magicnightsback.boostrap
+package ar.edu.unsam.phm.magicnightsback.bootstrap
 
 import ar.edu.unsam.phm.magicnightsback.domain.Show
-import ar.edu.unsam.phm.magicnightsback.domain.ShowDate
 import ar.edu.unsam.phm.magicnightsback.repository.BandRepository
 import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.DependsOn
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 
 
 @Component
+@Profile("baseBootstrap")
 @DependsOn("bandBootstrap", "facilityBootstrap")
-class ShowBoostrap(
+class ShowBootstrap(
     @Autowired
     bandRepository: BandRepository,
     @Autowired
@@ -168,10 +169,9 @@ class ShowBoostrap(
 //    }
 
     override fun afterPropertiesSet() {
-        println("Boostrap show started")
+        println("Bootstrap show started")
         createShowDates()
         createShows()
-        println("Boostrap show finished")
 //        addAttendees()
     }
 }

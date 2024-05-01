@@ -1,5 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
+import ar.edu.unsam.phm.magicnightsback.dto.ShowDateDTO
+import ar.edu.unsam.phm.magicnightsback.dto.toShowDateDTO
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.NotFoundException
 import ar.edu.unsam.phm.magicnightsback.error.ShowDateError
@@ -50,7 +52,7 @@ class Show(
 
     fun initialDates(newDates: List<LocalDateTime>) {
         newDates.forEach {
-            dates.add(ShowDate(it,facility))
+            dates.add(ShowDate(it, facility))
         }
     }
 
@@ -71,20 +73,22 @@ class Show(
     fun changeRentability(newShowStatus: Rentability) {
         this.rentabilityType = newShowStatus
     }
-
-    fun newDateAvailable(show: Show) = PivotStats.stats.all { it.newDateCondition(show) }
     fun getAllStats(show: Show) = PivotStats.stats.map { it.getStat(show) }
 
-   fun friendsAttendeesProfileImages(user: User) = friendsAttending(user).map { it.profileImgUrl }
-   fun friendsAttending(user: User) = allAttendees().filter { it.isMyFriend(user) }
+    //Friends Methods
+    fun friendsAttendeesProfileImages(user: User) = friendsAttending(user).map { it.profileImgUrl }
+    fun friendsAttending(user: User) = allAttendees().filter { it.isMyFriend(user) }
 
+    // Dates Methods
     fun allDates() = dates.map { it.date }.toList().sortedBy { it }
-
+    fun allDatesWithIds() = dates.map { it.toShowDateDTO() }.sortedBy { it.date }
     fun allAttendees() = dates.flatMap { it.attendees }
     fun soldOutDates() = dates.filter { it.isSoldOut() }.size
+    fun newDateAvailable(show: Show) = PivotStats.stats.all { it.newDateCondition(show) }
 
     //Validations
     fun validNewDate(date: LocalDate) {
+        if (date.isBefore(LocalDate.now())) throw BusinessException(ShowDateError.INVALID_DATE)
         if (dates.any { it.date.toLocalDate() == date }) throw BusinessException(ShowDateError.DATE_ALREADY_EXISTS)
         if (!newDateAvailable(this)) throw BusinessException(ShowDateError.NEW_SHOW_INVALID_CONDITIONS)
     }
