@@ -31,7 +31,7 @@ class User(
     @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val friends = mutableListOf<User>()
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val tickets = mutableListOf<Ticket>()
     var credit = 0.0
 

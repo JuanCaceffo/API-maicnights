@@ -53,6 +53,7 @@ abstract class Facility(
 class Stadium(
     name: String,
     location: Point,
+    @Column(nullable = false)
     override var fixedPrice: Double
 ) : Facility(name, location) {
     init {
