@@ -8,10 +8,8 @@ import java.util.*
 interface CartRepository: CrudRepository<Cart, Long> {
 //    fun getCardFor(userId: Long) = getAll().find { cart -> cart.user.id == userId } ?: throw NotFoundException(cartError.CART_FOR_USER_NOT_FOUND)
     @EntityGraph(attributePaths = [
-        "user",
-        "user.friends",
-        "user.tickets",
         "reservedTickets",
+        "reservedTickets.show",
         "reservedTickets.show.dates",
         "reservedTickets.show.facility.places",
         "reservedTickets.showDate",

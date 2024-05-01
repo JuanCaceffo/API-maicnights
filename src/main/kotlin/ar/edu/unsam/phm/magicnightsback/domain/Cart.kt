@@ -8,7 +8,7 @@ class Cart(@ManyToOne val user: User) {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val reservedTickets: MutableList<Ticket> = mutableListOf()
 
     fun getAllTickets() = reservedTickets
