@@ -25,20 +25,20 @@ class ShowDate(
         attendees.add(user)
     }
 
-    fun reserveSeat(seat: Seat, quantity: Int) {
+    fun reserveSeat(seat: SeatTypes, quantity: Int) {
         quantity.throwIfGreaterThan(availableSeatsOf(seat),ShowDateError.EXCEEDED_CAPACITY)
         reservedSeats[seat.name] = (reservedSeats[seat.name]!! + quantity)
     }
 
-    fun releaseSeat(seat: Seat, quantity: Int) {
+    fun releaseSeat(seat: SeatTypes, quantity: Int) {
         reservedSeats[seat.name] = (reservedSeats[seat.name]!! - quantity)
     }
 
-    fun getReservedSeatsOf(seat: Seat) = reservedSeats[seat.name] ?: 0
+    fun getReservedSeatsOf(seat: SeatTypes) = reservedSeats[seat.name] ?: 0
 
     fun getAllReservedSeats() = reservedSeats.map { it.value }.sum()
 
-    fun availableSeatsOf(seat: Seat): Int {
+    fun availableSeatsOf(seat: SeatTypes): Int {
         return facility.getPlaceCapacity(seat) - getReservedSeatsOf(seat)
     }
 

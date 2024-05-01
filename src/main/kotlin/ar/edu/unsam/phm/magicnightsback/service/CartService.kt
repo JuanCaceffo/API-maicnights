@@ -9,7 +9,6 @@ import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.stereotype.Service
 
 @Service
@@ -36,7 +35,7 @@ class CartService(
         val cart = getCartByUserId(userId)
         val show = validateOptionalIsNotNull(showRepo.findById(ticketData.showId))
         val showDate = show.getShowDateById(ticketData.showDateId)
-        val seat = show.facility.getPlaceBySeatName(ticketData.seatTypeName.name).seat
+        val seat = show.facility.getPlaceBySeatName(ticketData.seatTypeName.name).seatType
 
         cart.reserveTicket(Ticket(show, showDate, seat,ticketData.quantity))
         cartRepo.save(cart)

@@ -15,7 +15,7 @@ class PlaceTest : DescribeSpec({
         it("Should return the total cost of the facility") {
             //Arrate & Assert
             shouldThrow<BusinessException> {
-                Place(Seat(SeatTypes.BOX), -1)
+                Place(SeatTypes.BOX, -1)
             }.message shouldBe FacilityError.NEGATIVE_CAPACITY
         }
     }

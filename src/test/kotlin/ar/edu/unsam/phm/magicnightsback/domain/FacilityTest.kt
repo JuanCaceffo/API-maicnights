@@ -8,13 +8,10 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.doubles.shouldBeLessThan
 import io.kotest.matchers.shouldBe
 
-class FacilityTests : DescribeSpec({
+class FacilityTest : DescribeSpec({
     isolationMode = IsolationMode.InstancePerTest
     describe("Tests Stadium") {
         //Arrange
-        val upper = Seat(SeatTypes.UPPERLEVEL)
-        val box = Seat(SeatTypes.BOX)
-        val field = Seat(SeatTypes.FIELD)
 
         val stadium = Stadium(
             name = "River Plate",
@@ -22,9 +19,9 @@ class FacilityTests : DescribeSpec({
             1000000.0
         )
             .apply {
-                addPlace(upper, 20000)
-                addPlace(box, 15000)
-                addPlace(field, 35000)
+                addPlace(SeatTypes.UPPERLEVEL, 20000)
+                addPlace(SeatTypes.BOX, 15000)
+                addPlace(SeatTypes.FIELD, 35000)
             }
 
         it("Should return the total cost of the facility") {
@@ -34,7 +31,7 @@ class FacilityTests : DescribeSpec({
 
         it("Should return total seat capacy by seat type ") {
             //Assert
-            stadium.getPlaceCapacity(box) shouldBe 15000
+            stadium.getPlaceCapacity(SeatTypes.BOX) shouldBe 15000
         }
 
         it("El metodo getSeatCapacity devuelve la suma de capacidades de todos los tipos de asientos") {
@@ -60,15 +57,13 @@ class FacilityTests : DescribeSpec({
 
     describe("Tests Theater") {
         //Arrange
-        val lower = Seat(SeatTypes.LOWERLEVEL)
-        val pullman = Seat(SeatTypes.PULLMAN)
         val theater = Theater(
             name = "Grand Rex",
             Point(-34.54612, -58.45004)
         )
             .apply {
-                addPlace(pullman, 10000)
-                addPlace(lower, 15000)
+                addPlace(SeatTypes.PULLMAN, 10000)
+                addPlace(SeatTypes.LOWERLEVEL, 15000)
             }
 
         val goodTheater = Theater(
@@ -76,8 +71,8 @@ class FacilityTests : DescribeSpec({
             Point(-34.54612, -58.45004)
         )
             .apply {
-                addPlace(pullman, 10000)
-                addPlace(lower, 15000)
+                addPlace(SeatTypes.PULLMAN, 10000)
+                addPlace(SeatTypes.LOWERLEVEL, 15000)
                 hasGoodAcoustics = true
             }
 

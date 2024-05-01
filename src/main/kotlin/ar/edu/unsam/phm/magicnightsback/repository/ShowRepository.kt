@@ -12,7 +12,6 @@ interface ShowRepository : CrudRepository<Show, Long>, CustomCrudRepository<Show
             "band",
             "facility",
             "facility.places",
-            "facility.places.seat",
             "dates",
             "dates.reservedSeats",
             "dates.attendees",
@@ -26,7 +25,6 @@ interface ShowRepository : CrudRepository<Show, Long>, CustomCrudRepository<Show
             "band",
             "facility",
             "facility.places",
-            "facility.places.seat",
             "dates",
             "dates.attendees"
         ]

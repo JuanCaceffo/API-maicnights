@@ -12,16 +12,13 @@ class ShowTest: DescribeSpec({
             cost = 10000.0
         }
 
-        val pullman = Seat(SeatTypes.PULLMAN)
-        val lower = Seat(SeatTypes.LOWERLEVEL)
-
         val theater = Theater(
             name = "Gran Rex",
             location = Point(latitude = -34.603542, longitude = -58.378856)
         ).apply {
             hasGoodAcoustics = true
-            addPlace(pullman, 2000)
-            addPlace(lower, 3000)
+            addPlace(SeatTypes.PULLMAN, 2000)
+            addPlace(SeatTypes.LOWERLEVEL, 3000)
         }
 
         val show = Show(name = "Cachenged!!", vela, theater)
@@ -31,18 +28,18 @@ class ShowTest: DescribeSpec({
         }
 
         it( "The show returns a base ticket price"){
-            show.baseTicketPrice(pullman) shouldBe 15032.0
+            show.baseTicketPrice(SeatTypes.PULLMAN) shouldBe 15032.0
         }
 
         it ("The show returns a seat price based on a seat type" ){
-            show.ticketPrice(pullman) shouldBe 12025.6
+            show.ticketPrice(SeatTypes.PULLMAN) shouldBe 12025.6
         }
 
         it ( "The show returns a greater seat price based on a seat type if rentability changes"){
             //Act
             show.changeRentability(Rentability.MEGA_SHOW)
             //Assert
-            show.ticketPrice(pullman) shouldBe 19541.60
+            show.ticketPrice(SeatTypes.PULLMAN) shouldBe 19541.60
         }
     }
 })

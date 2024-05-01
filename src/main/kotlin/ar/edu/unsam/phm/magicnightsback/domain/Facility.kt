@@ -25,7 +25,7 @@ abstract class Facility(
     abstract fun fixedCostVariant(): Double
     fun cost() = fixedPrice + fixedCostVariant()
 
-    fun addPlace(seat: Seat, capacity: Int) {
+    fun addPlace(seat: SeatTypes, capacity: Int) {
         validateSeatType(seat.name)
         places.add(Place(seat, capacity = capacity))
     }
@@ -33,9 +33,9 @@ abstract class Facility(
     //TODO: validar si el asiento existe dentro de la facility
     fun getPlaceBySeatName(seatName: String): Place {
         validateSeatType(seatName)
-        return places.find { it.seat.name == seatName }!!
+        return places.find { it.seatType.name == seatName }!!
     }
-    fun getPlaceCapacity(seat: Seat) = getPlaceBySeatName(seat.name).capacity
+    fun getPlaceCapacity(seat: SeatTypes) = getPlaceBySeatName(seat.name).capacity
 
     fun getTotalSeatCapacity() = places.sumOf { it.capacity }
 

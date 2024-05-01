@@ -22,7 +22,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.time.LocalDate
@@ -33,9 +32,6 @@ import java.time.LocalDateTime
 @DisplayName("Show Controller Tests")
 @Transactional
 class ShowControllerTest(@Autowired val mockMvc: MockMvc) {
-
-    @Autowired
-    lateinit var seatRepository: SeatRepository
 
     @Autowired
     lateinit var facilityRepository: FacilityRepository

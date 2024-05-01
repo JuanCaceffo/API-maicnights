@@ -70,7 +70,7 @@ class ShowBootstrap(
 
     fun createShowDates() {
 
-        val generalDateTime = LocalDateTime.parse("2024-03-30T16:57:04.074472231")
+        val generalDateTime = LocalDateTime.now()
 
         shows[0].apply {
             val dates: MutableList<LocalDateTime> = mutableListOf()

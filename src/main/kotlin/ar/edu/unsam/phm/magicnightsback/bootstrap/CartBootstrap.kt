@@ -4,7 +4,7 @@ import ar.edu.unsam.phm.magicnightsback.domain.Cart
 import ar.edu.unsam.phm.magicnightsback.domain.SeatTypes
 import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.repository.CartRepository
-import ar.edu.unsam.phm.magicnightsback.repository.SeatRepository
+//import ar.edu.unsam.phm.magicnightsback.repository.SeatRepository
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import org.springframework.beans.factory.InitializingBean
@@ -19,7 +19,7 @@ class CartBootstrap(
     val cartRepository: CartRepository,
     userRepository: UserRepository,
     showRepository: ShowRepository,
-    seatRepository: SeatRepository
+//    seatRepository: SeatRepository
 ) : InitializingBean {
 
     val smallshowGranrex = showRepository.findById(1).get()
@@ -30,10 +30,10 @@ class CartBootstrap(
     val bestSmallShowTeatroOpera = showRepository.findById(6).get()
     val losRedondosClubDePolo = showRepository.findById(7).get()
 
-    val pullman = seatRepository.findByName(SeatTypes.PULLMAN.name).get()
-    val upperlevel = seatRepository.findByName(SeatTypes.UPPERLEVEL.name).get()
-    val lowerlevel = seatRepository.findByName(SeatTypes.LOWERLEVEL.name).get()
-    val field = seatRepository.findByName(SeatTypes.FIELD.name).get()
+//    val pullman = seatRepository.findByName(SeatTypes.PULLMAN.name).get()
+//    val upperlevel = seatRepository.findByName(SeatTypes.UPPERLEVEL.name).get()
+//    val SeatTypes.LOWERLEVEL = seatRepository.findByName(SeatTypes.LOWERLEVEL.name).get()
+//    val field = seatRepository.findByName(SeatTypes.FIELD.name).get()
 
     val carts = mapOf(
         "CartPablo" to Cart(userRepository.findByUsername("madescoces").get()),
@@ -59,14 +59,14 @@ class CartBootstrap(
                 Ticket(
                     smallshowGranrex,
                     smallshowGranrex.dates.elementAt(0),
-                    pullman,
+                    SeatTypes.PULLMAN,
                 )
             )
             reserveTicket(
                 Ticket(
                     smallShowTeatroColon,
                     smallShowTeatroColon.dates.elementAt(1),
-                    pullman,
+                    SeatTypes.PULLMAN,
                     2
                 )
             )
@@ -74,7 +74,7 @@ class CartBootstrap(
                 Ticket(
                     bigShowRiver,
                     bigShowRiver.dates.elementAt(0),
-                    upperlevel,
+                    SeatTypes.UPPERLEVEL,
                     2
                 )
             )
@@ -82,7 +82,7 @@ class CartBootstrap(
                 Ticket(
                     bigShowLaBombonera,
                     bigShowLaBombonera.dates.elementAt(0),
-                    upperlevel,
+                    SeatTypes.UPPERLEVEL,
                 )
             )
         }
@@ -91,14 +91,14 @@ class CartBootstrap(
                 Ticket(
                     smallshowGranrex,
                     smallshowGranrex.dates.elementAt(0),
-                    lowerlevel,
+                    SeatTypes.LOWERLEVEL,
                 )
             )
             reserveTicket(
                 Ticket(
                     bigShowRiver,
                     bigShowRiver.dates.elementAt(0),
-                    upperlevel,
+                    SeatTypes.UPPERLEVEL,
                     2
                 )
             )
@@ -108,14 +108,14 @@ class CartBootstrap(
                 Ticket(
                     smallshowGranrex,
                     smallshowGranrex.dates.elementAt(0),
-                    pullman,
+                    SeatTypes.PULLMAN,
                 )
             )
             reserveTicket(
                 Ticket(
                     bigShowRiver,
                     bigShowRiver.dates.elementAt(0),
-                    upperlevel,
+                    SeatTypes.UPPERLEVEL,
                     2
                 )
             )
@@ -125,14 +125,14 @@ class CartBootstrap(
                 Ticket(
                     smallshowGranrex,
                     smallshowGranrex.dates.elementAt(0),
-                    pullman,
+                    SeatTypes.PULLMAN,
                 )
             )
             reserveTicket(
                 Ticket(
                     bigShowRiver,
                     bigShowRiver.dates.elementAt(0),
-                    upperlevel,
+                    SeatTypes.UPPERLEVEL,
                     2
                 )
             )
@@ -142,14 +142,14 @@ class CartBootstrap(
                 Ticket(
                     smallshowGranrex,
                     smallshowGranrex.dates.elementAt(0),
-                    pullman,
+                    SeatTypes.PULLMAN,
                 )
             )
             reserveTicket(
                 Ticket(
                     bestSmallShowMovistarArena,
                     bestSmallShowMovistarArena.dates.elementAt(0),
-                    lowerlevel,
+                    SeatTypes.LOWERLEVEL,
                 )
             )
         }
@@ -158,14 +158,14 @@ class CartBootstrap(
                 Ticket(
                     smallshowGranrex,
                     smallshowGranrex.dates.elementAt(0),
-                    pullman,
+                    SeatTypes.PULLMAN,
                 )
             )
             reserveTicket(
                 Ticket(
                     bestSmallShowTeatroOpera,
                     bestSmallShowTeatroOpera.dates.elementAt(0),
-                    pullman,
+                    SeatTypes.PULLMAN,
                 )
             )
         }
@@ -174,14 +174,14 @@ class CartBootstrap(
                 Ticket(
                     smallshowGranrex,
                     smallshowGranrex.dates.elementAt(0),
-                    pullman,
+                    SeatTypes.PULLMAN,
                 )
             )
             reserveTicket(
                 Ticket(
                     losRedondosClubDePolo,
                     losRedondosClubDePolo.dates.elementAt(0),
-                    field,
+                    SeatTypes.FIELD,
                 )
             )
         }

@@ -8,15 +8,15 @@ data class Ticket(
     val show: Show,
     @ManyToOne(fetch = FetchType.LAZY)
     val showDate: ShowDate,
-    @ManyToOne(fetch = FetchType.LAZY)
-    val seat: Seat,
+    @Enumerated(EnumType.STRING)
+    val seat: SeatTypes,
     @Column
     val quantity: Int = 1,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
-    val price = show.ticketPrice(seat)*quantity
+    val price = show.ticketPrice(seat) * quantity
 
 }
 
