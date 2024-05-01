@@ -15,8 +15,6 @@ interface UserRepository : CrudRepository<User, Long>{
     override fun findById(id: Long): Optional<User>
 }
 
-
-
 //    fun getLoginUser(loginUser: LoginUserDTO): Long? {
 //        // Dado un usuario de tipo LoginDTO, devuelve el usuario encontrado en el repositorio que con el
 //        // nommbre de usuario y contraseña si existe.

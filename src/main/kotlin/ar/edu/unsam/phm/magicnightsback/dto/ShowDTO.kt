@@ -28,7 +28,7 @@ data class AdminSummaryDTO(
 data class ShowStats(
     val rating: Double? = null,
     val totalComments: Int? = null,
-    val userImageNames: List<String>? = null,
+    val userImageUrls: List<String>? = null,
 )
 
 fun Show.data() = ShowData(

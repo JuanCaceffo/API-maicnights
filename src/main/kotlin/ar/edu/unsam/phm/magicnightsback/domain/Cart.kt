@@ -3,7 +3,10 @@ package ar.edu.unsam.phm.magicnightsback.domain
 import jakarta.persistence.*
 
 @Entity
-class Cart(@ManyToOne val user: User) {
+class Cart(
+    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.DETACH])
+    val user: User
+) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0

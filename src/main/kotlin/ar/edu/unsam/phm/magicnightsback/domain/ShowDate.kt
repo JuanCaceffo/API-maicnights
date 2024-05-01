@@ -9,7 +9,7 @@ class ShowDate(
     @Column
     val date: LocalDateTime,
     @ManyToOne
-    val facility: Facility
+    private val show: Show
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +19,7 @@ class ShowDate(
     val attendees = mutableSetOf<User>()
 
     @ElementCollection(fetch = FetchType.LAZY)
-    val reservedSeats = facility.validSeatTypes().associateWith { 0 }.toMutableMap()
+    val reservedSeats = show.facility.validSeatTypes().associateWith { 0 }.toMutableMap()
 
     fun addAttendee(user: User) {
         attendees.add(user)
@@ -39,11 +39,11 @@ class ShowDate(
     fun getAllReservedSeats() = reservedSeats.map { it.value }.sum()
 
     fun availableSeatsOf(seat: SeatTypes): Int {
-        return facility.getPlaceCapacity(seat) - getReservedSeatsOf(seat)
+        return show.facility.getPlaceCapacity(seat) - getReservedSeatsOf(seat)
     }
 
     fun totalAvailableSeats(): Int {
-        return facility.getTotalSeatCapacity() - getAllReservedSeats()
+        return show.facility.getTotalSeatCapacity() - getAllReservedSeats()
     }
 
     fun datePassed(): Boolean = date.isBefore(LocalDateTime.now())
