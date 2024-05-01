@@ -75,8 +75,7 @@ class ShowControllerTest(@Autowired val mockMvc: MockMvc) {
         val newShowDate = ShowDateDTO()
 
         mockMvc.perform(
-            MockMvcRequestBuilders
-                .post("/api/admin/show/{showId}/new-show-date", user.id)
+            post("/api/admin/show/{showId}/new-show-date", user.id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("userId", user.id.toString())
                 .content(mapper.writeValueAsString(newShowDate))

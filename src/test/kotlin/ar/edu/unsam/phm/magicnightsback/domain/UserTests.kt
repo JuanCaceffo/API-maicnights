@@ -1,28 +1,24 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import ar.edu.unsam.phm.magicnightsback.error.BusinessException
-import ar.edu.unsam.phm.magicnightsback.error.FacilityError
-import io.kotest.assertions.throwables.shouldThrow
+import ar.edu.unsam.phm.magicnightsback.factory.TestFactory
+import ar.edu.unsam.phm.magicnightsback.factory.UserTypes
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.matchers.collections.shouldNotContain
-import io.kotest.matchers.collections.shouldNotContainAll
-import io.kotest.matchers.doubles.shouldBeLessThan
-import io.kotest.matchers.shouldBe
+import io.kotest.matchers.collections.shouldContain
+
 
 class UserTests : DescribeSpec({
     isolationMode = IsolationMode.InstancePerTest
 
+    val factory = TestFactory()
+
     describe("Tests friens") {
-        val user = User("Nombre", "Apellido", "usuario", "Password")
+        val user = factory.createUser(UserTypes.NORMAL)
 
         it("Se pueden agregar amigos a un usuario") {
-            val userFriend = User("Amigo", "Apellido Amigo", "amigo", "Password")
-
-            user.addFriend(userFriend)
-
-            user.friends shouldNotContain (userFriend)
+            val friend = factory.createUser(UserTypes.POOR)
+            user.addFriend(friend)
+            user.friends shouldContain friend
         }
-
     }
 })
