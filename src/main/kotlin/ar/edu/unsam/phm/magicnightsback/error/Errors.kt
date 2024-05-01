@@ -1,10 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.error
 
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.bind.annotation.RestControllerAdvice
 
 object UserError {
     const val MSG_NOT_ENOUGH_CREDIT = "No tiene saldo suficiente para realizar la compra"
@@ -19,7 +16,7 @@ object CommentError {
     const val INVALID_DELETE = "No se puede borrar un comentario que no le pertenece"
 }
 
-object showError {
+object ShowError {
     const val BAND_ERROR = "El show debe tener una banda"
     const val FACILITY_ERROR = "El show debe tener un lugar"
     const val USER_CANT_COMMENT = "El usaurio no puede comentar el show"
@@ -32,8 +29,8 @@ object ShowDateError{
     const val INVALID_DATE = "La fecha debe ser posterior a la actual"
     const val DATE_ALREADY_EXISTS = "La fecha que desea agregar ya existe"
     const val NEW_SHOW_INVALID_CONDITIONS = "Las condiciones no permiten agregar una nueva fecha para el show"
-
 }
+
 object RepositoryError {
     const val ID_NOT_FOUND = "El ID no corresponde con ningún elemento del repositorio"
     const val ELEMENT_NOT_FOUND = "Elemento no encontrado"
@@ -45,10 +42,11 @@ object FacilityError {
     const val NEGATIVE_PRICE = "El precio no puede ser un valor negativo"
 }
 
-object cartError {
+object CartError {
     const val CART_FOR_USER_NOT_FOUND = "El carrito para el usaurio especificado no fue encontrado"
 }
 
+@ResponseStatus(HttpStatus.BAD_REQUEST)
 class BusinessException(msg: String) : RuntimeException(msg)
 
 @ResponseStatus(HttpStatus.NOT_FOUND)

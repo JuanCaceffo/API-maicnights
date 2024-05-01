@@ -1,6 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
 import ar.edu.unsam.phm.magicnightsback.dto.ShowDateDTO
+import ar.edu.unsam.phm.magicnightsback.error.ShowDateError
 import ar.edu.unsam.phm.magicnightsback.factory.ShowTypes
 import ar.edu.unsam.phm.magicnightsback.factory.TestFactory
 import ar.edu.unsam.phm.magicnightsback.factory.UserTypes
@@ -11,8 +12,8 @@ import io.mockk.every
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import jakarta.transaction.Transactional
-import org.hamcrest.CoreMatchers.containsString
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -23,8 +24,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -93,16 +93,17 @@ class ShowControllerTest(@Autowired val mockMvc: MockMvc) {
         val show = showRepository.save(factory.createShow(ShowTypes.BIGSHOW))
         val newShowDate = ShowDateDTO(date = LocalDateTime.now().minusDays(1))
 
-        mockMvc.perform(
+        val result = mockMvc.perform(
             post("/api/admin/show/{showId}/new-show-date", show.id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("userId", admin.id.toString())
                 .content(mapper.writeValueAsString(newShowDate))
         )
             .andExpect(status().is4xxClientError)
-            .andExpect(content().string(containsString("posterior")))
-    }
+            .andReturn()
 
+        assertEquals(ShowDateError.INVALID_DATE, result.resolvedException?.message)
+    }
 
     @Test
     fun `llamada al metodo post para crear una funcion por un usuario que es admin falla debido a que no se cumplen las condiciones del negocio`() {
@@ -113,14 +114,16 @@ class ShowControllerTest(@Autowired val mockMvc: MockMvc) {
 
         val newShowDate = ShowDateDTO(date = LocalDateTime.now().plusDays(1))
 
-        mockMvc.perform(
+        val result = mockMvc.perform(
             post("/api/admin/show/{showId}/new-show-date", show.id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("userId", admin.id.toString())
                 .content(mapper.writeValueAsString(newShowDate))
         )
-            .andExpect(status().is4xxClientError)
-            .andExpect(content().string(containsString("condiciones")))
+            .andExpect(status().isBadRequest)
+            .andReturn()
+
+            assertEquals(ShowDateError.NEW_SHOW_INVALID_CONDITIONS, result.resolvedException?.message)
     }
 
     @Test
@@ -136,13 +139,15 @@ class ShowControllerTest(@Autowired val mockMvc: MockMvc) {
 
         show.initialDates(listOf(newDate))
 
-        mockMvc.perform(
+        val result = mockMvc.perform(
             post("/api/admin/show/{showId}/new-show-date", show.id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("userId", admin.id.toString())
                 .content(mapper.writeValueAsString(newShowDate))
         )
-            .andExpect(status().is4xxClientError)
-            .andExpect(content().string(containsString("ya existe")))
+            .andExpect(status().isBadRequest)
+            .andReturn()
+
+        assertEquals(ShowDateError.DATE_ALREADY_EXISTS, result.resolvedException?.message)
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 
 enum class UserTypes {
-    ADMIN, POOR, NORMAL,
+    ADMIN, POOR, NORMAL
 }
 
 enum class ShowTypes {

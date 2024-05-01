@@ -50,7 +50,6 @@ class CartBootstrap(
         carts.values.forEach {
             cartRepository.save(it)
             println("Cart for ${it.user.name} created")
-
         }
     }
 
@@ -199,6 +198,5 @@ class CartBootstrap(
         addTickets()
         buyCarts()
         createCarts()
-        println("Cart creation process ends")
     }
 }

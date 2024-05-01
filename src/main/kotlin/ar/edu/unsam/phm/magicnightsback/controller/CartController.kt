@@ -54,7 +54,7 @@ class CartController(
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "Ok"),
-            ApiResponse(responseCode = "404", description = showError.TICKET_CART_NOT_FOUND),
+            ApiResponse(responseCode = "404", description = ShowError.TICKET_CART_NOT_FOUND),
             ApiResponse(responseCode = "400", description = ShowDateError.EXCEEDED_CAPACITY + "<br>"+ FacilityError.INVALID_SEAT_TYPE),
         ]
     )
