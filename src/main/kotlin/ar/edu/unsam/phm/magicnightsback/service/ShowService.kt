@@ -5,12 +5,17 @@ import ar.edu.unsam.phm.magicnightsback.controller.ShowController.ShowRequest
 import ar.edu.unsam.phm.magicnightsback.domain.*
 import ar.edu.unsam.phm.magicnightsback.dto.ShowDateDTO
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
+import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 class ShowService {
+    @Autowired
+    private lateinit var userRepository: UserRepository
+
     @Autowired
     lateinit var showRepository: ShowRepository
 
@@ -59,10 +64,11 @@ class ShowService {
     }
 
     private fun createFilter(params: ShowRequest): Filter<Show> {
+        val user = userRepository.findById(params.userId)
         return Filter<Show>().apply {
             addFilterCondition(BandFilter(params.bandKeyword))
             addFilterCondition(FacilityFilter(params.facilityKeyword))
-            addFilterCondition(WithFriends(params.withFriends, params.userId))
+            if (user.isPresent) addFilterCondition(WithFriends(params.withFriends, user.get()))
         }
     }
 //

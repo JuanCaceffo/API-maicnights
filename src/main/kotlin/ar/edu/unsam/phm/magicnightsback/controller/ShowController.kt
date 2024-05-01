@@ -52,13 +52,13 @@ class ShowController {
     fun getShowDatesById(
         @PathVariable showId: Long,
         @PathVariable dateId: Long
-    ): List<SeatDTO> {
+    ): List<PlaceDTO> {
         val show = showService.findById(showId)
         val seats = show.getSeatTypes()
         val showDate = show.getShowDateById(dateId)
 
         return seats.map {
-            SeatDTO(
+            PlaceDTO(
                 it.name,
                 show.ticketPrice(it),
                 showDate.availableSeatsOf(it)

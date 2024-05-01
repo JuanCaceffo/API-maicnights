@@ -1,6 +1,5 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import ar.edu.unsam.phm.magicnightsback.dto.ShowDateDTO
 import ar.edu.unsam.phm.magicnightsback.dto.toShowDateDTO
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.NotFoundException
@@ -40,14 +39,14 @@ class Show(
 
     // Cost methods
     fun baseCost(): Double = (band.cost) + (facility.cost())
-    fun baseTicketPrice(seat: Seat): Double =
+    fun baseTicketPrice(seat: SeatTypes): Double =
         (facility.let { baseCost() / it.getTotalSeatCapacity() }) + seat.price
 
-    fun ticketPrice(seat: Seat): Double = (baseTicketPrice(seat) * rentabilityType.factor).truncate()
-    fun allTicketPrices() = facility.places.map { ticketPrice(it.seat) }
+    fun ticketPrice(seat: SeatTypes): Double = (baseTicketPrice(seat) * rentabilityType.factor).truncate()
+    fun allTicketPrices() = facility.places.map { ticketPrice(it.seatType) }
 
     // ShowDate methods
-    fun getSeatTypes() = facility.places.map { it.seat }
+    fun getSeatTypes() = facility.places.map { it.seatType }
     fun getShowDateById(showDateId: Long) = dates.find { it.id == showDateId } ?: throw NotFoundException(ShowDateError.MSG_DATE_NOT_FOUND)
 
     fun initialDates(newDates: List<LocalDateTime>) {
@@ -64,9 +63,9 @@ class Show(
     }
 
     // Admin Methods
-    fun sales(): List<Double> = facility.places.map { ticketPrice(it.seat) * totalTicketsSoldOf(it.seat) }
+    fun sales(): List<Double> = facility.places.map { ticketPrice(it.seatType) * totalTicketsSoldOf(it.seatType) }
     fun totalSales(): Double = sales().sumOf { it }
-    fun totalTicketsSoldOf(seat: Seat) = dates.sumOf { it.getReservedSeatsOf(seat) }
+    fun totalTicketsSoldOf(seat: SeatTypes) = dates.sumOf { it.getReservedSeatsOf(seat) }
     fun totalTicketsSold() = getSeatTypes().sumOf { totalTicketsSoldOf(it) }
     fun totalPendingAttendees() = pendingAttendeesIds.size
     fun rentability() = (((totalSales() - baseCost()) / totalSales()) * 100).coerceAtLeast(0.0)

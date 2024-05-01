@@ -37,7 +37,7 @@ class CartController(
         cartService.removeReserveTickets(userId)
     }
 
-    @PatchMapping("/{userId}/purchase-reserved-tickets")
+    @PatchMapping("/{userId}/buy-reserved-tickets")
     @Operation(summary = "Permite comprar todos los tickets reservados para un usuario")
     @ApiResponses(
         value = [

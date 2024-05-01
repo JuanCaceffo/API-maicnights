@@ -13,11 +13,9 @@ data class ShowData(
 
 data class ShowDTO(
     val data: ShowData,
+    val showStats: ShowStats,
     val prices: List<Double>? = null,
     val dates: List<ShowDateDTO>? = null,
-    val rating: Double? = null,
-    val totalComments: Int? = null,
-    val userImageNames: List<String>? = null,
     val comments: List<CommentDTO>? = null,
     val geolocation: String? = null,
     val price: Double? = null,
@@ -25,6 +23,12 @@ data class ShowDTO(
 
 data class AdminSummaryDTO(
     val title: String, val description: String
+)
+
+data class ShowStats(
+    val rating: Double? = null,
+    val totalComments: Int? = null,
+    val userImageNames: List<String>? = null,
 )
 
 fun Show.data() = ShowData(
@@ -35,22 +39,25 @@ fun Show.data() = ShowData(
     this.facility.name,
 )
 
+fun Show.stats(commentStats: CommentStadisticsDTO? = null,  user: User? = null) =
+    ShowStats(
+        commentStats?.rating,
+        commentStats?.totalComments,
+        if (user != null) this.friendsAttendeesProfileImages(user) else null,
+    )
+
 fun Show.toShowDTO(commentStats: CommentStadisticsDTO? = null, user: User? = null) = ShowDTO(
     this.data(),
+    this.stats(commentStats,user),
     this.allTicketPrices(),
     this.allDatesWithIds(),
-    commentStats?.rating,
-    commentStats?.totalComments,
-    if (user != null) this.friendsAttendeesProfileImages(user) else null,
 )
 
 fun Show.toShowDetailsDTO(commentStats: CommentStadisticsDTO? = null) = ShowDTO(
     this.data(),
+    this.stats(commentStats),
     null,
     this.allDatesWithIds(),
-    commentStats?.rating,
-    commentStats?.totalComments,
     null,
-    commentStats?.comments,
     this.geoLocationString()
 )
