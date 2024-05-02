@@ -1,6 +1,5 @@
 package ar.edu.unsam.phm.magicnightsback.dto
 
-import ar.edu.unsam.phm.magicnightsback.domain.BalanceHistory
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -8,6 +7,11 @@ import java.time.LocalDateTime
 data class LoginUserDTO(
     var username: String = "",
     var password: String = "",
+)
+
+data class LoginUserResponseDTO(
+    val id: Long,
+    val adminStatus: Boolean = false,
 )
 
 data class UserDTO(
@@ -39,4 +43,9 @@ fun User.toDTO(): UserDTO = UserDTO(
     this.username,
     this.birthday,
     this.dni
+)
+
+fun User.loginResponseDTO() = LoginUserResponseDTO(
+    this.id,
+    this.isAdmin
 )

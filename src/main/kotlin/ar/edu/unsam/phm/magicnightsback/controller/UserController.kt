@@ -23,18 +23,6 @@ class UserController {
     @Autowired
     lateinit var commentService: CommentService
 
-    @GetMapping("/validate")
-    @Operation(summary = "Valida que el usuario sea administrador")
-    fun isAdmin(@RequestParam(required = true) userId: Long):Boolean{
-        userService.validateAdminStatus(userId)
-        return true
-    }
-//
-//    @GetMapping("/{userId}/purchased_tickets")
-//    @Operation(summary = "Permite obtener todos los tickets por funcion comprados por el usuario")
-//    fun getUserPurchasedTickets(@PathVariable userId: Long): List<PurchasedTicketDTO> {
-//        return userService.getUserPurchasedTickets(userId)
-//    }
     @GetMapping("/{id}/friends")
     fun getUserFriends(@PathVariable id: Long): List<FriendDTO> {
         return userService.getUserFriends(id)
@@ -52,11 +40,10 @@ class UserController {
             ApiResponse(responseCode = "400", description = UserError.BAD_CREDENTIALS, content = arrayOf(Content())),
         ]
     )
-
     @PostMapping("/login")
-    fun authenticate(@RequestBody request: LoginUserDTO): Long {
+    fun authenticate(@RequestBody request: LoginUserDTO): LoginUserResponseDTO {
         val user = userService.authenticate(request.username, request.password)
-        return user.id
+        return user.loginResponseDTO()
     }
 
     @GetMapping("/{id}/data")
@@ -70,7 +57,6 @@ class UserController {
     @Operation(summary = "Permite actualizar la data del usuario")
     fun updateUser(@PathVariable id: Long, @RequestBody user: UserUpdateDTO): UserDTO {
         val updatedUserDTO = userService.updateUser(id, user)
-
         return updatedUserDTO
     }
 
