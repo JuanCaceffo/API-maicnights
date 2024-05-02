@@ -70,7 +70,6 @@ class ShowBootstrap(
     }
 
     fun createShowDates() {
-
         val generalDateTime = LocalDateTime.now()
 
         shows[0].apply {

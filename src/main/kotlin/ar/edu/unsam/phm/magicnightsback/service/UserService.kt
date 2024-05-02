@@ -1,16 +1,15 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
-import ar.edu.unsam.phm.magicnightsback.domain.BalanceHistory
 import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.domain.validateOptionalIsNotNull
 import ar.edu.unsam.phm.magicnightsback.dto.*
-import ar.edu.unsam.phm.magicnightsback.error.*
+import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
+import ar.edu.unsam.phm.magicnightsback.error.UserError
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
 
 @Service
 class UserService {
@@ -85,7 +84,7 @@ class UserService {
     fun updateUserBalance(userId: Long, newBalance: Double): Double {
         val user = findById(userId)
 
-        user.modifyBalance(BalanceHistory(newBalance, LocalDateTime.now()))
+        user.modifyBalance(newBalance)
         userRepository.save(user)
 
         return user.totalBalance()
@@ -103,8 +102,12 @@ class UserService {
         return user.toDTO()
     }
 
+    @Transactional(Transactional.TxType.NEVER)
+    fun getBalances(userId: Long): List<UserBalanceDTO> {
+        findById(userId)
+        return userRepository.allBalances(userId)
+    }
+
     fun validateAdminStatus(id: Long) =
         require(findById(id).isAdmin) { throw AuthenticationException(UserError.USER_IS_NOT_ADMIN) }
-
-    fun getBalances(): UserBalanceDTO = userRepository.getBalances()
 }

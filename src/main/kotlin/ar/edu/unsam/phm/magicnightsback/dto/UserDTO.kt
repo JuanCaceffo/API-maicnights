@@ -25,10 +25,11 @@ data class UserUpdateDTO(
     val surname: String,
 )
 
-data class UserBalanceDTO(
-    val currentBalance: BalanceHistory,
-    val previusBalance: BalanceHistory,
-)
+interface UserBalanceDTO {
+    fun getId(): Long
+    fun getAmount(): Double
+    fun getTimeStamp(): LocalDateTime
+}
 
 fun User.toDTO(): UserDTO = UserDTO(
     this.id,

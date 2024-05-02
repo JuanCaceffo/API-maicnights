@@ -6,7 +6,10 @@ import java.time.LocalDateTime
 @Entity
 class BalanceHistory(
     val amount: Double,
-    val timeStamp: LocalDateTime
+    val timeStamp: LocalDateTime,
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    val user: User
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

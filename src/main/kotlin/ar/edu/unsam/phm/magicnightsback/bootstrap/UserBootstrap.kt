@@ -1,5 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.bootstrap
 
+import ar.edu.unsam.phm.magicnightsback.domain.BalanceHistory
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import org.springframework.beans.factory.InitializingBean
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.time.LocalDate
+import java.time.LocalDateTime
 import kotlin.jvm.optionals.getOrNull
 
 @Component
@@ -136,7 +138,7 @@ class UserBootstrap : InitializingBean {
     }
 
     fun addCredits() {
-        users.values.forEach { it.addCredit(100000.0) }
+        users.values.forEach { it.modifyBalance(100000.0) }
     }
 
     fun createUsers() {

@@ -82,13 +82,12 @@ class UserController {
 
     @PatchMapping("/{id}/modify_balance")
     @Operation(summary = "Permite actualizar los creditos del usuario")
-    fun updateUserCredit(@PathVariable id: Long, @RequestBody creditToAdd: Double): Double {
-        return userService.updateUserBalance(id, creditToAdd)
+    fun updateUserBalance(@PathVariable id: Long, @RequestBody newBalance: Double): Double {
+        return userService.updateUserBalance(id, newBalance)
     }
 
     @GetMapping("{id}/balance_report")
-    fun userBalanceReport(@PathVariable id: Long): UserBalanceDTO {
-
-        return userService.getBalances()
+    fun userBalanceReport(@PathVariable id: Long): List<UserBalanceDTO> {
+        return userService.getBalances(id)
     }
 }
