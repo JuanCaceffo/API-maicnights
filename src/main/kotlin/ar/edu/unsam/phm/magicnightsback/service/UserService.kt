@@ -114,6 +114,12 @@ class UserService {
         return userRepository.allBalances(userId)
     }
 
+
+    fun findUsersWithMoreTicketsThan(ticketsQuantity: Int): List<UserDTO> {
+        return userRepository.findUsersWithMoreTicketsThan(ticketsQuantity).map { user -> user.toDTO() }
+    }
+
+
     fun validateAdminStatus(id: Long) =
         require(findById(id).isAdmin) { throw AuthenticationException(UserError.USER_IS_NOT_ADMIN) }
 

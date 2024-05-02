@@ -19,6 +19,19 @@ interface UserRepository : CrudRepository<User, Long> {
     @EntityGraph(attributePaths = ["tickets", "friends", "balances"])
     override fun findById(id: Long): Optional<User>
 
+    @Query("""
+        SELECT u
+        FROM User u
+        WHERE u.id IN (
+            SELECT u2.id
+            FROM User u2
+            JOIN u2.tickets t
+            GROUP BY u2.id
+            HAVING COUNT(t) > :ticketsQuantity
+        )
+    """)
+    fun findUsersWithMoreTicketsThan(ticketsQuantity: Int): Iterable<User>
+
     @Query(
         """SELECT
             u.id AS id,
@@ -36,18 +49,6 @@ interface UserRepository : CrudRepository<User, Long> {
     @Query(nativeQuery = true, value = "SELECT * FROM public.history_tickets(:userId,:year)")
     fun historyTickets(@Param("userId") userId: Long, @Param("year") year: Int): List<TicketResult>
 }
-
-//"""SELECT
-//            s.id,
-//            bh.amount,
-//            bh.time_stamp
-//        FROM spectator s
-//        JOIN balance_history bh ON s.id = bh.user_id
-//        WHERE s.id = :id
-//        ORDER BY bh.time_stamp
-//        LIMIT 2
-//        """, nativeQuery = true
-
 
 //    fun getLoginUser(loginUser: LoginUserDTO): Long? {
 //        // Dado un usuario de tipo LoginDTO, devuelve el usuario encontrado en el repositorio que con el

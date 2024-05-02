@@ -80,4 +80,10 @@ class UserController {
     @GetMapping("{userId}/history-tickets/year/{year}")
     @Operation(summary = "Permite obtener los tikcets que compró un usuario en determinado año")
     fun getHistoryTickets(@PathVariable userId: Long, @PathVariable year: Int) = userService.historyTickets(userId,year)
+
+    @GetMapping("/users_with_more_tickets_than/{n}")
+    @Operation(summary = "Permite obtener la cantidad de usuarios con mas de N tickets")
+    fun findUsersWithMoreTicketsThan(@PathVariable n: Int): List<UserDTO> {
+        return userService.findUsersWithMoreTicketsThan(n)
+    }
 }
