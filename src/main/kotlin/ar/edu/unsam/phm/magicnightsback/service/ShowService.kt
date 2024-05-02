@@ -1,6 +1,5 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
-import ar.edu.unsam.phm.magicnightsback.controller.ShowController.ShowAdminRequest
 import ar.edu.unsam.phm.magicnightsback.controller.ShowController.ShowRequest
 import ar.edu.unsam.phm.magicnightsback.domain.*
 import ar.edu.unsam.phm.magicnightsback.dto.ShowDateDTO
@@ -10,7 +9,6 @@ import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import kotlin.jvm.optionals.getOrNull
 
 @Service
 class ShowService {
@@ -45,12 +43,6 @@ class ShowService {
         userService.validateAdminStatus(userId)
         val show = validateOptionalIsNotNull(showRepository.findById(showId))
         return show.addDate(body.date)
-    }
-
-    @Transactional(Transactional.TxType.NEVER)
-    fun findAllAdmin(params: ShowAdminRequest): List<Show> {
-        userService.validateAdminStatus(params.userId)
-        return findAll(params.toShowRequest())
     }
 
     @Transactional(Transactional.TxType.NEVER)
