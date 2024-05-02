@@ -63,7 +63,7 @@ class ShowController {
                 show.ticketPrice(it),
                 showDate.availableSeatsOf(it)
             )
-        }
+        }.sortedBy { seat -> seat.seatType }
     }
 
     @GetMapping("/admin/shows")
