@@ -4,6 +4,7 @@ import ar.edu.unsam.phm.magicnightsback.domain.*
 import java.time.LocalDateTime
 
 data class TicketDTO(
+    val ticketId: Long,
     val data: ShowData,
     val stats: ShowStats,
     val date: LocalDateTime,
@@ -13,6 +14,7 @@ data class TicketDTO(
 )
 
 fun Ticket.toTicketDTO(commentStats: CommentStadisticsDTO? = null,user: User, price: Double, quantity: Int) = TicketDTO(
+    this.id,
     this.show.data(),
     this.show.stats(commentStats, user),
     this.showDate.date,

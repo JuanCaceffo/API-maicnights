@@ -15,7 +15,7 @@ class ShowDate(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     val attendees = mutableSetOf<User>()
 
     @ElementCollection(fetch = FetchType.LAZY)
@@ -47,6 +47,8 @@ class ShowDate(
     }
 
     fun datePassed(): Boolean = date.isBefore(LocalDateTime.now())
+
+    fun isAttendee(user: User) = attendees.contains(user)
 
     fun isSoldOut() = totalAvailableSeats() == 0
 }
