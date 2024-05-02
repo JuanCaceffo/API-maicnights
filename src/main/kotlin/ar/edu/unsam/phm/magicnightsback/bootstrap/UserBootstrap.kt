@@ -1,6 +1,9 @@
 package ar.edu.unsam.phm.magicnightsback.bootstrap
 
+import ar.edu.unsam.phm.magicnightsback.domain.SeatTypes
+import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.domain.User
+import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,6 +17,9 @@ import kotlin.jvm.optionals.getOrNull
 class UserBootstrap : InitializingBean {
     @Autowired
     lateinit var userRepository: UserRepository
+
+    @Autowired
+    lateinit var showRepository: ShowRepository
 
     val users = mapOf(
         "Pablo" to User(
@@ -151,10 +157,23 @@ class UserBootstrap : InitializingBean {
         }
     }
 
+    fun addTickets() {
+        val show = showRepository.findById(1).get()
+        val date = show.dates.elementAt(0)
+        val seat = SeatTypes.PULLMAN
+
+        val ticket = Ticket(show, date, seat)
+
+        users["Denise"]?.apply {
+            addTicket(ticket)
+        }
+    }
+
     override fun afterPropertiesSet() {
         println("User creation process starts")
         addCredits()
         addFriends()
+        addTickets()
         createUsers()
     }
 }

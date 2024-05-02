@@ -135,4 +135,8 @@ class UserService {
         if (!user.isAdmin) throw AuthenticationException(UserError.USER_IS_NOT_ADMIN)
     }
 
+    fun findUsersWithMoreTicketsThan(tickets_quantity: Int): List<UserDTO> {
+        return userRepository.findUsersWithMoreTicketsThan(tickets_quantity).get().map { user -> user.toDTO() }
+    }
+
 }

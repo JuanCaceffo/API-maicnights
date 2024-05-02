@@ -2,6 +2,7 @@ package ar.edu.unsam.phm.magicnightsback.repository
 
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import org.springframework.data.jpa.repository.EntityGraph
+import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 import java.util.Optional
@@ -13,8 +14,21 @@ interface UserRepository : CrudRepository<User, Long>{
 
     @EntityGraph(attributePaths = ["friends"])
     override fun findById(id: Long): Optional<User>
-}
 
+    @Query("""
+        SELECT u
+        FROM User u
+        WHERE u.id IN (
+            SELECT u2.id
+            FROM User u2
+            JOIN u2.tickets t
+            GROUP BY u2.id
+            HAVING COUNT(t) > :tickets_quantity
+        )
+    """)
+    fun findUsersWithMoreTicketsThan(tickets_quantity: Int): Optional<List<User>>
+
+}
 
 
 //    fun getLoginUser(loginUser: LoginUserDTO): Long? {

@@ -86,4 +86,11 @@ class UserController {
     fun updateUserCredit(@PathVariable id: Long, @RequestBody creditToAdd: Double): Double {
         return userService.updateUserCredit(id, creditToAdd)
     }
+
+    @GetMapping("/users_with_more_tickets_than/{n}")
+    @Operation(summary = "Permite obtener la cantidad de usuarios con mas de N tickets")
+    fun findUsersWithMoreTicketsThan(@PathVariable n: Int): List<UserDTO> {
+        return userService.findUsersWithMoreTicketsThan(n)
+    }
+
 }
