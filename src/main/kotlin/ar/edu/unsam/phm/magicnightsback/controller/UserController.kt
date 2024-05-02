@@ -90,4 +90,8 @@ class UserController {
     fun userBalanceReport(@PathVariable id: Long): List<UserBalanceDTO> {
         return userService.getBalances(id)
     }
+
+    @GetMapping("{userId}/history-tickets/year/{year}")
+    @Operation(summary = "Permite obtener los tikcets que compró un usuario en determinado año")
+    fun getHistoryTickets(@PathVariable userId: Long, @PathVariable year: Int) = userService.historyTickets(userId,year)
 }

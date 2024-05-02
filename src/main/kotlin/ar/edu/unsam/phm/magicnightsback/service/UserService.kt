@@ -1,11 +1,14 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
+import ar.edu.unsam.phm.magicnightsback.domain.SeatTypes
 import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.domain.validateOptionalIsNotNull
 import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
+import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.UserError
+import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,6 +16,9 @@ import org.springframework.stereotype.Service
 
 @Service
 class UserService {
+    @Autowired
+    private lateinit var showRepository: ShowRepository
+
     @Autowired
     lateinit var userRepository: UserRepository
 
@@ -41,9 +47,9 @@ class UserService {
     @Transactional(Transactional.TxType.NEVER)
     fun getTicketsGroupedByShowDate(user: User, ticketList: List<Ticket>): List<TicketDTO> {
 
-        val distinctTickets = ticketList.distinctBy { it.showDate }
+        val distinctTickets = ticketList.distinctBy { it.showDate.id }
         return distinctTickets.map { uniqueTicket ->
-            val ticketsSameShowDate = ticketList.filter { ticket -> ticket.showDate == uniqueTicket.showDate }
+            val ticketsSameShowDate = ticketList.filter { ticket -> ticket.showDate.id == uniqueTicket.showDate.id }
             val totalPrice = ticketsSameShowDate.sumOf { ticket -> ticket.price }
             val quantity = ticketsSameShowDate.sumOf { ticket -> ticket.quantity }
             val commentsStats = commentService.getCommentStadisticsOfShow(uniqueTicket.show.id)
@@ -110,4 +116,22 @@ class UserService {
 
     fun validateAdminStatus(id: Long) =
         require(findById(id).isAdmin) { throw AuthenticationException(UserError.USER_IS_NOT_ADMIN) }
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun historyTickets(userId: Long, year: Int): List<TicketDTO> {
+        val user = findById(userId)
+        val tickets = userRepository.historyTickets(userId,year).map {
+            ticketResult ->
+            val show = ticketResult.getShowId()?.let { validateOptionalIsNotNull(showRepository.findById(it)) } ?: throw BusinessException("El show id ingresado es null")
+            Ticket(
+                show,
+                show.getShowDateById(ticketResult.getShowDateId()),
+                SeatTypes.valueOf(ticketResult.getSeat()),
+                ticketResult.getQuantity()
+            ).apply {
+                id = ticketResult.getTicketId()
+            }
+        }
+        return getTicketsGroupedByShowDate(user,tickets)
+    }
 }
