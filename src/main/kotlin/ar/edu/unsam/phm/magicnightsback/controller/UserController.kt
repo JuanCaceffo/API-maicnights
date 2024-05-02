@@ -76,4 +76,11 @@ class UserController {
     fun userBalanceReport(@PathVariable id: Long): List<UserBalanceDTO> {
         return userService.getBalances(id)
     }
+
+    @GetMapping("/users_with_more_tickets_than/{n}")
+    @Operation(summary = "Permite obtener la cantidad de usuarios con mas de N tickets")
+    fun findUsersWithMoreTicketsThan(@PathVariable n: Int): List<UserDTO> {
+        return userService.findUsersWithMoreTicketsThan(n)
+    }
+
 }
