@@ -33,7 +33,7 @@ class User(
     val friends = mutableSetOf<User>()
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val tickets = mutableSetOf<Ticket>()
+    val tickets = mutableListOf<Ticket>()
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     var balances: MutableSet<BalanceHistory> = mutableSetOf()

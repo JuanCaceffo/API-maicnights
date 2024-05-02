@@ -15,14 +15,14 @@ class ShowDate(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.EAGER)
     val attendees = mutableSetOf<User>()
 
     @ElementCollection(fetch = FetchType.LAZY)
     val reservedSeats = show.facility.validSeatTypes().associateWith { 0 }.toMutableMap()
 
     fun addAttendee(user: User) {
-        attendees.add(user)
+        if(attendees.all{it.id != user.id}) attendees.add(user)
     }
 
     fun reserveSeat(seat: SeatTypes, quantity: Int) {
