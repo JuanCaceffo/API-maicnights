@@ -21,7 +21,7 @@ class ShowTest: DescribeSpec({
             addPlace(SeatTypes.LOWERLEVEL, 3000)
         }
 
-        val show = Show(name = "Cachenged!!", vela, theater)
+        val show = Show(name = "Cachenged", vela, theater)
 
         it("A show has a base cost"){
             show.baseCost() shouldBe 160000.0

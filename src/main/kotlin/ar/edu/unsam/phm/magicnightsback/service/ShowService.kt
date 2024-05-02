@@ -48,7 +48,7 @@ class ShowService {
     @Transactional(Transactional.TxType.NEVER)
     fun findByIdAdmin(showId: Long, userId: Long): Show {
         userService.validateAdminStatus(userId)
-        return validateOptionalIsNotNull(showRepository.findById(showId))
+        return findById(showId)
     }
 
     @Transactional(Transactional.TxType.NEVER)

@@ -15,7 +15,7 @@ class ShowDate(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val attendees = mutableSetOf<User>()
 
     @ElementCollection(fetch = FetchType.LAZY)
@@ -26,7 +26,7 @@ class ShowDate(
     }
 
     fun reserveSeat(seat: SeatTypes, quantity: Int) {
-        quantity.throwIfGreaterThan(availableSeatsOf(seat),ShowDateError.EXCEEDED_CAPACITY)
+        quantity.throwIfGreaterThan(availableSeatsOf(seat), ShowDateError.EXCEEDED_CAPACITY)
         reservedSeats[seat.name] = (reservedSeats[seat.name]!! + quantity)
     }
 

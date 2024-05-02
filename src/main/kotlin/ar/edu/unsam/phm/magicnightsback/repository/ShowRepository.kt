@@ -42,5 +42,4 @@ interface ShowRepository : CrudRepository<Show, Long>, CustomCrudRepository<Show
         HAVING COUNT(DISTINCT s.id) >= 2"""
     )
     fun busyFacilities(): MutableIterable<Long>
-
 }
