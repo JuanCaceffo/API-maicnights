@@ -53,7 +53,8 @@ class ShowBootstrap(
         Show(name = "Le ricote", redondos, polo),
         Show(name = "Midnight", oned, luna),
         Show(name = "Love of my life", queen, granrex),
-        Show(name = "Arriba!!", lavela, pocker)
+        Show(name = "Arriba!!", lavela, pocker),
+        Show(name = "Las re noches", redondos, luna)
     )
 
     fun createShows() {
@@ -149,6 +150,14 @@ class ShowBootstrap(
             repeat(2) { index ->
                 dates.add(generalDateTime.minusDays(1 + index.toLong()))
                 dates.add(generalDateTime.plusDays(17 + index.toLong()))
+            }
+            initialDates(dates)
+        }
+        shows[10].apply {
+            val dates: MutableList<LocalDateTime> = mutableListOf()
+            repeat(2) { index ->
+                dates.add(generalDateTime.minusDays(1 + index.toLong()))
+                dates.add(generalDateTime.plusDays(13 + index.toLong()))
             }
             initialDates(dates)
         }

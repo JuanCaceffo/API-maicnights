@@ -9,4 +9,7 @@ import java.util.*
 interface FacilityRepository : CrudRepository<Facility, Long>, CustomCrudRepository<Facility> {
     @EntityGraph(attributePaths = ["places"])
     override fun findById(id: Long): Optional<Facility>
+
+    @EntityGraph(attributePaths = ["places"])
+    override fun findAll(): Iterable<Facility>
 }

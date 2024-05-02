@@ -51,13 +51,13 @@ class Show(
 
     fun initialDates(newDates: List<LocalDateTime>) {
         newDates.forEach {
-            dates.add(ShowDate(it, facility))
+            dates.add(ShowDate(it, this))
         }
     }
 
     fun addDate(date: LocalDateTime): ShowDate {
         validNewDate(date.toLocalDate())
-        val showDate = ShowDate(date, facility)
+        val showDate = ShowDate(date, this)
         dates.add(showDate)
         return showDate
     }
@@ -75,8 +75,12 @@ class Show(
     fun getAllStats(show: Show) = PivotStats.stats.map { it.getStat(show) }
 
     //Friends Methods
-    fun friendsAttendeesProfileImages(user: User) = friendsAttending(user).map { it.profileImgUrl }
-    fun friendsAttending(user: User) = allAttendees().filter { it.isMyFriend(user) }
+    fun friendsAttendeesProfileImages(user: User): List<String> {
+        val friends = friendsAttending(user)
+        println("ACAAAAAAAAAAA$friends")
+        return friends.map { it.profileImgUrl }
+    }
+    fun friendsAttending(user: User) = allAttendees()//.filter { it.isMyFriend(user) }
 
     // Dates Methods
     fun allDates() = dates.map { it.date }.toList().sortedBy { it }
