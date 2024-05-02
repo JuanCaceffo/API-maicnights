@@ -4,6 +4,7 @@ import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.UserError
 import jakarta.persistence.*
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "spectator")
@@ -29,11 +30,13 @@ class User(
     var profileImgUrl: String = "default.jpg"
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val friends = mutableListOf<User>()
+    val friends = mutableSetOf<User>()
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val tickets = mutableListOf<Ticket>()
-    var credit = 0.0
+    val tickets = mutableSetOf<Ticket>()
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    var balances: MutableSet<BalanceHistory> = mutableSetOf()
 
     fun addFriend(user: User) {
         if (user != this) {
@@ -57,13 +60,17 @@ class User(
         tickets.remove(ticket)
     }
 
-    fun addCredit(credit: Double) {
-        this.credit += credit
+    fun totalBalance() = balances.sumOf { it.amount }
+
+    fun modifyBalance(amount: Double) {
+        validateBalance(amount)
+        balances.add(BalanceHistory(amount, LocalDateTime.now(), this))
     }
 
     fun age(): Int = birthday.calculateAge()
 
-    fun decreaseCredits(amount: Double) {
-        credit = (credit - amount).throwErrorIfNegative(BusinessException(UserError.MSG_NOT_ENOUGH_CREDIT)).toDouble()
+    fun validateBalance(amount: Double) {
+        (totalBalance() + amount).throwErrorIfNegative(BusinessException(UserError.MSG_NOT_ENOUGH_CREDIT))
+            .toDouble()
     }
 }

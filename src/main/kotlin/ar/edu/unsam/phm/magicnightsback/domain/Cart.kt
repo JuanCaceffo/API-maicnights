@@ -1,9 +1,13 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
 import jakarta.persistence.*
+import java.time.LocalDateTime
 
 @Entity
-class Cart(@ManyToOne val user: User) {
+class Cart(
+    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.DETACH])
+    val user: User
+) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
@@ -26,7 +30,7 @@ class Cart(@ManyToOne val user: User) {
     fun ticketsSize() = reservedTickets.sumOf { ticket -> ticket.quantity }
 
     fun buyReservedTickets(){
-        user.decreaseCredits(totalPrice())
+        user.modifyBalance(totalPrice())
         getAllTickets().forEach { ticket -> user.addTicket(ticket) }
         reservedTickets.clear()
     }

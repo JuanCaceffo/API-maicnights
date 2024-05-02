@@ -78,7 +78,7 @@ class ShowController {
         @PathVariable id: Long,
         @RequestParam(required = true, defaultValue = "-1") userId: Long
     ): List<ShowStatsDTO> {
-        userService.validateAdmin(userId)
+        userService.validateAdminStatus(userId)
         val show = showService.findById(id)
         return show.getAllStats(show)
     }

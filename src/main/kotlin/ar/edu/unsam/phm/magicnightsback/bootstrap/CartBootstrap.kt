@@ -30,11 +30,6 @@ class CartBootstrap(
     val bestSmallShowTeatroOpera = showRepository.findById(6).get()
     val losRedondosClubDePolo = showRepository.findById(7).get()
 
-//    val pullman = seatRepository.findByName(SeatTypes.PULLMAN.name).get()
-//    val upperlevel = seatRepository.findByName(SeatTypes.UPPERLEVEL.name).get()
-//    val SeatTypes.LOWERLEVEL = seatRepository.findByName(SeatTypes.LOWERLEVEL.name).get()
-//    val field = seatRepository.findByName(SeatTypes.FIELD.name).get()
-
     val carts = mapOf(
         "CartPablo" to Cart(userRepository.findByUsername("madescoces").get()),
         "CartSol" to Cart(userRepository.findByUsername("mariasol").get()),

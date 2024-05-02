@@ -4,6 +4,7 @@ import ar.edu.unsam.phm.magicnightsback.controller.ShowController.ShowAdminReque
 import ar.edu.unsam.phm.magicnightsback.controller.ShowController.ShowRequest
 import ar.edu.unsam.phm.magicnightsback.domain.*
 import ar.edu.unsam.phm.magicnightsback.dto.ShowDateDTO
+import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import jakarta.transaction.Transactional
@@ -15,6 +16,9 @@ import kotlin.jvm.optionals.getOrNull
 class ShowService {
     @Autowired
     private lateinit var userRepository: UserRepository
+
+    @Autowired
+    private lateinit var facilityRepository: FacilityRepository
 
     @Autowired
     lateinit var showRepository: ShowRepository
@@ -57,6 +61,11 @@ class ShowService {
 
     @Transactional(Transactional.TxType.NEVER)
     fun findByName(name: String): Show = validateOptionalIsNotNull(showRepository.findByName(name))
+
+    fun getBusyFacilities(): List<Facility> {
+        val facilitiesID = showRepository.busyFacilities().map { it }
+        return facilityRepository.findAll().filter { it.id in facilitiesID }
+    }
 
     private fun filter(shows: Iterable<Show>, params: ShowRequest): List<Show> {
         val filter = createFilter(params)
