@@ -24,7 +24,7 @@ class UserController {
     lateinit var commentService: CommentService
 
     @GetMapping("/validate")
-    @Operation(summary = "Valida el tipo de usuario")
+    @Operation(summary = "Valida que el usuario sea administrador")
     fun isAdmin(@RequestParam(required = true) userId: Long):Boolean{
         userService.validateAdminStatus(userId)
         return true
