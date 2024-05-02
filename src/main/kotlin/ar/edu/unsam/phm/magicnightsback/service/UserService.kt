@@ -39,7 +39,7 @@ class UserService {
 
     /*Mapeo todos los tickets en uno solo por showDate juntando el precio total*/
     @Transactional(Transactional.TxType.NEVER)
-    fun getTicketsGroupedByShowDate(user: User, ticketList: List<Ticket>): List<TicketDTO> {
+    fun getTicketsGroupedByShowDate(user: User, ticketList: Set<Ticket>): List<TicketDTO> {
 
         val distinctTickets = ticketList.distinctBy { it.showDate }
         return distinctTickets.map { uniqueTicket ->
@@ -51,12 +51,12 @@ class UserService {
         }
     }
 
-    //
-//    fun getUserPurchasedTickets(userId: Long): List<PurchasedTicketDTO> {
-//        val user = userRepository.getById(userId)
-//        return getTicketsGroupedByShowDate(user, user.tickets).map { it.toPurchasedTicketDTO() }
-//    }
-//
+    @Transactional(Transactional.TxType.NEVER)
+    fun getPurchasedTickets(userId: Long): List<TicketDTO> {
+        val user = findById(userId)
+        return getTicketsGroupedByShowDate(user, user.tickets).map { it }
+    }
+
     @Transactional(Transactional.TxType.NEVER)
     fun getUserFriends(id: Long): List<FriendDTO> {
         val user: User = findById(id)
@@ -108,13 +108,10 @@ class UserService {
         return userRepository.allBalances(userId)
     }
 
-
     fun findUsersWithMoreTicketsThan(ticketsQuantity: Int): List<UserDTO> {
         return userRepository.findUsersWithMoreTicketsThan(ticketsQuantity).map { user -> user.toDTO() }
     }
 
-
     fun validateAdminStatus(id: Long) =
         require(findById(id).isAdmin) { throw AuthenticationException(UserError.USER_IS_NOT_ADMIN) }
-
 }

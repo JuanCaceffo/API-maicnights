@@ -4,7 +4,7 @@ import ar.edu.unsam.phm.magicnightsback.domain.*
 import java.time.LocalDateTime
 
 data class TicketDTO(
-    val ticketId: Long,
+    val id: Long,
     val data: ShowData,
     val stats: ShowStats,
     val date: LocalDateTime,
