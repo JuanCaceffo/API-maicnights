@@ -89,16 +89,16 @@ class BaseShow(override val name: String, override val band: Band, override val 
 class AdminUser : TestObject<User> {
     override fun build() = User("admin", "admin", "admin", "asdf").apply {
         isAdmin = true
-        credit = 1000000.0
+        modifyBalance(1000000.0)
     }
 }
 
 class PoorUser : TestObject<User> {
-    override fun build() = User("admin", "admin", "admin", "asdf").apply { credit = 0.0 }
+    override fun build() = User("admin", "admin", "admin", "asdf").apply { modifyBalance( 0.0) }
 }
 
 class CommonUser : TestObject<User> {
     override fun build() = User("admin", "admin", "admin", "asdf").apply {
-        credit = 100000.0
+        modifyBalance( 100000.0)
     }
 }

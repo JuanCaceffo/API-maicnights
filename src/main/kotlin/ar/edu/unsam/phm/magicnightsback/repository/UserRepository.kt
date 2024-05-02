@@ -14,7 +14,7 @@ interface UserRepository : CrudRepository<User, Long> {
     @EntityGraph(attributePaths = ["tickets", "friends", "balances"])
     fun findByUsername(username: String): Optional<User>
 
-    @EntityGraph(attributePaths = ["friends"])
+    @EntityGraph(attributePaths = ["tickets", "friends", "balances"])
     override fun findById(id: Long): Optional<User>
 
     @Query(
