@@ -26,7 +26,7 @@ class CartService(
     @Transactional(Transactional.TxType.NEVER)
     fun getTicketsCart(userId: Long): List<TicketDTO> {
         val cart = getCartByUserId(userId)
-        val user = userService.getUserById(userId)
+        val user = userService.findById(userId)
         return  userService.getTicketsGroupedByShowDate(user,cart.getAllTickets())
     }
 
@@ -54,7 +54,6 @@ class CartService(
         cart.buyReservedTickets()
         cartRepo.save(cart)
     }
-
 
     @Transactional(Transactional.TxType.NEVER)
     fun reservedTicketsPrice(userId: Long): Double {

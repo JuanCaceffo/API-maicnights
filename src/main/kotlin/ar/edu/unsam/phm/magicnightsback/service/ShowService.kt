@@ -1,20 +1,22 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
-import ar.edu.unsam.phm.magicnightsback.controller.ShowController.ShowAdminRequest
 import ar.edu.unsam.phm.magicnightsback.controller.ShowController.ShowRequest
 import ar.edu.unsam.phm.magicnightsback.domain.*
 import ar.edu.unsam.phm.magicnightsback.dto.ShowDateDTO
+import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import kotlin.jvm.optionals.getOrNull
 
 @Service
 class ShowService {
     @Autowired
     private lateinit var userRepository: UserRepository
+
+    @Autowired
+    private lateinit var facilityRepository: FacilityRepository
 
     @Autowired
     lateinit var showRepository: ShowRepository
@@ -44,19 +46,18 @@ class ShowService {
     }
 
     @Transactional(Transactional.TxType.NEVER)
-    fun findAllAdmin(params: ShowAdminRequest): List<Show> {
-        userService.validateAdminStatus(params.userId)
-        return findAll(params.toShowRequest())
-    }
-
-    @Transactional(Transactional.TxType.NEVER)
     fun findByIdAdmin(showId: Long, userId: Long): Show {
         userService.validateAdminStatus(userId)
-        return validateOptionalIsNotNull(showRepository.findById(showId))
+        return findById(showId)
     }
 
     @Transactional(Transactional.TxType.NEVER)
     fun findByName(name: String): Show = validateOptionalIsNotNull(showRepository.findByName(name))
+
+    fun getBusyFacilities(): List<Facility> {
+        val facilitiesID = showRepository.busyFacilities().map { it }
+        return facilityRepository.findAll().filter { it.id in facilitiesID }
+    }
 
     private fun filter(shows: Iterable<Show>, params: ShowRequest): List<Show> {
         val filter = createFilter(params)

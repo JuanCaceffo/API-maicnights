@@ -1,5 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
+import ar.edu.unsam.phm.magicnightsback.dto.CommentCreateDTO
 import ar.edu.unsam.phm.magicnightsback.dto.CommentDTO
 import ar.edu.unsam.phm.magicnightsback.service.CommentService
 import io.swagger.v3.oas.annotations.Operation
@@ -19,6 +20,12 @@ class CommentController {
     @Operation(summary = "Devuelve todos los comentarios disponibles para un usuario")
     fun getUserComments(@RequestParam(required = true) userId: Long): List<CommentDTO> {
         return commentService.getUserComments(userId)
+    }
+
+    @PostMapping("add-user-comment")
+    @Operation(summary = "Permite que un usuario comente un show")
+    fun addUserComment(@RequestBody commentData: CommentCreateDTO) {
+        commentService.addComment(commentData)
     }
 
     @GetMapping("show/{showId}")

@@ -63,13 +63,7 @@ class ShowController {
                 show.ticketPrice(it),
                 showDate.availableSeatsOf(it)
             )
-        }
-    }
-
-    @GetMapping("/admin/shows")
-    @Operation(summary = "Devuelve todos los shows disponibles (dashboard Admin)")
-    fun getAllforAdmin(@ModelAttribute request: ShowAdminRequest): List<ShowDTO> {
-        return showService.findAllAdmin(request).map { it.toShowDTO() }
+        }.sortedBy { seat -> seat.seatType }
     }
 
     @GetMapping("/admin/show/{id}/stats")
@@ -78,7 +72,7 @@ class ShowController {
         @PathVariable id: Long,
         @RequestParam(required = true, defaultValue = "-1") userId: Long
     ): List<ShowStatsDTO> {
-        userService.validateAdmin(userId)
+        userService.validateAdminStatus(userId)
         val show = showService.findById(id)
         return show.getAllStats(show)
     }
@@ -115,12 +109,4 @@ class ShowController {
         @RequestParam val facilityKeyword: String = "",
         @RequestParam(required = false, defaultValue = "false") val withFriends: Boolean = false
     )
-
-    class ShowAdminRequest(
-        @RequestParam val userId: Long = 0,
-        @RequestParam val bandKeyword: String = "",
-        @RequestParam val facilityKeyword: String = "",
-    ) {
-        fun toShowRequest(): ShowRequest = ShowRequest(userId, bandKeyword, facilityKeyword)
-    }
 }

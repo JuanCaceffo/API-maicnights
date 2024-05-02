@@ -18,8 +18,7 @@ data class Comment(
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
-
+    var id: Long = 0
     var date: LocalDateTime = LocalDateTime.now()
 
     constructor(user: User, show: Show, dto: CommentDTO) : this(

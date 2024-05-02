@@ -49,8 +49,8 @@ class FacilityBootstrap(
             name = "Movistar Arena",
             location = Point(latitude = -34.63579, longitude = -58.36527)
         ).apply {
-            addPlace(SeatTypes.LOWERLEVEL, 1000)
             addPlace(SeatTypes.PULLMAN, 2000)
+            addPlace(SeatTypes.LOWERLEVEL, 1000)
         },
         Theater(
             name = "Teatro Colon",
@@ -65,8 +65,8 @@ class FacilityBootstrap(
             400000.0
         ).apply {
             addPlace(SeatTypes.UPPERLEVEL, 500)
-            addPlace(SeatTypes.BOX, 1000)
             addPlace(SeatTypes.FIELD, 3500)
+            addPlace(SeatTypes.BOX, 1000)
         },
         Stadium(
             name = "Club De Polo",
@@ -74,15 +74,15 @@ class FacilityBootstrap(
             550000.0
         ).apply {
             addPlace(SeatTypes.UPPERLEVEL, 1500)
-            addPlace(SeatTypes.BOX, 2000)
             addPlace(SeatTypes.FIELD, 6500)
+            addPlace(SeatTypes.BOX, 2000)
         },
         Theater(
             name = "Teatro Opera",
             location = Point(latitude = -34.61092, longitude = -58.37287)
         ).apply {
-            addPlace(SeatTypes.LOWERLEVEL, 2000)
             addPlace(SeatTypes.PULLMAN, 3000)
+            addPlace(SeatTypes.LOWERLEVEL, 2000)
         },
         Stadium(
             name = "La Bombonera",
@@ -90,16 +90,16 @@ class FacilityBootstrap(
             8500000.0
         ).apply {
             addPlace(SeatTypes.UPPERLEVEL, 10000)
-            addPlace(SeatTypes.BOX, 15000)
             addPlace(SeatTypes.FIELD, 25000)
+            addPlace(SeatTypes.BOX, 15000)
         },
         Theater(
             name = "Teatro Poker",
             location = Point(latitude = -34.60356, longitude = -58.38013)
         ).apply {
             hasGoodAcoustics = true
-            addPlace(SeatTypes.LOWERLEVEL, 300)
             addPlace(SeatTypes.PULLMAN, 200)
+            addPlace(SeatTypes.LOWERLEVEL, 300)
         }
     )
 

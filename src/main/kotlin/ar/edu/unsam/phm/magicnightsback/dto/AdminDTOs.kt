@@ -4,7 +4,7 @@ import ar.edu.unsam.phm.magicnightsback.domain.Show
 import ar.edu.unsam.phm.magicnightsback.domain.States
 
 data class ShowAdminDetailsDTO(
-    val showDto: ShowDTO,
+    val show: ShowDTO,
     val totalTicketsSold: Int,
     val ticketsSoldPerSeatType: List<TicketsPerSeatType>,
     val totalSales: Double,

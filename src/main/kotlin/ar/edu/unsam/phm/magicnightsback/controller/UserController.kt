@@ -23,17 +23,6 @@ class UserController {
     @Autowired
     lateinit var commentService: CommentService
 
-    @GetMapping("/validate")
-    @Operation(summary = "Valida el tipo de usuario")
-    fun isAdmin(@RequestParam(required = true) userId: Long):Boolean{
-        return userService.validateUser(userId)
-    }
-//
-//    @GetMapping("/{userId}/purchased_tickets")
-//    @Operation(summary = "Permite obtener todos los tickets por funcion comprados por el usuario")
-//    fun getUserPurchasedTickets(@PathVariable userId: Long): List<PurchasedTicketDTO> {
-//        return userService.getUserPurchasedTickets(userId)
-//    }
     @GetMapping("/{id}/friends")
     fun getUserFriends(@PathVariable id: Long): List<FriendDTO> {
         return userService.getUserFriends(id)
@@ -44,7 +33,6 @@ class UserController {
         return userService.deleteUserFriend(userId, friendId)
     }
 
-
     @Operation(summary = "Permite logear un usuario registrado en el sistema")
     @ApiResponses(
         value = [
@@ -53,11 +41,10 @@ class UserController {
         ]
     )
     @PostMapping("/login")
-    fun authenticate(@RequestBody request: LoginUserDTO): Long {
+    fun authenticate(@RequestBody request: LoginUserDTO): LoginUserResponseDTO {
         val user = userService.authenticate(request.username, request.password)
-        return user.id
+        return user.loginResponseDTO()
     }
-
 
     @GetMapping("/{id}/data")
     @Operation(summary = "Permite obtener la data del perfil del usuario")
@@ -70,21 +57,24 @@ class UserController {
     @Operation(summary = "Permite actualizar la data del usuario")
     fun updateUser(@PathVariable id: Long, @RequestBody user: UserUpdateDTO): UserDTO {
         val updatedUserDTO = userService.updateUser(id, user)
-
         return updatedUserDTO
     }
 
-    @GetMapping("/{id}/credit")
+    @GetMapping("/{id}/balance")
     @Operation(summary = "Permite obtener los creditos del usuario")
     fun getUserCredit(@PathVariable id: Long): Double {
-        return userService.getUserCredit(id)
+        return userService.getUserBalance(id)
     }
 
-
-    @PatchMapping("/{id}/add_credit")
+    @PatchMapping("/{id}/modify_balance")
     @Operation(summary = "Permite actualizar los creditos del usuario")
-    fun updateUserCredit(@PathVariable id: Long, @RequestBody creditToAdd: Double): Double {
-        return userService.updateUserCredit(id, creditToAdd)
+    fun updateUserBalance(@PathVariable id: Long, @RequestBody newBalance: Double): Double {
+        return userService.updateUserBalance(id, newBalance)
+    }
+
+    @GetMapping("{id}/balance_report")
+    fun userBalanceReport(@PathVariable id: Long): List<UserBalanceDTO> {
+        return userService.getBalances(id)
     }
 
     @GetMapping("/users_with_more_tickets_than/{n}")

@@ -142,7 +142,7 @@ class UserBootstrap : InitializingBean {
     }
 
     fun addCredits() {
-        users.values.forEach { it.addCredit(100000.0) }
+        users.values.forEach { it.modifyBalance(100000.0) }
     }
 
     fun createUsers() {

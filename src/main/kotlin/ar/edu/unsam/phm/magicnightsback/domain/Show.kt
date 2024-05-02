@@ -47,17 +47,18 @@ class Show(
 
     // ShowDate methods
     fun getSeatTypes() = facility.places.map { it.seatType }
-    fun getShowDateById(showDateId: Long) = dates.find { it.id == showDateId } ?: throw NotFoundException(ShowDateError.MSG_DATE_NOT_FOUND)
+    fun getShowDateById(showDateId: Long) =
+        dates.find { it.id == showDateId } ?: throw NotFoundException(ShowDateError.MSG_DATE_NOT_FOUND)
 
     fun initialDates(newDates: List<LocalDateTime>) {
         newDates.forEach {
-            dates.add(ShowDate(it, facility))
+            dates.add(ShowDate(it, this))
         }
     }
 
     fun addDate(date: LocalDateTime): ShowDate {
         validNewDate(date.toLocalDate())
-        val showDate = ShowDate(date, facility)
+        val showDate = ShowDate(date, this)
         dates.add(showDate)
         return showDate
     }
@@ -72,10 +73,12 @@ class Show(
     fun changeRentability(newShowStatus: Rentability) {
         this.rentabilityType = newShowStatus
     }
+
     fun getAllStats(show: Show) = PivotStats.stats.map { it.getStat(show) }
 
     //Friends Methods
-    fun friendsAttendeesProfileImages(user: User) = friendsAttending(user).map { it.profileImgUrl }
+    fun friendsAttendeesProfileImages(user: User): List<String> = friendsAttending(user).map { it.profileImgUrl }
+
     fun friendsAttending(user: User) = allAttendees().filter { it.isMyFriend(user) }
 
     // Dates Methods

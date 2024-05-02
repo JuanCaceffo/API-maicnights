@@ -1,8 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
-import ar.edu.unsam.phm.magicnightsback.domain.Comment
-import ar.edu.unsam.phm.magicnightsback.domain.averageOrZero
-import ar.edu.unsam.phm.magicnightsback.domain.validateOptionalIsNotNull
+import ar.edu.unsam.phm.magicnightsback.domain.*
 import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 import ar.edu.unsam.phm.magicnightsback.error.CommentError
@@ -12,7 +10,6 @@ import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
 
 @Service
 class CommentService {
@@ -63,11 +60,11 @@ class CommentService {
     fun findById(id: Long): Comment = validateOptionalIsNotNull(commentsRepository.findById(id))
 
     @Transactional(Transactional.TxType.REQUIRED)
-    fun addComment(dto: CommentDTO) {
-        val show = validateOptionalIsNotNull(showRepository.findById(dto.showId))
-        val user = validateOptionalIsNotNull(userRepository.findById(dto.userId))
-        validateShowAvaiableToComment(dto.date)
-        commentsRepository.save(Comment(user, show, dto))
+    fun addComment(commentCreate: CommentCreateDTO) {
+        val show = validateOptionalIsNotNull(showRepository.findById(commentCreate.showId))
+        val user = validateOptionalIsNotNull(userRepository.findById(commentCreate.userId))
+        validateShowAvaiableToComment(commentCreate.showDateId,user,show)
+        commentsRepository.save(Comment(user, show, commentCreate.text, commentCreate.rating))
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
@@ -77,9 +74,17 @@ class CommentService {
         commentsRepository.delete(comment)
     }
 
-    private fun validateShowAvaiableToComment(date: LocalDateTime) {
-        if (date > LocalDateTime.now()) {
+    private fun validateShowAvaiableToComment(showDateId: Long, user: User, show: Show) {
+        val showDate = show.getShowDateById(showDateId)
+        if (!showDate.isAttendee(user)){
+            throw BusinessException(CommentError.IS_NOT_ATTENDEE)
+        }
+        if (!showDate.datePassed()) {
             throw BusinessException(CommentError.SHOWDATE_NOT_PASSED)
         }
+        if (getUserComments(user.id).any { commentDto -> commentDto.showId == show.id }){
+            throw BusinessException(CommentError.SHOW_ALREADY_COMMENTED)
+        }
     }
+
 }
