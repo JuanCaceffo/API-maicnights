@@ -71,7 +71,7 @@
 //
 //        showRepository.create(
 //            Show(
-//                "Cachenged!!",
+//                "Cachenged",
 //                Band(
 //                    "La Vela Puerca",
 //                    10000.0

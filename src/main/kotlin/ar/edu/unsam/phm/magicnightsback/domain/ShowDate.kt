@@ -26,7 +26,7 @@ class ShowDate(
     }
 
     fun reserveSeat(seat: SeatTypes, quantity: Int) {
-        quantity.throwIfGreaterThan(availableSeatsOf(seat),ShowDateError.EXCEEDED_CAPACITY)
+        quantity.throwIfGreaterThan(availableSeatsOf(seat), ShowDateError.EXCEEDED_CAPACITY)
         reservedSeats[seat.name] = (reservedSeats[seat.name]!! + quantity)
     }
 

@@ -55,7 +55,6 @@ class CartService(
         cartRepo.save(cart)
     }
 
-
     @Transactional(Transactional.TxType.NEVER)
     fun reservedTicketsPrice(userId: Long): Double {
         val cart = getCartByUserId(userId)
