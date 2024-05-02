@@ -3,19 +3,6 @@ package ar.edu.unsam.phm.magicnightsback.dto
 import ar.edu.unsam.phm.magicnightsback.domain.Comment
 import java.time.LocalDateTime
 
-//class CommentDTO(
-//    val id: Long = 0,
-//    var userId: Long = 0,
-//    var showId: Long = 0,
-//    var showImgSrc: String = "",
-//    var userImgSrc: String = "",
-//    var showName: String = "",
-//    var userName: String = "",
-//    val text: String = "",
-//    val rating: Double = 0.0,
-//    val date: LocalDateTime = LocalDateTime.of(0,-1,0,0,0,0)
-//)
-
 data class CommentDTO(
     val id: Long,
     var userId: Long = 0,
@@ -61,6 +48,3 @@ data class CommentCreateDTO(
     val text: String,
     val rating: Double,
 )
-
-//fun Comment.toUserCommentDTO(): CommentDTO =
-//    CommentDTO(show.showImg, show.name, text, rating, date)

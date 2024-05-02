@@ -13,7 +13,7 @@ class Cart(
     var id: Long = 0
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val reservedTickets: MutableList<Ticket> = mutableListOf()
+    val reservedTickets: MutableSet<Ticket> = mutableSetOf()
 
     fun getAllTickets() = reservedTickets
 
@@ -35,5 +35,5 @@ class Cart(
         reservedTickets.clear()
     }
 
-    fun totalPrice() = reservedTickets.sumOf { ticket -> ticket.price }
+    fun totalPrice() = reservedTickets.sumOf { ticket -> ticket.price*-1 }
 }
