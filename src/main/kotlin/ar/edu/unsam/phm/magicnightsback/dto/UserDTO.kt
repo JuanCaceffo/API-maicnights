@@ -1,7 +1,9 @@
 package ar.edu.unsam.phm.magicnightsback.dto
 
+import ar.edu.unsam.phm.magicnightsback.domain.BalanceHistory
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class LoginUserDTO(
     var username: String = "",
@@ -23,6 +25,11 @@ data class UserUpdateDTO(
     val surname: String,
 )
 
+data class UserBalanceDTO(
+    val currentBalance: BalanceHistory,
+    val previusBalance: BalanceHistory,
+)
+
 fun User.toDTO(): UserDTO = UserDTO(
     this.id,
     this.profileImgUrl,
@@ -32,4 +39,3 @@ fun User.toDTO(): UserDTO = UserDTO(
     this.birthday,
     this.dni
 )
-

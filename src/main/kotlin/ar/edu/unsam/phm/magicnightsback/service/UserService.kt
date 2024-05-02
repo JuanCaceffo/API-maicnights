@@ -1,39 +1,33 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
+import ar.edu.unsam.phm.magicnightsback.domain.BalanceHistory
 import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.domain.validateOptionalIsNotNull
 import ar.edu.unsam.phm.magicnightsback.dto.*
 import ar.edu.unsam.phm.magicnightsback.error.*
-import ar.edu.unsam.phm.magicnightsback.error.AuthenticationException
-import ar.edu.unsam.phm.magicnightsback.error.UserError
-import org.springframework.stereotype.Service
-import org.springframework.beans.factory.annotation.Autowired
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import jakarta.transaction.Transactional
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 @Service
 class UserService {
     @Autowired
     lateinit var userRepository: UserRepository
+
     @Autowired
     lateinit var commentService: CommentService
 
-
     @Transactional(Transactional.TxType.NEVER)
-    fun findById(id: Long): User = validateOptionalIsNotNull(userRepository.findById(id))
+    fun findById(id: Long): User =
+        validateOptionalIsNotNull(userRepository.findById(id), "El usuario de id ${id} no fue encontrado")
 
     @Transactional(Transactional.TxType.NEVER)
     fun findByUsername(username: String): User = validateOptionalIsNotNull(userRepository.findByUsername(username))
 
     @Transactional(Transactional.TxType.NEVER)
-    fun getUserById(userId: Long) = validateOptionalIsNotNull(userRepository.findById(userId), "El usuario de id ${userId} no fue encontrado")
-
-    fun validateAdminStatus(userId: Long) {
-        val user = getUserById(userId)
-        if (!user.isAdmin) throw AuthenticationException(UserError.USER_IS_NOT_ADMIN)
-    }
-    
     fun authenticate(username: String, password: String): User {
         val user = findByUsername(username)
 
@@ -45,6 +39,7 @@ class UserService {
     }
 
     /*Mapeo todos los tickets en uno solo por showDate juntando el precio total*/
+    @Transactional(Transactional.TxType.NEVER)
     fun getTicketsGroupedByShowDate(user: User, ticketList: List<Ticket>): List<TicketDTO> {
 
         val distinctTickets = ticketList.distinctBy { it.showDate }
@@ -53,22 +48,23 @@ class UserService {
             val totalPrice = ticketsSameShowDate.sumOf { ticket -> ticket.price }
             val quantity = ticketsSameShowDate.sumOf { ticket -> ticket.quantity }
             val commentsStats = commentService.getCommentStadisticsOfShow(uniqueTicket.show.id)
-            uniqueTicket.toTicketDTO(commentsStats,user, totalPrice, quantity)
+            uniqueTicket.toTicketDTO(commentsStats, user, totalPrice, quantity)
         }
     }
-//
+
+    //
 //    fun getUserPurchasedTickets(userId: Long): List<PurchasedTicketDTO> {
 //        val user = userRepository.getById(userId)
 //        return getTicketsGroupedByShowDate(user, user.tickets).map { it.toPurchasedTicketDTO() }
 //    }
 //
-    @Transactional
+    @Transactional(Transactional.TxType.NEVER)
     fun getUserFriends(id: Long): List<FriendDTO> {
         val user: User = findById(id)
         return user.friends.map { userFriend -> userFriend.toFriendDTO() }
     }
 
-    @Transactional
+    @Transactional(Transactional.TxType.REQUIRED)
     fun deleteUserFriend(userId: Long, friendId: Long): List<FriendDTO> {
         val user = findById(userId)
         val friendToDelete = findById(friendId)
@@ -77,28 +73,25 @@ class UserService {
         userRepository.save(user)
 
         return user.friends.map { it.toFriendDTO() }
-}
-
-    fun validateUser(userId: Long): Boolean {
-        return findById(userId).isAdmin
     }
 
-    fun getUserCredit(userId: Long): Double {
+    @Transactional(Transactional.TxType.NEVER)
+    fun getUserBalance(userId: Long): Double = findById(userId).totalBalance()
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun getLastDateBalanceModify(userId: Long): Double = findById(userId).totalBalance()
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    fun updateUserBalance(userId: Long, newBalance: Double): Double {
         val user = findById(userId)
 
-        return user.credit
-    }
-
-
-    fun updateUserCredit(userId: Long, creditToAdd: Double): Double {
-        val user = findById(userId)
-
-        user.credit += creditToAdd
+        user.modifyBalance(BalanceHistory(newBalance, LocalDateTime.now()))
         userRepository.save(user)
 
-        return user.credit
+        return user.totalBalance()
     }
 
+    @Transactional(Transactional.TxType.REQUIRED)
     fun updateUser(userId: Long, userUpdate: UserUpdateDTO): UserDTO {
         val user = findById(userId)
 
@@ -110,29 +103,8 @@ class UserService {
         return user.toDTO()
     }
 
+    fun validateAdminStatus(id: Long) =
+        require(findById(id).isAdmin) { throw AuthenticationException(UserError.USER_IS_NOT_ADMIN) }
 
-//        val user = userRepository.getById(id)
-//        try {
-//            val comment = user.comments[commentId.toInt()]
-//            user.removeComment(comment)
-//        } catch (e: Exception) {
-//            throw BusinessException(UserError.NONEXISTENT_USER_COMMENT)
-//        }
-
-//
-//    fun createComment(id: Long, commentCreat: CommentCreateDTO) {
-//        val user = userRepository.getById(id)
-//        val ticket = user.tickets.distinctBy { it.showDate }[commentCreat.groupTicketId.toInt()]
-//        val comment = Comment(ticket.show, commentCreat.text, commentCreat.rating)
-//
-//        user.addComment(comment, ticket.show)
-//    }
-//
-//
-
-    fun validateAdmin(userId: Long) {
-        val user = findById(userId)
-        if (!user.isAdmin) throw AuthenticationException(UserError.USER_IS_NOT_ADMIN)
-    }
-
+    fun getBalances(): UserBalanceDTO = userRepository.getBalances()
 }

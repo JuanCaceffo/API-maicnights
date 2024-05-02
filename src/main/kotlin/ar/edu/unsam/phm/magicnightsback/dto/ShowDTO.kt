@@ -11,6 +11,12 @@ data class ShowData(
     val facilityName: String,
 )
 
+data class ShowStats(
+    val rating: Double? = null,
+    val totalComments: Int? = null,
+    val userImageNames: List<String>? = null,
+)
+
 data class ShowDTO(
     val data: ShowData,
     val showStats: ShowStats,
@@ -23,12 +29,6 @@ data class ShowDTO(
 
 data class AdminSummaryDTO(
     val title: String, val description: String
-)
-
-data class ShowStats(
-    val rating: Double? = null,
-    val totalComments: Int? = null,
-    val userImageNames: List<String>? = null,
 )
 
 fun Show.data() = ShowData(

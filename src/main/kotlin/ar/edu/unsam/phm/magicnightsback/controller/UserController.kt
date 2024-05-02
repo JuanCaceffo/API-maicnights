@@ -26,7 +26,8 @@ class UserController {
     @GetMapping("/validate")
     @Operation(summary = "Valida el tipo de usuario")
     fun isAdmin(@RequestParam(required = true) userId: Long):Boolean{
-        return userService.validateUser(userId)
+        userService.validateAdminStatus(userId)
+        return true
     }
 //
 //    @GetMapping("/{userId}/purchased_tickets")
@@ -44,7 +45,6 @@ class UserController {
         return userService.deleteUserFriend(userId, friendId)
     }
 
-
     @Operation(summary = "Permite logear un usuario registrado en el sistema")
     @ApiResponses(
         value = [
@@ -52,12 +52,12 @@ class UserController {
             ApiResponse(responseCode = "400", description = UserError.BAD_CREDENTIALS, content = arrayOf(Content())),
         ]
     )
+
     @PostMapping("/login")
     fun authenticate(@RequestBody request: LoginUserDTO): Long {
         val user = userService.authenticate(request.username, request.password)
         return user.id
     }
-
 
     @GetMapping("/{id}/data")
     @Operation(summary = "Permite obtener la data del perfil del usuario")
@@ -74,16 +74,21 @@ class UserController {
         return updatedUserDTO
     }
 
-    @GetMapping("/{id}/credit")
+    @GetMapping("/{id}/balance")
     @Operation(summary = "Permite obtener los creditos del usuario")
     fun getUserCredit(@PathVariable id: Long): Double {
-        return userService.getUserCredit(id)
+        return userService.getUserBalance(id)
     }
 
-
-    @PatchMapping("/{id}/add_credit")
+    @PatchMapping("/{id}/modify_balance")
     @Operation(summary = "Permite actualizar los creditos del usuario")
     fun updateUserCredit(@PathVariable id: Long, @RequestBody creditToAdd: Double): Double {
-        return userService.updateUserCredit(id, creditToAdd)
+        return userService.updateUserBalance(id, creditToAdd)
+    }
+
+    @GetMapping("{id}/balance_report")
+    fun userBalanceReport(@PathVariable id: Long): UserBalanceDTO {
+
+        return userService.getBalances()
     }
 }
