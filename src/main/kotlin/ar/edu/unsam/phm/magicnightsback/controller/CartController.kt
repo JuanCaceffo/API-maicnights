@@ -45,7 +45,7 @@ class CartController(
             ApiResponse(responseCode = "400", description = UserError.MSG_NOT_ENOUGH_CREDIT),
         ]
     )
-    fun purchaseReservedTickets(@PathVariable userId: Long){
+    fun buyReservedTickets(@PathVariable userId: Long){
         cartService.buyReservedTickets(userId)
     }
 

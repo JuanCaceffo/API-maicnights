@@ -51,8 +51,10 @@ class CartService(
     @Transactional(Transactional.TxType.REQUIRED)
     fun buyReservedTickets(userId: Long) {
         val cart = getCartByUserId(userId)
+        val user = cart.user
         cart.buyReservedTickets()
         cartRepo.save(cart)
+        userRepo.save(user)
     }
 
     @Transactional(Transactional.TxType.NEVER)
