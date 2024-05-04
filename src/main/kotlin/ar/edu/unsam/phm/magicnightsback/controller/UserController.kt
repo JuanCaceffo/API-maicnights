@@ -20,9 +20,6 @@ class UserController {
     @Autowired
     lateinit var userService: UserService
 
-    @Autowired
-    lateinit var commentService: CommentService
-
     @GetMapping("/{id}/friends")
     fun getUserFriends(@PathVariable id: Long): List<FriendDTO> {
         return userService.getUserFriends(id)

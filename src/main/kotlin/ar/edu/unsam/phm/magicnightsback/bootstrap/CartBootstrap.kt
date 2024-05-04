@@ -17,9 +17,9 @@ import org.springframework.stereotype.Component
 @DependsOn("showBootstrap", "userBootstrap")
 class CartBootstrap(
     val cartRepository: CartRepository,
-    userRepository: UserRepository,
+    private val userRepository: UserRepository,
     showRepository: ShowRepository,
-//    seatRepository: SeatRepository
+    repository: UserRepository,
 ) : InitializingBean {
 
     val smallshowGranrex = showRepository.findById(1).get()
@@ -30,14 +30,24 @@ class CartBootstrap(
     val bestSmallShowTeatroOpera = showRepository.findById(6).get()
     val losRedondosClubDePolo = showRepository.findById(7).get()
 
+    val users = listOf(
+        userRepository.findByUsername("madescoces").get(),
+        userRepository.findByUsername("mariasol").get(),
+        userRepository.findByUsername("juanceto01").get(),
+        userRepository.findByUsername("Denise123").get(),
+        userRepository.findByUsername("CarolRodri").get(),
+        userRepository.findByUsername("marcosg").get(),
+        userRepository.findByUsername("anam").get()
+    )
+
     val carts = mapOf(
-        "CartPablo" to Cart(userRepository.findByUsername("madescoces").get()),
-        "CartSol" to Cart(userRepository.findByUsername("mariasol").get()),
-        "CartJuan" to Cart(userRepository.findByUsername("juanceto01").get()),
-        "CartDenise" to Cart(userRepository.findByUsername("Denise123").get()),
-        "CartCarolina" to Cart(userRepository.findByUsername("CarolRodri").get()),
-        "CartMarcos" to Cart(userRepository.findByUsername("marcosg").get()),
-        "CartAna" to Cart(userRepository.findByUsername("anam").get())
+        "CartPablo" to Cart(users[0]),
+        "CartSol" to Cart(users[1]),
+        "CartJuan" to Cart(users[2]),
+        "CartDenise" to Cart(users[3]),
+        "CartCarolina" to Cart(users[4]),
+        "CartMarcos" to Cart(users[5]),
+        "CartAna" to Cart(users[6])
     )
 
     //TODO: no persitir carritos de usaurio ya persitidos
@@ -45,6 +55,13 @@ class CartBootstrap(
         carts.values.forEach {
             cartRepository.save(it)
             println("Cart for ${it.user.name} created")
+        }
+        saveUsers()
+    }
+
+    fun saveUsers() {
+        users.forEach {
+            userRepository.save(it)
         }
     }
 
@@ -59,18 +76,12 @@ class CartBootstrap(
             )
             reserveTicket(
                 Ticket(
-                    smallShowTeatroColon,
-                    smallShowTeatroColon.dates.elementAt(1),
-                    SeatTypes.PULLMAN,
-                    2
+                    smallShowTeatroColon, smallShowTeatroColon.dates.elementAt(1), SeatTypes.PULLMAN, 2
                 )
             )
             reserveTicket(
                 Ticket(
-                    bigShowRiver,
-                    bigShowRiver.dates.elementAt(0),
-                    SeatTypes.UPPERLEVEL,
-                    2
+                    bigShowRiver, bigShowRiver.dates.elementAt(0), SeatTypes.UPPERLEVEL, 2
                 )
             )
             reserveTicket(
@@ -91,10 +102,7 @@ class CartBootstrap(
             )
             reserveTicket(
                 Ticket(
-                    bigShowRiver,
-                    bigShowRiver.dates.elementAt(0),
-                    SeatTypes.UPPERLEVEL,
-                    2
+                    bigShowRiver, bigShowRiver.dates.elementAt(0), SeatTypes.UPPERLEVEL, 2
                 )
             )
         }
@@ -108,10 +116,7 @@ class CartBootstrap(
             )
             reserveTicket(
                 Ticket(
-                    bigShowRiver,
-                    bigShowRiver.dates.elementAt(0),
-                    SeatTypes.UPPERLEVEL,
-                    2
+                    bigShowRiver, bigShowRiver.dates.elementAt(0), SeatTypes.UPPERLEVEL, 2
                 )
             )
         }
@@ -125,10 +130,7 @@ class CartBootstrap(
             )
             reserveTicket(
                 Ticket(
-                    bigShowRiver,
-                    bigShowRiver.dates.elementAt(0),
-                    SeatTypes.UPPERLEVEL,
-                    2
+                    bigShowRiver, bigShowRiver.dates.elementAt(0), SeatTypes.UPPERLEVEL, 2
                 )
             )
         }

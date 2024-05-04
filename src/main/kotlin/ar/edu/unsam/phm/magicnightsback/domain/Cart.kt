@@ -30,7 +30,7 @@ class Cart(
     fun ticketsSize() = reservedTickets.sumOf { ticket -> ticket.quantity }
 
     fun buyReservedTickets(){
-        user.modifyBalance(totalPrice())
+        user.modifyBalance(-totalPrice())
         getAllTickets().forEach { ticket -> user.addTicket(ticket) }
         reservedTickets.clear()
     }

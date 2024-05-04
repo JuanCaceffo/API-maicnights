@@ -63,14 +63,13 @@ class User(
     fun totalBalance() = balances.sumOf { it.amount }
 
     fun modifyBalance(amount: Double) {
-        validateBalance(amount)
+        validateNotNegativeBalance(amount)
         balances.add(BalanceHistory(amount, LocalDateTime.now(), this))
     }
 
     fun age(): Int = birthday.calculateAge()
 
-    fun validateBalance(amount: Double) {
+    fun validateNotNegativeBalance(amount: Double) {
         (totalBalance() + amount).throwErrorIfNegative(BusinessException(UserError.MSG_NOT_ENOUGH_CREDIT))
-            .toDouble()
     }
 }
