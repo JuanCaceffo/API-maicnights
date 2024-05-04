@@ -33,7 +33,7 @@ class User(
     val friends = mutableSetOf<User>()
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val tickets = mutableSetOf<Ticket>()
+    val tickets = mutableListOf<Ticket>()
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     var balances: MutableSet<BalanceHistory> = mutableSetOf()
@@ -63,14 +63,13 @@ class User(
     fun totalBalance() = balances.sumOf { it.amount }
 
     fun modifyBalance(amount: Double) {
-        validateBalance(amount)
+        validateNotNegativeBalance(amount)
         balances.add(BalanceHistory(amount, LocalDateTime.now(), this))
     }
 
     fun age(): Int = birthday.calculateAge()
 
-    fun validateBalance(amount: Double) {
+    fun validateNotNegativeBalance(amount: Double) {
         (totalBalance() + amount).throwErrorIfNegative(BusinessException(UserError.MSG_NOT_ENOUGH_CREDIT))
-            .toDouble()
     }
 }

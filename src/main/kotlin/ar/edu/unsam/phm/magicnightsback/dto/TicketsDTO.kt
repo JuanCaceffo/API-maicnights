@@ -28,3 +28,11 @@ data class TicketCreateDTO(
     val seatTypeName: SeatTypes,
     val quantity: Int,
 )
+
+interface TicketResult {
+    fun getQuantity(): Int
+    fun getTicketId(): Long
+    fun getShowDateId(): Long
+    fun getShowId(): Long?
+    fun getSeat(): String
+}

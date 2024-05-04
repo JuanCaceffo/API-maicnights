@@ -15,7 +15,7 @@ class ShowDate(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     val attendees = mutableSetOf<User>()
 
     @ElementCollection(fetch = FetchType.LAZY)

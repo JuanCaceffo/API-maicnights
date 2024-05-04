@@ -157,23 +157,10 @@ class UserBootstrap : InitializingBean {
         }
     }
 
-    fun addTickets() {
-        val show = showRepository.findById(1).get()
-        val date = show.dates.elementAt(0)
-        val seat = SeatTypes.PULLMAN
-
-        val ticket = Ticket(show, date, seat)
-
-        users["Denise"]?.apply {
-            addTicket(ticket)
-        }
-    }
-
     override fun afterPropertiesSet() {
         println("User creation process starts")
         addCredits()
         addFriends()
-        addTickets()
         createUsers()
     }
 }

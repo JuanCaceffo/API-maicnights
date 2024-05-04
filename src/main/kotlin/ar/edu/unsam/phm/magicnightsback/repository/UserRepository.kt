@@ -1,6 +1,8 @@
 package ar.edu.unsam.phm.magicnightsback.repository
 
+import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.domain.User
+import ar.edu.unsam.phm.magicnightsback.dto.TicketResult
 import ar.edu.unsam.phm.magicnightsback.dto.UserBalanceDTO
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.Query
@@ -51,6 +53,9 @@ interface UserRepository : CrudRepository<User, Long> {
         """
     )
     fun allBalances(@Param("id") id: Long): List<UserBalanceDTO>
+
+    @Query(nativeQuery = true, value = "SELECT * FROM public.history_tickets(:userId,:year)")
+    fun historyTickets(@Param("userId") userId: Long, @Param("year") year: Int): List<TicketResult>
 }
 
 //    fun getLoginUser(loginUser: LoginUserDTO): Long? {
