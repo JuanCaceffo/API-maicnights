@@ -7,6 +7,7 @@ import ar.edu.unsam.phm.magicnightsback.repository.CartRepository
 //import ar.edu.unsam.phm.magicnightsback.repository.SeatRepository
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.context.annotation.DependsOn
 import org.springframework.context.annotation.Profile
@@ -50,18 +51,19 @@ class CartBootstrap(
         "CartAna" to Cart(users[6])
     )
 
-    //TODO: no persitir carritos de usaurio ya persitidos
     fun createCarts() {
         carts.values.forEach {
             cartRepository.save(it)
             println("Cart for ${it.user.name} created")
         }
         saveUsers()
+    //TODO: guardar los shows que estan persisitidos
     }
 
     fun saveUsers() {
         users.forEach {
             userRepository.save(it)
+            println("User ${it.name} saved ")
         }
     }
 
