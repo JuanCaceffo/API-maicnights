@@ -83,4 +83,9 @@ class UserController {
     fun findUsersWithMoreTicketsThan(@PathVariable n: Int): List<UserDTO> {
         return userService.findUsersWithMoreTicketsThan(n)
     }
+    @GetMapping("/purchased_tickets")
+    @Operation(summary = "Retorna los tickets comprados por un usuario")
+    fun getPurchasedTickets(@RequestParam userId: Long): List<TicketDTO> {
+        return userService.getPurchasedTickets(userId)
+    }
 }

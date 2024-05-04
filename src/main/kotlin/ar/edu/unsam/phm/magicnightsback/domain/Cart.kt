@@ -35,5 +35,5 @@ class Cart(
         reservedTickets.clear()
     }
 
-    fun totalPrice() = reservedTickets.sumOf { ticket -> ticket.price }
+    fun totalPrice() = reservedTickets.sumOf { ticket -> ticket.price*-1 }
 }

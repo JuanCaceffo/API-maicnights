@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 data class TicketDTO(
     val ticketId: Long,
     val data: ShowData,
-    val stats: ShowStats,
+    val showStats: ShowStats,
     val date: LocalDateTime,
     val price: Double,
     val quantity: Int,
