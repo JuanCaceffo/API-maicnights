@@ -51,7 +51,6 @@ class User(
     fun isMyFriend(user: User) = friends.contains(user)
 
     fun addTicket(ticket: Ticket) {
-        ticket.showDate.addAttendee(this)
         tickets.add(ticket)
     }
 

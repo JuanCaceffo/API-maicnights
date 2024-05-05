@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository
 import java.util.*
 
 interface CartRepository: CrudRepository<Cart, Long> {
-@EntityGraph(attributePaths = [
+    @EntityGraph(attributePaths = [
         "reservedTickets",
         "reservedTickets.show",
         "reservedTickets.show.dates",

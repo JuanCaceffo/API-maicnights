@@ -20,7 +20,6 @@ class CartBootstrap(
     val cartRepository: CartRepository,
     private val userRepository: UserRepository,
     showRepository: ShowRepository,
-    repository: UserRepository,
 ) : InitializingBean {
 
     val smallshowGranrex = showRepository.findById(1).get()
@@ -43,8 +42,8 @@ class CartBootstrap(
 
     val carts = mapOf(
         "CartPablo" to Cart(users[0]),
-        "CartSol" to Cart(users[1]),
-        "CartJuan" to Cart(users[2]),
+        "CartSol" to Cart(users[2]),
+        "CartJuan" to Cart(users[1]),
         "CartDenise" to Cart(users[3]),
         "CartCarolina" to Cart(users[4]),
         "CartMarcos" to Cart(users[5]),
@@ -57,7 +56,7 @@ class CartBootstrap(
             println("Cart for ${it.user.name} created")
         }
         saveUsers()
-    //TODO: guardar los shows que estan persisitidos
+        //TODO: guardar los shows que estan persisitidos
     }
 
     fun saveUsers() {

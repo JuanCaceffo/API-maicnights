@@ -6,7 +6,6 @@ import ar.edu.unsam.phm.magicnightsback.dto.TicketCreateDTO
 import ar.edu.unsam.phm.magicnightsback.dto.TicketDTO
 import ar.edu.unsam.phm.magicnightsback.repository.CartRepository
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
-import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service
 @Service
 class CartService(
     @Autowired val cartRepo: CartRepository,
-    @Autowired val userRepo: UserRepository,
     @Autowired val showRepo: ShowRepository,
     @Autowired val userService: UserService
 ) {
@@ -51,10 +49,8 @@ class CartService(
     @Transactional(Transactional.TxType.REQUIRED)
     fun buyReservedTickets(userId: Long) {
         val cart = getCartByUserId(userId)
-        val user = cart.user
         cart.buyReservedTickets()
         cartRepo.save(cart)
-        userRepo.save(user)
     }
 
     @Transactional(Transactional.TxType.NEVER)
@@ -66,7 +62,6 @@ class CartService(
     @Transactional(Transactional.TxType.NEVER)
     fun getTicketsSize(userId: Long): Int {
         val cart = getCartByUserId(userId)
-
         return cart.ticketsSize()
     }
 }
