@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component
 class CartBootstrap(
     val cartRepository: CartRepository,
     private val userRepository: UserRepository,
-    showRepository: ShowRepository,
+    val showRepository: ShowRepository,
 ) : InitializingBean {
 
     val smallshowGranrex = showRepository.findById(1).get()
@@ -29,6 +29,16 @@ class CartBootstrap(
     val bestSmallShowMovistarArena = showRepository.findById(5).get()
     val bestSmallShowTeatroOpera = showRepository.findById(6).get()
     val losRedondosClubDePolo = showRepository.findById(7).get()
+
+    val shows = listOf(
+        smallshowGranrex,
+        smallShowTeatroColon,
+        bigShowRiver,
+        bigShowLaBombonera,
+        bestSmallShowMovistarArena,
+        bestSmallShowTeatroOpera,
+        losRedondosClubDePolo,
+    )
 
     val users = listOf(
         userRepository.findByUsername("madescoces").get(),
@@ -55,16 +65,10 @@ class CartBootstrap(
             cartRepository.save(it)
             println("Cart for ${it.user.name} created")
         }
-        saveUsers()
-        //TODO: guardar los shows que estan persisitidos
+        showRepository.saveAll(shows)
+        //TODO: Indagar por que no puedo guardar desde el boostrap los shows a los que van mas de un user
     }
 
-    fun saveUsers() {
-        users.forEach {
-            userRepository.save(it)
-            println("User ${it.name} saved ")
-        }
-    }
 
     fun addTickets() {
         carts["CartPablo"]!!.apply {
@@ -75,32 +79,32 @@ class CartBootstrap(
                     SeatTypes.PULLMAN,
                 )
             )
-            reserveTicket(
-                Ticket(
-                    smallShowTeatroColon, smallShowTeatroColon.dates.elementAt(1), SeatTypes.PULLMAN, 2
-                )
-            )
-            reserveTicket(
-                Ticket(
-                    bigShowRiver, bigShowRiver.dates.elementAt(0), SeatTypes.UPPERLEVEL, 2
-                )
-            )
-            reserveTicket(
-                Ticket(
-                    bigShowLaBombonera,
-                    bigShowLaBombonera.dates.elementAt(0),
-                    SeatTypes.UPPERLEVEL,
-                )
-            )
+//            reserveTicket(
+//                Ticket(
+//                    smallShowTeatroColon, smallShowTeatroColon.dates.elementAt(1), SeatTypes.PULLMAN, 2
+//                )
+//            )
+//            reserveTicket(
+//                Ticket(
+//                    bigShowRiver, bigShowRiver.dates.elementAt(0), SeatTypes.UPPERLEVEL, 2
+//                )
+//            )
+//            reserveTicket(
+//                Ticket(
+//                    bigShowLaBombonera,
+//                    bigShowLaBombonera.dates.elementAt(0),
+//                    SeatTypes.UPPERLEVEL,
+//                )
+//            )
         }
         carts["CartSol"]!!.apply {
-            reserveTicket(
-                Ticket(
-                    smallshowGranrex,
-                    smallshowGranrex.dates.elementAt(0),
-                    SeatTypes.LOWERLEVEL,
-                )
-            )
+//            reserveTicket(
+//                Ticket(
+//                    smallshowGranrex,
+//                    smallshowGranrex.dates.elementAt(0),
+//                    SeatTypes.LOWERLEVEL,
+//                )
+//            )
             reserveTicket(
                 Ticket(
                     bigShowRiver, bigShowRiver.dates.elementAt(0), SeatTypes.UPPERLEVEL, 2
@@ -108,41 +112,41 @@ class CartBootstrap(
             )
         }
         carts["CartJuan"]!!.apply {
-            reserveTicket(
-                Ticket(
-                    smallshowGranrex,
-                    smallshowGranrex.dates.elementAt(0),
-                    SeatTypes.PULLMAN,
-                )
-            )
-            reserveTicket(
-                Ticket(
-                    bigShowRiver, bigShowRiver.dates.elementAt(0), SeatTypes.UPPERLEVEL, 2
-                )
-            )
+//            reserveTicket(
+//                Ticket(
+//                    smallshowGranrex,
+//                    smallshowGranrex.dates.elementAt(0),
+//                    SeatTypes.PULLMAN,
+//                )
+//            )
+//            reserveTicket(
+//                Ticket(
+//                    bigShowRiver, bigShowRiver.dates.elementAt(0), SeatTypes.UPPERLEVEL, 2
+//                )
+//            )
         }
         carts["CartDenise"]!!.apply {
-            reserveTicket(
-                Ticket(
-                    smallshowGranrex,
-                    smallshowGranrex.dates.elementAt(0),
-                    SeatTypes.PULLMAN,
-                )
-            )
-            reserveTicket(
-                Ticket(
-                    bigShowRiver, bigShowRiver.dates.elementAt(0), SeatTypes.UPPERLEVEL, 2
-                )
-            )
+//            reserveTicket(
+//                Ticket(
+//                    smallshowGranrex,
+//                    smallshowGranrex.dates.elementAt(0),
+//                    SeatTypes.PULLMAN,
+//                )
+//            )
+//            reserveTicket(
+//                Ticket(
+//                    bigShowRiver, bigShowRiver.dates.elementAt(0), SeatTypes.UPPERLEVEL, 2
+//                )
+//            )
         }
         carts["CartCarolina"]!!.apply {
-            reserveTicket(
-                Ticket(
-                    smallshowGranrex,
-                    smallshowGranrex.dates.elementAt(0),
-                    SeatTypes.PULLMAN,
-                )
-            )
+//            reserveTicket(
+//                Ticket(
+//                    smallshowGranrex,
+//                    smallshowGranrex.dates.elementAt(0),
+//                    SeatTypes.PULLMAN,
+//                )
+//            )
             reserveTicket(
                 Ticket(
                     bestSmallShowMovistarArena,
@@ -152,13 +156,13 @@ class CartBootstrap(
             )
         }
         carts["CartMarcos"]!!.apply {
-            reserveTicket(
-                Ticket(
-                    smallshowGranrex,
-                    smallshowGranrex.dates.elementAt(0),
-                    SeatTypes.PULLMAN,
-                )
-            )
+//            reserveTicket(
+//                Ticket(
+//                    smallshowGranrex,
+//                    smallshowGranrex.dates.elementAt(0),
+//                    SeatTypes.PULLMAN,
+//                )
+//            )
             reserveTicket(
                 Ticket(
                     bestSmallShowTeatroOpera,
@@ -168,13 +172,13 @@ class CartBootstrap(
             )
         }
         carts["CartAna"]!!.apply {
-            reserveTicket(
-                Ticket(
-                    smallshowGranrex,
-                    smallshowGranrex.dates.elementAt(0),
-                    SeatTypes.PULLMAN,
-                )
-            )
+//            reserveTicket(
+//                Ticket(
+//                    smallshowGranrex,
+//                    smallshowGranrex.dates.elementAt(0),
+//                    SeatTypes.PULLMAN,
+//                )
+//            )
             reserveTicket(
                 Ticket(
                     losRedondosClubDePolo,
