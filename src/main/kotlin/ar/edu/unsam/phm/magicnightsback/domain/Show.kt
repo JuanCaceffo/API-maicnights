@@ -79,7 +79,7 @@ class Show(
     //Friends Methods
     fun friendsAttendeesProfileImages(user: User): List<String> = friendsAttending(user).map { it.profileImgUrl }
 
-    fun friendsAttending(user: User) = allAttendees().filter { it.isMyFriend(user) }
+    fun friendsAttending(user: User) = allAttendees().filter { user.isMyFriend(it) }
 
     // Dates Methods
     fun allDates() = dates.map { it.date }.toList().sortedBy { it }
