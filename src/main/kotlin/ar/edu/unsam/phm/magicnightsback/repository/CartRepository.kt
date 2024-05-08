@@ -24,19 +24,11 @@ interface CartRepository : CrudRepository<Cart, Long> {
     )
     override fun findById(id: Long): Optional<Cart>
 
-    @Query(
-        """
-    SELECT ti.quantity AS quantity, 
-    ti.id AS ticketId, 
-    ti.show_date_id AS showDateId, 
-    ti.show_id AS ShowId,
-    ti.seat AS seat
-    FROM public.ticket AS ti
-    JOIN public.cart_reserved_tickets AS ct ON ct.reserved_tickets_id = ti.id
-    JOIN public.cart AS c ON c.id = ct.cart_id
-    JOIN public.show_date AS sd ON sd.id = ti.show_date_id
-    WHERE c.id = :userId
-        """, nativeQuery = true
-    )
-    fun getReservedTickets(@Param("userId") userId: Long): List<TicketResult>
+    @Query("""
+        SELECT ti
+        FROM Cart c
+        INNER JOIN c.reservedTickets ti
+        WHERE c.user.id = :userId
+    """)
+    fun getReservedTickets(@Param("userId") userId: Long): List<Ticket>
 }

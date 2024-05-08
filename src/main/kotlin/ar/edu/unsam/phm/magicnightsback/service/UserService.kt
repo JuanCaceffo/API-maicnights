@@ -47,7 +47,7 @@ class UserService {
     fun getPurchasedTickets(userId: Long): List<TicketDTO> {
         val user = findById(userId)
         val tickets = userRepository.getTickets(userId)
-        return ticketService.getTickets(user, tickets)
+        return ticketService.getTicketsGroupedByShowDate(user, tickets)
     }
 
     @Transactional(Transactional.TxType.NEVER)

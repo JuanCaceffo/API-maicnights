@@ -26,7 +26,7 @@ class CartService(
     fun getTicketsCart(userId: Long): List<TicketDTO> {
         val user = userService.findById(userId)
         val tickets = cartRepo.getReservedTickets(userId)
-        return  ticketService.getTickets(user,tickets)
+        return  ticketService.getTicketsGroupedByShowDate(user,tickets)
     }
 
     @Transactional(Transactional.TxType.REQUIRED)

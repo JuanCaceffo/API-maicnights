@@ -1,5 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.repository
 
+import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.dto.TicketResult
 import ar.edu.unsam.phm.magicnightsback.dto.UserBalanceDTO
@@ -56,17 +57,13 @@ interface UserRepository : CrudRepository<User, Long> {
     @Query(nativeQuery = true, value = "SELECT * FROM public.history_tickets(:userId,:year)")
     fun historyTickets(@Param("userId") userId: Long, @Param("year") year: Int): List<TicketResult>
 
+
     @Query("""
-    SELECT ti.quantity AS quantity,
-     ti.id AS ticketId,
-    ti.show_date_id AS showDateId, 
-    ti.show_id AS showId, 
-    ti.seat AS seat
-    FROM public.ticket AS ti
-    JOIN public.spectator_tickets AS st ON st.tickets_id = ti.id
-    JOIN public.spectator AS s ON s.id = st.user_id
-    JOIN public.show_date AS sd ON sd.id = ti.show_date_id
-    WHERE s.id = :userId
-    """, nativeQuery = true)
-    fun getTickets(@Param("userId") userId:Long): List<TicketResult>
+        SELECT ti
+        FROM User u
+        INNER JOIN u.tickets ti
+        WHERE u.id = :userId
+    """)
+    fun getTickets(@Param("userId") userId:Long): List<Ticket>
+
 }
