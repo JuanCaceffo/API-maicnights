@@ -84,7 +84,7 @@ class Show(
     // Dates Methods
     fun allDates() = dates.map { it.date }.toList().sortedBy { it }
     fun allDatesWithIds() = dates.map { it.toShowDateDTO() }.sortedBy { it.date }
-    fun allAttendees() = dates.flatMap { it.attendees }
+    fun allAttendees() = dates.flatMap { it.attendees }.toSet()
     fun soldOutDates() = dates.filter { it.isSoldOut() }.size
     fun newDateAvailable(show: Show) = PivotStats.stats.all { it.newDateCondition(show) }
 
