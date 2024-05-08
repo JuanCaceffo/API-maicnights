@@ -43,11 +43,12 @@ class UserService {
         return user
     }
 
-//    @Transactional(Transactional.TxType.NEVER)
-//    fun getPurchasedTickets(userId: Long): List<TicketDTO> {
-//        val user = findById(userId)
-//        return ticketService.getTickets(user, user.tickets).map { it }
-//    }
+    @Transactional(Transactional.TxType.NEVER)
+    fun getPurchasedTickets(userId: Long): List<TicketDTO> {
+        val user = findById(userId)
+        val tickets = userRepository.getTickets(userId)
+        return ticketService.getTickets(user, tickets)
+    }
 
     @Transactional(Transactional.TxType.NEVER)
     fun getUserFriends(id: Long): List<FriendDTO> {
