@@ -23,7 +23,7 @@ class UserService {
     lateinit var userRepository: UserRepository
 
     @Autowired
-    lateinit var commentService: CommentService
+    lateinit var ticketService: TicketService
 
     @Transactional(Transactional.TxType.NEVER)
     fun findById(id: Long): User =
@@ -43,24 +43,11 @@ class UserService {
         return user
     }
 
-    /*Mapeo todos los tickets en uno solo por showDate juntando el precio total*/
-    @Transactional(Transactional.TxType.NEVER)
-    fun getTicketsGroupedByShowDate(user: User, ticketList: List<Ticket>): List<TicketDTO> {
-
-        val distinctTickets = ticketList.distinctBy { it.showDate.id }
-        return distinctTickets.map { uniqueTicket ->
-            val ticketsSameShowDate = ticketList.filter { ticket -> ticket.showDate.id == uniqueTicket.showDate.id }
-            val totalPrice = ticketsSameShowDate.sumOf { ticket -> ticket.price }
-            val quantity = ticketsSameShowDate.sumOf { ticket -> ticket.quantity }
-            val commentsStats = commentService.getCommentStadisticsOfShow(uniqueTicket.show.id)
-            uniqueTicket.toTicketDTO(commentsStats, user, totalPrice, quantity)
-        }
-    }
-
     @Transactional(Transactional.TxType.NEVER)
     fun getPurchasedTickets(userId: Long): List<TicketDTO> {
         val user = findById(userId)
-        return getTicketsGroupedByShowDate(user, user.tickets).map { it }
+        val tickets = userRepository.getTickets(userId)
+        return ticketService.getTicketsGroupedByShowDate(user, tickets)
     }
 
     @Transactional(Transactional.TxType.NEVER)
@@ -124,18 +111,7 @@ class UserService {
     @Transactional(Transactional.TxType.NEVER)
     fun historyTickets(userId: Long, year: Int): List<TicketDTO> {
         val user = findById(userId)
-        val tickets = userRepository.historyTickets(userId,year).map {
-            ticketResult ->
-            val show = ticketResult.getShowId()?.let { validateOptionalIsNotNull(showRepository.findById(it)) } ?: throw BusinessException("El show id ingresado es null")
-            Ticket(
-                show,
-                show.getShowDateById(ticketResult.getShowDateId()),
-                SeatTypes.valueOf(ticketResult.getSeat()),
-                ticketResult.getQuantity()
-            ).apply {
-                id = ticketResult.getTicketId()
-            }
-        }
-        return getTicketsGroupedByShowDate(user,tickets)
+        val tickets = userRepository.historyTickets(userId,year)
+        return ticketService.getTickets(user,tickets)
     }
 }

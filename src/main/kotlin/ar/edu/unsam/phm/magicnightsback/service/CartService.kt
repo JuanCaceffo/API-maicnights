@@ -12,9 +12,10 @@ import org.springframework.stereotype.Service
 
 @Service
 class CartService(
-    @Autowired val cartRepo: CartRepository,
-    @Autowired val showRepo: ShowRepository,
-    @Autowired val userService: UserService
+    val cartRepo: CartRepository,
+    val showRepo: ShowRepository,
+    val userService: UserService,
+    val ticketService: TicketService
 ) {
 
     @Transactional(Transactional.TxType.NEVER)
@@ -23,9 +24,9 @@ class CartService(
 
     @Transactional(Transactional.TxType.NEVER)
     fun getTicketsCart(userId: Long): List<TicketDTO> {
-        val cart = getCartByUserId(userId)
         val user = userService.findById(userId)
-        return  userService.getTicketsGroupedByShowDate(user,cart.getAllTickets())
+        val tickets = cartRepo.getReservedTickets(userId)
+        return  ticketService.getTicketsGroupedByShowDate(user,tickets)
     }
 
     @Transactional(Transactional.TxType.REQUIRED)

@@ -48,7 +48,7 @@ class User(
         friends.remove(user)
     }
 
-    fun isMyFriend(user: User) = friends.contains(user)
+    fun isMyFriend(user: User) = friends.any { it.id == user.id }
 
     fun addTicket(ticket: Ticket) {
         tickets.add(ticket)
