@@ -26,7 +26,7 @@ data class TicketsPerSeatType(
 fun Show.toShowAdminDetailsDTO() = ShowAdminDetailsDTO(
     this.toShowDTO(),
     this.totalTicketsSold(),
-    this.getSeatTypes().map { TicketsPerSeatType(it.name, totalTicketsSoldOf(it)) },
+    this.getSeatTypes().map { TicketsPerSeatType(it.seatType.name, totalTicketsSoldOf(it.seatType)) },
     this.totalSales(),
     this.baseCost(),
     this.totalPendingAttendees()
