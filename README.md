@@ -36,3 +36,19 @@ AND date_part('year',sd.date) = yearr;
 END;
 $BODY$;
 ```
+
+##### Devuelve los usuarios tienen más de N tickets.
+
+```SQL
+ CREATE FUNCTION users_with_more_tickets_than(ticketsQuantity integer) RETURNS SETOF spectator AS $$
+ BEGIN
+     RETURN query
+     SELECT s.*
+     FROM spectator s
+     JOIN spectator_tickets st ON s.id = st.user_id
+     JOIN ticket t ON t.id = st.tickets_id
+     GROUP BY s.id
+     HAVING COUNT(*) > ticketsQuantity;
+ END;
+ $$ LANGUAGE plpgsql;
+ ```
