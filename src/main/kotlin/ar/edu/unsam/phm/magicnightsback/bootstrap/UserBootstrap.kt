@@ -1,7 +1,5 @@
 package ar.edu.unsam.phm.magicnightsback.bootstrap
 
-import ar.edu.unsam.phm.magicnightsback.domain.SeatTypes
-import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
