@@ -52,3 +52,54 @@ $BODY$;
  END;
  $$ LANGUAGE plpgsql;
  ```
+
+##### Lleva un control de las veces que un usuario modifica su saldo, de manera de saber: a) la fecha en la que se modificó, b) el nuevo saldo y el anterior saldo.
+```SQL
+CREATE TABLE balance_history (
+                                 id SERIAL PRIMARY KEY,
+                                 spectator_id INT,
+                                 previous_balance DECIMAL(10,2),
+                                 new_balance DECIMAL(10,2),
+                                 change_date TIMESTAMP
+);
+
+CREATE OR REPLACE FUNCTION balance_trigger_function()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM balance_history WHERE spectator_id = NEW.id) THEN
+UPDATE balance_history
+SET previous_balance = OLD.balance,
+    new_balance = NEW.balance,
+    change_date = NOW()
+WHERE spectator_id = NEW.id;
+ELSE
+        INSERT INTO balance_history (spectator_id, previous_balance, new_balance, change_date)
+        VALUES (NEW.id, OLD.balance, NEW.balance, NOW());
+END IF;
+
+RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER Update_saldo
+    AFTER UPDATE OF balance ON Spectator
+    FOR EACH ROW
+    EXECUTE FUNCTION balance_trigger_function();
+```
+
+
+##### Lista las instalaciones que tengan más de 2 shows realizados.
+
+```SQL
+DROP VIEW IF EXISTS facilities_con_mas_de_2_shows;
+
+CREATE VIEW facilities_con_mas_de_2_shows AS
+SELECT s.facility_id, COUNT(DISTINCT s.id) as show_count
+FROM Show s
+         JOIN show_dates sd ON s.id = sd.show_id
+         JOIN show_date sdate ON sd.dates_id = sdate.id
+WHERE to_timestamp(sdate.id) < CURRENT_TIMESTAMP
+GROUP BY s.facility_id
+HAVING COUNT(DISTINCT s.id) >= 2;
+```
