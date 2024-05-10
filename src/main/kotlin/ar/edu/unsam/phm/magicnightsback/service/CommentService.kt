@@ -65,7 +65,7 @@ class CommentService {
         val user = validateOptionalIsNotNull(userRepository.findById(commentCreate.userId))
         validateShowAvaiableToComment(commentCreate.showDateId,user,show)
         commentsRepository.save(Comment(user, show, commentCreate.text, commentCreate.rating))
-    }it s
+    }
 
     @Transactional(Transactional.TxType.REQUIRED)
     fun removeComment(userId: Long, commentId: Long) {
