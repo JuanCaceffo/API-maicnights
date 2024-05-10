@@ -48,7 +48,7 @@ class ShowDate(
 
     fun datePassed(): Boolean = date.isBefore(LocalDateTime.now())
 
-    fun isAttendee(user: User) = attendees.contains(user)
+    fun isAttendee(user: User) = attendees.any { it.id == user.id }
 
     fun isSoldOut() = totalAvailableSeats() == 0
 }
