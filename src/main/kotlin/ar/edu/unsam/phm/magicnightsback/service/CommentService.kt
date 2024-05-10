@@ -65,7 +65,7 @@ class CommentService {
         val user = validateOptionalIsNotNull(userRepository.findById(commentCreate.userId))
         validateShowAvaiableToComment(commentCreate.showDateId,user,show)
         commentsRepository.save(Comment(user, show, commentCreate.text, commentCreate.rating))
-    }
+    }it s
 
     @Transactional(Transactional.TxType.REQUIRED)
     fun removeComment(userId: Long, commentId: Long) {
@@ -82,9 +82,12 @@ class CommentService {
         if (!showDate.datePassed()) {
             throw BusinessException(CommentError.SHOWDATE_NOT_PASSED)
         }
-        if (getUserComments(user.id).any { commentDto -> commentDto.showId == show.id }){
+        if (isAlreadyCommented(user.id,show.id)){
             throw BusinessException(CommentError.SHOW_ALREADY_COMMENTED)
         }
     }
 
+    fun canBeCommented(showDate: ShowDate, user: User, show: Show) = !isAlreadyCommented(user.id, show.id) && showDate.datePassed() && showDate.isAttendee(user)
+
+    fun isAlreadyCommented(userId:Long, showId: Long) =  commentsRepository.countByUserIdAndShowId(userId, showId) > 0
 }

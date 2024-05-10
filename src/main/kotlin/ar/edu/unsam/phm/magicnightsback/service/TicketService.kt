@@ -30,7 +30,8 @@ class TicketService {
             val totalPrice = ticketsSameShowDate.sumOf { ticket -> ticket.price }
             val quantity = ticketsSameShowDate.sumOf { ticket -> ticket.quantity }
             val commentsStats = commentService.getCommentStadisticsOfShow(uniqueTicket.show.id)
-            uniqueTicket.toTicketDTO(commentsStats, user, totalPrice, quantity)
+            val canBeCommented = commentService.canBeCommented(uniqueTicket.showDate, user,uniqueTicket.show)
+            uniqueTicket.toTicketDTO(commentsStats, user, totalPrice, quantity, canBeCommented)
         }
     }
 
