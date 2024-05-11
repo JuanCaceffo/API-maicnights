@@ -2,6 +2,7 @@ package ar.edu.unsam.phm.magicnightsback.dto
 
 import ar.edu.unsam.phm.magicnightsback.domain.*
 import java.time.LocalDateTime
+import java.util.*
 
 data class TicketDTO(
     val ticketId: Long,
@@ -37,3 +38,11 @@ interface TicketResult {
     fun getShowId(): Long?
     fun getSeat(): String
 }
+
+data class TicketRequestDTO(
+    val showDateId: UUID,
+    val userId: UUID,
+    val seat: SeatTypes
+)
+
+fun TicketRequestDTO.toModel() = Ticket(showDateId, userId, seat)
