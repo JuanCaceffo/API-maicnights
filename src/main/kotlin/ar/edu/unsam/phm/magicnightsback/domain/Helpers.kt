@@ -1,9 +1,8 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import ar.edu.unsam.phm.magicnightsback.error.BusinessException
-import ar.edu.unsam.phm.magicnightsback.error.InternalServerError
-import ar.edu.unsam.phm.magicnightsback.error.NotFoundException
-import ar.edu.unsam.phm.magicnightsback.error.RepositoryError
+import ar.edu.unsam.phm.magicnightsback.exceptions.BusinessException
+import ar.edu.unsam.phm.magicnightsback.exceptions.NotFoundException
+import ar.edu.unsam.phm.magicnightsback.exceptions.RepositoryError
 //import ar.edu.unsam.phm.magicnightsback.repository.CommentRepository
 import java.time.LocalDate
 import java.time.LocalDateTime

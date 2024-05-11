@@ -2,9 +2,9 @@ package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.data.constants.ColumnLength
 import ar.edu.unsam.phm.magicnightsback.dto.toShowDateDTO
-import ar.edu.unsam.phm.magicnightsback.error.BusinessException
-import ar.edu.unsam.phm.magicnightsback.error.NotFoundException
-import ar.edu.unsam.phm.magicnightsback.error.ShowDateError
+import ar.edu.unsam.phm.magicnightsback.exceptions.BusinessException
+import ar.edu.unsam.phm.magicnightsback.exceptions.NotFoundException
+import ar.edu.unsam.phm.magicnightsback.exceptions.ShowDateError
 import jakarta.persistence.*
 import java.time.LocalDate
 import java.time.LocalDateTime
