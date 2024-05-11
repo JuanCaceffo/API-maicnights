@@ -1,8 +1,10 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import ar.edu.unsam.phm.magicnights.utils.validateIsNotBefore
+
 import ar.edu.unsam.phm.magicnightsback.data.constants.ColumnLength
+import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
 import ar.edu.unsam.phm.magicnightsback.error.ShowDateError
+import ar.edu.unsam.phm.magicnightsback.utils.validateIsNotBefore
 import jakarta.persistence.*
 import java.time.LocalDateTime
 import java.util.*
@@ -90,7 +92,7 @@ data class ShowDate(
     fun availableOf(seatType: SeatTypes, totalSold: Int) =
         seatCapacityOf(seatType)
             .minus(totalSold)
-            .notNegative(BusinessException(CreationError.NO_CAPACITY))
+            //.notNegative(BusinessException(CreationError.NO_CAPACITY))
 
     // Validations
     fun validateReservation(ticket: Ticket, totalSold: Int): ShowDate {
