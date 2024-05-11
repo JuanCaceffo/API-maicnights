@@ -36,7 +36,7 @@ class FacilityFilter(private val keyword: String) : CondicionesFiltrado<Show>{
 class WithFriends(private val condition:Boolean, private val user: User) : CondicionesFiltrado<Show> {
     override fun filter(elemento: Show): Boolean {
         return if(condition){
-            elemento.friendsAttending(user).isNotEmpty()
+            false //elemento.friendsAttending(user).isNotEmpty()
         } else {
             true
         }

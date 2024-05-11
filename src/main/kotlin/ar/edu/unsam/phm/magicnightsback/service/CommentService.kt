@@ -2,8 +2,8 @@ package ar.edu.unsam.phm.magicnightsback.service
 
 import ar.edu.unsam.phm.magicnightsback.domain.*
 import ar.edu.unsam.phm.magicnightsback.dto.*
-import ar.edu.unsam.phm.magicnightsback.error.BusinessException
-import ar.edu.unsam.phm.magicnightsback.error.CommentError
+import ar.edu.unsam.phm.magicnightsback.exceptions.BusinessException
+import ar.edu.unsam.phm.magicnightsback.exceptions.CommentError
 import ar.edu.unsam.phm.magicnightsback.repository.CommentRepository
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository

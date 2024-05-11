@@ -1,4 +1,4 @@
-//package ar.edu.unsam.phm.magicnightsback.domain
+package ar.edu.unsam.phm.magicnightsback.domain
 //
 //import ar.edu.unsam.phm.magicnightsback.error.BusinessException
 //import ar.edu.unsam.phm.magicnightsback.error.FacilityError
@@ -28,3 +28,4 @@
 //    PULLMAN(15000.0)
 //}
 //
+
