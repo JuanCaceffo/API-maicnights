@@ -115,7 +115,7 @@
 //
 //
 //    @Test
-//    fun `Un usuario al llamar al endpoint get de comments puede obtener todos los comentarios que realizo a a algun show sin error`() {
+//    fun `Un usuario al llamar al endpoint get de comments puede obtener todos los comentarios que realizo a a algun show sin exceptions`() {
 //        val user = userRepository.getById(0)
 //        val show = showRepository.getById(0)
 //        val ticket = Ticket(show, show.dates.first(), TheaterSeatType.PULLMAN, show.ticketPrice(TheaterSeatType.PULLMAN))

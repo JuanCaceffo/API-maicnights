@@ -2,7 +2,7 @@
 //
 //import ar.edu.unsam.phm.magicnightsback.dto.TicketCreateDTO
 //import ar.edu.unsam.phm.magicnightsback.dto.TicketDTO
-//import ar.edu.unsam.phm.magicnightsback.error.*
+//import ar.edu.unsam.phm.magicnightsback.exceptions.*
 //import ar.edu.unsam.phm.magicnightsback.service.CartService
 //import io.swagger.v3.oas.annotations.Operation
 //import io.swagger.v3.oas.annotations.responses.ApiResponse

@@ -1,7 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
 import ar.edu.unsam.phm.magicnightsback.dto.ShowDateDTO
-import ar.edu.unsam.phm.magicnightsback.error.ShowDateError
+import ar.edu.unsam.phm.magicnightsback.exceptions.ShowDateError
 import ar.edu.unsam.phm.magicnightsback.factory.ShowTypes
 import ar.edu.unsam.phm.magicnightsback.factory.TestFactory
 import ar.edu.unsam.phm.magicnightsback.factory.UserTypes

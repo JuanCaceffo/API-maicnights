@@ -1,6 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import ar.edu.unsam.phm.magicnightsback.error.ShowDateError
+import ar.edu.unsam.phm.magicnightsback.exceptions.ShowDateError
 import jakarta.persistence.*
 import java.time.LocalDateTime
 

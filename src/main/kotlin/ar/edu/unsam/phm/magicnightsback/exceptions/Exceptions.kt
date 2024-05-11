@@ -1,7 +1,8 @@
-package ar.edu.unsam.phm.magicnightsback.error
+package ar.edu.unsam.phm.magicnightsback.exceptions
 
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ResponseStatus
+import java.util.*
 
 object UserError {
     const val MSG_NOT_ENOUGH_CREDIT = "No tiene saldo suficiente para realizar la compra"
@@ -47,6 +48,17 @@ object FacilityError {
 object CartError {
     const val CART_FOR_USER_NOT_FOUND = "El carrito para el usaurio especificado no fue encontrado"
 }
+
+object FindError {
+    @Suppress("FunctionName")
+    fun NOT_FOUND(uuid: UUID, name: String = "entity") = "Can't find $name with id: $uuid."
+
+    @Suppress("FunctionName")
+    fun NAME_NOT_FOUND(username: String, name: String = "entity") = "Can't find $name with value: $username."
+}
+
+@ResponseStatus(value = HttpStatus.NOT_FOUND)
+class ResponseFindException(message: String) : RuntimeException(message)
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 class BusinessException(msg: String) : RuntimeException(msg)

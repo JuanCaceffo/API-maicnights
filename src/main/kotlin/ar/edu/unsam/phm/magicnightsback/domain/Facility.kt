@@ -1,7 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import ar.edu.unsam.phm.magicnightsback.error.BusinessException
-import ar.edu.unsam.phm.magicnightsback.error.FacilityError
+import ar.edu.unsam.phm.magicnightsback.exceptions.BusinessException
+import ar.edu.unsam.phm.magicnightsback.exceptions.FacilityError
 import jakarta.annotation.Nullable
 import jakarta.persistence.*
 
