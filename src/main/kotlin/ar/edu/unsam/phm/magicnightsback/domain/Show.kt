@@ -46,7 +46,7 @@ class Show(
     fun allTicketPrices() = facility.places.map { ticketPrice(it.seatType) }
 
     // ShowDate methods
-    fun getSeatTypes() = facility.places.map { it.seatType }
+    fun getSeatTypes() = facility.places.map { it }
     fun getShowDateById(showDateId: Long) =
         dates.find { it.id == showDateId } ?: throw NotFoundException(ShowDateError.MSG_DATE_NOT_FOUND)
 
@@ -67,7 +67,7 @@ class Show(
     fun sales(): List<Double> = facility.places.map { ticketPrice(it.seatType) * totalTicketsSoldOf(it.seatType) }
     fun totalSales(): Double = sales().sumOf { it }
     fun totalTicketsSoldOf(seat: SeatTypes) = dates.sumOf { it.getReservedSeatsOf(seat) }
-    fun totalTicketsSold() = getSeatTypes().sumOf { totalTicketsSoldOf(it) }
+    fun totalTicketsSold() = getSeatTypes().sumOf { totalTicketsSoldOf(it.seatType) }
     fun totalPendingAttendees() = pendingAttendeesIds.size
     fun rentability() = (((totalSales() - baseCost()) / totalSales()) * 100).coerceAtLeast(0.0)
     fun changeRentability(newShowStatus: Rentability) {

@@ -7,7 +7,7 @@ data class TicketDTO(
     val ticketId: Long,
     val data: ShowData,
     val showStats: ShowStats,
-    val date: LocalDateTime,
+    val date: ShowDateDTO,
     val price: Double,
     val quantity: Int,
     val canBeCommented: Boolean?
@@ -17,7 +17,7 @@ fun Ticket.toTicketDTO(commentStats: CommentStadisticsDTO? = null, user: User, p
     this.id,
     this.show.data(),
     this.show.stats(commentStats, user),
-    this.showDate.date,
+    this.showDate.toShowDateDTO(),
     price,
     quantity,
     canBeCommented
