@@ -10,7 +10,7 @@ on:
   push:
     branches:
       - 'main'
-      - 'dev'
+      #- 'dev'
 jobs:
   gradle:
     runs-on: ubuntu-latest

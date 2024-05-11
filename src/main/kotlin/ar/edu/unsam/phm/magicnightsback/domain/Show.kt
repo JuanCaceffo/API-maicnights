@@ -110,5 +110,5 @@ data class Show(
     val facility: Facility
 ) {
     @Id
-    val id: UUID = UUID.randomUUID()
+    val id: Long = 0
 }
