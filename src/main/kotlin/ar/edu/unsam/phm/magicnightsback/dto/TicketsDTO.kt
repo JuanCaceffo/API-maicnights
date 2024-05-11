@@ -1,6 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.dto
 
 import ar.edu.unsam.phm.magicnightsback.domain.*
+import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
 import java.time.LocalDateTime
 import java.util.*
 
