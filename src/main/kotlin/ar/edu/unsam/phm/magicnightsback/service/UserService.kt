@@ -40,12 +40,12 @@ class UserService {
         return user
     }
 
-    @Transactional(Transactional.TxType.NEVER)
-    fun getPurchasedTickets(userId: Long): List<TicketDTO> {
-        val user = findById(userId)
-        val tickets = userRepository.getTickets(userId)
-        return ticketService.getTicketsGroupedByShowDate(user, tickets)
-    }
+//    @Transactional(Transactional.TxType.NEVER)
+//    fun getPurchasedTickets(userId: Long): List<TicketDTO> {
+//        val user = findById(userId)
+//        val tickets = userRepository.getTickets(userId)
+//        return ticketService.getTicketsGroupedByShowDate(user, tickets)
+//    }
 
     @Transactional(Transactional.TxType.NEVER)
     fun getUserFriends(id: Long): List<FriendDTO> {
@@ -105,10 +105,10 @@ class UserService {
     fun validateAdminStatus(id: Long) =
         require(findById(id).isAdmin) { throw AuthenticationException(UserError.USER_IS_NOT_ADMIN) }
 
-    @Transactional(Transactional.TxType.NEVER)
-    fun historyTickets(userId: Long, year: Int): List<TicketDTO> {
-        val user = findById(userId)
-        val tickets = userRepository.historyTickets(userId,year)
-        return ticketService.getTickets(user,tickets)
-    }
+//    @Transactional(Transactional.TxType.NEVER)
+//    fun historyTickets(userId: Long, year: Int): List<TicketDTO> {
+//        val user = findById(userId)
+//        val tickets = userRepository.historyTickets(userId,year)
+//        return ticketService.getTickets(user,tickets)
+//    }
 }

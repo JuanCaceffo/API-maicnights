@@ -1,7 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.repository
 
-import ar.edu.unsam.phm.magicnightsback.domain.SeatTypes
 import ar.edu.unsam.phm.magicnightsback.domain.Ticket
+import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
 import org.springframework.data.repository.CrudRepository
 import java.time.LocalDateTime
 import java.util.*

@@ -3,6 +3,7 @@ package ar.edu.unsam.phm.magicnightsback.controller
 import ar.edu.unsam.phm.magicnightsback.service.TicketService
 import ar.edu.unsam.phm.magicnightsback.dto.TicketRequestDTO
 import ar.edu.unsam.phm.magicnightsback.dto.TicketResponseDTO
+import ar.edu.unsam.phm.magicnightsback.dto.toModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -21,10 +22,8 @@ class TicketController(
     fun findUserReservations(@PathVariable userId: Long) = ticketService.findUserReservations(userId)
 
     @PostMapping("/reservation")
-    fun reserveTicket(@RequestBody ticket: TicketRequestDTO): TicketResponseDTO {
-        val ticket = ticket.toModel()
-        val reservation = ticketService.reserve(ticket)
-        return reservation.toResponseDTO()
+    fun reserveTicket(@RequestBody tickets: List<TicketRequestDTO>): Boolean {
+        tickets.all { ticketService.reserve(it.toModel()) }
     }
 
     @DeleteMapping("/cancel/{ticketId}")

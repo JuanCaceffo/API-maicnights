@@ -14,7 +14,6 @@ import java.time.LocalDateTime
 import kotlin.jvm.optionals.getOrNull
 
 @Service
-
 class TicketService(
     @Autowired
     private val ticketRepository: TicketRepository,
@@ -23,6 +22,7 @@ class TicketService(
     @Autowired
     private val userService: UserService
 ) {
+    val ticketReservations = mutableMapOf<Long, MutableList<Ticket>>()
     // Read methods
     @Transactional(Transactional.TxType.NEVER)
     fun findAll(): List<Ticket> = ticketRepository.findAll().map { it }
@@ -51,8 +51,17 @@ class TicketService(
         ticketRepository.countBySeatAndShowDateId(seatType, showDateId)
 
     // Create methods
-    //@Transactional(Transactional.TxType.REQUIRED)
-//    fun reserve(ticket: Ticket): Ticket {
+    @Transactional(Transactional.TxType.REQUIRED)
+    fun reserve(ticket: Ticket): Ticket {
+        val showDate = validateReservation(ticket)
+        val user = userService.findById(ticket.userId)
+
+        if (ticketReservations.keys.contains(user.id)) {
+            ticketReservations[user.id]?.add(ticket)
+        } else {
+            ticketReservations[user.id] = mutableListOf(ticket)
+        }
+
 //        val showDate = validateReservation(ticket)
 //
 //        return ticketRepository.save(
@@ -61,7 +70,7 @@ class TicketService(
 //                price = showDate.currentPrice(ticket.seat)
 //            }
 //        )
-//    }
+    }
 
 //    @Transactional(Transactional.TxType.REQUIRED)
 //    fun confirmBuy(userId: Long): Boolean {

@@ -41,15 +41,15 @@ interface TicketResult {
 }
 
 data class TicketRequestDTO(
-    val showDateId: UUID,
-    val userId: UUID,
+    val showDateId: Long,
+    val userId: Long,
     val seat: SeatTypes
 )
 
 fun TicketRequestDTO.toModel() = Ticket(showDateId, userId, seat)
 
 data class TicketResponseDTO(
-    val id: UUID,
+    val id: Long,
     val date: LocalDateTime?,
     val price: Double
 )
