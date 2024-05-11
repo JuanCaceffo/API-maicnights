@@ -1,7 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.dto
 
 import ar.edu.unsam.phm.magicnightsback.domain.*
-import java.time.LocalDateTime
 
 data class TicketDTO(
     val ticketId: Long,
