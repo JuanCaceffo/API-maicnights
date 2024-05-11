@@ -51,10 +51,27 @@ object CartError {
 
 object FindError {
     @Suppress("FunctionName")
-    fun NOT_FOUND(uuid: UUID, name: String = "entity") = "Can't find $name with id: $uuid."
+    fun NOT_FOUND(uuid: Long, name: String = "entity") = "Can't find $name with id: $uuid."
 
     @Suppress("FunctionName")
     fun NAME_NOT_FOUND(username: String, name: String = "entity") = "Can't find $name with value: $username."
+}
+
+object CreationError {
+    @Suppress("FunctionName")
+    fun CANNOT_CREATE(name: String = "entity") = "Can't create $name"
+    @Suppress("FunctionName")
+    fun INVALID_SEAT_TYPE(name: String = "facility") = "The seat type is not valid for a $name."
+
+    const val DATE_NOT_PASSED = "The date has not been passed"
+    const val NO_CAPACITY = "Not enough seat capacity"
+    const val NEGATIVE_PRICE = "Fixed price can't be negative."
+}
+
+object ModifyError {
+    const val NEGATIVE_BALANCE = "Not enough funds"
+    @Suppress("FunctionName")
+    fun CANNOT_MODIFY(uuid: UUID, name: String = "entity") = "Can't modify $name with id: $uuid"
 }
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
