@@ -4,5 +4,5 @@ data class PlaceDTO(
     val id: Long,
     val seatType: String,
     val price: Double,
-    val quantity: Int,
+    val reservedQuantity: Int,
 )
