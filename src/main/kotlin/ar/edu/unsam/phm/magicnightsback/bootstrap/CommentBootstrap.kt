@@ -1,20 +1,14 @@
 package ar.edu.unsam.phm.magicnightsback.bootstrap
 
-//import ar.edu.unsam.phm.magicnightsback.domain.Comment
-//import ar.edu.unsam.phm.magicnightsback.domain.StadiumSeatType
-//import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.domain.Comment
 import ar.edu.unsam.phm.magicnightsback.repository.CommentRepository
-import ar.edu.unsam.phm.magicnightsback.service.ShowService
+import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.service.UserService
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.DependsOn
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
-//import org.springframework.context.annotation.DependsOn
-//import org.springframework.core.annotation.Order
-//import org.springframework.stereotype.Component
 
 @Component
 @Profile("baseBootstrap")
@@ -23,21 +17,23 @@ class CommentBootstrap(
     @Autowired
     userService: UserService,
     @Autowired
-    showService: ShowService
+    showRepository: ShowRepository
 ) : InitializingBean {
     @Autowired
     lateinit var commentRepository: CommentRepository
 
     val madescoces = userService.findByUsername("madescoces")
-    val cachengued = showService.findByName("Cachenged!!")
+    val cachengued = showRepository.findById(1).get()
+    val forYou = showRepository.findById(3).get()
     val comentarioPearlJam = """La noche con Pearl Jam fue simplemente espectacular. Desde el primer acorde hasta
         |el último, la banda nos llevó en un viaje emocionante a través de su música icónica. Eddie Vedder irradiaba
         |energía en el escenario, y cada canción resonaba en lo más profundo de mi ser. La atmósfera estaba cargada
         |de emoción y camaradería, y el público se entregó por completo. 🎸🎶 #PearlJam #ConciertoInolvidable""".trimMargin()
+    val commentVelaPuerca = """genial!!! Ame!! A parte los chicos re copados, al finalizar el show se quedaron para darnos autografos! <3""".trimMargin()
 
-
-    val comments = listOf<Comment>(
-        Comment(madescoces, cachengued, comentarioPearlJam, 5.0)
+    val comments = listOf(
+        Comment(madescoces, forYou, comentarioPearlJam, 5.0),
+        Comment(madescoces, cachengued, commentVelaPuerca,4.5)
     )
 
     //        "GrandRexComment1" to Comment(
