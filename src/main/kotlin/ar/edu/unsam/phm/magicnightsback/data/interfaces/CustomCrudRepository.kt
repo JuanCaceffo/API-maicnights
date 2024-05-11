@@ -1,4 +1,4 @@
-package ar.edu.unsam.phm.magicnightsback.interfaces
+package ar.edu.unsam.phm.magicnightsback.data.interfaces
 
 import java.util.*
 
