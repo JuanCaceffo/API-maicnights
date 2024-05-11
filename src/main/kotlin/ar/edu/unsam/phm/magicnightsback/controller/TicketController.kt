@@ -1,6 +1,8 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
 import ar.edu.unsam.phm.magicnightsback.service.TicketService
+import ar.edu.unsam.phm.magicnightsback.dto.TicketRequestDTO
+import ar.edu.unsam.phm.magicnightsback.dto.TicketResponseDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import java.util.*

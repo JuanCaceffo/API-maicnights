@@ -49,7 +49,7 @@ class ShowController {
 
     @GetMapping("/show_dates/{showId}/date/{dateId}")
     @Operation(summary = "Devuelve los asientos por cada fecha de un show")
-    fun getShowDatesById(
+    fun getSeatsByShowDateId(
         @PathVariable showId: Long,
         @PathVariable dateId: Long
     ): List<PlaceDTO> {
@@ -59,9 +59,10 @@ class ShowController {
 
         return seats.map {
             PlaceDTO(
-                it.name,
-                show.ticketPrice(it),
-                showDate.availableSeatsOf(it)
+                it.id ?: 0,
+                it.seatType.name,
+                show.ticketPrice(it.seatType),
+                showDate.availableSeatsOf(it.seatType)
             )
         }.sortedBy { seat -> seat.seatType }
     }

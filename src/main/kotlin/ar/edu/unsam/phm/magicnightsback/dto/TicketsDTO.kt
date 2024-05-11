@@ -8,21 +8,21 @@ data class TicketDTO(
     val ticketId: Long,
     val data: ShowData,
     val showStats: ShowStats,
-    val date: LocalDateTime,
+    val date: ShowDateDTO,
     val price: Double,
     val quantity: Int,
     val canBeCommented: Boolean?
 )
 
-fun Ticket.toTicketDTO(commentStats: CommentStadisticsDTO? = null, user: User, price: Double, quantity: Int, canBeCommented: Boolean? = null) = TicketDTO(
-    this.id,
-    this.show.data(),
-    this.show.stats(commentStats, user),
-    this.showDate.date,
-    price,
-    quantity,
-    canBeCommented
-)
+//fun Ticket.toTicketDTO(commentStats: CommentStadisticsDTO? = null, user: User, price: Double, quantity: Int, canBeCommented: Boolean? = null) = TicketDTO(
+//    this.id,
+//    this.show.data(),
+//    this.show.stats(commentStats, user),
+//    this.showDate.toShowDateDTO(),
+//    price,
+//    quantity,
+//    canBeCommented
+//)
 
 data class TicketCreateDTO(
     val showId: Long,
@@ -46,3 +46,15 @@ data class TicketRequestDTO(
 )
 
 fun TicketRequestDTO.toModel() = Ticket(showDateId, userId, seat)
+
+data class TicketResponseDTO(
+    val id: UUID,
+    val date: LocalDateTime?,
+    val price: Double
+)
+
+fun Ticket.toResponseDTO(): TicketResponseDTO = TicketResponseDTO(
+    this.id,
+    this.date,
+    this.price
+)

@@ -1,5 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
+import ar.edu.unsam.phm.magicnightsback.data.constants.ColumnLength
 import jakarta.persistence.*
 import java.time.LocalDateTime
 import java.util.*
@@ -33,16 +34,9 @@ data class Ticket(
     @Id
     val id: UUID = UUID.randomUUID()
 
-    var status: TicketStatus = TicketStatus.AVAILABLE
-
     var price: Double = 0.0
 
     @Column(nullable = true)
     var date: LocalDateTime? = null
 
-    fun updateToPurchased() {
-        date = LocalDateTime.now()
-        status = TicketStatus.BOUGHT
-    }
 }
-
