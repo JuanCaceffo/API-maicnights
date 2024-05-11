@@ -1,7 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.repository
 
 import ar.edu.unsam.phm.magicnightsback.domain.Facility
-import ar.edu.unsam.phm.magicnightsback.interfaces.CustomCrudRepository
+import ar.edu.unsam.phm.magicnightsback.data.interfaces.CustomCrudRepository
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.repository.CrudRepository
 import java.util.*
