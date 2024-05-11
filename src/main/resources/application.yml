@@ -18,14 +18,14 @@ spring:
   datasource:
     url: jdbc:postgresql://0.0.0.0:5432/magicnights
     username: admin
-    password: admin
+    password: admin1234
     driver-class-name: org.postgresql.Driver
 
   jpa:
     open-in-view: false
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
