@@ -1,16 +1,34 @@
-//package ar.edu.unsam.phm.magicnightsback.service
+package ar.edu.unsam.phm.magicnightsback.service
+
+import ar.edu.unsam.phm.magicnightsback.domain.*
+import ar.edu.unsam.phm.magicnightsback.dto.ShowDateDTO
+import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
+import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
+import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
+import jakarta.transaction.Transactional
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
+
+@Service
+class ShowService(
+
+//    private lateinit var userRepository: UserRepository
 //
-//import ar.edu.unsam.phm.magicnightsback.domain.*
-//import ar.edu.unsam.phm.magicnightsback.dto.ShowDateDTO
-//import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
-//import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
-//import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
-//import jakarta.transaction.Transactional
-//import org.springframework.beans.factory.annotation.Autowired
-//import org.springframework.stereotype.Service
+//    @Autowired
+//    private lateinit var facilityRepository: FacilityRepository
 //
-//@Service
-//class ShowService {
+    @Autowired
+    private var showRepository: ShowRepository
+//
+//    @Autowired
+//    lateinit var userService: UserService
+) {
+        @Transactional(Transactional.TxType.NEVER)
+        fun findById(showId: Long): Show {
+        //  return show.toShowDTO(showService.getAPossibleUserById(userId),comments)
+        return validateOptionalIsNotNull(showRepository.findById(showId))
+    }
+}
 //    @Autowired
 //    private lateinit var userRepository: UserRepository
 //

@@ -1,12 +1,10 @@
 package ar.edu.unsam.phm.magicnightsback.bootstrap
 
 import ar.edu.unsam.phm.magicnightsback.domain.*
-import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
 import ar.edu.unsam.phm.magicnightsback.domain.factory.*
 import ar.edu.unsam.phm.magicnightsback.repository.*
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import kotlin.jvm.optionals.getOrNull
 
@@ -29,9 +27,6 @@ class MagicNightsBootstrap(
 
     @Autowired
     private var seatRepository: SeatRepository,
-
-    @Autowired
-    private val encoder: PasswordEncoder
 ) : InitializingBean {
 
 
@@ -46,13 +41,14 @@ class MagicNightsBootstrap(
     val facilityCreator = FacilityFactory()
     val bandsCreator = BandFactory()
     val showDatesCreator = ShowDateFactory()
-    val usersCreator = UserFactory(encoder)
+    val usersCreator = UserFactory()
 
     val initFacilities = mapOf(
         "river" to facilityCreator.createFacility(FacilityFactoryTypes.BIGSTADIUM),
         "boca" to facilityCreator.createFacility(FacilityFactoryTypes.MEDIUMSTADIUM),
         "colon" to facilityCreator.createFacility(FacilityFactoryTypes.THEATER),
-        "rex" to facilityCreator.createFacility(FacilityFactoryTypes.BADTHEATER)
+        "rex" to facilityCreator.createFacility(FacilityFactoryTypes.BADTHEATER),
+        "peque" to facilityCreator.createFacility(FacilityFactoryTypes.SMALLTHEATER)
     )
 
     val initBands = mapOf(
@@ -64,7 +60,8 @@ class MagicNightsBootstrap(
     val initShows = mapOf(
         "cachen" to Show("Cachengued", initBands["vela"]!!, initFacilities["rex"]!!),
         "4you" to Show("4 You", initBands["pearl"]!!, initFacilities["boca"]!!),
-        "demons" to Show("Demons of Hell Rise", initBands["acdc"]!!, initFacilities["river"]!!)
+        "demons" to Show("Demons of Hell Rise", initBands["acdc"]!!, initFacilities["river"]!!),
+        "showcito" to Show("Unipersonal", initBands["acdc"]!!, initFacilities["peque"]!!)
     )
 
     val initUsers = mapOf(
@@ -79,6 +76,7 @@ class MagicNightsBootstrap(
         showDatesCreator.createShowDate(ShowDateFactoryTypes.MINUS, initShows["4you"]!!),
         showDatesCreator.createShowDate(ShowDateFactoryTypes.MINUS, initShows["demons"]!!),
         showDatesCreator.createShowDate(ShowDateFactoryTypes.PLUS, initShows["4you"]!!),
+        showDatesCreator.createShowDate(ShowDateFactoryTypes.PLUS, initShows["showcito"]!!),
     ).apply { addAll(showDatesCreator.createShowDates(ShowDateFactoryTypes.PLUS, initShows["demons"]!!, 3)) }
 
 

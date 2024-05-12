@@ -16,6 +16,11 @@ spring:
   profiles:
     active: baseBootstrap
 
+  security:
+    user:
+      name: user
+      password: usersinpass
+
   #   base de datos posta
   datasource:
     url: jdbc:postgresql://0.0.0.0:5432/magicnights

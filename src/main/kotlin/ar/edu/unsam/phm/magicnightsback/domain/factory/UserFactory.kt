@@ -2,7 +2,6 @@ package ar.edu.unsam.phm.magicnightsback.domain.factory
 
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.domain.UserRole
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 
@@ -11,28 +10,25 @@ enum class UserFactoryTypes {
 }
 
 @Component
-class UserFactory(private var encoder: PasswordEncoder) {
+class UserFactory() {
     fun createUser(type: UserFactoryTypes): User = when (type) {
-        UserFactoryTypes.ADMIN -> AdminUser(encoder).build()
-        UserFactoryTypes.NORMAL -> NormalUser(encoder).build()
-        UserFactoryTypes.POOR -> PoorUser(encoder).build()
-        UserFactoryTypes.NOIMAGE -> NoImageUser(encoder).build()
+        UserFactoryTypes.ADMIN -> AdminUser().build()
+        UserFactoryTypes.NORMAL -> NormalUser().build()
+        UserFactoryTypes.POOR -> PoorUser().build()
+        UserFactoryTypes.NOIMAGE -> NoImageUser().build()
     }
 }
 
-interface FactoryUser : FactoryObject<User> {
-    var encoder: PasswordEncoder
-}
+interface FactoryUser : FactoryObject<User>
 
 class AdminUser(
-    override var encoder: PasswordEncoder
 ) : FactoryUser {
     override fun build() =
         User(
             firstName = "Pablo",
             lastName = "Foglia",
             username = "madescoces",
-            password = encoder.encode("istheadmin"),
+            password = "istheadmin",
         ).apply {
             role = UserRole.ADMIN
             balance = 200000.0
@@ -42,15 +38,13 @@ class AdminUser(
         }
 }
 
-class NormalUser(
-    override var encoder: PasswordEncoder
-) : FactoryUser {
+class NormalUser : FactoryUser {
     override fun build() =
         User(
             firstName = "Sol",
             lastName = "Lopez",
             username = "lopezsol7",
-            password = encoder.encode("notadmin"),
+            password = "notadmin",
         ).apply {
             role = UserRole.USER
             balance = 100000.0
@@ -60,15 +54,13 @@ class NormalUser(
         }
 }
 
-class PoorUser(
-    override var encoder: PasswordEncoder
-) : FactoryUser {
+class PoorUser: FactoryUser {
     override fun build() =
         User(
             firstName = "Ana",
             lastName = "Martinez",
             username = "anam",
-            password = encoder.encode("notadmin"),
+            password = "notadmin",
         ).apply {
             role = UserRole.USER
             dni = 27365465
@@ -77,15 +69,13 @@ class PoorUser(
         }
 }
 
-class NoImageUser(
-    override var encoder: PasswordEncoder
-) : FactoryUser {
+class NoImageUser: FactoryUser {
     override fun build() =
         User(
             firstName = "Carolina",
             lastName = "Rodriguez",
             username = "carolrodri",
-            password = encoder.encode("notadmin"),
+            password = "notadmin",
         ).apply {
             role = UserRole.USER
             balance = 50000.0

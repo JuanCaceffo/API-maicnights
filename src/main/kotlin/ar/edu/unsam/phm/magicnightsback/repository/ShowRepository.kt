@@ -9,18 +9,15 @@ import org.springframework.data.repository.CrudRepository
 import java.util.*
 
 interface ShowRepository : CrudRepository<Show, Long>, CustomCrudRepository<Show> {
-//    @EntityGraph(
-//        attributePaths = [
-//            "band",
-//            "facility",
-//            "facility.places",
-//            "dates",
-//            "dates.reservedSeats",
-//            "dates.attendees",
-//            "pendingAttendeesIds"
-//        ]
-//    )
-//    override fun findById(id: Long): Optional<Show>
+
+    @EntityGraph(
+        attributePaths = [
+            "band",
+            "facility",
+            "facility.seats"
+        ]
+    )
+    override fun findById(id: Long): Optional<Show>
 //
 //    @EntityGraph(
 //        attributePaths = [

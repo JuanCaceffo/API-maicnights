@@ -67,8 +67,20 @@ data class ShowDate(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0
 
+    @Column(name = "show_date_sold_out")
     val soldOut: Boolean = false
 
+//    @ElementCollection
+//    @CollectionTable(
+//        name = "seat_availability",
+//        joinColumns = [JoinColumn(name = "show_date_id")]
+//    )
+//    @MapKeyColumn(name = "seat_id")
+//    @Column(name = "tickets_purchased")
+//    val seatAvailability: Map<Long, Long> = show.facility.seats.map { it.id }.associateWith { 0 }
+
+    @ManyToMany
+    val seats = show.facility.seats.map { it }
 
     // Costs
     fun baseCost(): Double = (show.band.cost).plus(show.facility.cost)
@@ -81,6 +93,7 @@ data class ShowDate(
     fun beenStaged(): Boolean = date.isBefore(LocalDateTime.now())
     private fun getSeat(seat: Seat) =
         show.facility.seats.firstOrNull { it.type == seat.type }
+
     fun seatCapacityOf(seat: Seat) =
         getSeat(seat)?.capacity ?: throw BusinessException(FindError.NOT_FOUND(seat.id, seat.type.name))
 

@@ -16,7 +16,15 @@ abstract class Facility(
     @Column(length = ColumnLength.MEDIUM, nullable = false, unique = true)
     var name: String,
     @Embedded
-    var location: Point
+    var location: Point,
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @JoinTable(
+        name = "facility_seats",
+        joinColumns = [JoinColumn(name = "facility_id")],
+        inverseJoinColumns = [JoinColumn(name = "seat_id")]
+    )
+    val seats: Set<Seat>
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,11 +32,20 @@ abstract class Facility(
 
     var cost = 0.0
 
+    init {
+        seats.forEach { validateSeatType(it) }
+    }
+
     abstract var fixedPrice: Double
     fun fixedCostVariant(): Double = 0.0
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
-    val seats = mutableSetOf<Seat>()
+//    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+//    @JoinTable(
+//        name = "facility_seats",
+//        joinColumns = [JoinColumn(name = "facility_id",)],
+//        inverseJoinColumns = [JoinColumn(name = "seat_id")]
+//    )
+//    val seats = mutableSetOf<Seat>()
 
     @PrePersist
     @PreUpdate
@@ -36,10 +53,10 @@ abstract class Facility(
         cost = fixedPrice + fixedCostVariant()
     }
 
-    fun addSeat( seat: Seat) {
-        validateSeatType(seat)
-        seats.add(seat)
-    }
+//    fun addSeat(seat: Seat) {
+//        validateSeatType(seat)
+//        seats.add(seat)
+//    }
 
     abstract fun validSeatTypes(): List<SeatTypes>
 
@@ -58,9 +75,10 @@ abstract class Facility(
 class Stadium(
     name: String,
     location: Point,
+    seats: Set<Seat>,
     @Column(nullable = false)
     override var fixedPrice: Double
-) : Facility(name, location) {
+) : Facility(name, location, seats) {
     init {
         require(fixedPrice >= 0) { throw BusinessException(FacilityError.NEGATIVE_PRICE) }
     }
@@ -75,9 +93,10 @@ class Stadium(
 class Theater(
     name: String,
     location: Point,
+    seats: Set<Seat>,
     @Nullable
     var hasGoodAcoustics: Boolean = false
-) : Facility(name, location) {
+) : Facility(name, location, seats) {
     override fun validSeatTypes() = listOf(SeatTypes.PULLMAN, SeatTypes.LOWERLEVEL)
 
     override var fixedPrice: Double = 100000.0

@@ -1,24 +1,38 @@
-//package ar.edu.unsam.phm.magicnightsback.controller
+package ar.edu.unsam.phm.magicnightsback.controller
+
+
+import ar.edu.unsam.phm.magicnightsback.dto.ShowDetailsResponseDTO
+import ar.edu.unsam.phm.magicnightsback.dto.toShowDetailsResponseDTO
+import ar.edu.unsam.phm.magicnightsback.service.ShowService
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.*
+
+
+@CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
+@RestController
+@RequestMapping("/api")
+@Tag(name = "Show", description = "Show related operations")
+class ShowController(
+    @Autowired
+    var showService: ShowService,
+
+//    @Autowired
+//    var userService: UserService,
 //
-//import ar.edu.unsam.phm.magicnightsback.domain.User
-//import ar.edu.unsam.phm.magicnightsback.dto.*
-//import ar.edu.unsam.phm.magicnightsback.exceptions.ShowDateError
-//import ar.edu.unsam.phm.magicnightsback.service.CommentService
-//import ar.edu.unsam.phm.magicnightsback.service.ShowService
-//import ar.edu.unsam.phm.magicnightsback.service.UserService
-//import io.swagger.v3.oas.annotations.Operation
-//import io.swagger.v3.oas.annotations.responses.ApiResponse
-//import io.swagger.v3.oas.annotations.responses.ApiResponses
-//import io.swagger.v3.oas.annotations.tags.Tag
-//import org.springframework.beans.factory.annotation.Autowired
-//import org.springframework.web.bind.annotation.*
-//
-//
-//@CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
-//@RestController
-//@RequestMapping("/api")
-//@Tag(name = "Show", description = "Show related operations")
-//class ShowController {
+//    @Autowired
+//    var commentService: CommentService,
+) {
+    @GetMapping("/show/{id}")
+    @Operation(summary = "Devuelve un show según su id")
+    fun getShowById(
+        @PathVariable id: Long,
+        @RequestParam userId: Long = 0
+    ): ShowDetailsResponseDTO {
+        return showService.findById(id).toShowDetailsResponseDTO()
+    }
+}
 //    @Autowired
 //    lateinit var showService: ShowService
 //
