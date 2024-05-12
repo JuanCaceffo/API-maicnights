@@ -10,11 +10,11 @@ package ar.edu.unsam.phm.magicnightsback.domain
 //    fun getAllStats(show: Show) = stats.map { it.getStat(show) }
 //}
 
-object PivotStats {
-    val stats = mutableListOf(
-        StatSales(1000000.0, 2000000.0),
-        StatPending(0.0, 50.0),
-        StatRentability(0.0, 50.0),
-        StatSoldOut(50.0, 75.0)
-    )
-}
+//object PivotStats {
+//    val stats = mutableListOf(
+//        StatSales(1000000.0, 2000000.0),
+//        StatPending(0.0, 50.0),
+//        StatRentability(0.0, 50.0),
+//        StatSoldOut(50.0, 75.0)
+//    )
+//}

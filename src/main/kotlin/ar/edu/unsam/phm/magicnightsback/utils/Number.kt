@@ -1,4 +1,4 @@
-package ar.edu.unsam.phm.magicnights.utils
+package ar.edu.unsam.phm.magicnightsback.utils
 
 import kotlin.math.pow
 import kotlin.math.round

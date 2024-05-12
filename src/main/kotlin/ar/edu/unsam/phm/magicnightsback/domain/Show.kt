@@ -1,14 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.data.constants.ColumnLength
-import ar.edu.unsam.phm.magicnightsback.dto.toShowDateDTO
-import ar.edu.unsam.phm.magicnightsback.exceptions.BusinessException
-import ar.edu.unsam.phm.magicnightsback.exceptions.NotFoundException
-import ar.edu.unsam.phm.magicnightsback.exceptions.ShowDateError
 import jakarta.persistence.*
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.util.*
 
 //@Entity
 //class Show(
@@ -110,5 +103,16 @@ data class Show(
     val facility: Facility
 ) {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0
+
+    val soldOut = false
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = ColumnLength.SMALL)
+    var rentability = Rentability.BASE_PRICE
+
+    fun changeRentability(newRentability: Rentability) {
+        rentability = newRentability
+    }
 }

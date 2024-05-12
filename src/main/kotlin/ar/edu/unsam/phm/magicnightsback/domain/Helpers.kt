@@ -49,6 +49,7 @@ fun Number.throwIfGreaterThan(number: Number, msg: String): Number {
 
 fun <T> validateOptionalIsNotNull(optional: Optional<T>, msg: String? = null):T{
     if(optional.isEmpty) {
+        val name = optional::class.simpleName
         throw NotFoundException(msg ?: RepositoryError.ELEMENT_NOT_FOUND)}
     return optional.get()
 }

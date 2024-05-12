@@ -38,14 +38,14 @@ interface UserBalanceDTO {
 fun User.toDTO(): UserDTO = UserDTO(
     this.id,
     this.profileImgUrl,
-    this.name,
-    this.surname,
+    this.firstName,
+    this.lastName,
     this.username,
     this.birthday,
     this.dni
 )
 
-fun User.loginResponseDTO() = LoginUserResponseDTO(
-    this.id,
-    this.isAdmin
-)
+//fun User.loginResponseDTO() = LoginUserResponseDTO(
+//    this.id,
+//    this.isAdmin
+//)

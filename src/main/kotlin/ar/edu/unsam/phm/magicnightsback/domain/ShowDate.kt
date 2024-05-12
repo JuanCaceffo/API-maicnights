@@ -1,11 +1,12 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import ar.edu.unsam.phm.magicnightsback.data.constants.ColumnLength
-import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
-import ar.edu.unsam.phm.magicnightsback.utils.validateIsNotBefore
+import ar.edu.unsam.phm.magicnightsback.exceptions.BadArgumentException
+import ar.edu.unsam.phm.magicnightsback.exceptions.BusinessException
+import ar.edu.unsam.phm.magicnightsback.exceptions.CreationError
+import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
+import ar.edu.unsam.phm.magicnightsback.utils.notNegative
 import jakarta.persistence.*
 import java.time.LocalDateTime
-import java.util.*
 
 //@Entity
 //class ShowDate(
@@ -63,40 +64,37 @@ data class ShowDate(
     val date: LocalDateTime
 ) {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0
 
-//    @OneToMany(mappedBy = "showDate", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-//    private val tickets: MutableSet<Ticket> = mutableSetOf()
+    val soldOut: Boolean = false
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = ColumnLength.SMALL)
-    var rentability = Rentability.BASE_PRICE
-
-    fun changeRentability(newRentability: Rentability) {
-        rentability = newRentability
-    }
 
     // Costs
     fun baseCost(): Double = (show.band.cost).plus(show.facility.cost)
-    fun baseCostPerSeat(seat: SeatTypes) = baseCost() / seatCapacityOf(seat)
-    fun baseSeatCost(seat: SeatTypes) = baseCostPerSeat(seat) + seat.price
-    fun currentPrice(seat: SeatTypes) = (baseSeatCost(seat) * rentability.factor)
+    fun baseCostPerSeat(seat: Seat) = baseCost() / seatCapacityOf(seat)
+    fun baseSeatCost(seat: Seat) = baseCostPerSeat(seat) + seat.price
+    fun currentPrice(seat: Seat) = (baseSeatCost(seat) * show.rentability.factor)
 
 
     // Availability
-    fun seatCapacityOf(seatType: SeatTypes) =
-        show.facility.seats[seatType]
-            ?: throw IllegalArgumentException("SeatType not found")
-    fun availableOf(seatType: SeatTypes, totalSold: Int) =
-        seatCapacityOf(seatType)
-            .minus(totalSold)
-            //.notNegative(BusinessException(CreationError.NO_CAPACITY))
+    fun beenStaged(): Boolean = date.isBefore(LocalDateTime.now())
+    private fun getSeat(seat: Seat) =
+        show.facility.seats.firstOrNull { it.type == seat.type }
+    fun seatCapacityOf(seat: Seat) =
+        getSeat(seat)?.capacity ?: throw BusinessException(FindError.NOT_FOUND(seat.id, seat.type.name))
+
+    fun availableOf(seat: Seat, quantity: Int) =
+        seatCapacityOf(seat)
+            .minus(quantity)
 
     // Validations
-    fun validateReservation(ticket: Ticket, totalSold: Int): ShowDate {
-        date.validateIsNotBefore()
-        availableOf(ticket.seat, totalSold)
-        return this
+    fun validateBeenStaged() {
+        if (beenStaged()) {
+            throw BusinessException(CreationError.ALREADY_PASSED)
+        }
     }
 
+    fun validateAvailability(seat: Seat, quantity: Int) =
+        availableOf(seat, quantity).notNegative(throw BadArgumentException(CreationError.NO_CAPACITY))
 }

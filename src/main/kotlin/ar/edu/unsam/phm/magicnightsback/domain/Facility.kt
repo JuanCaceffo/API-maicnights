@@ -5,6 +5,7 @@ import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
 import ar.edu.unsam.phm.magicnightsback.exceptions.BusinessException
 import ar.edu.unsam.phm.magicnightsback.exceptions.CreationError
 import ar.edu.unsam.phm.magicnightsback.exceptions.FacilityError
+import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
 import jakarta.annotation.Nullable
 import jakarta.persistence.*
 
@@ -13,11 +14,12 @@ import jakarta.persistence.*
 @DiscriminatorColumn(name = "type")
 abstract class Facility(
     @Column(length = ColumnLength.MEDIUM, nullable = false, unique = true)
-    val name: String,
+    var name: String,
     @Embedded
-    val location: Point
+    var location: Point
 ) {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
 
     var cost = 0.0
@@ -25,40 +27,28 @@ abstract class Facility(
     abstract var fixedPrice: Double
     fun fixedCostVariant(): Double = 0.0
 
-    @ElementCollection
-    @CollectionTable(
-        name = "seats",
-        joinColumns = [JoinColumn(name = "facility_id", referencedColumnName = "id")]
-    )
-    @MapKeyColumn(name = "type")
-    @Column(name = "quantity")
-    val seats = mutableMapOf<SeatTypes, Int>()
+    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    val seats = mutableSetOf<Seat>()
 
-    fun setSeatCapacity(seat: SeatTypes, capacity: Int) {
-        validateSeatType(seat)
-        seats[seat] = capacity
-    }
-
+    @PrePersist
+    @PreUpdate
     fun updateCost() {
         cost = fixedPrice + fixedCostVariant()
     }
 
-    fun seatCapacityOf(seat: SeatTypes) = seats[seat]
-
-    //TODO: validar si el asiento existe dentro de la facility
-//    fun getPlaceBySeatName(seatName: String): Place {
-//        validateSeatType(seatName)
-//        return places.find { it.seatType.name == seatName }!!
-//    }
-//    fun getPlaceCapacity(seat: SeatTypes) = getPlaceBySeatName(seat.name).capacity
-
-//    fun getTotalSeatCapacity() = places.sumOf { it.capacity }
+    fun addSeat( seat: Seat) {
+        validateSeatType(seat)
+        seats.add(seat)
+    }
 
     abstract fun validSeatTypes(): List<SeatTypes>
 
-    private fun validateSeatType(seat: SeatTypes) {
-        if (seat !in validSeatTypes()) {
-            throw BusinessException(CreationError.INVALID_SEAT_TYPE(seat.name))
+    private fun validateSeatType(seat: Seat) {
+        if (seat.type !in validSeatTypes()) {
+            throw BusinessException(CreationError.INVALID_SEAT_TYPE(this::class.toString()))
+        }
+        if (seat.capacity == 0) {
+            throw BusinessException(FindError.ZERO_CAPACITY)
         }
     }
 }

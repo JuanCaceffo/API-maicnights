@@ -1,21 +1,21 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
+import ar.edu.unsam.phm.magicnightsback.data.constants.ColumnLength
 import ar.edu.unsam.phm.magicnightsback.exceptions.BusinessException
-import ar.edu.unsam.phm.magicnightsback.exceptions.UserError
+import ar.edu.unsam.phm.magicnightsback.exceptions.UpdateError
 import jakarta.persistence.*
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 @Entity
-@Table(name = "spectator")
+@Table(name = "people")
 class User(
-    @Column(length = 100)
-    var name: String,
-    @Column(length = 100)
-    var surname: String,
-    @Column(length = 100)
+    @Column(length = ColumnLength.SMALL)
+    var firstName: String,
+    @Column(length = ColumnLength.SMALL)
+    var lastName: String,
+    @Column(length = ColumnLength.SMALL)
     val username: String,
-    @Column(length = 20)
+    @Column(length = ColumnLength.LARGE)
     var password: String,
 ) {
     @Id
@@ -24,19 +24,19 @@ class User(
 
     var birthday: LocalDate = LocalDate.now()
     var dni: Int = 0
-    var isAdmin: Boolean = false
 
-    @Column(length = 100)
+    @Column(length = ColumnLength.MEDIUM)
+    var role: UserRole = UserRole.USER
+    var balance = 0.0
+
+    @Column(length = ColumnLength.LARGE)
     var profileImgUrl: String = "default.jpg"
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val friends = mutableSetOf<User>()
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val tickets = mutableListOf<Ticket>()
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    var balances: MutableSet<BalanceHistory> = mutableSetOf()
+//    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+//    val tickets = mutableListOf<Ticket>()
 
     fun addFriend(user: User) {
         if (user != this) {
@@ -50,25 +50,23 @@ class User(
 
     fun isMyFriend(user: User) = friends.any { it.id == user.id }
 
-    fun addTicket(ticket: Ticket) {
-        tickets.add(ticket)
-    }
+//    fun addTicket(ticket: Ticket) {
+//        tickets.add(ticket)
+//    }
 
-    fun removeTicket(ticket: Ticket) {
-        ticket.showDate.attendees.remove(this)
-        tickets.remove(ticket)
-    }
-
-    fun totalBalance() = balances.sumOf { it.amount }
-
-    fun modifyBalance(amount: Double) {
-        validateNotNegativeBalance(amount)
-        balances.add(BalanceHistory(amount, LocalDateTime.now(), this))
-    }
+//    fun removeTicket(ticket: Ticket) {
+//        ticket.showDate.attendees.remove(this)
+//        tickets.remove(ticket)
+//    }
 
     fun age(): Int = birthday.calculateAge()
 
+    fun modifyBalance(balance: Double) {
+        validateNotNegativeBalance(balance)
+        this.balance += balance
+    }
+
     fun validateNotNegativeBalance(amount: Double) {
-        (totalBalance() + amount).throwErrorIfNegative(BusinessException(UserError.MSG_NOT_ENOUGH_CREDIT))
+        (balance + amount).throwErrorIfNegative(BusinessException(UpdateError.NEGATIVE_BALANCE))
     }
 }

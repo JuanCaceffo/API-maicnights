@@ -25,18 +25,19 @@ import java.time.LocalDateTime
 
 @Entity
 data class Ticket(
-    val showDateId: Long,
+    @ManyToOne
+    val showDate: ShowDate,
     val userId: Long,
 
-    @Column(length = ColumnLength.SMALL)
-    val seat: SeatTypes
+    @ManyToOne(fetch = FetchType.EAGER)
+    val seat: Seat
 ) {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0
 
     var price: Double = 0.0
 
     @Column(nullable = true)
-    var date: LocalDateTime? = null
-
+    var buyDate: LocalDateTime? = null
 }

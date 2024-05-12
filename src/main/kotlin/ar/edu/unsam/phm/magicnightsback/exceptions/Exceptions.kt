@@ -1,11 +1,12 @@
 package ar.edu.unsam.phm.magicnightsback.exceptions
 
+import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ResponseStatus
 import java.util.*
 
 object UserError {
-    const val MSG_NOT_ENOUGH_CREDIT = "No tiene saldo suficiente para realizar la compra"
+
     const val BAD_CREDENTIALS = "El usuario o la contraseña no son validos"
     const val USER_IS_NOT_ADMIN = "Usuario sin privilegios"
     const val NONEXISTENT_USER_COMMENT = "El comentario que intenta eliminar no existe"
@@ -51,10 +52,16 @@ object CartError {
 
 object FindError {
     @Suppress("FunctionName")
-    fun NOT_FOUND(uuid: Long, name: String = "entity") = "Can't find $name with id: $uuid."
+    fun NOT_FOUND(id: Long, name: String = "entity") = "Can't find $name with id: $id."
 
     @Suppress("FunctionName")
     fun NAME_NOT_FOUND(username: String, name: String = "entity") = "Can't find $name with value: $username."
+
+    const val ZERO_CAPACITY = "The seat capacity must be greater than zero"
+}
+
+object UpdateError {
+    const val NEGATIVE_BALANCE = "User Balance Can't be negative"
 }
 
 object CreationError {
@@ -64,6 +71,7 @@ object CreationError {
     fun INVALID_SEAT_TYPE(name: String = "facility") = "The seat type is not valid for a $name."
 
     const val DATE_NOT_PASSED = "The date has not been passed"
+    const val ALREADY_PASSED = "The date has already been passed"
     const val NO_CAPACITY = "Not enough seat capacity"
     const val NEGATIVE_PRICE = "Fixed price can't be negative."
 }
@@ -84,7 +92,7 @@ class BusinessException(msg: String) : RuntimeException(msg)
 class NotFoundException(msg: String) : RuntimeException(msg)
 
 @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-class IllegalArgumentException(msg: String) : RuntimeException(msg)
+class BadArgumentException(msg: String) : RuntimeException(msg)
 
 @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
 class NotImplementedError(msg: String) : RuntimeException(msg)

@@ -12,7 +12,7 @@ data class FriendDTO(
 
 fun User.toFriendDTO(): FriendDTO {
     return FriendDTO(
-        this.name,
+        this.firstName,
         this.username,
         this.profileImgUrl,
         this.id

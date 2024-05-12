@@ -5,15 +5,15 @@ import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
 import java.time.LocalDateTime
 import java.util.*
 
-data class TicketDTO(
-    val ticketId: Long,
-    val data: ShowData,
-    val showStats: ShowStats,
-    val date: ShowDateDTO,
-    val price: Double,
-    val quantity: Int,
-    val canBeCommented: Boolean?
-)
+//data class TicketDTO(
+//    val ticketId: Long,
+//    val data: ShowData,
+//    val showStats: ShowStats,
+//    val date: ShowDateDTO,
+//    val price: Double,
+//    val quantity: Int,
+//    val canBeCommented: Boolean?
+//)
 
 //fun Ticket.toTicketDTO(commentStats: CommentStadisticsDTO? = null, user: User, price: Double, quantity: Int, canBeCommented: Boolean? = null) = TicketDTO(
 //    this.id,
@@ -42,11 +42,16 @@ interface TicketResult {
 
 data class TicketRequestDTO(
     val showDateId: Long,
-    val userId: Long,
-    val seat: SeatTypes
+    val seat: SeatTypes,
+    val quantity: Int
 )
 
-fun TicketRequestDTO.toModel() = Ticket(showDateId, userId, seat)
+//fun TicketRequestDTO.toModel(showDate: ShowDate, userId: Long) =
+//    Ticket(
+//        showDate,
+//        userId,
+//        seat
+//    )
 
 data class TicketResponseDTO(
     val id: Long,
@@ -54,8 +59,8 @@ data class TicketResponseDTO(
     val price: Double
 )
 
-fun Ticket.toResponseDTO(): TicketResponseDTO = TicketResponseDTO(
-    this.id,
-    this.date,
-    this.price
-)
+//fun Ticket.toResponseDTO(): TicketResponseDTO = TicketResponseDTO(
+//    this.id,
+//    this.date,
+//    this.price
+//)
