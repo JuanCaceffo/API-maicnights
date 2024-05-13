@@ -1,5 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
+import ar.edu.unsam.phm.magicnightsback.domain.enums.Rentability
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe

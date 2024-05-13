@@ -1,6 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.data.constants.ColumnLength
+import ar.edu.unsam.phm.magicnightsback.domain.enums.Rentability
 import jakarta.persistence.*
 
 //@Entity

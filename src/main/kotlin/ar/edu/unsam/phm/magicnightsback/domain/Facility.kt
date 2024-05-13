@@ -26,46 +26,22 @@ abstract class Facility(
     )
     val seats: Set<Seat>
 ) {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0
-
-    var cost = 0.0
-
     init {
         seats.forEach { validateSeatType(it) }
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long = 0
+
     abstract var fixedPrice: Double
     fun fixedCostVariant(): Double = 0.0
-
-//    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
-//    @JoinTable(
-//        name = "facility_seats",
-//        joinColumns = [JoinColumn(name = "facility_id",)],
-//        inverseJoinColumns = [JoinColumn(name = "seat_id")]
-//    )
-//    val seats = mutableSetOf<Seat>()
-
-    @PrePersist
-    @PreUpdate
-    fun updateCost() {
-        cost = fixedPrice + fixedCostVariant()
-    }
-
-//    fun addSeat(seat: Seat) {
-//        validateSeatType(seat)
-//        seats.add(seat)
-//    }
-
+    fun cost() = fixedPrice + fixedCostVariant()
+    fun totalCapacity() = seats.sumOf { it.maxCapacity }
     abstract fun validSeatTypes(): List<SeatTypes>
-
     private fun validateSeatType(seat: Seat) {
         if (seat.type !in validSeatTypes()) {
             throw BusinessException(CreationError.INVALID_SEAT_TYPE(this::class.toString()))
-        }
-        if (seat.capacity == 0) {
-            throw BusinessException(FindError.ZERO_CAPACITY)
         }
     }
 }

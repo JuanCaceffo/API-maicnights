@@ -70,36 +70,14 @@ data class ShowDate(
     @Column(name = "show_date_sold_out")
     val soldOut: Boolean = false
 
-//    @ElementCollection
-//    @CollectionTable(
-//        name = "seat_availability",
-//        joinColumns = [JoinColumn(name = "show_date_id")]
-//    )
-//    @MapKeyColumn(name = "seat_id")
-//    @Column(name = "tickets_purchased")
-//    val seatAvailability: Map<Long, Long> = show.facility.seats.map { it.id }.associateWith { 0 }
-
-    @ManyToMany
-    val seats = show.facility.seats.map { it }
-
     // Costs
-    fun baseCost(): Double = (show.band.cost).plus(show.facility.cost)
-    fun baseCostPerSeat(seat: Seat) = baseCost() / seatCapacityOf(seat)
+    fun baseCost(): Double = (show.band.cost).plus(show.facility.cost())
+    fun baseCostPerSeat(seat: Seat) = baseCost() / show.facility.totalCapacity()
     fun baseSeatCost(seat: Seat) = baseCostPerSeat(seat) + seat.price
     fun currentPrice(seat: Seat) = (baseSeatCost(seat) * show.rentability.factor)
 
-
     // Availability
     fun beenStaged(): Boolean = date.isBefore(LocalDateTime.now())
-    private fun getSeat(seat: Seat) =
-        show.facility.seats.firstOrNull { it.type == seat.type }
-
-    fun seatCapacityOf(seat: Seat) =
-        getSeat(seat)?.capacity ?: throw BusinessException(FindError.NOT_FOUND(seat.id, seat.type.name))
-
-    fun availableOf(seat: Seat, quantity: Int) =
-        seatCapacityOf(seat)
-            .minus(quantity)
 
     // Validations
     fun validateBeenStaged() {
@@ -107,7 +85,4 @@ data class ShowDate(
             throw BusinessException(CreationError.ALREADY_PASSED)
         }
     }
-
-    fun validateAvailability(seat: Seat, quantity: Int) =
-        availableOf(seat, quantity).notNegative(throw BadArgumentException(CreationError.NO_CAPACITY))
 }

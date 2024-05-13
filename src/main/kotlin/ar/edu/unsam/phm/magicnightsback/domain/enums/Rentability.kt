@@ -1,4 +1,4 @@
-package ar.edu.unsam.phm.magicnightsback.domain
+package ar.edu.unsam.phm.magicnightsback.domain.enums
 
 enum class Rentability(val factor: Double) {
     BASE_PRICE(0.8),
