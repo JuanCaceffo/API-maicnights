@@ -3,6 +3,7 @@ package ar.edu.unsam.phm.magicnightsback.domain
 import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
 import ar.edu.unsam.phm.magicnightsback.exceptions.BusinessException
 import ar.edu.unsam.phm.magicnightsback.utils.notNegative
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -20,6 +21,7 @@ data class Seat(
     init {
         require(maxCapacity > 0) { throw BusinessException("maxCapacity must be greater than zero") }
     }
+
 
     val price = type.price
 

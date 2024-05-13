@@ -29,9 +29,9 @@ class ShowController(
     fun getShowById(
         @PathVariable id: Long,
         @RequestParam userId: Long = 0
-    ): ShowDetailsResponseDTO {
-        return showService.findById(id).toShowDetailsResponseDTO()
-    }
+    ): ShowDetailsResponseDTO =
+        showService.findByIdOrError(id).toShowDetailsResponseDTO()
+
 }
 //    @Autowired
 //    lateinit var showService: ShowService

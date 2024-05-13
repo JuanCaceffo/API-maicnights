@@ -1,19 +1,17 @@
-//package ar.edu.unsam.phm.magicnightsback.service
-//
-//import ar.edu.unsam.phm.magicnightsback.domain.Ticket
-//import ar.edu.unsam.phm.magicnightsback.dto.TicketRequestDTO
-//import ar.edu.unsam.phm.magicnightsback.dto.toModel
-//import jakarta.transaction.Transactional
-//import org.springframework.stereotype.Service
-//import java.time.LocalDateTime
-//
-//@Service
-//class CartService(
-//    val showDateService: ShowDateService,
-//    val userService: UserService,
-//    val ticketService: TicketService
-//) {
-//    private val cart: HashMap<Long, MutableList<Ticket>> = HashMap()
+package ar.edu.unsam.phm.magicnightsback.service
+
+import ar.edu.unsam.phm.magicnightsback.domain.Ticket
+import org.springframework.stereotype.Service
+
+@Service
+class CartService(
+    val showDateService: ShowDateService,
+    val userService: UserService,
+    val ticketService: TicketService
+) {
+    private val cart: HashMap<Long, MutableList<Ticket>> = HashMap()
+}
+
 //
 //    @Transactional(Transactional.TxType.REQUIRED)
 //    fun addToCart(userId: Long, ticketsRequested: List<TicketRequestDTO>) {

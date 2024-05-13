@@ -1,8 +1,8 @@
-//package ar.edu.unsam.phm.magicnightsback.service
-//
+package ar.edu.unsam.phm.magicnightsback.service
+
 //import ar.edu.unsam.phm.magicnights.utils.stringMe
 //import ar.edu.unsam.phm.magicnightsback.domain.Ticket
-//import ar.edu.unsam.phm.magicnightsback.domain.User
+import ar.edu.unsam.phm.magicnightsback.domain.User
 //import ar.edu.unsam.phm.magicnightsback.domain.validateOptionalIsNotNull
 //import ar.edu.unsam.phm.magicnightsback.dto.*
 //import ar.edu.unsam.phm.magicnightsback.exceptions.AuthenticationException
@@ -10,14 +10,21 @@
 //import ar.edu.unsam.phm.magicnightsback.exceptions.ResponseFindException
 //import ar.edu.unsam.phm.magicnightsback.exceptions.UserError
 //import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
-//import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
-//import jakarta.transaction.Transactional
-//import org.springframework.beans.factory.annotation.Autowired
-//import org.springframework.stereotype.Service
-//import kotlin.jvm.optionals.getOrNull
-//
-//@Service
-//class UserService {
+import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
+import jakarta.transaction.Transactional
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
+import kotlin.jvm.optionals.getOrNull
+
+@Service
+class UserService(
+    @Autowired
+    var userRepository: UserRepository
+) {
+    @Transactional(Transactional.TxType.NEVER)
+    fun findById(id: Long): User? =
+        userRepository.findById(id).getOrNull()
+}
 //    @Autowired
 //    private lateinit var showRepository: ShowRepository
 //
@@ -30,9 +37,7 @@
 //    @Transactional(Transactional.TxType.NEVER)
 //    fun userExists(id: Long) = userRepository.existsUserById(id)
 //
-//    @Transactional(Transactional.TxType.NEVER)
-//    fun findById(id: Long): User? =
-//        userRepository.findById(id).getOrNull()
+
 //
 //    @Transactional(Transactional.TxType.NEVER)
 //    fun findOrErrorById(id: Long): User =

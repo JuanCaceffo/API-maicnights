@@ -1,13 +1,13 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
-import ar.edu.unsam.phm.magicnightsback.domain.*
-import ar.edu.unsam.phm.magicnightsback.dto.ShowDateDTO
-import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
+import ar.edu.unsam.phm.magicnightsback.domain.Show
+import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
+import ar.edu.unsam.phm.magicnightsback.exceptions.NotFoundException
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
-import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 class ShowService(
@@ -23,11 +23,13 @@ class ShowService(
 //    @Autowired
 //    lateinit var userService: UserService
 ) {
-        @Transactional(Transactional.TxType.NEVER)
-        fun findById(showId: Long): Show {
-        //  return show.toShowDTO(showService.getAPossibleUserById(userId),comments)
-        return validateOptionalIsNotNull(showRepository.findById(showId))
-    }
+    @Transactional(Transactional.TxType.NEVER)
+    fun findById(showId: Long): Show? =
+        showRepository.findById(showId).getOrNull()
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun findByIdOrError(showId: Long): Show =
+        findById(showId) ?: throw NotFoundException(FindError.NOT_FOUND(showId, Show::class.toString()))
 }
 //    @Autowired
 //    private lateinit var userRepository: UserRepository

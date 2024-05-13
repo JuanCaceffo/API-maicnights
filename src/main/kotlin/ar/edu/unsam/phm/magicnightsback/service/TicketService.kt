@@ -1,4 +1,4 @@
-//package ar.edu.unsam.phm.magicnightsback.service
+package ar.edu.unsam.phm.magicnightsback.service
 //
 //import ar.edu.unsam.phm.magicnights.utils.stringMe
 //import ar.edu.unsam.phm.magicnightsback.domain.ShoppingCart
@@ -6,22 +6,24 @@
 //import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
 //import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
 //import ar.edu.unsam.phm.magicnightsback.exceptions.ResponseFindException
-//import ar.edu.unsam.phm.magicnightsback.repository.TicketRepository
+import ar.edu.unsam.phm.magicnightsback.repository.TicketRepository
 //import jakarta.transaction.Transactional
-//import org.springframework.beans.factory.annotation.Autowired
-//import org.springframework.stereotype.Service
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
 //import java.time.LocalDateTime
 //import kotlin.jvm.optionals.getOrNull
 //
-//@Service
-//class TicketService(
-//    @Autowired
-//    private val ticketRepository: TicketRepository,
-//    @Autowired
-//    private val showDateService: ShowDateService,
-//    @Autowired
-//    private val userService: UserService
-//) {
+@Service
+class TicketService(
+    @Autowired
+    private val ticketRepository: TicketRepository,
+    @Autowired
+    private val showDateService: ShowDateService,
+    @Autowired
+    private val userService: UserService
+) {
+
+}
 //
 //    // Read methods
 //    @Transactional(Transactional.TxType.NEVER)
