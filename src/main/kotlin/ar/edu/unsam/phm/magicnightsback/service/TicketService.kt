@@ -2,12 +2,12 @@ package ar.edu.unsam.phm.magicnightsback.service
 //
 //import ar.edu.unsam.phm.magicnights.utils.stringMe
 //import ar.edu.unsam.phm.magicnightsback.domain.ShoppingCart
-//import ar.edu.unsam.phm.magicnightsback.domain.Ticket
+import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 //import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
 //import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
 //import ar.edu.unsam.phm.magicnightsback.exceptions.ResponseFindException
 import ar.edu.unsam.phm.magicnightsback.repository.TicketRepository
-//import jakarta.transaction.Transactional
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 //import java.time.LocalDateTime
@@ -22,7 +22,8 @@ class TicketService(
     @Autowired
     private val userService: UserService
 ) {
-
+    @Transactional(Transactional.TxType.NEVER)
+    fun findByUserId(userId: Long): List<Ticket> = ticketRepository.findByUserId(userId).map { it }
 }
 //
 //    // Read methods
@@ -40,8 +41,7 @@ class TicketService(
 //    @Transactional(Transactional.TxType.NEVER)
 //    fun findByDate(date: LocalDateTime): Ticket? = ticketRepository.findByDateIs(date).getOrNull()
 //
-//    @Transactional(Transactional.TxType.NEVER)
-//    fun findUserTicketsBy(userId: Long): List<Ticket> = ticketRepository.findByUserId(userId).map { it }
+
 //
 ////    @Transactional(Transactional.TxType.NEVER)
 ////    fun findUserReservations(userId: Long): List<Ticket> =

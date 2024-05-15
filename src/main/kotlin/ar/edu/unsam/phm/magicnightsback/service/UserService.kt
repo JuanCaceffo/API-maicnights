@@ -2,7 +2,6 @@ package ar.edu.unsam.phm.magicnightsback.service
 
 //import ar.edu.unsam.phm.magicnights.utils.stringMe
 //import ar.edu.unsam.phm.magicnightsback.domain.Ticket
-import ar.edu.unsam.phm.magicnightsback.domain.User
 //import ar.edu.unsam.phm.magicnightsback.domain.validateOptionalIsNotNull
 //import ar.edu.unsam.phm.magicnightsback.dto.*
 //import ar.edu.unsam.phm.magicnightsback.exceptions.AuthenticationException
@@ -10,6 +9,11 @@ import ar.edu.unsam.phm.magicnightsback.domain.User
 //import ar.edu.unsam.phm.magicnightsback.exceptions.ResponseFindException
 //import ar.edu.unsam.phm.magicnightsback.exceptions.UserError
 //import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
+import ar.edu.unsam.phm.magicnights.utils.stringMe
+import ar.edu.unsam.phm.magicnightsback.domain.User
+import ar.edu.unsam.phm.magicnightsback.exceptions.AuthenticationException
+import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
+import ar.edu.unsam.phm.magicnightsback.exceptions.NotFoundException
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,6 +28,31 @@ class UserService(
     @Transactional(Transactional.TxType.NEVER)
     fun findById(id: Long): User? =
         userRepository.findById(id).getOrNull()
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun findByIdOrError(id: Long): User =
+        findById(id) ?: throw NotFoundException(FindError.NOT_FOUND(id, User::class.toString()))
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun userExists(id: Long): Boolean = userRepository.existsUserById(id)
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun getBalance(userId: Long): Double = findByIdOrError(userId).balance
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun validateUserExists(id: Long) {
+        if (!userExists(id)) {
+            throw NotFoundException(
+                FindError.NOT_FOUND(id, User::class.stringMe())
+            )
+        }
+    }
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun authenticate(username: String, password: String): User =
+        userRepository.findByUsernameAndPassword(username, password).getOrNull()
+            ?: throw AuthenticationException(FindError.BAD_CREDENTIALS)
+
 }
 //    @Autowired
 //    private lateinit var showRepository: ShowRepository
@@ -34,35 +63,16 @@ class UserService(
 //    @Autowired
 //    lateinit var ticketService: TicketService
 //
-//    @Transactional(Transactional.TxType.NEVER)
-//    fun userExists(id: Long) = userRepository.existsUserById(id)
-//
 
 //
-//    @Transactional(Transactional.TxType.NEVER)
-//    fun findOrErrorById(id: Long): User =
-//        findById(id) ?: throw ResponseFindException(FindError.NOT_FOUND(id, User::class.stringMe()))
+
+
 //
 //    @Transactional(Transactional.TxType.NEVER)
 //    fun findByUsername(username: String): User = validateOptionalIsNotNull(userRepository.findByUsername(username))
 //
-//    @Transactional(Transactional.TxType.NEVER)
-//    fun authenticate(username: String, password: String): User {
-//        val user = findByUsername(username)
-//
-//        if (user.password != password) {
-//            throw AuthenticationException(UserError.BAD_CREDENTIALS)
-//        }
-//
-//        return user
-//    }
-//
-////    @Transactional(Transactional.TxType.NEVER)
-////    fun getPurchasedTickets(userId: Long): List<TicketDTO> {
-////        val user = findById(userId)
-////        val tickets = userRepository.getTickets(userId)
-////        return ticketService.getTicketsGroupedByShowDate(user, tickets)
-////    }
+
+
 //
 //    @Transactional(Transactional.TxType.NEVER)
 //    fun getUserFriends(id: Long): List<FriendDTO> {
@@ -81,8 +91,7 @@ class UserService(
 //        return user.friends.map { it.toFriendDTO() }
 //    }
 //
-//    @Transactional(Transactional.TxType.NEVER)
-//    fun getUserBalance(userId: Long): Double = findOrErrorById(userId).totalBalance()
+
 //
 //    @Transactional(Transactional.TxType.NEVER)
 //    fun getLastDateBalanceModify(userId: Long): Double = findOrErrorById(userId).totalBalance()
@@ -122,16 +131,7 @@ class UserService(
 //    fun validateAdminStatus(id: Long) =
 //        require(findOrErrorById(id).isAdmin) { throw AuthenticationException(UserError.USER_IS_NOT_ADMIN) }
 //
-//    fun validateUserExists(id: Long) {
-//        if (!userExists(id)) {
-//            throw ar.edu.unsam.phm.magicnightsback.exceptions.NotFoundException(
-//                FindError.NOT_FOUND(
-//                    id,
-//                    User::class.toString()
-//                )
-//            )
-//        }
-//    }
+
 //
 ////    @Transactional(Transactional.TxType.NEVER)
 ////    fun historyTickets(userId: Long, year: Int): List<TicketDTO> {

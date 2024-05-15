@@ -41,3 +41,12 @@ spring:
 logging:
   level:
     root: INFO
+
+# Rutas default para los endpoints
+api:
+  base: /api
+  ticket: ${api.base}/ticket
+  user: ${api.base}/user
+  show: ${api.base}/show
+  cart: ${api.base}/cart
+  showdate: ${api.base}/showdate

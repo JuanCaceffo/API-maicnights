@@ -1,15 +1,15 @@
-package ar.edu.unsam.phm.magicnightsback.dto
+package ar.edu.unsam.phm.magicnightsback.domain.dto
 
 import ar.edu.unsam.phm.magicnightsback.domain.Show
 
-//
-//import ar.edu.unsam.phm.magicnightsback.domain.Show
-//import ar.edu.unsam.phm.magicnightsback.domain.User
-//
-
-
 data class ShowDetailsRequestDTO (
     val id: Long
+)
+
+data class ShowDTO (
+    val id: Long,
+    val name: String,
+    val soldout: Boolean
 )
 
 data class ShowDetailsResponseDTO (
@@ -18,10 +18,16 @@ data class ShowDetailsResponseDTO (
     val soldout: Boolean
 )
 
+fun Show.toDTO() = ShowDTO(
+    id,
+    name,
+    soldOut
+)
+
 fun Show.toShowDetailsResponseDTO() = ShowDetailsResponseDTO(
-    this.id,
-    this.name,
-    this.soldOut
+    id,
+    name,
+    soldOut
 )
 
 

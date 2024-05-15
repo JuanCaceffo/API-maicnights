@@ -12,7 +12,10 @@ interface UserRepository : CrudRepository<User, Long> {
     @EntityGraph(attributePaths = ["friends"])
     fun findByUsername(username: String): Optional<User>
 
-//    @EntityGraph(attributePaths = [
+    @EntityGraph(attributePaths = ["friends"])
+    fun findByUsernameAndPassword(username: String, password: String): Optional<User>
+
+    //    @EntityGraph(attributePaths = [
 //        "tickets",
 //        "tickets.show",
 //        "tickets.show.band",
@@ -62,5 +65,5 @@ interface UserRepository : CrudRepository<User, Long> {
 //    """)
 //    fun getTickets(@Param("userId") userId:Long): List<Ticket>
 //
-//    fun existsUserById(userId:Long): Boolean
+    fun existsUserById(userId: Long): Boolean
 }

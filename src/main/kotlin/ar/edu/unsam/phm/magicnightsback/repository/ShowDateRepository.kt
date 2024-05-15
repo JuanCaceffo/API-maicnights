@@ -1,5 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.repository
 
+import ar.edu.unsam.phm.magicnightsback.domain.Seat
 import ar.edu.unsam.phm.magicnightsback.domain.ShowDate
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.repository.CrudRepository
@@ -16,4 +17,6 @@ interface ShowDateRepository: CrudRepository<ShowDate, Long> {
     override fun findById(id: Long): Optional<ShowDate>
 
     fun findByDateAndShowId(date: LocalDateTime, showId: Long): Optional<ShowDate>
+
+    fun findAllByShowId(showId:Long): Iterable<ShowDate>
 }

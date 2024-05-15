@@ -1,4 +1,4 @@
-package ar.edu.unsam.phm.magicnightsback.dto
+package ar.edu.unsam.phm.magicnightsback.domain.dto
 
 import ar.edu.unsam.phm.magicnightsback.domain.ShowDate
 import com.fasterxml.jackson.annotation.JsonFormat
@@ -11,7 +11,7 @@ data class ShowDateDTO(
     val date: LocalDateTime = LocalDateTime.MIN
 )
 
-fun ShowDate.toShowDateDTO() = ShowDateDTO(
+fun ShowDate.toDTO() = ShowDateDTO(
     id = this.id,
     date = this.date,
 )

@@ -1,24 +1,57 @@
-//package ar.edu.unsam.phm.magicnightsback.controller
-//
-//import ar.edu.unsam.phm.magicnightsback.dto.*
-//import ar.edu.unsam.phm.magicnightsback.exceptions.UserError
-//import ar.edu.unsam.phm.magicnightsback.dto.UserDTO
-//import ar.edu.unsam.phm.magicnightsback.service.*
-//import io.swagger.v3.oas.annotations.tags.Tag
-//import io.swagger.v3.oas.annotations.Operation
-//import io.swagger.v3.oas.annotations.media.Content
-//import io.swagger.v3.oas.annotations.responses.ApiResponse
-//import io.swagger.v3.oas.annotations.responses.ApiResponses
-//import org.springframework.beans.factory.annotation.Autowired
-//import org.springframework.web.bind.annotation.*
-//
-//@CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
-//@RestController
-//@RequestMapping("/api/user")
-//@Tag(name = "User", description = "User related operations")
-//class UserController {
-//    @Autowired
-//    lateinit var userService: UserService
+package ar.edu.unsam.phm.magicnightsback.controller
+
+import ar.edu.unsam.phm.magicnightsback.domain.dto.*
+import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
+import ar.edu.unsam.phm.magicnightsback.service.TicketService
+import ar.edu.unsam.phm.magicnightsback.service.UserService
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.*
+
+@CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
+@RestController
+@RequestMapping("\${api.user}")
+@Tag(name = "User", description = "User related operations")
+class UserController(
+    @Autowired
+    var userService: UserService,
+
+    @Autowired
+    var ticketService: TicketService
+) {
+    @GetMapping("/{id}")
+    @Operation(summary = "User profile by id.")
+    fun findById(@PathVariable id: Long) =
+        userService.findByIdOrError(id).toDTO()
+
+    @GetMapping("/{id}/balance")
+    @Operation(summary = "User balance by id.")
+    fun getBalance(@PathVariable id: Long) = userService.getBalance(id)
+
+    @Operation(summary = "User authentitcation.")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Ok"),
+            ApiResponse(responseCode = "400", description = FindError.BAD_CREDENTIALS, content = arrayOf(Content())),
+        ]
+    )
+    @PostMapping("/login")
+    fun authenticate(@RequestBody request: LoginUserDTO): LoginUserResponseDTO {
+        val user = userService.authenticate(request.username, request.password)
+        return user.loginResponseDTO()
+    }
+
+    @GetMapping("/{id}/bought_tickets")
+    @Operation(summary = "Reuturns a list of bought tickets.")
+    fun findBoughtTickets(@PathVariable id: Long): List<TicketDTO> {
+        return ticketService.findByUserId(id).map { it.toDTO() }
+    }
+}
+
 //
 ////    @GetMapping("/{id}/friends")
 ////    fun getUserFriends(@PathVariable id: Long): List<FriendDTO> {
@@ -30,25 +63,10 @@
 ////        return userService.deleteUserFriend(userId, friendId)
 ////    }
 ////
-////    @Operation(summary = "Permite logear un usuario registrado en el sistema")
-////    @ApiResponses(
-////        value = [
-////            ApiResponse(responseCode = "200", description = "Ok"),
-////            ApiResponse(responseCode = "400", description = UserError.BAD_CREDENTIALS, content = arrayOf(Content())),
-////        ]
-////    )
-////    @PostMapping("/login")
-////    fun authenticate(@RequestBody request: LoginUserDTO): LoginUserResponseDTO {
-////        val user = userService.authenticate(request.username, request.password)
-////        return user.loginResponseDTO()
-////    }
+
+
 ////
-////    @GetMapping("/{id}/data")
-////    @Operation(summary = "Permite obtener la data del perfil del usuario")
-////    fun getUser(@PathVariable id: Long): UserDTO {
-////        val user = userService.findById(id)
-////        return user.toDTO()
-////    }
+
 ////
 ////    @PatchMapping("/{id}/update")
 ////    @Operation(summary = "Permite actualizar la data del usuario")
@@ -57,11 +75,7 @@
 ////        return updatedUserDTO
 ////    }
 ////
-////    @GetMapping("/{id}/balance")
-////    @Operation(summary = "Permite obtener los creditos del usuario")
-////    fun getUserCredit(@PathVariable id: Long): Double {
-////        return userService.getUserBalance(id)
-////    }
+
 ////
 ////    @PatchMapping("/{id}/modify_balance")
 ////    @Operation(summary = "Permite actualizar los creditos del usuario")
@@ -83,9 +97,5 @@
 ////    fun findUsersWithMoreTicketsThan(@PathVariable n: Int): List<UserDTO> {
 ////        return userService.findUsersWithMoreTicketsThan(n)
 ////    }
-////    @GetMapping("/purchased_tickets")
-////    @Operation(summary = "Retorna los tickets comprados por un usuario")
-////    fun getPurchasedTickets(@RequestParam userId: Long): List<TicketDTO> {
-////        return userService.getPurchasedTickets(userId)
-////    }
+
 //}

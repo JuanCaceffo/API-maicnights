@@ -1,39 +1,48 @@
-//package ar.edu.unsam.phm.magicnightsback.controller
-//
+package ar.edu.unsam.phm.magicnightsback.controller
+
 //import ar.edu.unsam.phm.magicnightsback.dto.TicketRequestDTO
-//import ar.edu.unsam.phm.magicnightsback.service.CartService
-//import io.swagger.v3.oas.annotations.Operation
-//import io.swagger.v3.oas.annotations.tags.Tag
-//import org.springframework.beans.factory.annotation.Autowired
-//import org.springframework.web.bind.annotation.*
-//
-//@RestController
-//@CrossOrigin(origins = ["*"])
-//@RequestMapping("api/cart/user")
-//@Tag(name = "Cart", description = "Cart related operations")
-//class CartController(
-////    @Autowired
-////    val cartService: CartService
-//) {
-////    @PatchMapping("/{userId}/add_to_cart")
-////    @Operation(summary = "Agrega los asientos al carrito de compras")
-////    fun addToCart(@PathVariable userId: Long, tickets: List<TicketRequestDTO>) {
-////        cartService.addToCart(userId, tickets)
-////    }
-//}
-////
-////    @GetMapping("/{userId}/reserved-tickets-price")
-////    @Operation(summary = "Permite obtener el precio total de los tickets reservados para un usario")
-////    fun getResrvedTicketsTotalPrice(@PathVariable userId: Long): Double{
-////        return cartService.reservedTicketsPrice(userId)
-////    }
-////
-////    @GetMapping("/{userId}/reserved-tickets")
-////    @Operation(summary = "Permite obtener los tickets reservados agrupados por funcion para un usuario ")
-////    fun getUserTicketsCart(@PathVariable userId: Long): List<TicketDTO> {
-////        return cartService.getTicketsCart(userId)
-////    }
-////
+import ar.edu.unsam.phm.magicnightsback.domain.dto.TicketDTO
+import ar.edu.unsam.phm.magicnightsback.domain.dto.TicketRequestDTO
+import ar.edu.unsam.phm.magicnightsback.domain.dto.toDTO
+import ar.edu.unsam.phm.magicnightsback.service.CartService
+import ar.edu.unsam.phm.magicnightsback.service.UserService
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.*
+
+@RestController
+@CrossOrigin(origins = ["*"])
+@RequestMapping("\${api.cart}/user")
+@Tag(name = "Cart", description = "Cart related operations")
+class CartController(
+    @Autowired
+    val cartService: CartService,
+
+    @Autowired
+    val userService: UserService
+) {
+    @GetMapping("/{id}")
+    @Operation(summary = "Obtiene el carrito según usuario.")
+    fun getUserCart(@PathVariable id: Long): List<TicketDTO> {
+        return cartService.getCart(id).map { it.toDTO() }
+    }
+
+    @PostMapping("/{id}/add")
+    @Operation(summary = "Agrega los tickets al carrito de compras")
+    fun addToCart(@PathVariable id: Long, @RequestBody tickets: List<TicketRequestDTO>) {
+        userService.validateUserExists(id)
+        cartService.addAll(id, tickets)
+    }
+
+//    @GetMapping("/{userId}/reserved-tickets-price")
+//    @Operation(summary = "Permite obtener el precio total de los tickets reservados para un usario")
+//    fun getResrvedTicketsTotalPrice(@PathVariable userId: Long): Double {
+//        return cartService.reservedTicketsPrice(userId)
+//    }
+}
+
+
 ////    @DeleteMapping("/{userId}/remove-reserved-tickets")
 ////    @Operation(summary = "Permite eliminar todos los tiquets reservados para un usuario")
 ////    fun removeReservedTickets(@PathVariable userId: Long){

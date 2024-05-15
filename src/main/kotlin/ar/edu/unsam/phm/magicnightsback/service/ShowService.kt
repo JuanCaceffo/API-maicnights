@@ -24,12 +24,20 @@ class ShowService(
 //    lateinit var userService: UserService
 ) {
     @Transactional(Transactional.TxType.NEVER)
-    fun findById(showId: Long): Show? =
-        showRepository.findById(showId).getOrNull()
+    fun findById(id: Long): Show? =
+        showRepository.findById(id).getOrNull()
 
     @Transactional(Transactional.TxType.NEVER)
-    fun findByIdOrError(showId: Long): Show =
-        findById(showId) ?: throw NotFoundException(FindError.NOT_FOUND(showId, Show::class.toString()))
+    fun findByIdOrError(id: Long): Show =
+        findById(id) ?: throw NotFoundException(FindError.NOT_FOUND(id, Show::class.toString()))
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun findAll(/*params: ShowRequest*/): List<Show> {
+        val shows = showRepository.findAll()
+        //val filteredShows = filter(shows, params)
+
+        return shows.map { it }
+    }
 }
 //    @Autowired
 //    private lateinit var userRepository: UserRepository
@@ -43,13 +51,7 @@ class ShowService(
 //    @Autowired
 //    lateinit var userService: UserService
 //
-////    @Transactional(Transactional.TxType.NEVER)
-////    fun findAll(params: ShowRequest): List<Show> {
-////        val shows = showRepository.findAll()
-////        val filteredShows = filter(shows, params)
-////
-////        return filteredShows
-////    }
+
 //
 //    @Transactional(Transactional.TxType.NEVER)
 //    fun findById(showId: Long): Show {

@@ -25,9 +25,11 @@ import java.time.LocalDateTime
 
 @Entity
 data class Ticket(
+    @ManyToOne(fetch = FetchType.LAZY)
+    val user: User,
+
     @ManyToOne
     val showDate: ShowDate,
-    val userId: Long,
 
     @ManyToOne(fetch = FetchType.EAGER)
     val seat: Seat

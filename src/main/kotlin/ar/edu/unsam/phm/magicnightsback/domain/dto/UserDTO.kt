@@ -1,6 +1,7 @@
-package ar.edu.unsam.phm.magicnightsback.dto
+package ar.edu.unsam.phm.magicnightsback.domain.dto
 
 import ar.edu.unsam.phm.magicnightsback.domain.User
+import ar.edu.unsam.phm.magicnightsback.domain.UserRole
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -11,7 +12,13 @@ data class LoginUserDTO(
 
 data class LoginUserResponseDTO(
     val id: Long,
-    val adminStatus: Boolean = false,
+    val role: UserRole
+)
+
+
+fun User.loginResponseDTO() = LoginUserResponseDTO(
+    id,
+    role
 )
 
 data class UserDTO(
@@ -22,6 +29,20 @@ data class UserDTO(
     val username: String,
     val birthday: LocalDate,
     val dni: Int,
+    val role: UserRole,
+    val balance: Double
+)
+
+fun User.toDTO(): UserDTO = UserDTO(
+    id,
+    profileImgUrl,
+    firstName,
+    lastName,
+    username,
+    birthday,
+    dni,
+    role,
+    balance
 )
 
 data class UserUpdateDTO(
@@ -35,17 +56,4 @@ interface UserBalanceDTO {
     fun getTimeStamp(): LocalDateTime
 }
 
-fun User.toDTO(): UserDTO = UserDTO(
-    this.id,
-    this.profileImgUrl,
-    this.firstName,
-    this.lastName,
-    this.username,
-    this.birthday,
-    this.dni
-)
 
-//fun User.loginResponseDTO() = LoginUserResponseDTO(
-//    this.id,
-//    this.isAdmin
-//)

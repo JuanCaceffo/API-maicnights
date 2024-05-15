@@ -75,14 +75,8 @@ data class ShowDate(
     fun baseCostPerSeat(seat: Seat) = baseCost() / show.facility.totalCapacity()
     fun baseSeatCost(seat: Seat) = baseCostPerSeat(seat) + seat.price
     fun currentPrice(seat: Seat) = (baseSeatCost(seat) * show.rentability.factor)
+    fun haveSeat( seat: Seat) = show.facility.seats.any { it.id == seat.id }
 
     // Availability
     fun beenStaged(): Boolean = date.isBefore(LocalDateTime.now())
-
-    // Validations
-    fun validateBeenStaged() {
-        if (beenStaged()) {
-            throw BusinessException(CreationError.ALREADY_PASSED)
-        }
-    }
 }

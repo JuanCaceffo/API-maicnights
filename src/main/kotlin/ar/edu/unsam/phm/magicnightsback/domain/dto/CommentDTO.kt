@@ -1,4 +1,4 @@
-package ar.edu.unsam.phm.magicnightsback.dto
+package ar.edu.unsam.phm.magicnightsback.domain.dto
 
 import ar.edu.unsam.phm.magicnightsback.domain.Comment
 import java.time.LocalDateTime

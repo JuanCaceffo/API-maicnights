@@ -7,7 +7,7 @@ import java.util.*
 
 object UserError {
 
-    const val BAD_CREDENTIALS = "El usuario o la contraseña no son validos"
+
     const val USER_IS_NOT_ADMIN = "Usuario sin privilegios"
     const val NONEXISTENT_USER_COMMENT = "El comentario que intenta eliminar no existe"
 }
@@ -55,9 +55,14 @@ object FindError {
     fun NOT_FOUND(id: Long, name: String = "entity") = "Can't find $name with id: $id."
 
     @Suppress("FunctionName")
+    fun INVALID_SEAT_TYPE(name: String = "facility") = "The seat type is not valid for a $name."
+
+    @Suppress("FunctionName")
     fun NAME_NOT_FOUND(username: String, name: String = "entity") = "Can't find $name with value: $username."
 
-    const val ZERO_CAPACITY = "The seat capacity must be greater than zero"
+    const val BAD_CREDENTIALS = "Invalid user credentials."
+
+    const val ZERO_CAPACITY = "The seat capacity must be greater than zero."
 }
 
 object UpdateError {
@@ -67,8 +72,6 @@ object UpdateError {
 object CreationError {
     @Suppress("FunctionName")
     fun CANNOT_CREATE(name: String = "entity") = "Can't create $name"
-    @Suppress("FunctionName")
-    fun INVALID_SEAT_TYPE(name: String = "facility") = "The seat type is not valid for a $name."
 
     const val DATE_NOT_PASSED = "The date has not been passed"
     const val ALREADY_PASSED = "The date has already been passed"

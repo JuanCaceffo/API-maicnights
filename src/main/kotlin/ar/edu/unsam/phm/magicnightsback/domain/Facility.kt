@@ -3,7 +3,6 @@ package ar.edu.unsam.phm.magicnightsback.domain
 import ar.edu.unsam.phm.magicnightsback.data.constants.ColumnLength
 import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
 import ar.edu.unsam.phm.magicnightsback.exceptions.BusinessException
-import ar.edu.unsam.phm.magicnightsback.exceptions.CreationError
 import ar.edu.unsam.phm.magicnightsback.exceptions.FacilityError
 import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
 import jakarta.annotation.Nullable
@@ -39,9 +38,9 @@ abstract class Facility(
     fun cost() = fixedPrice + fixedCostVariant()
     fun totalCapacity() = seats.sumOf { it.maxCapacity }
     abstract fun validSeatTypes(): List<SeatTypes>
-    private fun validateSeatType(seat: Seat) {
+    fun validateSeatType(seat: Seat) {
         if (seat.type !in validSeatTypes()) {
-            throw BusinessException(CreationError.INVALID_SEAT_TYPE(this::class.toString()))
+            throw BusinessException(FindError.INVALID_SEAT_TYPE(this::class.toString()))
         }
     }
 }

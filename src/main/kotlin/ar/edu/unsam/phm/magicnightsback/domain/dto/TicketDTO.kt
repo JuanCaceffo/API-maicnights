@@ -1,9 +1,26 @@
-package ar.edu.unsam.phm.magicnightsback.dto
+package ar.edu.unsam.phm.magicnightsback.domain.dto
 
-import ar.edu.unsam.phm.magicnightsback.domain.*
+import ar.edu.unsam.phm.magicnightsback.domain.Seat
+import ar.edu.unsam.phm.magicnightsback.domain.ShowDate
+import ar.edu.unsam.phm.magicnightsback.domain.Ticket
+import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
 import java.time.LocalDateTime
-import java.util.*
+
+
+data class TicketDTO(
+    val id: Long,
+    val seat: SeatDTO,
+    val showDate: ShowDate
+)
+
+fun Ticket.toDTO(): TicketDTO = TicketDTO(
+    id,
+    seat.toDTO(),
+    showDate
+)
+
+
 
 //data class TicketDTO(
 //    val ticketId: Long,
@@ -42,16 +59,9 @@ interface TicketResult {
 
 data class TicketRequestDTO(
     val showDateId: Long,
-    val seat: SeatTypes,
+    val seatId: Long,
     val quantity: Int
 )
-
-//fun TicketRequestDTO.toModel(showDate: ShowDate, userId: Long) =
-//    Ticket(
-//        showDate,
-//        userId,
-//        seat
-//    )
 
 data class TicketResponseDTO(
     val id: Long,

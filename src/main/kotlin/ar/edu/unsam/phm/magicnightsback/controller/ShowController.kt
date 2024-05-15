@@ -1,8 +1,11 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
 
-import ar.edu.unsam.phm.magicnightsback.dto.ShowDetailsResponseDTO
-import ar.edu.unsam.phm.magicnightsback.dto.toShowDetailsResponseDTO
+import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowDTO
+import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowDetailsResponseDTO
+import ar.edu.unsam.phm.magicnightsback.domain.dto.toDTO
+import ar.edu.unsam.phm.magicnightsback.domain.dto.toShowDetailsResponseDTO
+import ar.edu.unsam.phm.magicnightsback.service.ShowDateService
 import ar.edu.unsam.phm.magicnightsback.service.ShowService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -12,11 +15,14 @@ import org.springframework.web.bind.annotation.*
 
 @CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
 @RestController
-@RequestMapping("/api")
+@RequestMapping("\${api.show}")
 @Tag(name = "Show", description = "Show related operations")
 class ShowController(
     @Autowired
     var showService: ShowService,
+
+    @Autowired
+    var showDateService: ShowDateService,
 
 //    @Autowired
 //    var userService: UserService,
@@ -24,32 +30,35 @@ class ShowController(
 //    @Autowired
 //    var commentService: CommentService,
 ) {
-    @GetMapping("/show/{id}")
-    @Operation(summary = "Devuelve un show según su id")
-    fun getShowById(
+    @GetMapping("/{id}")
+    @Operation(summary = "Returns a show by id")
+    fun findShowById(
         @PathVariable id: Long,
         @RequestParam userId: Long = 0
     ): ShowDetailsResponseDTO =
         showService.findByIdOrError(id).toShowDetailsResponseDTO()
 
+    @GetMapping
+    @Operation(summary = "Returns all available shows")
+    fun findAll(@ModelAttribute request: ShowRequest): List<ShowDTO> {
+        return showService.findAll(/*request*/).map { it.toDTO() }
+        //val commentsStats = commentService.getCommentStadisticsOfShow(it.id)
+        //it.toShowDTO(commentsStats, userOrNull(request.userId))
+    }
+
+    @GetMapping("{id}/showdates")
+    @Operation(summary = "Returns all available show dates for a show")
+    fun findShowDatesByShowId(@PathVariable id: Long) =
+        showDateService.findAllByShowId(id).map { it.toDTO() }
+
+    class ShowRequest(
+        @RequestParam val userId: Long = 0,
+        @RequestParam val bandKeyword: String = "",
+        @RequestParam val facilityKeyword: String = "",
+        @RequestParam(required = false, defaultValue = "false") val withFriends: Boolean = false
+    )
 }
-//    @Autowired
-//    lateinit var showService: ShowService
-//
-//    @Autowired
-//    lateinit var userService: UserService
-//
-//    @Autowired
-//    lateinit var commentService: CommentService
-//
-////    @GetMapping("/shows")
-////    @Operation(summary = "Devuelve todos los shows disponibles")
-////    fun getAll(@ModelAttribute request: ShowRequest): List<ShowDTO> {
-////        return showService.findAll(request).map {
-////            val commentsStats = commentService.getCommentStadisticsOfShow(it.id)
-////            it.toShowDTO(commentsStats, userOrNull(request.userId))
-////        }
-////    }
+
 ////
 ////    @GetMapping("/show/{id}")
 ////    @Operation(summary = "Devuelve un show según su id")
@@ -61,25 +70,7 @@ class ShowController(
 ////        return showService.findById(id).toShowDetailsDTO(commentsStats)
 ////    }
 ////
-////    @GetMapping("/show_dates/{showId}/date/{dateId}")
-////    @Operation(summary = "Devuelve los asientos por cada fecha de un show")
-////    fun getSeatsByShowDateId(
-////        @PathVariable showId: Long,
-////        @PathVariable dateId: Long
-////    ): List<PlaceDTO> {
-////        val show = showService.findById(showId)
-////        val seats = show.getSeatTypes()
-////        val showDate = show.getShowDateById(dateId)
-////
-////        return seats.map {
-////            PlaceDTO(
-////                it.id ?: 0,
-////                it.seatType.name,
-////                show.ticketPrice(it.seatType),
-////                showDate.availableSeatsOf(it.seatType)
-////            )
-////        }.sortedBy { seat -> seat.seatType }
-////    }
+
 ////
 ////    @GetMapping("/admin/show/{id}/stats")
 ////    @Operation(summary = "Devuelve los stats de un show según su id (dashboard Admin)")
@@ -118,10 +109,5 @@ class ShowController(
 ////        }
 ////    }
 ////
-////    class ShowRequest(
-////        @RequestParam val userId: Long = 0,
-////        @RequestParam val bandKeyword: String = "",
-////        @RequestParam val facilityKeyword: String = "",
-////        @RequestParam(required = false, defaultValue = "false") val withFriends: Boolean = false
-////    )
+
 //}
