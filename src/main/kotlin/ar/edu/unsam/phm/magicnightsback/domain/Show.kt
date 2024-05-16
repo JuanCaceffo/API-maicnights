@@ -2,6 +2,7 @@ package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.data.constants.ColumnLength
 import ar.edu.unsam.phm.magicnightsback.domain.enums.Rentability
+import ar.edu.unsam.phm.magicnightsback.utils.removeSpaces
 import jakarta.persistence.*
 
 //@Entity
@@ -19,8 +20,7 @@ import jakarta.persistence.*
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
 //    var id: Long = 0
 //
-//    @Column(length = 100)
-//    var imgUrl = "${band.name.removeSpaces().lowercase()}.jpg"
+
 //
 //    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
 //    var dates = mutableSetOf<ShowDate>()
@@ -112,6 +112,9 @@ data class Show(
     @Enumerated(EnumType.STRING)
     @Column(length = ColumnLength.SMALL)
     var rentability = Rentability.BASE_PRICE
+
+    @Column(length = 100)
+    var imgUrl = "${band.name.removeSpaces().lowercase()}.jpg"
 
     fun changeRentability(newRentability: Rentability) {
         rentability = newRentability

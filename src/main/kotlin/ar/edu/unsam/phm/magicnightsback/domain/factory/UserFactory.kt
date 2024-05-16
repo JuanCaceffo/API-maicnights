@@ -1,7 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.domain.factory
 
 import ar.edu.unsam.phm.magicnightsback.domain.User
-import ar.edu.unsam.phm.magicnightsback.domain.UserRole
+import ar.edu.unsam.phm.magicnightsback.domain.enums.UserRole
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 

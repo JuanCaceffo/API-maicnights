@@ -2,6 +2,7 @@ package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.data.constants.ColumnLength
 import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
+import ar.edu.unsam.phm.magicnightsback.domain.enums.TicketStatus
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -39,6 +40,8 @@ data class Ticket(
     val id: Long = 0
 
     var price: Double = 0.0
+
+    var status: TicketStatus = TicketStatus.AVAILABLE
 
     @Column(nullable = true)
     var buyDate: LocalDateTime? = null

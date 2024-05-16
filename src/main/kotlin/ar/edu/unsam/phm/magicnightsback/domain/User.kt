@@ -1,8 +1,11 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.data.constants.ColumnLength
+import ar.edu.unsam.phm.magicnightsback.domain.enums.UserRole
 import ar.edu.unsam.phm.magicnightsback.exceptions.BusinessException
 import ar.edu.unsam.phm.magicnightsback.exceptions.UpdateError
+import ar.edu.unsam.phm.magicnightsback.utils.calculateAge
+import ar.edu.unsam.phm.magicnightsback.utils.notNegative
 import jakarta.persistence.*
 import java.time.LocalDate
 
@@ -67,6 +70,6 @@ class User(
     }
 
     fun validateNotNegativeBalance(amount: Double) {
-        (balance + amount).throwErrorIfNegative(BusinessException(UpdateError.NEGATIVE_BALANCE))
+        (balance + amount).notNegative(BusinessException(UpdateError.NEGATIVE_BALANCE))
     }
 }

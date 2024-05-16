@@ -1,7 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.domain.dto
 
 import ar.edu.unsam.phm.magicnightsback.domain.User
-import ar.edu.unsam.phm.magicnightsback.domain.UserRole
+import ar.edu.unsam.phm.magicnightsback.domain.enums.UserRole
 import java.time.LocalDate
 import java.time.LocalDateTime
 
