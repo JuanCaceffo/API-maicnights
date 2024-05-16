@@ -41,7 +41,7 @@ class ShowController(
     @GetMapping
     @Operation(summary = "Returns all available shows")
     fun findAll(@ModelAttribute request: ShowRequest): List<ShowDTO> {
-        return showService.findAll(/*request*/).map { it.toDTO() }
+        return showService.findAllWithFilters(request).map { it.toDTO() }
         //val commentsStats = commentService.getCommentStadisticsOfShow(it.id)
         //it.toShowDTO(commentsStats, userOrNull(request.userId))
     }

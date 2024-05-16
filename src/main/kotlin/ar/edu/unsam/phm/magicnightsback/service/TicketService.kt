@@ -24,6 +24,11 @@ class TicketService(
 ) {
     @Transactional(Transactional.TxType.NEVER)
     fun findByUserId(userId: Long): List<Ticket> = ticketRepository.findByUserId(userId).map { it }
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    fun save(ticket: Ticket) {
+        ticketRepository.save(ticket)
+    }
 }
 //
 //    // Read methods

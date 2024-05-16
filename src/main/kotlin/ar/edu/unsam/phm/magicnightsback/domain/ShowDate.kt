@@ -70,13 +70,6 @@ data class ShowDate(
     @Column(name = "show_date_sold_out")
     val soldOut: Boolean = false
 
-    // Costs
-    fun baseCost(): Double = (show.band.cost).plus(show.facility.cost())
-    fun baseCostPerSeat(seat: Seat) = baseCost() / show.facility.totalCapacity()
-    fun baseSeatCost(seat: Seat) = baseCostPerSeat(seat) + seat.price
-    fun currentPrice(seat: Seat) = (baseSeatCost(seat) * show.rentability.factor)
-    fun haveSeat( seat: Seat) = show.facility.seats.any { it.id == seat.id }
-
     // Availability
     fun beenStaged(): Boolean = date.isBefore(LocalDateTime.now())
 }

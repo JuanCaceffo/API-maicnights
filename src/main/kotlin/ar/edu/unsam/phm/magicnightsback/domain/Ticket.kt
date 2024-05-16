@@ -41,6 +41,7 @@ data class Ticket(
 
     var price: Double = 0.0
 
+    @Enumerated(EnumType.STRING)
     var status: TicketStatus = TicketStatus.AVAILABLE
 
     @Column(nullable = true)

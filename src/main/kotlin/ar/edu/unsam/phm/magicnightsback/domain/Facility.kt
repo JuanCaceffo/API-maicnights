@@ -17,7 +17,7 @@ abstract class Facility(
     @Embedded
     var location: Point,
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinTable(
         name = "facility_seats",
         joinColumns = [JoinColumn(name = "facility_id")],

@@ -41,6 +41,17 @@ class CartService(
         }
     }
 
+    fun buyAll(userId: Long) {
+
+//
+//        cart[userId]?.forEach {
+//            it.buyDate = LocalDateTime.now()
+//            it.price = it.showDate.currentPrice(it.seat)
+//        }
+
+        cart[userId]?.forEach { ticketService.save(it) }
+    }
+
     private fun seatReservations(seatType: SeatTypes) =
         cart.values.flatMap { tickets -> tickets.filter { it.seat.type == seatType } }.count()
 
@@ -63,16 +74,7 @@ class CartService(
 ////
 
 //
-////    fun buyCart(userId: Long): Boolean {
-////        val user = userService.findOrErrorById(userId)
-////
-////        cart[userId]?.forEach {
-////            it.buyDate = LocalDateTime.now()
-////            it.price = it.showDate.currentPrice(it.seat)
-////        }
-////
-////        cart[userId]?.all { ticketService.save() }
-////    }
+
 //
 //
 ////    @Transactional(Transactional.TxType.NEVER)

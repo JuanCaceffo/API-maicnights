@@ -1,5 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
+import ar.edu.unsam.phm.magicnightsback.controller.ShowController
 import ar.edu.unsam.phm.magicnightsback.domain.Show
 import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
 import ar.edu.unsam.phm.magicnightsback.exceptions.NotFoundException
@@ -32,8 +33,8 @@ class ShowService(
         findById(id) ?: throw NotFoundException(FindError.NOT_FOUND(id, Show::class.toString()))
 
     @Transactional(Transactional.TxType.NEVER)
-    fun findAll(/*params: ShowRequest*/): List<Show> {
-        val shows = showRepository.findAll()
+    fun findAllWithFilters(params: ShowController.ShowRequest): List<Show> {
+        val shows = showRepository.filterShows(params.bandKeyword, params.facilityKeyword)
         //val filteredShows = filter(shows, params)
 
         return shows.map { it }

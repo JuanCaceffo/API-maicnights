@@ -116,6 +116,13 @@ data class Show(
     @Column(length = 100)
     var imgUrl = "${band.name.removeSpaces().lowercase()}.jpg"
 
+    // Seat methods
+    fun haveSeat( seat: Seat) = facility.seats.any { it.id == seat.id }
+    fun currentPrice(seat: Seat) = baseSeatCost(seat) * rentability.factor
+    private fun baseCost(): Double = (band.cost).plus(facility.cost())
+    private fun baseCostPerSeat() = baseCost() / facility.totalCapacity()
+    private fun baseSeatCost(seat: Seat) = baseCostPerSeat() + seat.price
+
     fun changeRentability(newRentability: Rentability) {
         rentability = newRentability
     }

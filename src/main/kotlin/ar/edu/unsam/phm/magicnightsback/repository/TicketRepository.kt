@@ -6,6 +6,8 @@ import org.springframework.data.repository.CrudRepository
 interface TicketRepository : CrudRepository<Ticket, Long> {
     //    fun findByDateIs(date: LocalDateTime): Optional<Ticket>
     fun findByUserId(userId: Long): Iterable<Ticket>
+
+
 ////    fun findByUserIdAndStatusIs(userId: UUID, status: TicketStatus): Iterable<Ticket>
 //    fun countBySeatAndShowDateId(seat:SeatTypes, showDateId: Long) : Int
 }

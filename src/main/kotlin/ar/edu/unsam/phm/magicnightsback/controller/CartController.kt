@@ -23,16 +23,22 @@ class CartController(
     val userService: UserService
 ) {
     @GetMapping("/{id}")
-    @Operation(summary = "Obtiene el carrito según usuario.")
+    @Operation(summary = "Returns cart by user id.")
     fun getUserCart(@PathVariable id: Long): List<TicketDTO> {
         return cartService.getCart(id).map { it.toDTO() }
     }
 
     @PostMapping("/{id}/add")
-    @Operation(summary = "Agrega los tickets al carrito de compras")
+    @Operation(summary = "Adds tickets to user shopping cart.")
     fun addToCart(@PathVariable id: Long, @RequestBody tickets: List<TicketRequestDTO>) {
         userService.validateUserExists(id)
         cartService.addAll(id, tickets)
+    }
+
+    @PostMapping("/{id}/buy")
+    @Operation(summary = "Buy all tickets")
+    fun buyAll(@PathVariable id: Long) {
+        cartService.buyAll(id)
     }
 
 //    @GetMapping("/{userId}/reserved-tickets-price")
@@ -49,17 +55,7 @@ class CartController(
 ////        cartService.removeReserveTickets(userId)
 ////    }
 ////
-////    @PatchMapping("/{userId}/buy-reserved-tickets")
-////    @Operation(summary = "Permite comprar todos los tickets reservados para un usuario")
-////    @ApiResponses(
-////        value = [
-////            ApiResponse(responseCode = "200", description = "Ok"),
-////            ApiResponse(responseCode = "400", description = UserError.MSG_NOT_ENOUGH_CREDIT),
-////        ]
-////    )
-////    fun buyReservedTickets(@PathVariable userId: Long){
-////        cartService.buyReservedTickets(userId)
-////    }
+
 ////
 ////    @PatchMapping("/{userId}/reserve-tickets")
 ////    @Operation(summary = "Permite reservar x cantidad de tiquets de un show para una funcion de ese show y para un tipo de asiento")
