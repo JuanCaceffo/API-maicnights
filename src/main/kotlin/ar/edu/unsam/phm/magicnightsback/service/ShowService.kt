@@ -1,9 +1,11 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
-import ar.edu.unsam.phm.magicnightsback.controller.ShowController
-import ar.edu.unsam.phm.magicnightsback.domain.Show
+import ar.edu.unsam.phm.magicnightsback.controller.ShowController.ShowRequest
+import ar.edu.unsam.phm.magicnightsback.domain.*
 import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
 import ar.edu.unsam.phm.magicnightsback.exceptions.NotFoundException
+import ar.edu.unsam.phm.magicnightsback.repository.BandRepository
+import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,17 +14,17 @@ import kotlin.jvm.optionals.getOrNull
 
 @Service
 class ShowService(
-
-//    private lateinit var userRepository: UserRepository
-//
-//    @Autowired
-//    private lateinit var facilityRepository: FacilityRepository
-//
     @Autowired
-    private var showRepository: ShowRepository
-//
-//    @Autowired
-//    lateinit var userService: UserService
+    private var facilityRepository: FacilityRepository,
+
+    @Autowired
+    private var showRepository: ShowRepository,
+
+    @Autowired
+    private var bandRepository: BandRepository,
+
+    @Autowired
+    private  var userService: UserService
 ) {
     @Transactional(Transactional.TxType.NEVER)
     fun findById(id: Long): Show? =
@@ -33,11 +35,28 @@ class ShowService(
         findById(id) ?: throw NotFoundException(FindError.NOT_FOUND(id, Show::class.toString()))
 
     @Transactional(Transactional.TxType.NEVER)
-    fun findAllWithFilters(params: ShowController.ShowRequest): List<Show> {
-        val shows = showRepository.filterShows(params.bandKeyword, params.facilityKeyword)
-        //val filteredShows = filter(shows, params)
+    fun findAll(params: ShowRequest): List<Show> {
+        val shows = showRepository.findAll()
+        val filteredShows = filter(shows, params)
 
-        return shows.map { it }
+        return filteredShows
+    }
+
+    private fun filter(shows: Iterable<Show>, params: ShowRequest): List<Show> {
+        val filter = createFilter(params)
+        return shows.filter { show -> filter.apply(show) }
+    }
+
+    private fun createFilter(params: ShowRequest): Filter<Show> {
+        val band = bandRepository.findByNameLike(params.bandKeyword).getOrNull()
+        val facility = facilityRepository.findByNameLike(params.facilityKeyword).getOrNull()
+        val user = userService.findById(params.userId)
+
+        return Filter<Show>().apply {
+            addFilterCondition(BandFilter(band?.id))
+            addFilterCondition(FacilityFilter(facility?.id))
+            addFilterCondition(WithFriends(user?.friends))
+        }
     }
 }
 //    @Autowired

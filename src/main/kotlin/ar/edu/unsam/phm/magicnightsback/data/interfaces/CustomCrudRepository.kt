@@ -4,4 +4,5 @@ import java.util.*
 
 interface CustomCrudRepository<T> {
     fun findByNameEquals(name: String): Optional<T>
+    fun findByNameLike(name: String): Optional<T>
 }
