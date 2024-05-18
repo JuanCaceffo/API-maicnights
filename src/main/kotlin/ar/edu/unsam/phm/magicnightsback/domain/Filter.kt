@@ -9,13 +9,8 @@ class Filter<T> {
         condiciones.add(condicion)
     }
 
-    fun apply(elemento: T): Boolean {
-        val uno = condiciones[0].filter(elemento)
-        val dos = condiciones[1].filter(elemento)
-        val tres = condiciones[2].filter(elemento)
-
-        return condiciones.all { it.filter(elemento) }
-    }
+    fun apply(elemento: T): Boolean =
+        condiciones.all { it.filter(elemento) }
 }
 
 interface CondicionesFiltrado<T> {

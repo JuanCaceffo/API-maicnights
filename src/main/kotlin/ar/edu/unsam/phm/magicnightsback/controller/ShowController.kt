@@ -45,6 +45,13 @@ class ShowController(
     @Operation(summary = "Returns all available shows")
     fun findAll(@ModelAttribute request: ShowRequest = ShowRequest()): List<ShowDTO> {
         return showService.findAll(request).map {
+            println(request.userId)
+            println(request.bandKeyword)
+            println(request.facilityKeyword)
+            println(request.withFriends)
+
+
+
             val dates = showDateService.findAllByShowId(it.id).map { date -> date.toDTO() }
             val commentsStats = commentService.getCommentStadisticsOfShow(it.id)
             val totalFriendsAttending = ticketService.countFriendsAttendingToShow(it.id, request.userId)

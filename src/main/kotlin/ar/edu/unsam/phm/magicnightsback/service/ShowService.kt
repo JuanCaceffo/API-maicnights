@@ -34,9 +34,8 @@ class ShowService(
     @Transactional(Transactional.TxType.NEVER)
     fun findAll(params: ShowRequest): List<Show> {
         val shows = showRepository.findAll()
-        //val filteredShows = filter(shows, params)
-        //return filteredShows
-        return shows.map {it}
+        val filteredShows = filter(shows, params)
+        return filteredShows.map { it }
     }
 
     private fun filter(shows: Iterable<Show>, params: ShowRequest): List<Show> {
