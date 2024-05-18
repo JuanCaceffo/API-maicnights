@@ -107,8 +107,6 @@ data class Show(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0
 
-    val soldOut = false
-
     @Enumerated(EnumType.STRING)
     @Column(length = ColumnLength.SMALL)
     var rentability = Rentability.BASE_PRICE
@@ -117,13 +115,14 @@ data class Show(
     var imgUrl = "${band.name.removeSpaces().lowercase()}.jpg"
 
     // Seat methods
-    fun haveSeat( seat: Seat) = facility.seats.any { it.id == seat.id }
-    fun currentPrice(seat: Seat) = baseSeatCost(seat) * rentability.factor
+    fun haveSeat(seat: Seat) = facility.seats.any { it.id == seat.id }
+    fun currentTicketPrice(seat: Seat) = baseSeatCost(seat) * rentability.factor
     private fun baseCost(): Double = (band.cost).plus(facility.cost())
     private fun baseCostPerSeat() = baseCost() / facility.totalCapacity()
     private fun baseSeatCost(seat: Seat) = baseCostPerSeat() + seat.price
-
+    fun allTicketPrices() = facility.seats.map { currentTicketPrice(it) }
     fun changeRentability(newRentability: Rentability) {
         rentability = newRentability
     }
 }
+

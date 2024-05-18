@@ -10,6 +10,8 @@ import ar.edu.unsam.phm.magicnightsback.repository.TicketRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import kotlin.jvm.optionals.getOrNull
+
 //import java.time.LocalDateTime
 //import kotlin.jvm.optionals.getOrNull
 //
@@ -23,12 +25,33 @@ class TicketService(
     private val userService: UserService
 ) {
     @Transactional(Transactional.TxType.NEVER)
-    fun findByUserId(userId: Long): List<Ticket> = ticketRepository.findByUserId(userId).map { it }
+    fun findByUserId(userId: Long): List<Ticket> =
+        ticketRepository.findByUserId(userId).map { it }
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun findUsersAttendingToShow(showId: Long): Set<Long> =
+        ticketRepository.findByShowDateShowId(showId).map { it.user.id }.toSet()
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun findFriendsAttendingToShow(showId: Long, userId: Long): Set<Long> {
+        val user = userService.findByIdOrError(userId)
+        return findUsersAttendingToShow(showId).filter { user.isMyFriend(it) }.toSet()
+    }
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun countFriendsAttendingToShow(showId:Long, userId:Long):Int =
+        ticketRepository.countFriendsByShow(showId, userId).getOrNull() ?: 0
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun getTopFriendsImages(showId:Long, userId:Long): List<String> =
+        ticketRepository.getTopFriendsImages(showId, userId).map { it }
 
     @Transactional(Transactional.TxType.REQUIRED)
     fun save(ticket: Ticket) {
         ticketRepository.save(ticket)
     }
+
+
 }
 //
 //    // Read methods

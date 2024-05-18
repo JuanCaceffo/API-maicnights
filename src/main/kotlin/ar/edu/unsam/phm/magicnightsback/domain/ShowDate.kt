@@ -61,14 +61,12 @@ import java.time.LocalDateTime
 data class ShowDate(
     @ManyToOne
     val show: Show,
+
     val date: LocalDateTime
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0
-
-    @Column(name = "show_date_sold_out")
-    val soldOut: Boolean = false
 
     // Availability
     fun beenStaged(): Boolean = date.isBefore(LocalDateTime.now())

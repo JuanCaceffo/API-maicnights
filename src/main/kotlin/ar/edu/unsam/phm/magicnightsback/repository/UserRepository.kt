@@ -10,10 +10,14 @@ import java.util.*
 @Repository
 interface UserRepository : CrudRepository<User, Long> {
     @EntityGraph(attributePaths = ["friends"])
+    override fun findById(id: Long): Optional<User>
+
+    @EntityGraph(attributePaths = ["friends"])
     fun findByUsername(username: String): Optional<User>
 
     @EntityGraph(attributePaths = ["friends"])
     fun findByUsernameAndPassword(username: String, password: String): Optional<User>
+
 
     //    @EntityGraph(attributePaths = [
 //        "tickets",

@@ -23,7 +23,7 @@ import kotlin.jvm.optionals.getOrNull
 @Service
 class UserService(
     @Autowired
-    var userRepository: UserRepository
+    var userRepository: UserRepository,
 ) {
     @Transactional(Transactional.TxType.NEVER)
     fun findById(id: Long): User? =
@@ -39,6 +39,10 @@ class UserService(
     @Transactional(Transactional.TxType.NEVER)
     fun getBalance(userId: Long): Double = findByIdOrError(userId).balance
 
+//    @Transactional(Transactional.TxType.NEVER)
+//    fun getUserImageUrls(users: Set<Long>): Set<String> =
+//        userRepository.findImageUrl(users)
+
     @Transactional(Transactional.TxType.NEVER)
     fun validateUserExists(id: Long) {
         if (!userExists(id)) {
@@ -52,7 +56,6 @@ class UserService(
     fun authenticate(username: String, password: String): User =
         userRepository.findByUsernameAndPassword(username, password).getOrNull()
             ?: throw AuthenticationException(FindError.BAD_CREDENTIALS)
-
 }
 //    @Autowired
 //    private lateinit var showRepository: ShowRepository

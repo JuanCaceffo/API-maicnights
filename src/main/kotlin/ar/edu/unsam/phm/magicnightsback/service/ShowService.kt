@@ -14,21 +14,18 @@ import kotlin.jvm.optionals.getOrNull
 
 @Service
 class ShowService(
-    @Autowired
-    private var facilityRepository: FacilityRepository,
+    @Autowired private var facilityRepository: FacilityRepository,
 
-    @Autowired
-    private var showRepository: ShowRepository,
+    @Autowired private var showRepository: ShowRepository,
 
-    @Autowired
-    private var bandRepository: BandRepository,
+    @Autowired private var bandRepository: BandRepository,
 
-    @Autowired
-    private  var userService: UserService
+    @Autowired private var userService: UserService,
+
+    @Autowired private var ticketService: TicketService
 ) {
     @Transactional(Transactional.TxType.NEVER)
-    fun findById(id: Long): Show? =
-        showRepository.findById(id).getOrNull()
+    fun findById(id: Long): Show? = showRepository.findById(id).getOrNull()
 
     @Transactional(Transactional.TxType.NEVER)
     fun findByIdOrError(id: Long): Show =
@@ -37,9 +34,9 @@ class ShowService(
     @Transactional(Transactional.TxType.NEVER)
     fun findAll(params: ShowRequest): List<Show> {
         val shows = showRepository.findAll()
-        val filteredShows = filter(shows, params)
-
-        return filteredShows
+        //val filteredShows = filter(shows, params)
+        //return filteredShows
+        return shows.map {it}
     }
 
     private fun filter(shows: Iterable<Show>, params: ShowRequest): List<Show> {
@@ -48,16 +45,18 @@ class ShowService(
     }
 
     private fun createFilter(params: ShowRequest): Filter<Show> {
-        val band = bandRepository.findByNameLike(params.bandKeyword).getOrNull()
-        val facility = facilityRepository.findByNameLike(params.facilityKeyword).getOrNull()
+        val bandIds = bandRepository.findByNameIsContainingIgnoreCase(params.bandKeyword).map { it.id }
+        val facilityIds = facilityRepository.findByNameIsContainingIgnoreCase(params.facilityKeyword).map { it.id }
         val user = userService.findById(params.userId)
 
         return Filter<Show>().apply {
-            addFilterCondition(BandFilter(band?.id))
-            addFilterCondition(FacilityFilter(facility?.id))
-            addFilterCondition(WithFriends(user?.friends))
+            addFilterCondition(BandFilter(bandIds))
+            addFilterCondition(FacilityFilter(facilityIds))
+            if (user != null && params.withFriends) addFilterCondition(WithFriends(user.id, ticketService))
         }
     }
+
+
 }
 //    @Autowired
 //    private lateinit var userRepository: UserRepository

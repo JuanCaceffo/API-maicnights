@@ -1,12 +1,11 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
 
-import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowDTO
-import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowDetailsResponseDTO
-import ar.edu.unsam.phm.magicnightsback.domain.dto.toDTO
-import ar.edu.unsam.phm.magicnightsback.domain.dto.toShowDetailsResponseDTO
+import ar.edu.unsam.phm.magicnightsback.domain.dto.*
+import ar.edu.unsam.phm.magicnightsback.service.CommentService
 import ar.edu.unsam.phm.magicnightsback.service.ShowDateService
 import ar.edu.unsam.phm.magicnightsback.service.ShowService
+import ar.edu.unsam.phm.magicnightsback.service.TicketService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,26 +23,43 @@ class ShowController(
     @Autowired
     var showDateService: ShowDateService,
 
+
+    @Autowired
+    var ticketService: TicketService,
+
 //    @Autowired
 //    var userService: UserService,
 //
-//    @Autowired
-//    var commentService: CommentService,
+    @Autowired
+    var commentService: CommentService
 ) {
-    @GetMapping("/{id}")
-    @Operation(summary = "Returns a show by id")
-    fun findShowById(
-        @PathVariable id: Long,
-        @RequestParam userId: Long = 0
-    ): ShowDetailsResponseDTO =
-        showService.findByIdOrError(id).toShowDetailsResponseDTO()
+//    @GetMapping("/{id}")
+//    @Operation(summary = "Returns a show by id")
+//    fun findShowById(
+//        @PathVariable id: Long,
+//        @RequestParam userId: Long = 0
+//    ): ShowDetailsResponseDTO =
+//        showService.findByIdOrError(id).toShowDetailsResponseDTO()
 
     @GetMapping
     @Operation(summary = "Returns all available shows")
-    fun findAll(@ModelAttribute request: ShowRequest): List<ShowDTO> {
-        return showService.findAll(request).map { it.toDTO() }
-        //val commentsStats = commentService.getCommentStadisticsOfShow(it.id)
-        //it.toShowDTO(commentsStats, userOrNull(request.userId))
+    fun findAll(@ModelAttribute request: ShowRequest = ShowRequest()): List<ShowDTO> {
+        return showService.findAll(request).map {
+            val dates = showDateService.findAllByShowId(it.id).map { date -> date.toDTO() }
+            val commentsStats = commentService.getCommentStadisticsOfShow(it.id)
+            val totalFriendsAttending = ticketService.countFriendsAttendingToShow(it.id, request.userId)
+            val images = ticketService.getTopFriendsImages(it.id, request.userId)
+
+            val stats = ShowExtraDataDTO(
+                images,
+                totalFriendsAttending,
+                commentsStats.rating,
+                commentsStats.totalComments,
+                dates
+            )
+
+            it.toDTO(stats)
+        }
     }
 
     @GetMapping("{id}/showdates")
@@ -51,10 +67,10 @@ class ShowController(
     fun findShowDatesByShowId(@PathVariable id: Long) =
         showDateService.findAllByShowId(id).map { it.toDTO() }
 
-    class ShowRequest(
-        @RequestParam val userId: Long = 0,
-        @RequestParam val bandKeyword: String = "",
-        @RequestParam val facilityKeyword: String = "",
+    data class ShowRequest(
+        @RequestParam(required = false) val userId: Long = 0L,
+        @RequestParam(required = false) val bandKeyword: String = "",
+        @RequestParam(required = false) val facilityKeyword: String = "",
         @RequestParam(required = false, defaultValue = "false") val withFriends: Boolean = false
     )
 }

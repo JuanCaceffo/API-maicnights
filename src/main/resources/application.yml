@@ -8,6 +8,12 @@ server:
     include-exception: true
     include-stacktrace: never
 
+cors:
+  allowed-origins: "*"
+  allowed-methods: "*"
+  allowed-headers: "*"
+  allow-credentials: false
+
 spring:
   application:
     name: magicnights

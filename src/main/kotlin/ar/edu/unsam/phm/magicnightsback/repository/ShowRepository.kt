@@ -1,12 +1,9 @@
 package ar.edu.unsam.phm.magicnightsback.repository
 
-import ar.edu.unsam.phm.magicnightsback.domain.Facility
 import ar.edu.unsam.phm.magicnightsback.domain.Show
-import ar.edu.unsam.phm.magicnightsback.data.interfaces.CustomCrudRepository
+import ar.edu.unsam.phm.magicnightsback.domain.interfaces.CustomCrudRepository
 import org.springframework.data.jpa.repository.EntityGraph
-import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
-import org.springframework.data.repository.query.Param
 import java.util.*
 
 interface ShowRepository : CrudRepository<Show, Long>, CustomCrudRepository<Show> {
@@ -20,18 +17,15 @@ interface ShowRepository : CrudRepository<Show, Long>, CustomCrudRepository<Show
     )
     override fun findById(id: Long): Optional<Show>
 
+    @EntityGraph(
+        attributePaths = [
+            "band",
+            "facility",
+            "facility.seats"
+        ]
+    )
+    override fun findAll(): Iterable<Show>
 
-//
-//    @EntityGraph(
-//        attributePaths = [
-//            "band",
-//            "facility",
-//            "facility.places",
-//            "dates",
-//            "dates.attendees"
-//        ]
-//    )
-//    override fun findAll(): MutableIterable<Show>
 //
 //    @Query (
 //        """SELECT s.facility.id

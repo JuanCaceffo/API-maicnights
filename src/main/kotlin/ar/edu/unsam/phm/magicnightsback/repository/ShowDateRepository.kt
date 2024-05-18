@@ -16,6 +16,14 @@ interface ShowDateRepository: CrudRepository<ShowDate, Long> {
     ])
     override fun findById(id: Long): Optional<ShowDate>
 
+    @EntityGraph(attributePaths = [
+        "show",
+        "show.band",
+        "show.facility",
+        "show.facility.seats"
+    ])
+    override fun findAll(): Iterable<ShowDate>
+
     fun findByDateAndShowId(date: LocalDateTime, showId: Long): Optional<ShowDate>
 
     fun findAllByShowId(showId:Long): Iterable<ShowDate>

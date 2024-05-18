@@ -36,6 +36,11 @@ class User(
     var profileImgUrl: String = "default.jpg"
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @JoinTable(
+        name = "user_friends",
+        joinColumns = [JoinColumn(name = "user_id")],
+        inverseJoinColumns = [JoinColumn(name = "friend_id")]
+    )
     val friends = mutableSetOf<User>()
 
 //    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
@@ -51,7 +56,9 @@ class User(
         friends.remove(user)
     }
 
-    fun isMyFriend(user: User) = friends.any { it.id == user.id }
+    fun isMyFriend(userId: Long) = friends.any { it.id == userId }
+
+    
 
 //    fun addTicket(ticket: Ticket) {
 //        tickets.add(ticket)

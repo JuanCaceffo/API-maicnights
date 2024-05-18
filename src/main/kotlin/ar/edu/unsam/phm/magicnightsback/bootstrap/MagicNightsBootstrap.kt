@@ -27,21 +27,16 @@ class MagicNightsBootstrap(
 
     @Autowired
     private var seatRepository: SeatRepository,
+
+    @Autowired
+    private var ticketRepository: TicketRepository,
 ) : InitializingBean {
-
-
-    //    @Autowired
-//    lateinit var userRepository: UserRepository
-//
-
-//
-//    @Autowired
-//    lateinit var ticketRepository: TicketRepository
 
     val facilityCreator = FacilityFactory()
     val bandsCreator = BandFactory()
     val showDatesCreator = ShowDateFactory()
     val usersCreator = UserFactory()
+    val ticketCreator = Ticketfactory()
 
     val initFacilities = mapOf(
         "river" to facilityCreator.createFacility(FacilityFactoryTypes.BIGSTADIUM),
@@ -79,6 +74,26 @@ class MagicNightsBootstrap(
         showDatesCreator.createShowDate(ShowDateFactoryTypes.PLUS, initShows["showcito"]!!),
     ).apply { addAll(showDatesCreator.createShowDates(ShowDateFactoryTypes.PLUS, initShows["demons"]!!, 3)) }
 
+    fun initTickets(): Set<Ticket> {
+        val showDates = showDateRepository.findAll().map{it}
+
+        return setOf(
+        ticketCreator.createTicket(TicketFactoryTypes.NORMAL, initUsers["sol"]!!, showDates[6]!!, showDates[6].show.facility.seats.toList()[0]),
+        ticketCreator.createTicket(TicketFactoryTypes.NORMAL, initUsers["ana"]!!, showDates[6]!!, showDates[6]!!.show.facility.seats.toList()[1]),
+        ticketCreator.createTicket(TicketFactoryTypes.NORMAL, initUsers["carolina"]!!, showDates[6]!!, showDates[6]!!.show.facility.seats.toList()[0]),
+    )}
+
+    fun setFriends() {
+        initUsers["pablo"]?.apply {
+            initUsers["sol"]?.let { addFriend(it) }
+            initUsers["ana"]?.let { addFriend(it) }
+            initUsers["carolina"]?.let { addFriend(it) }
+        }
+
+        initUsers["sol"]?.apply {
+            initUsers["pablo"]?.let { addFriend(it) }
+        }
+    }
 
     override fun afterPropertiesSet() {
         persist(initFacilities.values.toSet())
@@ -89,8 +104,11 @@ class MagicNightsBootstrap(
         println("All shows have been initialized")
         persist(initShowDates.toSet())
         println("All showDates have been initialized")
+        setFriends()
         persist(initUsers.values.toSet())
         println("All users have been initialized")
+        persist(initTickets())
+        println("All tickets have been initialized")
     }
 
     private fun <T> persist(objects: Set<T>) {
@@ -102,7 +120,7 @@ class MagicNightsBootstrap(
                 is Show -> showRepository.save(it)
                 is Band -> bandRepository.save(it)
                 is ShowDate -> showDateRepository.save(it)
-                //        is Ticket -> ticketRepository.save(it)
+                is Ticket -> ticketRepository.save(it)
             }
         }
     }
@@ -129,20 +147,20 @@ class MagicNightsBootstrap(
                     val facility = showRepository.findByNameEquals(it.name).getOrNull()
                     facility == null
                 }
-//
+
                 is Band -> {
                     val band = bandRepository.findByNameEquals(it.name).getOrNull()
                     band == null
                 }
-//
+
                 is ShowDate -> {
                     val showDate = showDateRepository.findByDateAndShowId(it.date, it.show.id).getOrNull()
                     showDate == null
                 }
-//
-//                is Ticket -> {
-//                    true
-//                }
+
+                is Ticket -> {
+                    true
+                }
 
                 else -> throw IllegalArgumentException("Unsupported Class: ${it!!::class.simpleName}")
             }
