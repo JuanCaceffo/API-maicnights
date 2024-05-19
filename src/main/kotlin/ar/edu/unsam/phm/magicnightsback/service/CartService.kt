@@ -9,6 +9,7 @@ import ar.edu.unsam.phm.magicnightsback.exceptions.BusinessException
 import ar.edu.unsam.phm.magicnightsback.exceptions.CreationError
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 @Service
 class CartService(
@@ -36,20 +37,26 @@ class CartService(
             validateReservation(showDate, seat, tkt.quantity)
 
             repeat(tkt.quantity) {
-                userCart.add(Ticket(user, showDate, seat))
+                userCart.add(Ticket(user, showDate, seat).apply {
+                    price = showDate.show.currentTicketPrice(seat)
+                })
             }
         }
     }
 
     fun buyAll(userId: Long) {
-
-//
-//        cart[userId]?.forEach {
-//            it.buyDate = LocalDateTime.now()
-//            it.price = it.showDate.currentPrice(it.seat)
-//        }
-
+        cart[userId]?.forEach {
+            it.buyDate = LocalDateTime.now()
+        }
         cart[userId]?.forEach { ticketService.save(it) }
+    }
+
+    fun clearAll(userId: Long) {
+        cart[userId]?.clear()
+    }
+
+    fun totalPrice(userId: Long): Double {
+        return cart[userId]?.sumOf { it.price } ?: 0.0
     }
 
     private fun seatReservations(seatType: SeatTypes) =

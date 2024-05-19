@@ -50,8 +50,6 @@ class TicketService(
     fun save(ticket: Ticket) {
         ticketRepository.save(ticket)
     }
-
-
 }
 //
 //    // Read methods

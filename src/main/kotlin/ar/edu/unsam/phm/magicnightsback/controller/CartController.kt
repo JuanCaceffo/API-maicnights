@@ -1,10 +1,10 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
-//import ar.edu.unsam.phm.magicnightsback.dto.TicketRequestDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.TicketDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.TicketRequestDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.toDTO
 import ar.edu.unsam.phm.magicnightsback.service.CartService
+import ar.edu.unsam.phm.magicnightsback.service.ShowService
 import ar.edu.unsam.phm.magicnightsback.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -20,16 +20,19 @@ class CartController(
     val cartService: CartService,
 
     @Autowired
-    val userService: UserService
+    val userService: UserService,
+
+    @Autowired
+    val showService: ShowService
 ) {
-//    @GetMapping("/{id}")
-//    @Operation(summary = "Returns cart by user id.")
-//    fun getUserCart(@PathVariable id: Long): List<TicketDTO> {
-//        return cartService.getCart(id).map { it.toDTO() }
-//    }
+    @GetMapping("/{id}")
+    @Operation(summary = "Returns cart by user id.")
+    fun getUserCart(@PathVariable id: Long): List<TicketDTO> {
+        return cartService.getCart(id).map { it.toDTO(showService.getShowExtraData(it.showDate.show.id, id)) }
+    }
 
     @PostMapping("/{id}/add")
-    @Operation(summary = "Adds tickets to user shopping cart.")
+    @Operation(summary = "Adds tickets to user's cart.")
     fun addToCart(@PathVariable id: Long, @RequestBody tickets: List<TicketRequestDTO>) {
         userService.validateUserExists(id)
         cartService.addAll(id, tickets)
@@ -41,13 +44,18 @@ class CartController(
         cartService.buyAll(id)
     }
 
-//    @GetMapping("/{userId}/reserved-tickets-price")
-//    @Operation(summary = "Permite obtener el precio total de los tickets reservados para un usario")
-//    fun getResrvedTicketsTotalPrice(@PathVariable userId: Long): Double {
-//        return cartService.reservedTicketsPrice(userId)
-//    }
-}
+    @DeleteMapping("/{id}/clear")
+    @Operation(summary = "Clear all tickets")
+    fun clearAll(@PathVariable id: Long){
+        cartService.clearAll(id)
+    }
 
+    @GetMapping("/{userId}/total_price")
+    @Operation(summary = "Returns total price of cart")
+    fun getTotalPrice(@PathVariable userId: Long): Double {
+        return cartService.totalPrice(userId)
+    }
+}
 
 ////    @DeleteMapping("/{userId}/remove-reserved-tickets")
 ////    @Operation(summary = "Permite eliminar todos los tiquets reservados para un usuario")

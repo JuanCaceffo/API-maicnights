@@ -64,11 +64,8 @@ interface TicketRepository : CrudRepository<Ticket, Long> {
         @Param("userId") userId: Long
     ): Iterable<String>
 
+//    fun 
+
 ////    fun findByUserIdAndStatusIs(userId: UUID, status: TicketStatus): Iterable<Ticket>
 //    fun countBySeatAndShowDateId(seat:SeatTypes, showDateId: Long) : Int
 }
-
-
-//WHERE
-//pf.user_id = 1
-//);
