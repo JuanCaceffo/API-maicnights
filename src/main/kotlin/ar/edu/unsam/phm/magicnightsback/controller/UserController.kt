@@ -71,6 +71,12 @@ class UserController(
         val updatedUserDTO = userService.updateUser(id, user)
         return updatedUserDTO
     }
+
+    @PatchMapping("/{id}/modify_balance")
+    @Operation(summary = "Permite actualizar los creditos del usuario")
+    fun updateUserBalance(@PathVariable id: Long, @RequestBody newBalance: Double): Double {
+        return userService.updateUserBalance(id, newBalance)
+    }
 }
 
 ////

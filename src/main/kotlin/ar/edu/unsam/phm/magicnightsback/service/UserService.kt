@@ -77,6 +77,15 @@ class UserService(
 
         return user.toDTO()
     }
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    fun updateUserBalance(userId: Long, newBalance: Double): Double {
+        val user = findByIdOrError(userId)
+
+        user.modifyBalance(newBalance)
+        userRepository.save(user)
+        return user.balance
+    }
 }
 
 
