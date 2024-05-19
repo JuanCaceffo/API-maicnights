@@ -23,9 +23,9 @@ fun User.loginResponseDTO() = LoginUserResponseDTO(
 
 data class UserDTO(
     val id: Long,
-    val profileImg: String,
-    val name: String,
-    val surname: String,
+    val profileImgUrl: String,
+    val firstName: String,
+    val lastName: String,
     val username: String,
     val birthday: LocalDate,
     val dni: Int,
@@ -46,8 +46,8 @@ fun User.toDTO(): UserDTO = UserDTO(
 )
 
 data class UserUpdateDTO(
-    val name: String,
-    val surname: String,
+    val firstName: String,
+    val lastName: String,
 )
 
 interface UserBalanceDTO {

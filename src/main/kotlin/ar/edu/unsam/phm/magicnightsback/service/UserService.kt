@@ -1,18 +1,8 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
-//import ar.edu.unsam.phm.magicnights.utils.stringMe
-//import ar.edu.unsam.phm.magicnightsback.domain.Ticket
-//import ar.edu.unsam.phm.magicnightsback.domain.validateOptionalIsNotNull
-//import ar.edu.unsam.phm.magicnightsback.dto.*
-//import ar.edu.unsam.phm.magicnightsback.exceptions.AuthenticationException
-//import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
-//import ar.edu.unsam.phm.magicnightsback.exceptions.ResponseFindException
-//import ar.edu.unsam.phm.magicnightsback.exceptions.UserError
-//import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnights.utils.stringMe
 import ar.edu.unsam.phm.magicnightsback.domain.User
-import ar.edu.unsam.phm.magicnightsback.domain.dto.FriendDTO
-import ar.edu.unsam.phm.magicnightsback.domain.dto.toFriendDTO
+import ar.edu.unsam.phm.magicnightsback.domain.dto.*
 import ar.edu.unsam.phm.magicnightsback.exceptions.AuthenticationException
 import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
 import ar.edu.unsam.phm.magicnightsback.exceptions.NotFoundException
@@ -74,6 +64,27 @@ class UserService(
         userRepository.save(user)
 
         return user.friends.map { it.toFriendDTO() }
+    }
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    fun updateUser(userId: Long, userUpdate: UserUpdateDTO): UserDTO {
+        val user = findByIdOrError(userId)
+
+        user.firstName = userUpdate.firstName
+        user.lastName = userUpdate.lastName
+
+        userRepository.save(user)
+
+        return user.toDTO()
+    }
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    fun updateUserBalance(userId: Long, newBalance: Double): Double {
+        val user = findByIdOrError(userId)
+
+        user.modifyBalance(newBalance)
+        userRepository.save(user)
+        return user.balance
     }
 }
 
