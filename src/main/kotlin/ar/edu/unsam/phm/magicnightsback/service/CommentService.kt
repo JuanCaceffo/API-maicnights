@@ -3,9 +3,11 @@ package ar.edu.unsam.phm.magicnightsback.service
 import ar.edu.unsam.phm.magicnightsback.domain.*
 import ar.edu.unsam.phm.magicnightsback.domain.dto.CommentDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.CommentStadisticsDTO
+import ar.edu.unsam.phm.magicnightsback.domain.dto.toShowCommentDTO
 import ar.edu.unsam.phm.magicnightsback.repository.CommentRepository
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
+import ar.edu.unsam.phm.magicnightsback.utils.truncate
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -28,8 +30,8 @@ class CommentService {
 //    @Transactional(Transactional.TxType.NEVER)
 //    fun getUserComments(id: Long): List<CommentDTO> = commentsRepository.findByUserId(id).map { it.toUserCommentDto() }
 //
-//    @Transactional(Transactional.TxType.NEVER)
-//    fun getShowComments(id: Long): List<CommentDTO> = commentsRepository.findByShowId(id).map { it.toShowCommentDto() }
+    @Transactional(Transactional.TxType.NEVER)
+    fun getShowComments(id: Long): Set<CommentDTO> = commentsRepository.findByShowId(id).map { it.toShowCommentDTO() }.toSet()
 
 //    @Transactional(Transactional.TxType.NEVER)
 //    fun findCommentByShowId(id: Long, sid: Long): Comment {
@@ -40,7 +42,7 @@ class CommentService {
     fun getCommentStadisticsOfShow(id: Long): CommentStadisticsDTO {
         val totalRating = commentsRepository.averageCommentRatingOfShow(id).getOrNull() ?: 0.0
         val totalComments = commentsRepository.countAllByShowId(id)
-        return CommentStadisticsDTO(totalRating, totalComments)
+        return CommentStadisticsDTO(totalRating.truncate(1), totalComments)
     }
 
 //

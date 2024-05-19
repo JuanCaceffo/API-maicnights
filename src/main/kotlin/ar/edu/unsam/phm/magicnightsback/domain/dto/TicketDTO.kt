@@ -16,7 +16,7 @@ data class TicketDTO(
 
 fun Ticket.toDTO(): TicketDTO = TicketDTO(
     id,
-    seat.toDTO(),
+    seat.toDTO(this.showDate.show),
     showDate
 )
 

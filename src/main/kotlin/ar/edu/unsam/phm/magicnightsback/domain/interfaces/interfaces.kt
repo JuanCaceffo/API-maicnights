@@ -2,7 +2,7 @@ package ar.edu.unsam.phm.magicnightsback.domain.interfaces
 
 import ar.edu.unsam.phm.magicnightsback.domain.Comment
 import ar.edu.unsam.phm.magicnightsback.domain.Point
-import ar.edu.unsam.phm.magicnightsback.domain.ShowDate
+import ar.edu.unsam.phm.magicnightsback.domain.dto.CommentDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowDateDTO
 
 interface ShowData {
@@ -21,12 +21,12 @@ interface ShowWithFriends {
 
 interface ShowStats {
     val rating: Double
-    val totalOpinions: Int
+    val totalComments: Int
 }
 
 interface ShowDetails {
-    val geolocation: Point
-    val comments: List<Comment>
+    val geolocation: String
+    val comments: Set<CommentDTO>
 }
 
 interface ShowDates {

@@ -7,8 +7,8 @@ import org.springframework.data.repository.query.Param
 import java.util.*
 
 interface CommentRepository : CrudRepository<Comment, Long>{
-    fun findByShowId(id: Long): List<Comment>
-    fun findByUserId(id: Long): List<Comment>
+    fun findByShowId(id: Long): Iterable<Comment>
+    fun findByUserId(id: Long): Iterable<Comment>
     fun countByUserIdAndShowId(userId:Long, showId:Long): Int
 
     @Query("""

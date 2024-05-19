@@ -1,6 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.domain.dto
 
 import ar.edu.unsam.phm.magicnightsback.domain.Seat
+import ar.edu.unsam.phm.magicnightsback.domain.Show
 
 data class SeatDTO(
     val id: Long,
@@ -9,9 +10,9 @@ data class SeatDTO(
     val available: Int,
 )
 
-fun Seat.toDTO() = SeatDTO(
+fun Seat.toDTO(show: Show) = SeatDTO(
     id,
     type.name,
-    price = 0.0,
+    show.currentTicketPrice(this),
     available()
 )

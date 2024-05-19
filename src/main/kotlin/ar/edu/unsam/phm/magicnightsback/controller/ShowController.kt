@@ -33,25 +33,30 @@ class ShowController(
     @Autowired
     var commentService: CommentService
 ) {
-//    @GetMapping("/{id}")
-//    @Operation(summary = "Returns a show by id")
-//    fun findShowById(
-//        @PathVariable id: Long,
-//        @RequestParam userId: Long = 0
-//    ): ShowDetailsResponseDTO =
-//        showService.findByIdOrError(id).toShowDetailsResponseDTO()
+    @GetMapping("/{id}")
+    @Operation(summary = "Returns a show by id")
+    fun findShowById(
+        @PathVariable id: Long
+    ): ShowDetailsDTO {
+        val commentsStats = commentService.getCommentStadisticsOfShow(id)
+        val dates = showDateService.findAllByShowId(id).map { it.toDTO() }
+        val showComments = commentService.getShowComments(id)
+
+        val stats = ShowDetailsExtraDataDTO(
+            commentsStats.rating,
+            commentsStats.totalComments,
+            dates,
+            showComments
+        )
+
+        return showService.findByIdOrError(id).toShowDetailsDTO(stats)
+    }
+
 
     @GetMapping
     @Operation(summary = "Returns all available shows")
     fun findAll(@ModelAttribute request: ShowRequest = ShowRequest()): List<ShowDTO> {
         return showService.findAll(request).map {
-            println(request.userId)
-            println(request.bandKeyword)
-            println(request.facilityKeyword)
-            println(request.withFriends)
-
-
-
             val dates = showDateService.findAllByShowId(it.id).map { date -> date.toDTO() }
             val commentsStats = commentService.getCommentStadisticsOfShow(it.id)
             val totalFriendsAttending = ticketService.countFriendsAttendingToShow(it.id, request.userId)

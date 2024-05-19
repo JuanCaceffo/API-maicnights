@@ -20,24 +20,24 @@ data class CommentStadisticsDTO(
     val comments: List<CommentDTO> = listOf()
 )
 
-private fun Comment.toDto(): CommentDTO = CommentDTO(
+private fun Comment.toDTO(): CommentDTO = CommentDTO(
     id = this.id,
     text = this.text,
     rating = this.rating,
     date = this.date
 )
 
-fun Comment.toUserCommentDto(): CommentDTO = this.toDto().apply {
-    userId = this@toUserCommentDto.user.id
-    showId = this@toUserCommentDto.show.id
+fun Comment.toUserCommentDTO(): CommentDTO = this.toDTO().apply {
+    userId = this@toUserCommentDTO.user.id
+    showId = this@toUserCommentDTO.show.id
     //imgSrc = this@toUserCommentDto.show.imgUrl
-    name = this@toUserCommentDto.show.name
+    name = this@toUserCommentDTO.show.name
 }
 
-fun Comment.toShowCommentDto(): CommentDTO = this.toDto().apply {
-    showId = this@toShowCommentDto.show.id
-    imgSrc = this@toShowCommentDto.user.profileImgUrl
-    name = this@toShowCommentDto.user.firstName
+fun Comment.toShowCommentDTO(): CommentDTO = this.toDTO().apply {
+    showId = this@toShowCommentDTO.show.id
+    imgSrc = this@toShowCommentDTO.user.profileImgUrl
+    name = this@toShowCommentDTO.user.firstName
 }
 
 
