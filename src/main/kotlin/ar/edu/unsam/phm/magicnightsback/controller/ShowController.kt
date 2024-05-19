@@ -2,6 +2,7 @@ package ar.edu.unsam.phm.magicnightsback.controller
 
 
 import ar.edu.unsam.phm.magicnightsback.domain.dto.*
+import ar.edu.unsam.phm.magicnightsback.exceptions.NotFoundException
 import ar.edu.unsam.phm.magicnightsback.service.CommentService
 import ar.edu.unsam.phm.magicnightsback.service.ShowDateService
 import ar.edu.unsam.phm.magicnightsback.service.ShowService
@@ -36,7 +37,7 @@ class ShowController(
     @GetMapping("/{id}")
     @Operation(summary = "Returns a show by id")
     fun findShowById(
-        @PathVariable id: Long
+        @PathVariable id: String
     ): ShowDetailsDTO {
         val commentsStats = commentService.getCommentStadisticsOfShow(id)
         val dates = showDateService.findAllByShowId(id).map { it.toDTO() }
@@ -49,7 +50,7 @@ class ShowController(
             showComments
         )
 
-        return showService.findByIdOrError(id).toShowDetailsDTO(stats)
+        return showService.findById(id)?.toShowDetailsDTO(stats) ?: throw NotFoundException("") //TODO: return showService.findByIdOrError(id).toShowDetailsDTO(stats)
     }
 
 
@@ -63,7 +64,7 @@ class ShowController(
 
     @GetMapping("{id}/showdates")
     @Operation(summary = "Returns all available show dates for a show")
-    fun findShowDatesByShowId(@PathVariable id: Long) =
+    fun findShowDatesByShowId(@PathVariable id: String) =
         showDateService.findAllByShowId(id).map { it.toDTO() }
 
 
@@ -102,7 +103,7 @@ class ShowController(
 ////
 ////    @GetMapping("/admin/show/{showId}")
 ////    @Operation(summary = "Detalles de un show (dashboard Admin)")
-////    fun getShowByIdForAdmin(@PathVariable showId: Long, @RequestParam userId: Long): ShowAdminDetailsDTO {
+////    fun getShowByIdForAdmin(@PathVariable showId: String, @RequestParam userId: Long): ShowAdminDetailsDTO {
 ////        return showService.findByIdAdmin(showId, userId).toShowAdminDetailsDTO()
 ////    }
 ////
@@ -114,7 +115,7 @@ class ShowController(
 ////            ApiResponse(responseCode = "400", description = ShowDateError.NEW_SHOW_INVALID_CONDITIONS),
 ////        ]
 ////    )
-////    fun createShowDate(@PathVariable showId: Long, @RequestParam userId: Long,@RequestBody body: ShowDateDTO) {
+////    fun createShowDate(@PathVariable showId: String, @RequestParam userId: Long,@RequestBody body: ShowDateDTO) {
 ////       showService.createShowDate(showId, userId, body)
 ////    }
 ////

@@ -31,7 +31,7 @@ class CommentService {
 //    fun getUserComments(id: Long): List<CommentDTO> = commentsRepository.findByUserId(id).map { it.toUserCommentDto() }
 //
     @Transactional(Transactional.TxType.NEVER)
-    fun getShowComments(id: Long): Set<CommentDTO> = commentsRepository.findByShowId(id).map { it.toShowCommentDTO() }.toSet()
+    fun getShowComments(id: String): Set<CommentDTO> = commentsRepository.findByShowId(id).map { it.toShowCommentDTO() }.toSet()
 
 //    @Transactional(Transactional.TxType.NEVER)
 //    fun findCommentByShowId(id: Long, sid: Long): Comment {
@@ -39,7 +39,7 @@ class CommentService {
 //    }
 //
     @Transactional(Transactional.TxType.NEVER)
-    fun getCommentStadisticsOfShow(id: Long): CommentStadisticsDTO {
+    fun getCommentStadisticsOfShow(id: String): CommentStadisticsDTO {
         val totalRating = commentsRepository.averageCommentRatingOfShow(id).getOrNull() ?: 0.0
         val totalComments = commentsRepository.countAllByShowId(id)
         return CommentStadisticsDTO(totalRating.truncate(1), totalComments)
@@ -69,7 +69,7 @@ class CommentService {
 //        commentsRepository.delete(comment)
 //    }
 //
-////    private fun validateShowAvaiableToComment(showDateId: Long, user: User, show: Show) {
+////    private fun validateShowAvaiableToComment(showDateId: String, user: User, show: Show) {
 ////        val showDate = show.getShowDateById(showDateId)
 ////        if (!showDate.isAttendee(user)){
 ////            throw BusinessException(CommentError.IS_NOT_ATTENDEE)
@@ -84,5 +84,5 @@ class CommentService {
 //
 //    //fun canBeCommented(showDate: ShowDate, user: User, show: Show) = !isAlreadyCommented(user.id, show.id) && showDate.datePassed() && showDate.isAttendee(user)
 //
-//    fun isAlreadyCommented(userId:Long, showId: Long) =  commentsRepository.countByUserIdAndShowId(userId, showId) > 0
+//    fun isAlreadyCommented(userId:Long, showId: String) =  commentsRepository.countByUserIdAndShowId(userId, showId) > 0
 }

@@ -20,7 +20,7 @@ interface TicketRepository : CrudRepository<Ticket, Long> {
     )
     fun findByUserId(userId: Long): Iterable<Ticket>
 
-    fun findByShowDateShowId(showId: Long): Iterable<Ticket>
+    fun findByShowDateShowId(showId: String): Iterable<Ticket>
 
 
     @Query(
@@ -38,7 +38,7 @@ interface TicketRepository : CrudRepository<Ticket, Long> {
         """
     )
     fun countFriendsByShow(
-        @Param("showId") showId: Long,
+        @Param("showId") showId: String,
         @Param("userId") userId: Long
     ): Optional<Int>
 
@@ -60,12 +60,12 @@ interface TicketRepository : CrudRepository<Ticket, Long> {
         """
     )
     fun getTopFriendsImages(
-        @Param("showId") showId: Long,
+        @Param("showId") showId: String,
         @Param("userId") userId: Long
     ): Iterable<String>
 
 ////    fun findByUserIdAndStatusIs(userId: UUID, status: TicketStatus): Iterable<Ticket>
-//    fun countBySeatAndShowDateId(seat:SeatTypes, showDateId: Long) : Int
+//    fun countBySeatAndShowDateId(seat:SeatTypes, showDateId: String) : Int
 }
 
 

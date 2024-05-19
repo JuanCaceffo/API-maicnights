@@ -160,7 +160,7 @@ class MagicNightsBootstrap(
                 }
 
                 is Show -> {
-                    val facility = showRepository.findByNameEquals(it.name).getOrNull()
+                    val facility = showRepository.findById(it.id).getOrNull() ////
                     facility == null
                 }
 

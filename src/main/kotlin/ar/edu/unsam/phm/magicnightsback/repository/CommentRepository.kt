@@ -7,16 +7,16 @@ import org.springframework.data.repository.query.Param
 import java.util.*
 
 interface CommentRepository : CrudRepository<Comment, Long>{
-    fun findByShowId(id: Long): Iterable<Comment>
+    fun findByShowId(id: String): Iterable<Comment>
     fun findByUserId(id: Long): Iterable<Comment>
-    fun countByUserIdAndShowId(userId:Long, showId:Long): Int
+    fun countByUserIdAndShowId(userId:Long, showId: String): Int
 
     @Query("""
         SELECT AVG(C.rating)
         FROM Comment C
         WHERE C.show.id = :showId
     """)
-    fun averageCommentRatingOfShow(@Param("showId") showId:Long): Optional<Double>
+    fun averageCommentRatingOfShow(@Param("showId") showId: String): Optional<Double>
 
-    fun countAllByShowId(showId:Long): Int
+    fun countAllByShowId(showId: String): Int
 }

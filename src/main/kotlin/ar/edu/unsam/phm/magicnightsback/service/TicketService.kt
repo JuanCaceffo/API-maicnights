@@ -29,21 +29,21 @@ class TicketService(
         ticketRepository.findByUserId(userId).map { it }
 
     @Transactional(Transactional.TxType.NEVER)
-    fun findUsersAttendingToShow(showId: Long): Set<Long> =
+    fun findUsersAttendingToShow(showId: String): Set<Long> =
         ticketRepository.findByShowDateShowId(showId).map { it.user.id }.toSet()
 
     @Transactional(Transactional.TxType.NEVER)
-    fun findFriendsAttendingToShow(showId: Long, userId: Long): Set<Long> {
+    fun findFriendsAttendingToShow(showId: String, userId: Long): Set<Long> {
         val user = userService.findByIdOrError(userId)
         return findUsersAttendingToShow(showId).filter { user.isMyFriend(it) }.toSet()
     }
 
     @Transactional(Transactional.TxType.NEVER)
-    fun countFriendsAttendingToShow(showId:Long, userId:Long):Int =
+    fun countFriendsAttendingToShow(showId: String, userId:Long):Int =
         ticketRepository.countFriendsByShow(showId, userId).getOrNull() ?: 0
 
     @Transactional(Transactional.TxType.NEVER)
-    fun getTopFriendsImages(showId:Long, userId:Long): List<String> =
+    fun getTopFriendsImages(showId: String, userId:Long): List<String> =
         ticketRepository.getTopFriendsImages(showId, userId).map { it }
 
     @Transactional(Transactional.TxType.REQUIRED)
@@ -77,7 +77,7 @@ class TicketService(
 //
 //    // Read count methods
 //    @Transactional(Transactional.TxType.NEVER)
-//    fun boughtBy(seatType: SeatTypes, showDateId: Long): Int =
+//    fun boughtBy(seatType: SeatTypes, showDateId: String): Int =
 //        ticketRepository.countBySeatAndShowDateId(seatType, showDateId)
 //
 //    // Create methods

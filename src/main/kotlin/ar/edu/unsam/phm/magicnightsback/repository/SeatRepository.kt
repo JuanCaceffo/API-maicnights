@@ -19,5 +19,5 @@ interface SeatRepository: CrudRepository<Seat, Long> {
         WHERE SD.id = :showDateId
     """
     )
-    fun findAllByShowDateId(showDateId: Long): Iterable<Seat>
+    fun findAllByShowDateId(showDateId: String): Iterable<Seat>
 }

@@ -6,7 +6,7 @@ import ar.edu.unsam.phm.magicnightsback.domain.dto.CommentDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowDateDTO
 
 interface ShowData {
-    val id: Long
+    val id: String
     val showImg: String
     val showName: String
     val bandName: String

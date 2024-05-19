@@ -30,7 +30,7 @@
 //
 //    @GetMapping("show/{showId}")
 //    @Operation(summary = "Devuelve los comentarios de un show")
-//    fun getShowComments(@PathVariable showId: Long): List<CommentDTO> {
+//    fun getShowComments(@PathVariable showId: String): List<CommentDTO> {
 //        return commentService.getShowComments(showId)
 //    }
 //

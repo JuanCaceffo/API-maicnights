@@ -30,10 +30,10 @@ class CartService(
         val userCart = cart.getOrPut(userId) { mutableListOf() }
 
         ticketsRequested.forEach { tkt ->
-            val showDate = showDateService.findByIdOrError(tkt.showDateId)
+            val showDate = showDateService.findById(tkt.showDateId) //TODO: val showDate = showDateService.findByIdOrError(tkt.showDateId)
             val seat = seatService.findByIdOrError(tkt.seatId)
 
-            validateReservation(showDate, seat, tkt.quantity)
+            validateReservation(showDate!!, seat, tkt.quantity) //TODO: Sacar !! cuando se habilite findByIdOrError
 
             repeat(tkt.quantity) {
                 userCart.add(Ticket(user, showDate, seat))

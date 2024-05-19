@@ -4,8 +4,8 @@ import ar.edu.unsam.phm.magicnightsback.controller.ShowController.ShowRequest
 import ar.edu.unsam.phm.magicnightsback.domain.*
 import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowExtraDataDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.toDTO
-import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
-import ar.edu.unsam.phm.magicnightsback.exceptions.NotFoundException
+//import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
+//import ar.edu.unsam.phm.magicnightsback.exceptions.NotFoundException
 import ar.edu.unsam.phm.magicnightsback.repository.BandRepository
 import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
@@ -31,11 +31,11 @@ class ShowService(
     @Autowired private var commentService: CommentService
 ) {
     @Transactional(Transactional.TxType.NEVER)
-    fun findById(id: Long): Show? = showRepository.findById(id).getOrNull()
+    fun findById(id: String): Show? = showRepository.findById(id).getOrNull()
 
-    @Transactional(Transactional.TxType.NEVER)
-    fun findByIdOrError(id: Long): Show =
-        findById(id) ?: throw NotFoundException(FindError.NOT_FOUND(id, Show::class.toString()))
+//    @Transactional(Transactional.TxType.NEVER)
+//    fun findByIdOrError(id: String): Show =
+//        findById(id) ?: throw NotFoundException(FindError.NOT_FOUND(id, Show::class.toString()))
 
     @Transactional(Transactional.TxType.NEVER)
     fun findAll(params: ShowRequest): List<Show> {
@@ -45,7 +45,7 @@ class ShowService(
     }
 
     @Transactional(Transactional.TxType.NEVER)
-    fun getShowExtraData(showId: Long, userId: Long): ShowExtraDataDTO {
+    fun getShowExtraData(showId: String, userId: Long): ShowExtraDataDTO {
         val dates = showDateService.findAllByShowId(showId).map { it.toDTO() }
         val commentsStats = commentService.getCommentStadisticsOfShow(showId)
         val totalFriendsAttending = ticketService.countFriendsAttendingToShow(showId, userId)
@@ -94,20 +94,20 @@ class ShowService(
 
 //
 //    @Transactional(Transactional.TxType.NEVER)
-//    fun findById(showId: Long): Show {
+//    fun findById(showId: String): Show {
 //        //  return show.toShowDTO(showService.getAPossibleUserById(userId),comments)
 //        return validateOptionalIsNotNull(showRepository.findById(showId))
 //    }
 //
 ////    @Transactional(Transactional.TxType.REQUIRED)
-////    fun createShowDate(showId: Long, userId: Long,  body: ShowDateDTO): ShowDate {
+////    fun createShowDate(showId: String, userId: Long,  body: ShowDateDTO): ShowDate {
 ////        userService.validateAdminStatus(userId)
 ////        val show = validateOptionalIsNotNull(showRepository.findById(showId))
 ////        return show.addDate(body.date)
 ////    }
 //
 //    @Transactional(Transactional.TxType.NEVER)
-//    fun findByIdAdmin(showId: Long, userId: Long): Show {
+//    fun findByIdAdmin(showId: String, userId: Long): Show {
 //        userService.validateAdminStatus(userId)
 //        return findById(showId)
 //    }

@@ -32,7 +32,7 @@ class TestController(
     }
 
     @GetMapping("/friends_count/{showId}/{userId}")
-    fun getFacility(@PathVariable showId: Long, @PathVariable userId: Long): Int {
+    fun getFacility(@PathVariable showId: String, @PathVariable userId: Long): Int {
         return ticketService.countFriendsAttendingToShow(showId, userId)
     }
 
@@ -40,7 +40,7 @@ class TestController(
 
 //    @GetMapping("/attendees/{showId}")
 //    @Operation(summary = "Returns users with show tickets")
-//    fun getUsersInShow(@PathVariable showId: Long): List<Long> {
+//    fun getUsersInShow(@PathVariable showId: String): List<Long> {
 //        return ticketService.findUsersAttendingToShow(showId)
 //    }
 }
