@@ -11,6 +11,8 @@ package ar.edu.unsam.phm.magicnightsback.service
 //import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnights.utils.stringMe
 import ar.edu.unsam.phm.magicnightsback.domain.User
+import ar.edu.unsam.phm.magicnightsback.domain.dto.FriendDTO
+import ar.edu.unsam.phm.magicnightsback.domain.dto.toFriendDTO
 import ar.edu.unsam.phm.magicnightsback.exceptions.AuthenticationException
 import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
 import ar.edu.unsam.phm.magicnightsback.exceptions.NotFoundException
@@ -56,18 +58,24 @@ class UserService(
     fun authenticate(username: String, password: String): User =
         userRepository.findByUsernameAndPassword(username, password).getOrNull()
             ?: throw AuthenticationException(FindError.BAD_CREDENTIALS)
-}
-//    @Autowired
-//    private lateinit var showRepository: ShowRepository
-//
-//    @Autowired
-//    lateinit var userRepository: UserRepository
-//
-//    @Autowired
-//    lateinit var ticketService: TicketService
-//
 
-//
+    @Transactional(Transactional.TxType.NEVER)
+    fun findUserFriends(id: Long): List<FriendDTO> {
+        val user: User = findByIdOrError(id)
+        return user.friends.map { it.toFriendDTO() }
+    }
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    fun deleteUserFriend(userId: Long, friendId: Long): List<FriendDTO> {
+        val user = findByIdOrError(userId)
+        val friendToDelete = findByIdOrError(friendId)
+
+        user.removeFriend(friendToDelete)
+        userRepository.save(user)
+
+        return user.friends.map { it.toFriendDTO() }
+    }
+}
 
 
 //
@@ -77,22 +85,8 @@ class UserService(
 
 
 //
-//    @Transactional(Transactional.TxType.NEVER)
-//    fun getUserFriends(id: Long): List<FriendDTO> {
-//        val user: User = findOrErrorById(id)
-//        return user.friends.map { userFriend -> userFriend.toFriendDTO() }
-//    }
-//
-//    @Transactional(Transactional.TxType.REQUIRED)
-//    fun deleteUserFriend(userId: Long, friendId: Long): List<FriendDTO> {
-//        val user = findOrErrorById(userId)
-//        val friendToDelete = findOrErrorById(friendId)
-//
-//        user.removeFriend(friendToDelete)
-//        userRepository.save(user)
-//
-//        return user.friends.map { it.toFriendDTO() }
-//    }
+
+
 //
 
 //

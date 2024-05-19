@@ -54,19 +54,21 @@ class UserController(
         val user = userService.authenticate(request.username, request.password)
         return user.loginResponseDTO()
     }
+
+    @GetMapping("/{id}/friends")
+    fun findUserFriends(@PathVariable id: Long): List<FriendDTO> {
+        return userService.findUserFriends(id)
+    }
+
+    @DeleteMapping("/{userId}/friend/{friendId}")
+    fun deleteUserFriend(@PathVariable userId: Long, @PathVariable friendId: Long): List<FriendDTO> {
+        return userService.deleteUserFriend(userId, friendId)
+    }
 }
 
 //
-////    @GetMapping("/{id}/friends")
-////    fun getUserFriends(@PathVariable id: Long): List<FriendDTO> {
-////        return userService.getUserFriends(id)
-////    }
-////
-////    @DeleteMapping("/{userId}/remove-friend/{friendId}")
-////    fun deleteUserFriend(@PathVariable userId: Long, @PathVariable friendId: Long): List<FriendDTO> {
-////        return userService.deleteUserFriend(userId, friendId)
-////    }
-////
+
+
 
 
 ////
