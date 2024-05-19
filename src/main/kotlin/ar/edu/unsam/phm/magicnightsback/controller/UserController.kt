@@ -64,14 +64,14 @@ class UserController(
     fun deleteUserFriend(@PathVariable userId: Long, @PathVariable friendId: Long): List<FriendDTO> {
         return userService.deleteUserFriend(userId, friendId)
     }
+
+    @PatchMapping("/{id}/update")
+    @Operation(summary = "Permite actualizar la data del usuario")
+    fun updateUser(@PathVariable id: Long, @RequestBody user: UserUpdateDTO): UserDTO {
+        val updatedUserDTO = userService.updateUser(id, user)
+        return updatedUserDTO
+    }
 }
-
-//
-
-
-
-
-////
 
 ////
 ////    @PatchMapping("/{id}/update")
