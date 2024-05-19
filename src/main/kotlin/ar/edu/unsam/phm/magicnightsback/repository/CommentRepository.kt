@@ -14,7 +14,7 @@ interface CommentRepository : CrudRepository<Comment, Long>{
     @Query("""
         SELECT AVG(C.rating)
         FROM Comment C
-        WHERE C.show.id = :showId
+        WHERE C.showId = :showId
     """)
     fun averageCommentRatingOfShow(@Param("showId") showId: String): Optional<Double>
 

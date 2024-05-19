@@ -8,7 +8,7 @@ import java.util.*
 interface ShowDateRepository: MongoRepository<ShowDate, String> {
     override fun findById(id: String): Optional<ShowDate>
 
-    override fun findAll(): MutableList<ShowDate>
+    override fun findAll(): List<ShowDate>
 
     fun findByDateAndShowId(date: LocalDateTime, showId: String): Optional<ShowDate>
 

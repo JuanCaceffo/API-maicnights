@@ -1,7 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.bootstrap
 
 import ar.edu.unsam.phm.magicnightsback.domain.*
-import ar.edu.unsam.phm.magicnightsback.domain.dto.CommentDTO
 import ar.edu.unsam.phm.magicnightsback.domain.factory.*
 import ar.edu.unsam.phm.magicnightsback.repository.*
 import org.springframework.beans.factory.InitializingBean
@@ -51,16 +50,16 @@ class MagicNightsBootstrap(
     )
 
     val initBands = mapOf(
-        "vela" to bandsCreator.createFacility(BandFactoryTypes.CHEAP),
-        "pearl" to bandsCreator.createFacility(BandFactoryTypes.NORMAL),
-        "acdc" to bandsCreator.createFacility(BandFactoryTypes.EXPENSIVE)
+        "vela" to bandsCreator.createBand(BandFactoryTypes.CHEAP),
+        "pearl" to bandsCreator.createBand(BandFactoryTypes.NORMAL),
+        "acdc" to bandsCreator.createBand(BandFactoryTypes.EXPENSIVE)
     )
 
-    val initShows = mapOf(
-        "cachen" to Show("Cachengued", initBands["vela"]!!, initFacilities["rex"]!!),
-        "4you" to Show("4 You", initBands["pearl"]!!, initFacilities["boca"]!!),
-        "demons" to Show("Demons of Hell Rise", initBands["acdc"]!!, initFacilities["river"]!!),
-        "showcito" to Show("Unipersonal", initBands["acdc"]!!, initFacilities["peque"]!!)
+    fun initShows() = mapOf(
+        "cachen" to Show("Cachengued", bandRepository.findByName("La Vela Puerca").get().id, facilityRepository.findByName("Gran Rex").get().id),
+        "4you" to Show("4 You", bandRepository.findByName("Pearl Jam").get().id, facilityRepository.findByName("La Bombonera").get().id),
+        "demons" to Show("Demons of Hell Rise", bandRepository.findByName("AC/DC").get().id, facilityRepository.findByName("River Plate").get().id),
+        "showcito" to Show("Unipersonal", bandRepository.findByName("AC/DC").get().id, facilityRepository.findByName("Teatro Peque").get().id)
     )
 
     val initUsers = mapOf(
@@ -70,30 +69,30 @@ class MagicNightsBootstrap(
         "carolina" to usersCreator.createUser(UserFactoryTypes.NOIMAGE),
     )
 
-    val initShowDates = mutableListOf(
-        showDatesCreator.createShowDate(ShowDateFactoryTypes.MINUS, initShows["cachen"]!!),
-        showDatesCreator.createShowDate(ShowDateFactoryTypes.MINUS, initShows["4you"]!!),
-        showDatesCreator.createShowDate(ShowDateFactoryTypes.MINUS, initShows["demons"]!!),
-        showDatesCreator.createShowDate(ShowDateFactoryTypes.PLUS, initShows["4you"]!!),
-        showDatesCreator.createShowDate(ShowDateFactoryTypes.PLUS, initShows["showcito"]!!),
-    ).apply { addAll(showDatesCreator.createShowDates(ShowDateFactoryTypes.PLUS, initShows["demons"]!!, 3)) }
+    fun initShowDates() = mutableListOf(
+        showDatesCreator.createShowDate(ShowDateFactoryTypes.MINUS, showRepository.findByName("Cachengued").get()),
+        showDatesCreator.createShowDate(ShowDateFactoryTypes.MINUS, showRepository.findByName("4 You").get()),
+        showDatesCreator.createShowDate(ShowDateFactoryTypes.MINUS, showRepository.findByName("demons").get()),
+        showDatesCreator.createShowDate(ShowDateFactoryTypes.PLUS, showRepository.findByName("4 You").get()),
+        showDatesCreator.createShowDate(ShowDateFactoryTypes.PLUS, showRepository.findByName("showcito").get()),
+    ).apply { addAll(showDatesCreator.createShowDates(ShowDateFactoryTypes.PLUS, showRepository.findByName("demons").get(), 3)) }
 
-    val initComments = setOf(
-        Comment(initUsers["pablo"]!!, initShows["cachen"]!!, """La noche con Pearl Jam fue simplemente espectacular. Desde el primer acorde hasta
+    fun initComments() = setOf(
+        Comment(initUsers["pablo"]!!, showRepository.findByName("Cachengued").get(), """La noche con Pearl Jam fue simplemente espectacular. Desde el primer acorde hasta
         |el último, la banda nos llevó en un viaje emocionante a través de su música icónica. Eddie Vedder irradiaba
         |energía en el escenario, y cada canción resonaba en lo más profundo de mi ser. La atmósfera estaba cargada
         |de emoción y camaradería, y el público se entregó por completo. 🎸🎶 #PearlJam #ConciertoInolvidable""".trimMargin(), 5.0),
-        Comment(initUsers["sol"]!!, initShows["cachen"]!!, "Que divertido estuvo, la pase re bien con mis amigos.", 4.5),
-        Comment(initUsers["ana"]!!, initShows["cachen"]!!, "Pésimo. El sonido anduvo mal todo el show", 1.5)
+        Comment(initUsers["sol"]!!, showRepository.findByName("Cachengued").get(), "Que divertido estuvo, la pase re bien con mis amigos.", 4.5),
+        Comment(initUsers["ana"]!!, showRepository.findByName("Cachengued").get(), "Pésimo. El sonido anduvo mal todo el show", 1.5)
     )
 
     fun initTickets(): Set<Ticket> {
-        val showDates = showDateRepository.findAll().map{it}
+        val showDates = showDateRepository.findAll().toList()
 
         return setOf(
-        ticketCreator.createTicket(TicketFactoryTypes.NORMAL, initUsers["sol"]!!, showDates[6]!!, showDates[6].show.facility.seats.toList()[0]),
-        ticketCreator.createTicket(TicketFactoryTypes.NORMAL, initUsers["ana"]!!, showDates[6]!!, showDates[6]!!.show.facility.seats.toList()[1]),
-        ticketCreator.createTicket(TicketFactoryTypes.NORMAL, initUsers["carolina"]!!, showDates[6]!!, showDates[6]!!.show.facility.seats.toList()[0]),
+        ticketCreator.createTicket(TicketFactoryTypes.NORMAL, initUsers["sol"]!!, showDates[6], showDates[6].show.facility.seats.toList()[0]),
+        ticketCreator.createTicket(TicketFactoryTypes.NORMAL, initUsers["ana"]!!, showDates[6], showDates[6].show.facility.seats.toList()[1]),
+        ticketCreator.createTicket(TicketFactoryTypes.NORMAL, initUsers["carolina"]!!, showDates[6], showDates[6].show.facility.seats.toList()[0]),
     )}
 
     fun setFriends() {
@@ -113,16 +112,16 @@ class MagicNightsBootstrap(
         println("All facilities have been initialized")
         persist(initBands.values.toSet())
         println("All bands have been initialized")
-        persist(initShows.values.toSet())
+        persist(initShows().values.toSet())
         println("All shows have been initialized")
-        persist(initShowDates.toSet())
+        persist(initShowDates().toSet())
         println("All showDates have been initialized")
         setFriends()
         persist(initUsers.values.toSet())
         println("All users have been initialized")
         persist(initTickets())
         println("All tickets have been initialized")
-        persist(initComments)
+        persist(initComments())
         println("All comments have been initialized")
     }
 
@@ -155,17 +154,17 @@ class MagicNightsBootstrap(
                 }
 
                 is Facility -> {
-                    val facility = facilityRepository.findByNameEquals(it.name).getOrNull()
+                    val facility = facilityRepository.findByName(it.name).getOrNull()
                     facility == null
                 }
 
                 is Show -> {
-                    val facility = showRepository.findById(it.id).getOrNull() ////
-                    facility == null
+                    val show = showRepository.findByName(it.name).getOrNull() ////
+                    show == null
                 }
 
                 is Band -> {
-                    val band = bandRepository.findByNameEquals(it.name).getOrNull()
+                    val band = bandRepository.findByName(it.name).getOrNull()
                     band == null
                 }
 

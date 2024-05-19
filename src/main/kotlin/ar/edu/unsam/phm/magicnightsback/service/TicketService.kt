@@ -30,7 +30,7 @@ class TicketService(
 
     @Transactional(Transactional.TxType.NEVER)
     fun findUsersAttendingToShow(showId: String): Set<Long> =
-        ticketRepository.findByShowDateShowId(showId).map { it.user.id }.toSet()
+        ticketRepository.findByShowId(showId).map { it.user.id }.toSet()
 
     @Transactional(Transactional.TxType.NEVER)
     fun findFriendsAttendingToShow(showId: String, userId: Long): Set<Long> {

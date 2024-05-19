@@ -7,6 +7,7 @@ import java.util.*
 interface ShowRepository : MongoRepository<Show, String> {
     override fun findById(id: String): Optional<Show>
     override fun findAll(): MutableList<Show>
+    fun findByName(name: String): Optional<Show>
 
 //
 //    @Query (

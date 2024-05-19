@@ -20,15 +20,14 @@ interface TicketRepository : CrudRepository<Ticket, Long> {
     )
     fun findByUserId(userId: Long): Iterable<Ticket>
 
-    fun findByShowDateShowId(showId: String): Iterable<Ticket>
+    fun findByShowId(showId: String): Iterable<Ticket>
 
 
     @Query(
         """
             SELECT COUNT(DISTINCT tk.user.id) 
                 FROM Ticket tk
-                INNER JOIN tk.showDate sd
-                WHERE sd.show.id = :showId
+                WHERE tk.showId = :showId
                 AND tk.user.id IN (
                     SELECT f.id
                     FROM User u
@@ -47,8 +46,7 @@ interface TicketRepository : CrudRepository<Ticket, Long> {
             SELECT
                 TK.user.profileImgUrl AS user_images
                 FROM Ticket TK
-                INNER JOIN TK.showDate sd
-                WHERE sd.show.id = :showId
+                WHERE TK.showId = :showId
                 AND TK.user.id IN (
                     SELECT f.id
                     FROM User U
