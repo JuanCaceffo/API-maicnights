@@ -29,7 +29,7 @@ data class Ticket(
     @ManyToOne(fetch = FetchType.LAZY)
     val user: User,
 
-    @ManyToOne
+    @Transient
     val showDate: ShowDate,
 
     @ManyToOne(fetch = FetchType.EAGER)

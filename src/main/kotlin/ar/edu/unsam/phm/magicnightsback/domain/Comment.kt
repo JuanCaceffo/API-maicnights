@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 data class Comment(
     @ManyToOne(fetch = FetchType.LAZY)
     val user: User,
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Transient
     val show: Show,
     @Column(length = 400)
     var text: String = "",
