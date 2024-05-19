@@ -2,6 +2,8 @@ package ar.edu.unsam.phm.magicnightsback.service
 
 import ar.edu.unsam.phm.magicnightsback.controller.ShowController.ShowRequest
 import ar.edu.unsam.phm.magicnightsback.domain.*
+import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowExtraDataDTO
+import ar.edu.unsam.phm.magicnightsback.domain.dto.toDTO
 import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
 import ar.edu.unsam.phm.magicnightsback.exceptions.NotFoundException
 import ar.edu.unsam.phm.magicnightsback.repository.BandRepository
@@ -22,7 +24,11 @@ class ShowService(
 
     @Autowired private var userService: UserService,
 
-    @Autowired private var ticketService: TicketService
+    @Autowired private var ticketService: TicketService,
+
+    @Autowired private var showDateService: ShowDateService,
+
+    @Autowired private var commentService: CommentService
 ) {
     @Transactional(Transactional.TxType.NEVER)
     fun findById(id: Long): Show? = showRepository.findById(id).getOrNull()
@@ -36,6 +42,22 @@ class ShowService(
         val shows = showRepository.findAll()
         val filteredShows = filter(shows, params)
         return filteredShows.map { it }
+    }
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun getShowExtraData(showId: Long, userId: Long): ShowExtraDataDTO {
+        val dates = showDateService.findAllByShowId(showId).map { it.toDTO() }
+        val commentsStats = commentService.getCommentStadisticsOfShow(showId)
+        val totalFriendsAttending = ticketService.countFriendsAttendingToShow(showId, userId)
+        val images = ticketService.getTopFriendsImages(showId, userId)
+
+        return ShowExtraDataDTO(
+            images,
+            totalFriendsAttending,
+            commentsStats.rating,
+            commentsStats.totalComments,
+            dates
+        )
     }
 
     private fun filter(shows: Iterable<Show>, params: ShowRequest): List<Show> {

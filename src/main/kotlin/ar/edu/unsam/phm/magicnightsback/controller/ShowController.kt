@@ -57,20 +57,7 @@ class ShowController(
     @Operation(summary = "Returns all available shows")
     fun findAll(@ModelAttribute request: ShowRequest = ShowRequest()): List<ShowDTO> {
         return showService.findAll(request).map {
-            val dates = showDateService.findAllByShowId(it.id).map { date -> date.toDTO() }
-            val commentsStats = commentService.getCommentStadisticsOfShow(it.id)
-            val totalFriendsAttending = ticketService.countFriendsAttendingToShow(it.id, request.userId)
-            val images = ticketService.getTopFriendsImages(it.id, request.userId)
-
-            val stats = ShowExtraDataDTO(
-                images,
-                totalFriendsAttending,
-                commentsStats.rating,
-                commentsStats.totalComments,
-                dates
-            )
-
-            it.toDTO(stats)
+            it.toDTO(showService.getShowExtraData(it.id, request.userId))
         }
     }
 
@@ -78,6 +65,8 @@ class ShowController(
     @Operation(summary = "Returns all available show dates for a show")
     fun findShowDatesByShowId(@PathVariable id: Long) =
         showDateService.findAllByShowId(id).map { it.toDTO() }
+
+
 
     data class ShowRequest(
         @RequestParam(required = false) val userId: Long = 0L,

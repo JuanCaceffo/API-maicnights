@@ -1,6 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.repository
 
 import ar.edu.unsam.phm.magicnightsback.domain.Ticket
+import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
@@ -8,6 +9,15 @@ import java.util.*
 
 interface TicketRepository : CrudRepository<Ticket, Long> {
     //    fun findByDateIs(date: LocalDateTime): Optional<Ticket>
+    @EntityGraph(
+        attributePaths = [
+            "showDate",
+            "showDate.show",
+            "showDate.show.facility",
+            "showDate.show.facility.seats",
+            "showDate.show.band"
+        ]
+    )
     fun findByUserId(userId: Long): Iterable<Ticket>
 
     fun findByShowDateShowId(showId: Long): Iterable<Ticket>

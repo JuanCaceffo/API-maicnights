@@ -2,6 +2,7 @@ package ar.edu.unsam.phm.magicnightsback.controller
 
 import ar.edu.unsam.phm.magicnightsback.domain.dto.*
 import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
+import ar.edu.unsam.phm.magicnightsback.service.ShowService
 import ar.edu.unsam.phm.magicnightsback.service.TicketService
 import ar.edu.unsam.phm.magicnightsback.service.UserService
 import io.swagger.v3.oas.annotations.Operation
@@ -21,12 +22,21 @@ class UserController(
     var userService: UserService,
 
     @Autowired
-    var ticketService: TicketService
+    var ticketService: TicketService,
+
+    @Autowired
+    var showService: ShowService
 ) {
     @GetMapping("/{id}")
     @Operation(summary = "User profile by id.")
     fun findById(@PathVariable id: Long) =
         userService.findByIdOrError(id).toDTO()
+
+    @GetMapping("/{id}/bought_tickets")
+    @Operation(summary = "Reuturns a list of bought tickets.")
+    fun findBoughtTicketsByUserId(@PathVariable id: Long): List<TicketDTO> {
+        return ticketService.findByUserId(id).map { it.toDTO(showService.getShowExtraData(it.showDate.show.id, id)) }
+    }
 
     @GetMapping("/{id}/balance")
     @Operation(summary = "User balance by id.")
@@ -43,12 +53,6 @@ class UserController(
     fun authenticate(@RequestBody request: LoginUserDTO): LoginUserResponseDTO {
         val user = userService.authenticate(request.username, request.password)
         return user.loginResponseDTO()
-    }
-
-    @GetMapping("/{id}/bought_tickets")
-    @Operation(summary = "Reuturns a list of bought tickets.")
-    fun findBoughtTickets(@PathVariable id: Long): List<TicketDTO> {
-        return ticketService.findByUserId(id).map { it.toDTO() }
     }
 }
 

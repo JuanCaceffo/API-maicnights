@@ -22,11 +22,11 @@ class CartController(
     @Autowired
     val userService: UserService
 ) {
-    @GetMapping("/{id}")
-    @Operation(summary = "Returns cart by user id.")
-    fun getUserCart(@PathVariable id: Long): List<TicketDTO> {
-        return cartService.getCart(id).map { it.toDTO() }
-    }
+//    @GetMapping("/{id}")
+//    @Operation(summary = "Returns cart by user id.")
+//    fun getUserCart(@PathVariable id: Long): List<TicketDTO> {
+//        return cartService.getCart(id).map { it.toDTO() }
+//    }
 
     @PostMapping("/{id}/add")
     @Operation(summary = "Adds tickets to user shopping cart.")
