@@ -11,8 +11,8 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
+@CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
 @RestController
-@CrossOrigin(origins = ["*"])
 @RequestMapping("\${api.cart}/user")
 @Tag(name = "Cart", description = "Cart related operations")
 class CartController(

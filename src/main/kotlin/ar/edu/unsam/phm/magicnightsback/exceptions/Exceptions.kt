@@ -67,6 +67,13 @@ object FindError {
 
 object UpdateError {
     const val NEGATIVE_BALANCE = "User Balance Can't be negative"
+    @Suppress("FunctionName")
+    fun CANNOT_MODIFY(id: Long, name: String = "entity") = "Can't modify $name with id: $id"
+}
+
+object DeleteError {
+    @Suppress("FunctionName")
+    fun CANNOT_DELETE(id: Long, name: String = "entity") = "Can't delete $name with id: $id"
 }
 
 object CreationError {
@@ -77,12 +84,6 @@ object CreationError {
     const val ALREADY_PASSED = "The date has already been passed"
     const val NO_CAPACITY = "Not enough seat capacity"
     const val NEGATIVE_PRICE = "Fixed price can't be negative."
-}
-
-object ModifyError {
-    const val NEGATIVE_BALANCE = "Not enough funds"
-    @Suppress("FunctionName")
-    fun CANNOT_MODIFY(uuid: UUID, name: String = "entity") = "Can't modify $name with id: $uuid"
 }
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
