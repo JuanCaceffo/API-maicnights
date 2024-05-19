@@ -28,7 +28,7 @@ data class ShowDetailsExtraDataDTO(
 
 fun Show.toShowDetailsDTO(stats: ShowDetailsExtraDataDTO) = ShowDetailsDTO(
     id,
-    imgUrl,
+    imgUrl(),
     name,
     band.name,
     facility.name,

@@ -38,7 +38,8 @@ data class Ticket(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0
-
+    val showDateId: String = showDate.id
+    val showId: String = showDate.show.id
     var price: Double = 0.0
 
     @Enumerated(EnumType.STRING)

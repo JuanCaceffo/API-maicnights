@@ -20,6 +20,7 @@ data class Comment(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
     var date: LocalDateTime = LocalDateTime.now()
+    val showId = show.id
 
     constructor(user: User, show: Show, dto: CommentDTO) : this(
         user = user,

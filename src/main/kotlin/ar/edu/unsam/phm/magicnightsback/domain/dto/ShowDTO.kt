@@ -37,7 +37,7 @@ data class ShowAdminDTO(
 
 fun Show.toDTO(stats:ShowExtraDataDTO) = ShowDTO(
     id,
-    imgUrl,
+    imgUrl(),
     name,
     band.name,
     facility.name,

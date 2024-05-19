@@ -11,7 +11,7 @@ data class ShowDate(
     val date: LocalDateTime
 ) {
     @Id
-    val id: String = "0"
+    lateinit var id: String
 
     // Availability
     fun beenStaged(): Boolean = date.isBefore(LocalDateTime.now())

@@ -3,24 +3,25 @@ package ar.edu.unsam.phm.magicnightsback.domain
 import ar.edu.unsam.phm.magicnightsback.domain.enums.Rentability
 import ar.edu.unsam.phm.magicnightsback.utils.removeSpaces
 import org.springframework.data.annotation.Id
+import org.springframework.data.annotation.Transient
 import org.springframework.data.mongodb.core.mapping.Document
 
 
 @Document("Shows")
 data class Show(
     val name: String,
-
-    @Transient
-    val band: Band,
-
-    @Transient
-    val facility: Facility
+    val bandId: Long,
+    val facilityId: Long
 ) {
     @Id
     lateinit var id: String
     var rentability = Rentability.BASE_PRICE
-    var imgUrl = "${band.name.removeSpaces().lowercase()}.jpg"
+    @Transient
+    lateinit var band: Band
+    @Transient
+    lateinit var facility: Facility
 
+    fun imgUrl() = "${band.name.removeSpaces().lowercase()}.jpg"
     // Seat methods
     fun haveSeat(seat: Seat) = facility.seats.any { it.id == seat.id }
     fun currentTicketPrice(seat: Seat) = baseSeatCost(seat) * rentability.factor

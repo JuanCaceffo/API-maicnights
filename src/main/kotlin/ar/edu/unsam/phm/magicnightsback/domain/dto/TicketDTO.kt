@@ -25,7 +25,7 @@ data class TicketDTO(
 
 fun Ticket.toDTO(stats: ShowExtraDataDTO): TicketDTO = TicketDTO(
     id,
-    showDate.show.imgUrl,
+    showDate.show.imgUrl(),
     showDate.show.name,
     showDate.show.band.name,
     showDate.show.facility.name,
