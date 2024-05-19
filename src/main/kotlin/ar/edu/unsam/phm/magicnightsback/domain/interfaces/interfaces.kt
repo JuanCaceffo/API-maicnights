@@ -14,6 +14,15 @@ interface ShowData {
     val prices: List<Double>
 }
 
+interface ShowTicket{ // Igual a ShowData pero con id Long
+    val id: Long
+    val showImg: String
+    val showName: String
+    val bandName: String
+    val facilityName: String
+    val prices: List<Double>
+}
+
 interface ShowWithFriends {
     val friendsImgs: List<String>
     val totalFriendsAttending: Int

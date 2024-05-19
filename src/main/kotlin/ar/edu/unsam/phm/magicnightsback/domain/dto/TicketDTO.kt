@@ -2,15 +2,12 @@ package ar.edu.unsam.phm.magicnightsback.domain.dto
 
 import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
-import ar.edu.unsam.phm.magicnightsback.domain.interfaces.ShowData
-import ar.edu.unsam.phm.magicnightsback.domain.interfaces.ShowDates
-import ar.edu.unsam.phm.magicnightsback.domain.interfaces.ShowStats
-import ar.edu.unsam.phm.magicnightsback.domain.interfaces.ShowWithFriends
+import ar.edu.unsam.phm.magicnightsback.domain.interfaces.*
 import java.time.LocalDateTime
 
 
 data class TicketDTO(
-    override val id: String,
+    override val id: Long,
     override val showImg: String,
     override val showName: String,
     override val bandName: String,
@@ -23,7 +20,7 @@ data class TicketDTO(
     override val dates: List<ShowDateDTO>,
     val seatId: Long,
     val showDateId: String
-): ShowData, ShowStats, ShowWithFriends, ShowDates
+): ShowTicket, ShowStats, ShowWithFriends, ShowDates
 
 
 fun Ticket.toDTO(stats: ShowExtraDataDTO): TicketDTO = TicketDTO(
