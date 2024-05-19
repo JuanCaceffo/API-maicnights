@@ -1,30 +1,12 @@
 package ar.edu.unsam.phm.magicnightsback.repository
 
 import ar.edu.unsam.phm.magicnightsback.domain.Show
-import ar.edu.unsam.phm.magicnightsback.domain.interfaces.CustomCrudRepository
-import org.springframework.data.jpa.repository.EntityGraph
-import org.springframework.data.repository.CrudRepository
+import org.springframework.data.mongodb.repository.MongoRepository
 import java.util.*
 
-interface ShowRepository : CrudRepository<Show, Long>, CustomCrudRepository<Show> {
-
-    @EntityGraph(
-        attributePaths = [
-            "band",
-            "facility",
-            "facility.seats"
-        ]
-    )
-    override fun findById(id: Long): Optional<Show>
-
-    @EntityGraph(
-        attributePaths = [
-            "band",
-            "facility",
-            "facility.seats"
-        ]
-    )
-    override fun findAll(): Iterable<Show>
+interface ShowRepository : MongoRepository<Show, String> {
+    override fun findById(id: String): Optional<Show>
+    override fun findAll(): MutableList<Show>
 
 //
 //    @Query (
