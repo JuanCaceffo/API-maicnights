@@ -24,6 +24,6 @@ class SeatService(
         findById(id) ?: throw ResponseFindException(FindError.NOT_FOUND(id, Seat::class.stringMe()))
 
     @Transactional(Transactional.TxType.NEVER)
-    fun findAllSeatByShowDateId(shoDateId: Long): List<Seat> =
+    fun findAllSeatByShowDateId(shoDateId: String): List<Seat> =
         seatRepository.findAllByShowDateId(shoDateId).map { it }
 }

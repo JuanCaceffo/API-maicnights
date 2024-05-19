@@ -22,8 +22,8 @@ class ShowDateController(
 ) {
     @GetMapping("/{id}/seats")
     @Operation(summary = "Returns show date seats")
-    fun findAllSeatByShowDateId(@PathVariable id: Long): List<SeatDTO> {
-        val show = showDateService.findByIdOrError(id).show
-        return seatService.findAllSeatByShowDateId(id).map { it.toDTO(show) }
+    fun findAllSeatByShowDateId(@PathVariable id: String): List<SeatDTO> {
+        val show = showDateService.findById(id)?.show//TODO: showDateService.findByIdOrError(id).show
+        return seatService.findAllSeatByShowDateId(id).map { it.toDTO(show!!) } //TODO: Sacar !! cuando esté habilitada findByIdOrError
     }
 }
