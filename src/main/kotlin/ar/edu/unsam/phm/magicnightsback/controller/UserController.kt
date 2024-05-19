@@ -80,21 +80,6 @@ class UserController(
 }
 
 ////
-////    @PatchMapping("/{id}/update")
-////    @Operation(summary = "Permite actualizar la data del usuario")
-////    fun updateUser(@PathVariable id: Long, @RequestBody user: UserUpdateDTO): UserDTO {
-////        val updatedUserDTO = userService.updateUser(id, user)
-////        return updatedUserDTO
-////    }
-////
-
-////
-////    @PatchMapping("/{id}/modify_balance")
-////    @Operation(summary = "Permite actualizar los creditos del usuario")
-////    fun updateUserBalance(@PathVariable id: Long, @RequestBody newBalance: Double): Double {
-////        return userService.updateUserBalance(id, newBalance)
-////    }
-////
 ////    @GetMapping("{id}/balance_report")
 ////    fun userBalanceReport(@PathVariable id: Long): List<UserBalanceDTO> {
 ////        return userService.getBalances(id)
@@ -109,5 +94,4 @@ class UserController(
 ////    fun findUsersWithMoreTicketsThan(@PathVariable n: Int): List<UserDTO> {
 ////        return userService.findUsersWithMoreTicketsThan(n)
 ////    }
-
 //}
