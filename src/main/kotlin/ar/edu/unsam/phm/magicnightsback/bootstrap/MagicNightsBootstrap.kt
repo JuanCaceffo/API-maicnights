@@ -79,10 +79,10 @@ class MagicNightsBootstrap(
     ).apply { addAll(showDatesCreator.createShowDates(ShowDateFactoryTypes.PLUS, initShows["demons"]!!, 3)) }
 
     val initComments = setOf(
-        Comment(initUsers["pablo"]!!, initShows["cachen"]!!, """La noche con Pearl Jam fue simplemente espectacular. Desde el primer acorde hasta
-        |el último, la banda nos llevó en un viaje emocionante a través de su música icónica. Eddie Vedder irradiaba
+        Comment(initUsers["pablo"]!!, initShows["cachen"]!!, """La noche con La vela fue simplemente espectacular. Desde el primer acorde hasta
+        |el último, la banda nos llevó en un viaje emocionante a través de su música icónica. Sebas irradiaba
         |energía en el escenario, y cada canción resonaba en lo más profundo de mi ser. La atmósfera estaba cargada
-        |de emoción y camaradería, y el público se entregó por completo. 🎸🎶 #PearlJam #ConciertoInolvidable""".trimMargin(), 5.0),
+        |de emoción y camaradería, y el público se entregó por completo. 🎸🎶 #LaVela #ConciertoInolvidable""".trimMargin(), 5.0),
         Comment(initUsers["sol"]!!, initShows["cachen"]!!, "Que divertido estuvo, la pase re bien con mis amigos.", 4.5),
         Comment(initUsers["ana"]!!, initShows["cachen"]!!, "Pésimo. El sonido anduvo mal todo el show", 1.5)
     )
