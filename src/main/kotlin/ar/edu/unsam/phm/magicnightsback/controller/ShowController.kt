@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
-
 @CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
 @RestController
 @RequestMapping("\${api.show}")
@@ -40,7 +39,7 @@ class ShowController(
     ): ShowDetailsDTO {
         val commentsStats = commentService.getCommentStadisticsOfShow(id)
         val dates = showDateService.findAllByShowId(id).map { it.toDTO() }
-        val showComments = commentService.getShowComments(id)
+        val showComments = commentService.findByShowId(id)
 
         val stats = ShowDetailsExtraDataDTO(
             commentsStats.rating,

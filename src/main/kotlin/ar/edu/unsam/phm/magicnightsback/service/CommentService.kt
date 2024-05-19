@@ -1,9 +1,15 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
-import ar.edu.unsam.phm.magicnightsback.domain.*
+import ar.edu.unsam.phm.magicnights.utils.stringMe
+import ar.edu.unsam.phm.magicnightsback.domain.Comment
 import ar.edu.unsam.phm.magicnightsback.domain.dto.CommentDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.CommentStadisticsDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.toShowCommentDTO
+import ar.edu.unsam.phm.magicnightsback.domain.dto.toUserCommentDTO
+import ar.edu.unsam.phm.magicnightsback.exceptions.BusinessException
+import ar.edu.unsam.phm.magicnightsback.exceptions.DeleteError
+import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
+import ar.edu.unsam.phm.magicnightsback.exceptions.ResponseFindException
 import ar.edu.unsam.phm.magicnightsback.repository.CommentRepository
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
@@ -24,16 +30,38 @@ class CommentService {
     @Autowired
     lateinit var userRepository: UserRepository
 
-    @Transactional(Transactional.TxType.NEVER)
-    fun findAll(): Iterable<Comment> = commentsRepository.findAll()
+    //@Transactional(Transactional.TxType.NEVER)
+    //fun findAll(): Iterable<Comment> = commentsRepository.findAll()
 
-//    @Transactional(Transactional.TxType.NEVER)
-//    fun getUserComments(id: Long): List<CommentDTO> = commentsRepository.findByUserId(id).map { it.toUserCommentDto() }
-//
     @Transactional(Transactional.TxType.NEVER)
-    fun getShowComments(id: Long): Set<CommentDTO> = commentsRepository.findByShowId(id).map { it.toShowCommentDTO() }.toSet()
+    fun findById(id: Long): Comment? =
+        commentsRepository.findById(id).getOrNull()
 
-//    @Transactional(Transactional.TxType.NEVER)
+    @Transactional(Transactional.TxType.NEVER)
+    fun findByIdOrError(id: Long): Comment =
+        findById(id) ?: throw ResponseFindException(FindError.NOT_FOUND(id, Comment::class.stringMe()))
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun findByUserId(id: Long): Set<CommentDTO> =
+        commentsRepository.findByUserId(id).map { it.toUserCommentDTO() }.toSet()
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun findByShowId(id: Long): Set<CommentDTO> =
+        commentsRepository.findByShowId(id).map { it.toShowCommentDTO() }.toSet()
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    fun removeComment(userId: Long, commentId: Long) {
+        val comment = findByIdOrError(commentId)
+        if (!comment.canBeDeletedBy(userId)) throw BusinessException(
+            DeleteError.CANNOT_DELETE(
+                commentId,
+                Comment::class.stringMe()
+            )
+        )
+        commentsRepository.delete(comment)
+    }
+
+    //    @Transactional(Transactional.TxType.NEVER)
 //    fun findCommentByShowId(id: Long, sid: Long): Comment {
 //        return validateOptionalIsNotNull(commentsRepository.findById(id))
 //    }
@@ -51,8 +79,7 @@ class CommentService {
 //        return validateOptionalIsNotNull(commentsRepository.findById(id))
 //    }
 //
-//    @Transactional(Transactional.TxType.NEVER)
-//    fun findById(id: Long): Comment = validateOptionalIsNotNull(commentsRepository.findById(id))
+
 //
 ////    @Transactional(Transactional.TxType.REQUIRED)
 ////    fun addComment(commentCreate: CommentCreateDTO) {
@@ -62,12 +89,7 @@ class CommentService {
 ////        commentsRepository.save(Comment(user, show, commentCreate.text, commentCreate.rating))
 ////    }
 //
-//    @Transactional(Transactional.TxType.REQUIRED)
-//    fun removeComment(userId: Long, commentId: Long) {
-//        val comment = validateOptionalIsNotNull(commentsRepository.findById(commentId))
-//        if (!comment.canBeDeletedBy(userId)) throw BusinessException(CommentError.INVALID_DELETE)
-//        commentsRepository.delete(comment)
-//    }
+
 //
 ////    private fun validateShowAvaiableToComment(showDateId: Long, user: User, show: Show) {
 ////        val showDate = show.getShowDateById(showDateId)

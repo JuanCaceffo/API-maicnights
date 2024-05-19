@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
 import kotlin.jvm.optionals.getOrNull
 
+@CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
 @RestController
 @RequestMapping("\${api.base}/test")
 @Tag(name = "Testing", description = "Testing endpoints")

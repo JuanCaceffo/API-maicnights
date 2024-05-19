@@ -30,7 +30,7 @@ private fun Comment.toDTO(): CommentDTO = CommentDTO(
 fun Comment.toUserCommentDTO(): CommentDTO = this.toDTO().apply {
     userId = this@toUserCommentDTO.user.id
     showId = this@toUserCommentDTO.show.id
-    //imgSrc = this@toUserCommentDto.show.imgUrl
+    imgSrc = this@toUserCommentDTO.show.imgUrl
     name = this@toUserCommentDTO.show.name
 }
 

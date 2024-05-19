@@ -10,4 +10,5 @@ data class ApiProperties (
     val show: String,
     val cart: String,
     val showdate: String,
+    val comment: String,
 )

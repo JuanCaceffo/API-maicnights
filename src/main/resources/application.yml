@@ -8,12 +8,6 @@ server:
     include-exception: true
     include-stacktrace: never
 
-cors:
-  allowed-origins: "*"
-  allowed-methods: "*"
-  allowed-headers: "*"
-  allow-credentials: false
-
 spring:
   application:
     name: magicnights
@@ -56,3 +50,4 @@ api:
   show: ${api.base}/show
   cart: ${api.base}/cart
   showdate: ${api.base}/showdate
+  comment: ${api.base}/comment
