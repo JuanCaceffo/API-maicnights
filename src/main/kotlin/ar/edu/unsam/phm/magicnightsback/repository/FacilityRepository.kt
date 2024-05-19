@@ -12,4 +12,7 @@ interface FacilityRepository : CrudRepository<Facility, Long>, CustomCrudReposit
 
     @EntityGraph(attributePaths = ["seats"])
     override fun findByName(name: String): Optional<Facility>
+
+    @EntityGraph(attributePaths = ["seats"])
+    override fun findById(id: Long): Optional<Facility>
 }

@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 
 @Document("ShowDates")
 data class ShowDate(
-    val show: Show,
+    var show: Show,
     val date: LocalDateTime
 ) {
     @Id

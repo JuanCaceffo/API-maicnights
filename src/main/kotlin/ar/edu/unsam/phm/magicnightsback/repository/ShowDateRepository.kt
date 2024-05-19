@@ -12,5 +12,5 @@ interface ShowDateRepository: MongoRepository<ShowDate, String> {
 
     fun findByDateAndShowId(date: LocalDateTime, showId: String): Optional<ShowDate>
 
-    fun findAllByShowId(showId: String): Iterable<ShowDate>
+    fun findAllByShowId(showId: String): List<ShowDate>
 }

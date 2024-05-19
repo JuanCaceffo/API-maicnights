@@ -16,18 +16,21 @@ class ShowDateService(
     @Autowired
     private val showDateRepository: ShowDateRepository,
 
+
     @Autowired
-    private val seatService: SeatService
+    private val showService: ShowService
 ) {
-    @Transactional(Transactional.TxType.NEVER)
+
+    fun getHydrousShowDate(showDate: ShowDate)= showDate.apply { show = showService.getHydrousShow(show) }
+
+    fun getAllHydrousShowDates() = showDateRepository.findAll().map { showDate ->  getHydrousShowDate(showDate)}
+
     fun findById(id: String): ShowDate? =
         showDateRepository.findById(id).getOrNull()
 
-    @Transactional(Transactional.TxType.NEVER)
     fun findByIdOrError(id: String): ShowDate =
         findById(id) ?: throw ResponseFindException("")//ResponseFindException(FindError.NOT_FOUND(id, ShowDate::class.stringMe()))
 
-    @Transactional(Transactional.TxType.NEVER)
     fun findAllByShowId(showId: String): List<ShowDate> =
-        showDateRepository.findAllByShowId(showId).map { it }
+        showDateRepository.findAllByShowId(showId)
 }

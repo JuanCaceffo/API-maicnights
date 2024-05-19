@@ -3,6 +3,7 @@ package ar.edu.unsam.phm.magicnightsback.bootstrap
 import ar.edu.unsam.phm.magicnightsback.domain.*
 import ar.edu.unsam.phm.magicnightsback.domain.factory.*
 import ar.edu.unsam.phm.magicnightsback.repository.*
+import ar.edu.unsam.phm.magicnightsback.service.ShowDateService
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -33,6 +34,8 @@ class MagicNightsBootstrap(
 
     @Autowired
     private var commentRepository: CommentRepository,
+
+    private val showDateService: ShowDateService,
 ) : InitializingBean {
 
     val facilityCreator = FacilityFactory()
@@ -72,10 +75,10 @@ class MagicNightsBootstrap(
     fun initShowDates() = mutableListOf(
         showDatesCreator.createShowDate(ShowDateFactoryTypes.MINUS, showRepository.findByName("Cachengued").get()),
         showDatesCreator.createShowDate(ShowDateFactoryTypes.MINUS, showRepository.findByName("4 You").get()),
-        showDatesCreator.createShowDate(ShowDateFactoryTypes.MINUS, showRepository.findByName("demons").get()),
+        showDatesCreator.createShowDate(ShowDateFactoryTypes.MINUS, showRepository.findByName("Demons of Hell Rise").get()),
         showDatesCreator.createShowDate(ShowDateFactoryTypes.PLUS, showRepository.findByName("4 You").get()),
-        showDatesCreator.createShowDate(ShowDateFactoryTypes.PLUS, showRepository.findByName("showcito").get()),
-    ).apply { addAll(showDatesCreator.createShowDates(ShowDateFactoryTypes.PLUS, showRepository.findByName("demons").get(), 3)) }
+        showDatesCreator.createShowDate(ShowDateFactoryTypes.PLUS, showRepository.findByName("Unipersonal").get()),
+    ).apply { addAll(showDatesCreator.createShowDates(ShowDateFactoryTypes.PLUS, showRepository.findByName("Demons of Hell Rise").get(), 3)) }
 
     fun initComments() = setOf(
         Comment(initUsers["pablo"]!!, showRepository.findByName("Cachengued").get(), """La noche con Pearl Jam fue simplemente espectacular. Desde el primer acorde hasta
@@ -87,7 +90,7 @@ class MagicNightsBootstrap(
     )
 
     fun initTickets(): Set<Ticket> {
-        val showDates = showDateRepository.findAll().toList()
+        val showDates = showDateService.getAllHydrousShowDates()
 
         return setOf(
         ticketCreator.createTicket(TicketFactoryTypes.NORMAL, initUsers["sol"]!!, showDates[6], showDates[6].show.facility.seats.toList()[0]),

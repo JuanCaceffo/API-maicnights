@@ -8,6 +8,7 @@ import ar.edu.unsam.phm.magicnightsback.domain.dto.toDTO
 //import ar.edu.unsam.phm.magicnightsback.exceptions.NotFoundException
 import ar.edu.unsam.phm.magicnightsback.repository.BandRepository
 import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
+import ar.edu.unsam.phm.magicnightsback.repository.ShowDateRepository
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,7 +27,7 @@ class ShowService(
 
     @Autowired private var ticketService: TicketService,
 
-    @Autowired private var showDateService: ShowDateService,
+    @Autowired private var showDateRepository: ShowDateRepository,
 
     @Autowired private var commentService: CommentService
 ) {
@@ -37,6 +38,11 @@ class ShowService(
 //    fun findByIdOrError(id: String): Show =
 //        findById(id) ?: throw NotFoundException(FindError.NOT_FOUND(id, Show::class.toString()))
 
+    fun getHydrousShow(show: Show) = show.apply {
+        facility = facilityRepository.findById(show.facilityId).get()
+        band = bandRepository.findById(show.bandId).get()
+    }
+
     @Transactional(Transactional.TxType.NEVER)
     fun findAll(params: ShowRequest): List<Show> {
         val shows = showRepository.findAll()
@@ -46,7 +52,7 @@ class ShowService(
 
     @Transactional(Transactional.TxType.NEVER)
     fun getShowExtraData(showId: String, userId: Long): ShowExtraDataDTO {
-        val dates = showDateService.findAllByShowId(showId).map { it.toDTO() }
+        val dates = showDateRepository.findAllByShowId(showId).map { it.toDTO() }
         val commentsStats = commentService.getCommentStadisticsOfShow(showId)
         val totalFriendsAttending = ticketService.countFriendsAttendingToShow(showId, userId)
         val images = ticketService.getTopFriendsImages(showId, userId)

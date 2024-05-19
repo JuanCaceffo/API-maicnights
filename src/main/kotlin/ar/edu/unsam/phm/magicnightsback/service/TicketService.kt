@@ -20,8 +20,6 @@ class TicketService(
     @Autowired
     private val ticketRepository: TicketRepository,
     @Autowired
-    private val showDateService: ShowDateService,
-    @Autowired
     private val userService: UserService
 ) {
     @Transactional(Transactional.TxType.NEVER)
