@@ -20,12 +20,12 @@ class CartService(
 ) {
     private val cart: HashMap<Long, MutableList<Ticket>> = HashMap()
 
-    @Transactional(Transactional.TxType.NEVER)
+    
     fun getCart(userId: Long): List<Ticket> {
         return cart[userId] ?: emptyList()
     }
 
-    @Transactional(Transactional.TxType.NEVER)
+    @Transactional(Transactional.TxType.REQUIRED)
     fun addAll(userId: Long, ticketsRequested: List<TicketRequestDTO>) {
         val user = userService.findByIdOrError(userId)
         val userCart = cart.getOrPut(userId) { mutableListOf() }
@@ -44,17 +44,22 @@ class CartService(
         }
     }
 
+    @Transactional(Transactional.TxType.REQUIRED)
     fun buyAll(userId: Long) {
+        userService.findByIdOrError(userId).modifyBalance(totalPrice(userId))
         cart[userId]?.forEach {
             it.buyDate = LocalDateTime.now()
         }
         cart[userId]?.forEach { ticketService.save(it) }
+        clearAll(userId)
     }
 
+    @Transactional(Transactional.TxType.REQUIRED)
     fun clearAll(userId: Long) {
         cart[userId]?.clear()
     }
 
+    @Transactional(Transactional.TxType.REQUIRED)
     fun totalPrice(userId: Long): Double {
         return cart[userId]?.sumOf { it.price } ?: 0.0
     }
@@ -84,11 +89,11 @@ class CartService(
 
 //
 //
-////    @Transactional(Transactional.TxType.NEVER)
+////    
 ////    fun getCartByUserId(userId:Long) = validateOptionalIsNotNull(cartRepo.findById(userId),"El carrito para el usuario de id ${userId} no fue encontrado")
 ////
 ////
-////    @Transactional(Transactional.TxType.NEVER)
+////    
 ////    fun getTicketsCart(userId: Long): List<TicketDTO> {
 ////        val user = userService.findById(userId)
 ////        val tickets = cartRepo.getReservedTickets(userId)
@@ -120,13 +125,13 @@ class CartService(
 ////        cartRepo.save(cart)
 ////    }
 ////
-////    @Transactional(Transactional.TxType.NEVER)
+////    
 ////    fun reservedTicketsPrice(userId: Long): Double {
 ////        val cart = getCartByUserId(userId)
 ////        return cart.totalPrice()
 ////    }
 ////
-////    @Transactional(Transactional.TxType.NEVER)
+////    
 ////    fun getTicketsSize(userId: Long): Int {
 ////        val cart = getCartByUserId(userId)
 ////        return cart.ticketsSize()

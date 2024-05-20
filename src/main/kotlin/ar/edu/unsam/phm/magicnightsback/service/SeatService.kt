@@ -15,15 +15,15 @@ class SeatService(
     @Autowired
     val seatRepository: SeatRepository
 ) {
-    @Transactional(Transactional.TxType.NEVER)
+    
     fun findById(id: Long): Seat? =
         seatRepository.findById(id).getOrNull()
 
-    @Transactional(Transactional.TxType.NEVER)
+    
     fun findByIdOrError(id: Long): Seat =
         findById(id) ?: throw ResponseFindException(FindError.NOT_FOUND(id, Seat::class.stringMe()))
 
-    @Transactional(Transactional.TxType.NEVER)
+    
     fun findAllSeatByShowDateId(shoDateId: Long): List<Seat> =
         seatRepository.findAllByShowDateId(shoDateId).map { it }
 }

@@ -17,25 +17,25 @@ class UserService(
     @Autowired
     var userRepository: UserRepository,
 ) {
-    @Transactional(Transactional.TxType.NEVER)
+    
     fun findById(id: Long): User? =
         userRepository.findById(id).getOrNull()
 
-    @Transactional(Transactional.TxType.NEVER)
+    @Transactional(Transactional.TxType.REQUIRED)
     fun findByIdOrError(id: Long): User =
         findById(id) ?: throw NotFoundException(FindError.NOT_FOUND(id, User::class.toString()))
 
-    @Transactional(Transactional.TxType.NEVER)
+    
     fun userExists(id: Long): Boolean = userRepository.existsUserById(id)
 
-    @Transactional(Transactional.TxType.NEVER)
+    
     fun getBalance(userId: Long): Double = findByIdOrError(userId).balance
 
-//    @Transactional(Transactional.TxType.NEVER)
+//    
 //    fun getUserImageUrls(users: Set<Long>): Set<String> =
 //        userRepository.findImageUrl(users)
 
-    @Transactional(Transactional.TxType.NEVER)
+    
     fun validateUserExists(id: Long) {
         if (!userExists(id)) {
             throw NotFoundException(
@@ -44,12 +44,12 @@ class UserService(
         }
     }
 
-    @Transactional(Transactional.TxType.NEVER)
+    
     fun authenticate(username: String, password: String): User =
         userRepository.findByUsernameAndPassword(username, password).getOrNull()
             ?: throw AuthenticationException(FindError.BAD_CREDENTIALS)
 
-    @Transactional(Transactional.TxType.NEVER)
+    
     fun findUserFriends(id: Long): List<FriendDTO> {
         val user: User = findByIdOrError(id)
         return user.friends.map { it.toFriendDTO() }
@@ -88,20 +88,10 @@ class UserService(
     }
 }
 
-
-//
-//    @Transactional(Transactional.TxType.NEVER)
+//    
 //    fun findByUsername(username: String): User = validateOptionalIsNotNull(userRepository.findByUsername(username))
-//
 
-
-//
-
-
-//
-
-//
-//    @Transactional(Transactional.TxType.NEVER)
+//    
 //    fun getLastDateBalanceModify(userId: Long): Double = findOrErrorById(userId).totalBalance()
 //
 //    @Transactional(Transactional.TxType.REQUIRED)
@@ -126,7 +116,7 @@ class UserService(
 //        return user.toDTO()
 //    }
 //
-//    @Transactional(Transactional.TxType.NEVER)
+//    
 //    fun getBalances(userId: Long): List<UserBalanceDTO> {
 //        findById(userId)
 //        return userRepository.allBalances(userId)
@@ -141,7 +131,7 @@ class UserService(
 //
 
 //
-////    @Transactional(Transactional.TxType.NEVER)
+////    
 ////    fun historyTickets(userId: Long, year: Int): List<TicketDTO> {
 ////        val user = findById(userId)
 ////        val tickets = userRepository.historyTickets(userId,year)

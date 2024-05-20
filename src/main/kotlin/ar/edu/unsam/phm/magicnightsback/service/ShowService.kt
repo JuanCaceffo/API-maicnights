@@ -30,21 +30,21 @@ class ShowService(
 
     @Autowired private var commentService: CommentService
 ) {
-    @Transactional(Transactional.TxType.NEVER)
+    
     fun findById(id: Long): Show? = showRepository.findById(id).getOrNull()
 
-    @Transactional(Transactional.TxType.NEVER)
+    
     fun findByIdOrError(id: Long): Show =
         findById(id) ?: throw NotFoundException(FindError.NOT_FOUND(id, Show::class.toString()))
 
-    @Transactional(Transactional.TxType.NEVER)
+    
     fun findAll(params: ShowRequest): List<Show> {
         val shows = showRepository.findAll()
         val filteredShows = filter(shows, params)
         return filteredShows.map { it }
     }
 
-    @Transactional(Transactional.TxType.NEVER)
+    
     fun getShowExtraData(showId: Long, userId: Long): ShowExtraDataDTO {
         val dates = showDateService.findAllByShowId(showId).map { it.toDTO() }
         val commentsStats = commentService.getCommentStadisticsOfShow(showId)
@@ -93,7 +93,7 @@ class ShowService(
 //
 
 //
-//    @Transactional(Transactional.TxType.NEVER)
+//    
 //    fun findById(showId: Long): Show {
 //        //  return show.toShowDTO(showService.getAPossibleUserById(userId),comments)
 //        return validateOptionalIsNotNull(showRepository.findById(showId))
@@ -106,13 +106,13 @@ class ShowService(
 ////        return show.addDate(body.date)
 ////    }
 //
-//    @Transactional(Transactional.TxType.NEVER)
+//    
 //    fun findByIdAdmin(showId: Long, userId: Long): Show {
 //        userService.validateAdminStatus(userId)
 //        return findById(showId)
 //    }
 //
-//    @Transactional(Transactional.TxType.NEVER)
+//    
 //    fun findByName(name: String): Show = validateOptionalIsNotNull(showRepository.findByNameEquals(name))
 //
 ////    fun getBusyFacilities(): List<Facility> {

@@ -30,22 +30,19 @@ class CommentService {
     @Autowired
     lateinit var userRepository: UserRepository
 
-    //@Transactional(Transactional.TxType.NEVER)
-    //fun findAll(): Iterable<Comment> = commentsRepository.findAll()
-
-    @Transactional(Transactional.TxType.NEVER)
+    
     fun findById(id: Long): Comment? =
         commentsRepository.findById(id).getOrNull()
 
-    @Transactional(Transactional.TxType.NEVER)
+    
     fun findByIdOrError(id: Long): Comment =
         findById(id) ?: throw ResponseFindException(FindError.NOT_FOUND(id, Comment::class.stringMe()))
 
-    @Transactional(Transactional.TxType.NEVER)
+    
     fun findByUserId(id: Long): Set<CommentDTO> =
         commentsRepository.findByUserId(id).map { it.toUserCommentDTO() }.toSet()
 
-    @Transactional(Transactional.TxType.NEVER)
+    
     fun findByShowId(id: Long): Set<CommentDTO> =
         commentsRepository.findByShowId(id).map { it.toShowCommentDTO() }.toSet()
 
@@ -61,12 +58,12 @@ class CommentService {
         commentsRepository.delete(comment)
     }
 
-    //    @Transactional(Transactional.TxType.NEVER)
+    //    
 //    fun findCommentByShowId(id: Long, sid: Long): Comment {
 //        return validateOptionalIsNotNull(commentsRepository.findById(id))
 //    }
 //
-    @Transactional(Transactional.TxType.NEVER)
+    
     fun getCommentStadisticsOfShow(id: Long): CommentStadisticsDTO {
         val totalRating = commentsRepository.averageCommentRatingOfShow(id).getOrNull() ?: 0.0
         val totalComments = commentsRepository.countAllByShowId(id)
@@ -74,7 +71,7 @@ class CommentService {
     }
 
 //
-//    @Transactional(Transactional.TxType.NEVER)
+//    
 //    fun findCommentByUserId(id: Long, sid: Long): Comment {
 //        return validateOptionalIsNotNull(commentsRepository.findById(id))
 //    }

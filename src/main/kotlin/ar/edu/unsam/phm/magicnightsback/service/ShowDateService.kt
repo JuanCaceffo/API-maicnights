@@ -21,15 +21,12 @@ class ShowDateService(
     @Autowired
     private val seatService: SeatService
 ) {
-    @Transactional(Transactional.TxType.NEVER)
     fun findById(id: Long): ShowDate? =
         showDateRepository.findById(id).getOrNull()
 
-    @Transactional(Transactional.TxType.NEVER)
     fun findByIdOrError(id: Long): ShowDate =
         findById(id) ?: throw ResponseFindException (FindError.NOT_FOUND(id, ShowDate::class.stringMe()))
 
-    @Transactional(Transactional.TxType.NEVER)
     fun findAllByShowId(showId: Long): List<ShowDate> =
         showDateRepository.findAllByShowId(showId).map { it }
 }
