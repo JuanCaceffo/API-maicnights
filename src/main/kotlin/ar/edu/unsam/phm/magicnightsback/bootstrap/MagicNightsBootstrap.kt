@@ -176,9 +176,10 @@ class MagicNightsBootstrap(
                 }
 
                 is ShowDate -> {
-                    val showDate = showDateRepository.getByDateAndShowId(it.date.plusHours(3L).toLocalDate().toString(), it.show.id).getOrNull()
+                    val showDate = showDateRepository.getByDateAndShowId(it.date.plusHours(3L).toLocalDate(), it.show.id).getOrNull()
                     showDate == null
                 }
+
 
                 is Ticket -> {
                     true
