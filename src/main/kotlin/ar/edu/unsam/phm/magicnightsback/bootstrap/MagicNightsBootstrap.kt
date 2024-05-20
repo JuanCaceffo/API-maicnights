@@ -7,6 +7,10 @@ import ar.edu.unsam.phm.magicnightsback.service.ShowDateService
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.util.Date
 import kotlin.jvm.optionals.getOrNull
 
 @Component
@@ -74,11 +78,11 @@ class MagicNightsBootstrap(
 
     fun initShowDates() = mutableListOf(
         showDatesCreator.createShowDate(ShowDateFactoryTypes.MINUS, showRepository.findByName("Cachengued").get()),
-        showDatesCreator.createShowDate(ShowDateFactoryTypes.MINUS, showRepository.findByName("4 You").get()),
-        showDatesCreator.createShowDate(ShowDateFactoryTypes.MINUS, showRepository.findByName("Demons of Hell Rise").get()),
-        showDatesCreator.createShowDate(ShowDateFactoryTypes.PLUS, showRepository.findByName("4 You").get()),
-        showDatesCreator.createShowDate(ShowDateFactoryTypes.PLUS, showRepository.findByName("Unipersonal").get()),
-    ).apply { addAll(showDatesCreator.createShowDates(ShowDateFactoryTypes.PLUS, showRepository.findByName("Demons of Hell Rise").get(), 3)) }
+//        showDatesCreator.createShowDate(ShowDateFactoryTypes.MINUS, showRepository.findByName("4 You").get()),
+//        showDatesCreator.createShowDate(ShowDateFactoryTypes.MINUS, showRepository.findByName("Demons of Hell Rise").get()),
+//        showDatesCreator.createShowDate(ShowDateFactoryTypes.PLUS, showRepository.findByName("4 You").get()),
+//        showDatesCreator.createShowDate(ShowDateFactoryTypes.PLUS, showRepository.findByName("Unipersonal").get()),
+    )/*.apply { addAll(showDatesCreator.createShowDates(ShowDateFactoryTypes.PLUS, showRepository.findByName("Demons of Hell Rise").get(), 3)) }*/
 
     fun initComments() = setOf(
         Comment(initUsers["pablo"]!!, showRepository.findByName("Cachengued").get(), """La noche con La vela fue simplemente espectacular. Desde el primer acorde hasta
@@ -122,7 +126,7 @@ class MagicNightsBootstrap(
         setFriends()
         persist(initUsers.values.toSet())
         println("All users have been initialized")
-        persist(initTickets())
+//        persist(initTickets())
         println("All tickets have been initialized")
         persist(initComments())
         println("All comments have been initialized")
@@ -172,7 +176,7 @@ class MagicNightsBootstrap(
                 }
 
                 is ShowDate -> {
-                    val showDate = showDateRepository.findByDateAndShowId(it.date, it.show.id).getOrNull()
+                    val showDate = showDateRepository.getByDateAndShowId(it.date.plusHours(3L).toLocalDate().toString(), it.show.id).getOrNull()
                     showDate == null
                 }
 

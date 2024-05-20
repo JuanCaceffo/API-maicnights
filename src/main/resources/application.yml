@@ -46,6 +46,8 @@ spring:
 logging:
   level:
     root: INFO
+    org.springframework.data: DEBUG
+    org.mongodb.driver.protocol.command: DEBUG
 
 # Rutas default para los endpoints
 api:

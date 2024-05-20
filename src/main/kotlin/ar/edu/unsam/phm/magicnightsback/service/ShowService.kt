@@ -45,9 +45,9 @@ class ShowService(
 
     @Transactional(Transactional.TxType.NEVER)
     fun findAll(params: ShowRequest): List<Show> {
-        val shows = showRepository.findAll()
+        val shows = showRepository.findAll().map { getHydrousShow(it) }
         val filteredShows = filter(shows, params)
-        return filteredShows.map { it }
+        return filteredShows
     }
 
     @Transactional(Transactional.TxType.NEVER)

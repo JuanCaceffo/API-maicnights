@@ -23,13 +23,6 @@ class ShowController(
     @Autowired
     var showDateService: ShowDateService,
 
-
-    @Autowired
-    var ticketService: TicketService,
-
-//    @Autowired
-//    var userService: UserService,
-//
     @Autowired
     var commentService: CommentService
 ) {
