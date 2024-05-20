@@ -32,8 +32,7 @@ interface ShowRepository : CrudRepository<Show, Long>, CustomCrudRepository<Show
         SELECT
             SD.id
         FROM ShowDate SD
-        WHERE SD.show.id = :id
-        
+        WHERE SD.show.id = :id        
     """)
     fun showDateIdsByShowId(@Param("id") id: Long): Iterable<Long>
 

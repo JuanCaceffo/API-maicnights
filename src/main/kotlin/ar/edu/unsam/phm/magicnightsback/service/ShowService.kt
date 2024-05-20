@@ -69,8 +69,8 @@ class ShowService(
         val showCost = showDateRepository.showCost(id).getOrNull() ?: 1.0
         val showSales = ticketRepository.totalShowSales(id).getOrNull() ?: 0.0
 
-        val showDatesSoldOut = showRepository.showDateIdsByShowId(id).map{it}.filter {
-            showDateService.isSoldOut(id)
+        val showDatesSoldOut = showRepository.showDateIdsByShowId(id).map{it}.filter { showDateId ->
+            showDateService.isSoldOut(showDateId)
         }.size
 
         return StatsDTO(
