@@ -3,13 +3,11 @@ package ar.edu.unsam.phm.magicnightsback.service
 import ar.edu.unsam.phm.magicnightsback.controller.ShowController.ShowRequest
 import ar.edu.unsam.phm.magicnightsback.domain.*
 import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowExtraDataDTO
+import ar.edu.unsam.phm.magicnightsback.domain.dto.StatsDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.toDTO
 import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
 import ar.edu.unsam.phm.magicnightsback.exceptions.NotFoundException
-import ar.edu.unsam.phm.magicnightsback.repository.BandRepository
-import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
-import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
-import jakarta.transaction.Transactional
+import ar.edu.unsam.phm.magicnightsback.repository.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import kotlin.jvm.optionals.getOrNull
@@ -22,6 +20,10 @@ class ShowService(
 
     @Autowired private var bandRepository: BandRepository,
 
+    @Autowired private var ticketRepository: TicketRepository,
+
+    @Autowired private var showDateRepository: ShowDateRepository,
+
     @Autowired private var userService: UserService,
 
     @Autowired private var ticketService: TicketService,
@@ -30,21 +32,18 @@ class ShowService(
 
     @Autowired private var commentService: CommentService
 ) {
-    
+
     fun findById(id: Long): Show? = showRepository.findById(id).getOrNull()
 
-    
     fun findByIdOrError(id: Long): Show =
         findById(id) ?: throw NotFoundException(FindError.NOT_FOUND(id, Show::class.toString()))
 
-    
     fun findAll(params: ShowRequest): List<Show> {
         val shows = showRepository.findAll()
         val filteredShows = filter(shows, params)
         return filteredShows.map { it }
     }
 
-    
     fun getShowExtraData(showId: Long, userId: Long): ShowExtraDataDTO {
         val dates = showDateService.findAllByShowId(showId).map { it.toDTO() }
         val commentsStats = commentService.getCommentStadisticsOfShow(showId)
@@ -57,6 +56,28 @@ class ShowService(
             commentsStats.rating,
             commentsStats.totalComments,
             dates
+        )
+    }
+
+    fun addPendingAttendee(id: Long) {
+        val show = findByIdOrError(id)
+        show.addPendingAttendee()
+    }
+
+    fun getKPIs(id: Long): StatsDTO {
+        val show = findByIdOrError(id)
+        val showCost = showDateRepository.showCost(id).getOrNull() ?: 1.0
+        val showSales = ticketRepository.totalShowSales(id).getOrNull() ?: 0.0
+
+        val showDatesSoldOut = showRepository.showDateIdsByShowId(id).map{it}.filter {
+            showDateService.isSoldOut(id)
+        }.size
+
+        return StatsDTO(
+            ticketRepository.totalShowSales(id).getOrNull() ?: 0.0,
+            show.pendingAttendees,
+            (showSales / if (showCost == 0.0) 1.0 else showCost) * 100,
+            showDatesSoldOut
         )
     }
 

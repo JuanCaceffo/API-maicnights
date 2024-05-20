@@ -50,7 +50,10 @@ class CartService(
         cart[userId]?.forEach {
             it.buyDate = LocalDateTime.now()
         }
-        cart[userId]?.forEach { ticketService.save(it) }
+        cart[userId]?.forEach {
+            seatService.updateUsedCapacityById(it.seat.id, 1)
+            ticketService.save(it)
+        }
         clearAll(userId)
     }
 

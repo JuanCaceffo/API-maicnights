@@ -1,6 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.repository
 
 import ar.edu.unsam.phm.magicnightsback.domain.Ticket
+import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
@@ -64,8 +65,26 @@ interface TicketRepository : CrudRepository<Ticket, Long> {
         @Param("userId") userId: Long
     ): Iterable<String>
 
-//    fun countAllPricesByShowId(showId: Long)
+    @Query(
+        """
+            SELECT 
+                SUM(T.price) 
+                FROM Ticket T
+                INNER JOIN ShowDate SD
+                ON SD.id = T.showDate.id
+                WHERE SD.show.id = :showId
+        """
+    )
+    fun totalShowSales(@Param("showId") showId: Long): Optional<Double>
+
+    @Query("""
+       SELECT 
+        COUNT(*) AS taken_capacity
+        FROM Ticket TK        
+        WHERE TK.showDate.id = :id        
+    """)
+    fun showDateTakenCapacity(@Param("id") id:Long): Int
 
 ////    fun findByUserIdAndStatusIs(userId: UUID, status: TicketStatus): Iterable<Ticket>
-//    fun countBySeatAndShowDateId(seat:SeatTypes, showDateId: Long) : Int
+
 }

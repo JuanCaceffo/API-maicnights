@@ -29,7 +29,7 @@ data class Seat(
     fun modifyUsedCapacity(value: Int) {
         validateMaxCapacity()
         validateUsedCapacityIsNotUnderZero(value)
-        usedCapacity.plus(value)
+        usedCapacity += value
     }
 
     fun available() = maxCapacity.minus(usedCapacity)
