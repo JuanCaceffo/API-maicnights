@@ -7,9 +7,7 @@ import ar.edu.unsam.phm.magicnightsback.service.ShowDateService
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import java.time.LocalDate
-import java.time.ZoneId
-import java.time.ZoneOffset
+import java.time.*
 import java.util.Date
 import kotlin.jvm.optionals.getOrNull
 
@@ -176,7 +174,10 @@ class MagicNightsBootstrap(
                 }
 
                 is ShowDate -> {
-                    val showDate = showDateRepository.getByDateAndShowId(it.date.plusHours(3L).toLocalDate(), it.show.id).getOrNull()
+                    val startOfDay = LocalDateTime.of(it.date.toLocalDate(), LocalTime.MIN)
+                    val endOfDay = LocalDateTime.of(it.date.plusHours(3L).toLocalDate().plusDays(1), LocalTime.MIN)
+
+                    val showDate = showDateRepository.getByDateAndShowId(startOfDay,endOfDay, it.show.id).getOrNull()
                     showDate == null
                 }
 
