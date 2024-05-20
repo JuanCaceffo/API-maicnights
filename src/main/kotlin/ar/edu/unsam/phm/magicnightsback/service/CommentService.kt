@@ -22,6 +22,9 @@ import kotlin.jvm.optionals.getOrNull
 @Service
 class CommentService {
     @Autowired
+    lateinit var hydrousService: HydrousService
+
+    @Autowired
     lateinit var commentsRepository: CommentRepository
 
     @Autowired
@@ -46,7 +49,7 @@ class CommentService {
 
     @Transactional(Transactional.TxType.NEVER)
     fun findByUserId(id: Long): Set<CommentDTO> =
-        commentsRepository.findByUserId(id).map { it.toUserCommentDTO() }.toSet()
+        commentsRepository.findByUserId(id).map { hydrousService.getHydrousComment(it, ShowFieldsToHydrous.BAND).toUserCommentDTO() }.toSet()
 
     @Transactional(Transactional.TxType.NEVER)
     fun findByShowId(id: String): Set<CommentDTO> =

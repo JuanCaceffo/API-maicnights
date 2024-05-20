@@ -10,8 +10,7 @@ import java.time.LocalDateTime
 data class Comment(
     @ManyToOne(fetch = FetchType.LAZY)
     val user: User,
-    @Transient
-    val show: Show,
+    val showId: String,
     @Column(length = 400)
     var text: String = "",
     val rating: Double = 0.0
@@ -20,11 +19,12 @@ data class Comment(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
     var date: LocalDateTime = LocalDateTime.now()
-    val showId = show.id
+    @Transient
+    lateinit var show: Show
 
-    constructor(user: User, show: Show, dto: CommentDTO) : this(
+    constructor(user: User, showId: String, dto: CommentDTO) : this(
         user = user,
-        show = show,
+        showId = showId,
         text = dto.text,
         rating = dto.rating
     ) {

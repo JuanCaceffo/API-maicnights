@@ -16,12 +16,11 @@ class ShowDateService(
     @Autowired
     private val showDateRepository: ShowDateRepository,
 
-
     @Autowired
-    private val showService: ShowService
+    private val hydrousService: HydrousService
 ) {
 
-    fun getHydrousShowDate(showDate: ShowDate)= showDate.apply { show = showService.getHydrousShow(show) }
+    fun getHydrousShowDate(showDate: ShowDate)= showDate.apply { show = hydrousService.getHydrousShow(show) }
 
     fun getAllHydrousShowDates() = showDateRepository.findAll().map { showDate ->  getHydrousShowDate(showDate)}
 

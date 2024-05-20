@@ -3,10 +3,7 @@ package ar.edu.unsam.phm.magicnightsback.controller
 
 import ar.edu.unsam.phm.magicnightsback.domain.dto.*
 import ar.edu.unsam.phm.magicnightsback.exceptions.NotFoundException
-import ar.edu.unsam.phm.magicnightsback.service.CommentService
-import ar.edu.unsam.phm.magicnightsback.service.ShowDateService
-import ar.edu.unsam.phm.magicnightsback.service.ShowService
-import ar.edu.unsam.phm.magicnightsback.service.TicketService
+import ar.edu.unsam.phm.magicnightsback.service.*
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,7 +21,8 @@ class ShowController(
     var showDateService: ShowDateService,
 
     @Autowired
-    var commentService: CommentService
+    var commentService: CommentService,
+    private val hydrousService: HydrousService
 ) {
     @GetMapping("/{id}")
     @Operation(summary = "Returns a show by id")
@@ -42,7 +40,7 @@ class ShowController(
             showComments
         )
 
-        return showService.findById(id)?.toShowDetailsDTO(stats) ?: throw NotFoundException("") //TODO: return showService.findByIdOrError(id).toShowDetailsDTO(stats)
+        return hydrousService.getHydrousShow(showService.findById(id)!!).toShowDetailsDTO(stats) ?: throw NotFoundException("") //TODO: return showService.findByIdOrError(id).toShowDetailsDTO(stats)
     }
 
 

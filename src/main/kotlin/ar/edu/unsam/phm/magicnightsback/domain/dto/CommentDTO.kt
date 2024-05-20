@@ -29,13 +29,13 @@ private fun Comment.toDTO(): CommentDTO = CommentDTO(
 
 fun Comment.toUserCommentDTO(): CommentDTO = this.toDTO().apply {
     userId = this@toUserCommentDTO.user.id
-    showId = this@toUserCommentDTO.show.id
+    showId = this@toUserCommentDTO.showId
     imgSrc = this@toUserCommentDTO.show.imgUrl()
     name = this@toUserCommentDTO.show.name
 }
 
 fun Comment.toShowCommentDTO(): CommentDTO = this.toDTO().apply {
-    showId = this@toShowCommentDTO.show.id
+    showId = this@toShowCommentDTO.showId
     imgSrc = this@toShowCommentDTO.user.profileImgUrl
     name = this@toShowCommentDTO.user.firstName
 }

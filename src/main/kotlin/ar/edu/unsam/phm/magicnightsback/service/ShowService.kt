@@ -29,23 +29,17 @@ class ShowService(
 
     @Autowired private var showDateRepository: ShowDateRepository,
 
-    @Autowired private var commentService: CommentService
+    @Autowired private var commentService: CommentService,
+    private val hydrousService: HydrousService
 ) {
-    @Transactional(Transactional.TxType.NEVER)
     fun findById(id: String): Show? = showRepository.findById(id).getOrNull()
 
 //    @Transactional(Transactional.TxType.NEVER)
 //    fun findByIdOrError(id: String): Show =
 //        findById(id) ?: throw NotFoundException(FindError.NOT_FOUND(id, Show::class.toString()))
 
-    fun getHydrousShow(show: Show) = show.apply {
-        facility = facilityRepository.findById(show.facilityId).get()
-        band = bandRepository.findById(show.bandId).get()
-    }
-
-    @Transactional(Transactional.TxType.NEVER)
     fun findAll(params: ShowRequest): List<Show> {
-        val shows = showRepository.findAll().map { getHydrousShow(it) }
+        val shows = showRepository.findAll().map { hydrousService.getHydrousShow(it) }
         val filteredShows = filter(shows, params)
         return filteredShows
     }
