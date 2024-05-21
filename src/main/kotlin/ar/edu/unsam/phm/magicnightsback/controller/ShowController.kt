@@ -27,11 +27,13 @@ class ShowController(
         val commentsStats = commentService.getCommentStadisticsOfShow(id)
         val dates = showDateService.findAllByShowId(id).map { it.toDTO() }
         val showComments = commentService.findByShowId(id)
+        val soldOutStatus = showService.isSoldOut(id)
 
         val stats = ShowDetailsExtraDataDTO(
             commentsStats.rating,
             commentsStats.totalComments,
             dates,
+            soldOutStatus,
             showComments
         )
 
@@ -49,7 +51,7 @@ class ShowController(
 
     @PatchMapping("{id}/add_pending")
     @Operation(summary = "Adds a pending Attendee to a Show")
-    fun addPendingAttendee(@PathVariable id: Long, @RequestParam userId: Long) {
+    fun addPendingAttendee(@PathVariable id: Long) {
         showService.addPendingAttendee(id)
     }
 
@@ -78,11 +80,13 @@ class ShowController(
         val commentsStats = commentService.getCommentStadisticsOfShow(showId)
         val dates = showDateService.findAllByShowId(showId).map { it.toDTO() }
         val seats = show.facility.seats
+        val soldOutStatus = showService.isSoldOut(showId)
 
         val stats = ShowDetailsExtraDataDTO(
             commentsStats.rating,
             commentsStats.totalComments,
-            dates
+            dates,
+            soldOutStatus
         )
 
         val adminSummary =
@@ -106,7 +110,6 @@ class ShowController(
         @RequestParam(required = false, defaultValue = "false") val withFriends: Boolean = false
     )
 }
-
 
 ////    @GetMapping("/admin/show/{id}/stats")
 ////    @Operation(summary = "Devuelve los stats de un show según su id (dashboard Admin)")

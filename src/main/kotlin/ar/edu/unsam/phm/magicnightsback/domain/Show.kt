@@ -127,10 +127,6 @@ data class Show(
         pendingAttendees += 1
     }
 
-    fun clearAttendees() {
-        pendingAttendees = 0
-    }
-
     private fun baseCostPerSeat() = cost / facility.totalCapacity()
     private fun baseSeatCost(seat: Seat) = baseCostPerSeat() + seat.price
     fun allTicketPrices() = facility.seats.map { currentTicketPrice(it) }

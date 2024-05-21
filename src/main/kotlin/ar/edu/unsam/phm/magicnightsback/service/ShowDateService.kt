@@ -30,6 +30,12 @@ class ShowDateService(
         return totalCapacity.minus(takenCapacity) <= 0
     }
 
+    fun isShowSoldOut(showId: Long): Boolean {
+        return findAllByShowId(showId).all {
+            isSoldOut(it.id)
+        }
+    }
+
     fun showCost(id: Long): Double =
         showDateRepository.showCost(id).getOrDefault(0.0)
 }

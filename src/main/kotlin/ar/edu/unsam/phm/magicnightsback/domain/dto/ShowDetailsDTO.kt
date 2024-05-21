@@ -15,13 +15,15 @@ data class ShowDetailsDTO(
     override val totalComments: Int,
     override val geolocation: String,
     override val comments: Set<CommentDTO>? = null,
-    val adminSummary: List<AdminSummary>? = null
+    val adminSummary: List<AdminSummary>? = null,
+    val isSoldOut: Boolean
 ) : ShowData, ShowStats, ShowDetails, ShowDates
 
 data class ShowDetailsExtraDataDTO(
     override val rating: Double,
     override val totalComments: Int,
     val dates: List<ShowDateDTO>,
+    val isSoldOut: Boolean,
     val comments: Set<CommentDTO>? = null
 ): ShowStats
 
@@ -37,7 +39,8 @@ fun Show.toShowDetailsDTO(stats: ShowDetailsExtraDataDTO) = ShowDetailsDTO(
     stats.totalComments,
     facility.location.toGeolocation(),
     stats.comments,
-    adminSummary = null
+    adminSummary = null,
+    stats.isSoldOut
 )
 
 fun Show.toShowAdminDetailsDTO(stats: ShowDetailsExtraDataDTO,adminSummary: List<AdminSummary>) = ShowDetailsDTO (
@@ -52,5 +55,6 @@ fun Show.toShowAdminDetailsDTO(stats: ShowDetailsExtraDataDTO,adminSummary: List
     stats.totalComments,
     facility.location.toGeolocation(),
     comments = null,
-    adminSummary
+    adminSummary,
+    stats.isSoldOut
 )

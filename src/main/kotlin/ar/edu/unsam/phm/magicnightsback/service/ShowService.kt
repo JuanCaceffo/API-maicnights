@@ -52,6 +52,7 @@ class ShowService(
     fun addPendingAttendee(id: Long) {
         val show = findByIdOrError(id)
         show.addPendingAttendee()
+        showRepository.save(show)
     }
 
     fun getKPIs(id: Long): List<ShowStatsDTO> {
@@ -74,6 +75,8 @@ class ShowService(
             .statSoldOut(showDatesSoldOut, Pivots(50.0, 75.0), showDatesIds.size)
             .build()
     }
+
+    fun isSoldOut(showId: Long) = showDateService.isShowSoldOut(showId)
 
     private fun filter(shows: Iterable<Show>, params: ShowRequest): List<Show> {
         val filter = createFilter(params)
