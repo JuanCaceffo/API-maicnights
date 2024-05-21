@@ -115,7 +115,7 @@ data class Show(
     var imgUrl = "${band.name.removeSpaces().lowercase()}.jpg"
 
     @Column(nullable = false)
-    var cost = 0.0
+    var cost = band.cost.plus(facility.cost())
 
     @Column(nullable = false)
     var pendingAttendees = 0
@@ -123,14 +123,14 @@ data class Show(
     // Seat methods
     fun haveSeat(seat: Seat) = facility.seats.any { it.id == seat.id }
     fun currentTicketPrice(seat: Seat) = baseSeatCost(seat) * rentability.factor
-
-    @PrePersist
-    @PreUpdate
-    private fun baseCost() {
-        cost = (band.cost).plus(facility.cost())
+    fun addPendingAttendee() {
+        pendingAttendees += 1
     }
 
-    fun addPendingAttendee() { pendingAttendees += 1 }
+    fun clearAttendees() {
+        pendingAttendees = 0
+    }
+
     private fun baseCostPerSeat() = cost / facility.totalCapacity()
     private fun baseSeatCost(seat: Seat) = baseCostPerSeat() + seat.price
     fun allTicketPrices() = facility.seats.map { currentTicketPrice(it) }

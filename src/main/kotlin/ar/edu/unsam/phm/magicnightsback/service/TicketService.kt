@@ -1,7 +1,5 @@
 package ar.edu.unsam.phm.magicnightsback.service
-//
-//import ar.edu.unsam.phm.magicnights.utils.stringMe
-//import ar.edu.unsam.phm.magicnightsback.domain.ShoppingCart
+
 import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 //import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
 //import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
@@ -10,41 +8,33 @@ import ar.edu.unsam.phm.magicnightsback.repository.TicketRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
-//import java.time.LocalDateTime
-//import kotlin.jvm.optionals.getOrNull
-//
 @Service
 class TicketService(
-    @Autowired
-    private val ticketRepository: TicketRepository,
-    @Autowired
-    private val showDateService: ShowDateService,
-    @Autowired
-    private val userService: UserService
+    @Autowired private val ticketRepository: TicketRepository,
+    @Autowired private val userService: UserService
 ) {
-    
     fun findByUserId(userId: Long): List<Ticket> =
         ticketRepository.findByUserId(userId).map { it }
 
-    
     fun findUsersAttendingToShow(showId: Long): Set<Long> =
         ticketRepository.findByShowDateShowId(showId).map { it.user.id }.toSet()
 
-    
     fun findFriendsAttendingToShow(showId: Long, userId: Long): Set<Long> {
         val user = userService.findByIdOrError(userId)
         return findUsersAttendingToShow(showId).filter { user.isMyFriend(it) }.toSet()
     }
 
-    
     fun countFriendsAttendingToShow(showId:Long, userId:Long):Int =
         ticketRepository.countFriendsByShow(showId, userId).getOrNull() ?: 0
 
-    
     fun getTopFriendsImages(showId:Long, userId:Long): List<String> =
         ticketRepository.getTopFriendsImages(showId, userId).map { it }
+
+    fun totalShowSales(showId:Long): Double =
+        ticketRepository.totalShowSales(showId).getOrDefault(0.0)
 
     @Transactional(Transactional.TxType.REQUIRED)
     fun save(ticket: Ticket) {

@@ -23,7 +23,7 @@ abstract class Facility(
         joinColumns = [JoinColumn(name = "facility_id")],
         inverseJoinColumns = [JoinColumn(name = "seat_id")]
     )
-    val seats: Set<Seat>
+    val seats: List<Seat>
 ) {
     init {
         seats.forEach { validateSeatType(it) }
@@ -37,6 +37,7 @@ abstract class Facility(
     fun fixedCostVariant(): Double = 0.0
     fun cost() = fixedPrice + fixedCostVariant()
     fun totalCapacity() = seats.sumOf { it.maxCapacity }
+    fun soldOut() = seats.all { it.available() == 0 }
     abstract fun validSeatTypes(): List<SeatTypes>
     fun validateSeatType(seat: Seat) {
         if (seat.type !in validSeatTypes()) {
@@ -50,7 +51,7 @@ abstract class Facility(
 class Stadium(
     name: String,
     location: Point,
-    seats: Set<Seat>,
+    seats: List<Seat>,
     @Column(nullable = false)
     override var fixedPrice: Double
 ) : Facility(name, location, seats) {
@@ -68,7 +69,7 @@ class Stadium(
 class Theater(
     name: String,
     location: Point,
-    seats: Set<Seat>,
+    seats: List<Seat>,
     @Nullable
     var hasGoodAcoustics: Boolean = false
 ) : Facility(name, location, seats) {

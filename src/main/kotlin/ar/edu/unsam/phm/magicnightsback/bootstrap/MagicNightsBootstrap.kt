@@ -78,7 +78,7 @@ class MagicNightsBootstrap(
         showDatesCreator.createShowDate(ShowDateFactoryTypes.PLUS, initShows["showcito"]!!),
     ).apply { addAll(showDatesCreator.createShowDates(ShowDateFactoryTypes.PLUS, initShows["demons"]!!, 3)) }
 
-    val initComments = setOf(
+    val initComments = listOf(
         Comment(initUsers["pablo"]!!, initShows["cachen"]!!, """La noche con La vela fue simplemente espectacular. Desde el primer acorde hasta
         |el último, la banda nos llevó en un viaje emocionante a través de su música icónica. Sebas irradiaba
         |energía en el escenario, y cada canción resonaba en lo más profundo de mi ser. La atmósfera estaba cargada
@@ -87,10 +87,10 @@ class MagicNightsBootstrap(
         Comment(initUsers["ana"]!!, initShows["cachen"]!!, "Pésimo. El sonido anduvo mal todo el show", 1.5)
     )
 
-    fun initTickets(): Set<Ticket> {
+    fun initTickets(): List<Ticket> {
         val showDates = showDateRepository.findAll().map{it}
 
-        return setOf(
+        return listOf(
         ticketCreator.createTicket(TicketFactoryTypes.NORMAL, initUsers["sol"]!!, showDates[6]!!, showDates[6].show.facility.seats.toList()[0]),
         ticketCreator.createTicket(TicketFactoryTypes.NORMAL, initUsers["ana"]!!, showDates[6]!!, showDates[6]!!.show.facility.seats.toList()[1]),
         ticketCreator.createTicket(TicketFactoryTypes.NORMAL, initUsers["carolina"]!!, showDates[6]!!, showDates[6]!!.show.facility.seats.toList()[0]),
@@ -109,16 +109,16 @@ class MagicNightsBootstrap(
     }
 
     override fun afterPropertiesSet() {
-        persist(initFacilities.values.toSet())
+        persist(initFacilities.values.toList())
         println("All facilities have been initialized")
-        persist(initBands.values.toSet())
+        persist(initBands.values.toList())
         println("All bands have been initialized")
-        persist(initShows.values.toSet())
+        persist(initShows.values.toList())
         println("All shows have been initialized")
-        persist(initShowDates.toSet())
+        persist(initShowDates)
         println("All showDates have been initialized")
         setFriends()
-        persist(initUsers.values.toSet())
+        persist(initUsers.values.toList())
         println("All users have been initialized")
         persist(initTickets())
         println("All tickets have been initialized")
@@ -126,7 +126,7 @@ class MagicNightsBootstrap(
         println("All comments have been initialized")
     }
 
-    private fun <T> persist(objects: Set<T>) {
+    private fun <T> persist(objects: List<T>) {
         filterExistingObjects(objects).forEach {
             when (it) {
                 is Seat -> seatRepository.save(it)
@@ -141,7 +141,7 @@ class MagicNightsBootstrap(
         }
     }
 
-    private fun <T> filterExistingObjects(objects: Set<T>) =
+    private fun <T> filterExistingObjects(objects: List<T>) =
         objects.filter {
             when (it) {
                 is Seat -> {

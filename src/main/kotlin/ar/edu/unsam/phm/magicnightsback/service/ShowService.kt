@@ -4,7 +4,6 @@ import ar.edu.unsam.phm.magicnightsback.controller.ShowController.ShowRequest
 import ar.edu.unsam.phm.magicnightsback.domain.*
 import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowExtraDataDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowStatsDTO
-import ar.edu.unsam.phm.magicnightsback.domain.dto.StatsDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.toDTO
 import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
 import ar.edu.unsam.phm.magicnightsback.exceptions.NotFoundException
@@ -16,21 +15,11 @@ import kotlin.jvm.optionals.getOrNull
 @Service
 class ShowService(
     @Autowired private var facilityRepository: FacilityRepository,
-
     @Autowired private var showRepository: ShowRepository,
-
     @Autowired private var bandRepository: BandRepository,
-
-    @Autowired private var ticketRepository: TicketRepository,
-
-    @Autowired private var showDateRepository: ShowDateRepository,
-
     @Autowired private var userService: UserService,
-
     @Autowired private var ticketService: TicketService,
-
     @Autowired private var showDateService: ShowDateService,
-
     @Autowired private var commentService: CommentService
 ) {
 
@@ -67,23 +56,22 @@ class ShowService(
 
     fun getKPIs(id: Long): List<ShowStatsDTO> {
         val show = findByIdOrError(id)
-        val showCost = showDateRepository.showCost(id).getOrNull() ?: 1.0
-        val showSales = ticketRepository.totalShowSales(id).getOrNull() ?: 0.0
-        val totalDates = showRepository.showDateIdsByShowId(id).map{it}
-
-        val showDatesSoldOut = totalDates.filter { showDateId ->
+        val pendingAttendees = show.pendingAttendees
+        val showCost = showDateService.showCost(id)
+        val showSales = ticketService.totalShowSales(id)
+        val showDatesIds = showRepository.showDateIdsByShowId(id).map { it }
+        val showDatesSoldOut = showDatesIds.filter { showDateId ->
             showDateService.isSoldOut(showDateId)
         }.size
 
-        val totalSales = ticketRepository.totalShowSales(id).getOrNull() ?: 0.0
-        val pendingAttendees = show.pendingAttendees
-        val rentability = (showSales / if (showCost == 0.0) 1.0 else (showCost * totalDates.size )) * 100
+        val grossIncome = showSales - showCost
+        val rentability = (grossIncome / if (showCost != 0.0) showCost else 1.0) * 100
 
         return AdminStatBuilder()
-            .statSales(totalSales, Pivots(1000000.0, 2000000.0))
+            .statSales(showSales, Pivots(1000000.0, 2000000.0))
             .statPending(pendingAttendees, Pivots(0.0, 50.0), show)
             .statRentability(rentability, Pivots(100.0, 150.0))
-            .statSoldOut(showDatesSoldOut, Pivots(50.0, 75.0), totalDates.size)
+            .statSoldOut(showDatesSoldOut, Pivots(50.0, 75.0), showDatesIds.size)
             .build()
     }
 
