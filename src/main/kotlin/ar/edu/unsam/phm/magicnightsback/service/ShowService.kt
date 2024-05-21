@@ -91,8 +91,6 @@ class ShowService(
             if (user != null && params.withFriends) addFilterCondition(WithFriends(user.id, ticketService))
         }
     }
-
-
 }
 //    @Autowired
 //    private lateinit var userRepository: UserRepository
@@ -122,10 +120,7 @@ class ShowService(
 ////    }
 //
 //    
-//    fun findByIdAdmin(showId: Long, userId: Long): Show {
-//        userService.validateAdminStatus(userId)
-//        return findById(showId)
-//    }
+
 //
 //    
 //    fun findByName(name: String): Show = validateOptionalIsNotNull(showRepository.findByNameEquals(name))

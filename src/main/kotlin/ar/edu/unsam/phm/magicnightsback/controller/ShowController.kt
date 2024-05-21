@@ -2,10 +2,7 @@ package ar.edu.unsam.phm.magicnightsback.controller
 
 
 import ar.edu.unsam.phm.magicnightsback.domain.dto.*
-import ar.edu.unsam.phm.magicnightsback.service.CommentService
-import ar.edu.unsam.phm.magicnightsback.service.ShowDateService
-import ar.edu.unsam.phm.magicnightsback.service.ShowService
-import ar.edu.unsam.phm.magicnightsback.service.TicketService
+import ar.edu.unsam.phm.magicnightsback.service.*
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,21 +13,11 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("\${api.show}")
 @Tag(name = "Show", description = "Show related operations")
 class ShowController(
-    @Autowired
-    var showService: ShowService,
-
-    @Autowired
-    var showDateService: ShowDateService,
-
-
-    @Autowired
-    var ticketService: TicketService,
-
-//    @Autowired
-//    var userService: UserService,
-//
-    @Autowired
-    var commentService: CommentService
+    @Autowired var showService: ShowService,
+    @Autowired var showDateService: ShowDateService,
+    @Autowired var commentService: CommentService,
+    @Autowired var userService: UserService,
+    @Autowired var ticketService: TicketService
 ) {
     @GetMapping("/{id}")
     @Operation(summary = "Returns a show by id")
@@ -71,9 +58,35 @@ class ShowController(
     fun findShowDatesByShowId(@PathVariable id: Long) =
         showDateService.findAllByShowId(id).map { it.toDTO() }
 
-    @GetMapping("{id}/kpi")
+    @GetMapping("{showId}/user/{userId}/kpi")
     @Operation(summary = "Returns KPIs of a Show")
-    fun getKPIs(@PathVariable id: Long) = showService.getKPIs(id)
+    fun getKPIs(@PathVariable showId: Long, @PathVariable userId: Long): List<ShowStatsDTO> {
+        userService.validateAdminStatus(userId)
+        return showService.getKPIs(showId)
+    }
+
+    @GetMapping("{showId}/user/{userId}")
+    @Operation(summary = "Show details (Admin)")
+    fun getShowByIdForAdmin(@PathVariable showId: Long, @PathVariable userId: Long): ShowDetailsDTO {
+        userService.validateAdminStatus(userId)
+
+        val ticketsSold = ticketService.ticketSalesCountByShowId(showId)
+        val commentsStats = commentService.getCommentStadisticsOfShow(showId)
+        val dates = showDateService.findAllByShowId(showId).map { it.toDTO() }
+
+        val stats = ShowDetailsExtraDataDTO(
+            commentsStats.rating,
+            commentsStats.totalComments,
+            dates
+        )
+
+        val adminSummary = listOf(
+            AdminSummary("Entradas vendidas:", ticketsSold.toDouble())
+        )
+
+
+        return showService.findByIdOrError(showId).toShowAdminDetailsDTO(stats, adminSummary)
+    }
 
     data class ShowRequest(
         @RequestParam(required = false) val userId: Long = 0L,
@@ -82,7 +95,6 @@ class ShowController(
         @RequestParam(required = false, defaultValue = "false") val withFriends: Boolean = false
     )
 }
-
 
 
 ////    @GetMapping("/admin/show/{id}/stats")
@@ -96,11 +108,6 @@ class ShowController(
 ////        return show.getAllStats(show)
 ////    }
 
-////    @GetMapping("/admin/show/{showId}")
-////    @Operation(summary = "Detalles de un show (dashboard Admin)")
-////    fun getShowByIdForAdmin(@PathVariable showId: Long, @RequestParam userId: Long): ShowAdminDetailsDTO {
-////        return showService.findByIdAdmin(showId, userId).toShowAdminDetailsDTO()
-////    }
 
 ////    @PostMapping("/admin/show/{showId}/new-show-date")
 ////    @Operation(summary = "Permite agregar una fecha")

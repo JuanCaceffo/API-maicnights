@@ -1,7 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.bootstrap
 
 import ar.edu.unsam.phm.magicnightsback.domain.*
-import ar.edu.unsam.phm.magicnightsback.domain.dto.CommentDTO
 import ar.edu.unsam.phm.magicnightsback.domain.factory.*
 import ar.edu.unsam.phm.magicnightsback.repository.*
 import org.springframework.beans.factory.InitializingBean
@@ -79,22 +78,46 @@ class MagicNightsBootstrap(
     ).apply { addAll(showDatesCreator.createShowDates(ShowDateFactoryTypes.PLUS, initShows["demons"]!!, 3)) }
 
     val initComments = listOf(
-        Comment(initUsers["pablo"]!!, initShows["cachen"]!!, """La noche con La vela fue simplemente espectacular. Desde el primer acorde hasta
+        Comment(
+            initUsers["pablo"]!!,
+            initShows["cachen"]!!,
+            """La noche con La vela fue simplemente espectacular. Desde el primer acorde hasta
         |el último, la banda nos llevó en un viaje emocionante a través de su música icónica. Sebas irradiaba
         |energía en el escenario, y cada canción resonaba en lo más profundo de mi ser. La atmósfera estaba cargada
-        |de emoción y camaradería, y el público se entregó por completo. 🎸🎶 #LaVela #ConciertoInolvidable""".trimMargin(), 5.0),
-        Comment(initUsers["sol"]!!, initShows["cachen"]!!, "Que divertido estuvo, la pase re bien con mis amigos.", 4.5),
+        |de emoción y camaradería, y el público se entregó por completo. 🎸🎶 #LaVela #ConciertoInolvidable""".trimMargin(),
+            5.0
+        ),
+        Comment(
+            initUsers["sol"]!!,
+            initShows["cachen"]!!,
+            "Que divertido estuvo, la pase re bien con mis amigos.",
+            4.5
+        ),
         Comment(initUsers["ana"]!!, initShows["cachen"]!!, "Pésimo. El sonido anduvo mal todo el show", 1.5)
     )
 
     fun initTickets(): List<Ticket> {
-        val showDates = showDateRepository.findAll().map{it}
+        val showDates = showDateRepository.findAll().map { it }
+        val seatsACDC = showDates[6].show.facility.seats
 
         return listOf(
-        ticketCreator.createTicket(TicketFactoryTypes.NORMAL, initUsers["sol"]!!, showDates[6]!!, showDates[6].show.facility.seats.toList()[0]),
-        ticketCreator.createTicket(TicketFactoryTypes.NORMAL, initUsers["ana"]!!, showDates[6]!!, showDates[6]!!.show.facility.seats.toList()[1]),
-        ticketCreator.createTicket(TicketFactoryTypes.NORMAL, initUsers["carolina"]!!, showDates[6]!!, showDates[6]!!.show.facility.seats.toList()[0]),
-    )}
+            ticketCreator.createTicket(
+                TicketFactoryTypes.NORMAL,
+                initUsers["sol"]!!,
+                showDates[6]!!,
+                seatRepository.save(seatsACDC[0].apply { modifyUsedCapacity(1) })),
+            ticketCreator.createTicket(
+                TicketFactoryTypes.NORMAL,
+                initUsers["ana"]!!,
+                showDates[6]!!,
+                seatRepository.save(seatsACDC[1].apply { modifyUsedCapacity(1) })),
+            ticketCreator.createTicket(
+                TicketFactoryTypes.NORMAL,
+                initUsers["carolina"]!!,
+                showDates[6]!!,
+                seatRepository.save(seatsACDC[0].apply { modifyUsedCapacity(1) })),
+        )
+    }
 
     fun setFriends() {
         initUsers["pablo"]?.apply {

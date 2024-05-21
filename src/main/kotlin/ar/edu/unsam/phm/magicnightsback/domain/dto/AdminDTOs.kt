@@ -1,4 +1,4 @@
-package ar.edu.unsam.phm.magicnightsback.domain.dto
+ package ar.edu.unsam.phm.magicnightsback.domain.dto
 
 import ar.edu.unsam.phm.magicnightsback.domain.enums.StatColors
 import java.util.UUID
@@ -15,6 +15,11 @@ import java.util.UUID
 //    val showCost: Double,
 //    val pendingAttendees: Int
 //)
+
+ data class AdminSummary(
+     val title: String,
+     val value: Double
+ )
 
 data class ShowStatsDTO (
     val id: UUID,

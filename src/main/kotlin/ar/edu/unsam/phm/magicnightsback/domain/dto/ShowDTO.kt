@@ -73,9 +73,7 @@ fun Show.toDTO(stats:ShowExtraDataDTO) = ShowDTO(
 //    val price: Double? = null,
 //)
 //
-//data class AdminSummaryDTO(
-//    val title: String, val description: String
-//)
+
 //
 //fun Show.data() = ShowData(
 //    this.id,

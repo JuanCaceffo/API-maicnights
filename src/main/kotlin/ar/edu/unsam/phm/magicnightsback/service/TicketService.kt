@@ -40,6 +40,12 @@ class TicketService(
     fun save(ticket: Ticket) {
         ticketRepository.save(ticket)
     }
+
+    fun ticketSalesCountByShowDateId(id: Long) =
+        ticketRepository.showDateTakenCapacity(id).getOrDefault(0)
+
+    fun ticketSalesCountByShowId(id: Long) =
+        ticketRepository.showTakenCapacity(id).getOrDefault(0)
 }
 //
 //    // Read methods

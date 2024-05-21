@@ -5,7 +5,6 @@ import ar.edu.unsam.phm.magicnightsback.domain.ShowDate
 import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
 import ar.edu.unsam.phm.magicnightsback.exceptions.ResponseFindException
 import ar.edu.unsam.phm.magicnightsback.repository.ShowDateRepository
-import ar.edu.unsam.phm.magicnightsback.repository.TicketRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import kotlin.jvm.optionals.getOrDefault
@@ -14,7 +13,7 @@ import kotlin.jvm.optionals.getOrNull
 @Service
 class ShowDateService(
     @Autowired private val showDateRepository: ShowDateRepository,
-    @Autowired private val ticketRepository: TicketRepository,
+    @Autowired private val ticketService: TicketService
 ) {
     fun findById(id: Long): ShowDate? =
         showDateRepository.findById(id).getOrNull()
@@ -26,9 +25,9 @@ class ShowDateService(
         showDateRepository.findAllByShowId(showId).map { it }
 
     fun isSoldOut(id: Long): Boolean {
-        val reputo = findByIdOrError(id).show.totalCapacity()
-        val megaputo = ticketRepository.showDateTakenCapacity(id)
-        return reputo.minus(megaputo) <= 0
+        val totalCapacity = findByIdOrError(id).show.totalCapacity()
+        val takenCapacity = ticketService.ticketSalesCountByShowDateId(id)
+        return totalCapacity.minus(takenCapacity) <= 0
     }
 
     fun showCost(id: Long): Double =

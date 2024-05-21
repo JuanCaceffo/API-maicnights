@@ -6,9 +6,6 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import java.util.*
 
 object UserError {
-
-
-    const val USER_IS_NOT_ADMIN = "Usuario sin privilegios"
     const val NONEXISTENT_USER_COMMENT = "El comentario que intenta eliminar no existe"
 }
 
@@ -61,6 +58,7 @@ object FindError {
     fun NAME_NOT_FOUND(username: String, name: String = "entity") = "Can't find $name with value: $username."
 
     const val BAD_CREDENTIALS = "Invalid user credentials."
+    const val USER_IS_NOT_ADMIN = "Invalid user privileges."
 
     const val ZERO_CAPACITY = "The seat capacity must be greater than zero."
 }
