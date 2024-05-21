@@ -2,9 +2,13 @@ package ar.edu.unsam.phm.magicnightsback.service
 
 import ar.edu.unsam.phm.magicnightsback.controller.ShowController.ShowRequest
 import ar.edu.unsam.phm.magicnightsback.domain.*
+import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowDateDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowExtraDataDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowStatsDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.toDTO
+import ar.edu.unsam.phm.magicnightsback.domain.enums.StatColors
+import ar.edu.unsam.phm.magicnightsback.exceptions.BadArgumentException
+import ar.edu.unsam.phm.magicnightsback.exceptions.CreationError
 import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
 import ar.edu.unsam.phm.magicnightsback.exceptions.NotFoundException
 import ar.edu.unsam.phm.magicnightsback.repository.*
@@ -77,6 +81,20 @@ class ShowService(
     }
 
     fun isSoldOut(showId: Long) = showDateService.isShowSoldOut(showId)
+
+    fun createShowDate(showId: Long, userId: Long,  body: ShowDateDTO) {
+        userService.validateAdminStatus(userId)
+        validateNewShowDate(showId)
+        val show = findByIdOrError(showId)
+        val showDate = ShowDate(show,body.date)
+        showDateService.addShowDate(showDate)
+    }
+
+    private fun validateNewShowDate(showId: Long) {
+        val kpis = getKPIs(showId)
+        val kpisConditions = kpis.all { it.color == StatColors.YELLOW }
+        if (kpisConditions) throw BadArgumentException(CreationError.NEW_DATE_INVALID_CONDITIONS)
+    }
 
     private fun filter(shows: Iterable<Show>, params: ShowRequest): List<Show> {
         val filter = createFilter(params)

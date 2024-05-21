@@ -103,6 +103,12 @@ class ShowController(
         return showService.findByIdOrError(showId).toShowAdminDetailsDTO(stats, adminSummary)
     }
 
+    @PostMapping("{showId}/new-show-date")
+    @Operation(summary = "Permite agregar una fecha")
+    fun createShowDate(@PathVariable showId: Long, @RequestParam userId: Long,@RequestBody body: ShowDateDTO) {
+       showService.createShowDate(showId, userId, body)
+    }
+
     data class ShowRequest(
         @RequestParam(required = false) val userId: Long = 0L,
         @RequestParam(required = false) val bandKeyword: String = "",
@@ -123,14 +129,14 @@ class ShowController(
 ////    }
 
 
-////    @PostMapping("/admin/show/{showId}/new-show-date")
-////    @Operation(summary = "Permite agregar una fecha")
-////    @ApiResponses(
-////        value = [
-////            ApiResponse(responseCode = "200", description = "Ok"),
-////            ApiResponse(responseCode = "400", description = ShowDateError.NEW_SHOW_INVALID_CONDITIONS),
-////        ]
-////    )
-////    fun createShowDate(@PathVariable showId: Long, @RequestParam userId: Long,@RequestBody body: ShowDateDTO) {
-////       showService.createShowDate(showId, userId, body)
-////    }
+//    @PostMapping("/admin/show/{showId}/new-show-date")
+//    @Operation(summary = "Permite agregar una fecha")
+//    @ApiResponses(
+//        value = [
+//            ApiResponse(responseCode = "200", description = "Ok"),
+//            ApiResponse(responseCode = "400", description = ShowDateError.NEW_SHOW_INVALID_CONDITIONS),
+//        ]
+//    )
+//    fun createShowDate(@PathVariable showId: Long, @RequestParam userId: Long,@RequestBody body: ShowDateDTO) {
+//       showService.createShowDate(showId, userId, body)
+//    }

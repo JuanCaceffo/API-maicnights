@@ -82,6 +82,7 @@ object CreationError {
     const val ALREADY_PASSED = "The date has already been passed"
     const val NO_CAPACITY = "Not enough seat capacity"
     const val NEGATIVE_PRICE = "Fixed price can't be negative."
+    const val NEW_DATE_INVALID_CONDITIONS = "The show does not meet necessary conditions to add a Date."
 }
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND)

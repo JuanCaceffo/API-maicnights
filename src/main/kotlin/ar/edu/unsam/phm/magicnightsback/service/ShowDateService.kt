@@ -2,6 +2,7 @@ package ar.edu.unsam.phm.magicnightsback.service
 
 import ar.edu.unsam.phm.magicnights.utils.stringMe
 import ar.edu.unsam.phm.magicnightsback.domain.ShowDate
+import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowDateDTO
 import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
 import ar.edu.unsam.phm.magicnightsback.exceptions.ResponseFindException
 import ar.edu.unsam.phm.magicnightsback.repository.ShowDateRepository
@@ -38,4 +39,8 @@ class ShowDateService(
 
     fun showCost(id: Long): Double =
         showDateRepository.showCost(id).getOrDefault(0.0)
+
+    fun addShowDate(showDate: ShowDate) {
+        showDateRepository.save(showDate)
+    }
 }
