@@ -43,9 +43,6 @@ class User(
     )
     val friends = mutableSetOf<User>()
 
-//    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-//    val tickets = mutableListOf<Ticket>()
-
     fun addFriend(user: User) {
         if (user != this) {
             friends.add(user)
@@ -57,17 +54,6 @@ class User(
     }
 
     fun isMyFriend(userId: Long) = friends.any { it.id == userId }
-
-    
-
-//    fun addTicket(ticket: Ticket) {
-//        tickets.add(ticket)
-//    }
-
-//    fun removeTicket(ticket: Ticket) {
-//        ticket.showDate.attendees.remove(this)
-//        tickets.remove(ticket)
-//    }
 
     fun age(): Int = birthday.calculateAge()
 

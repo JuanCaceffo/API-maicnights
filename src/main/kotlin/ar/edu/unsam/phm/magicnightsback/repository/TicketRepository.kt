@@ -22,7 +22,6 @@ interface TicketRepository : CrudRepository<Ticket, Long> {
 
     fun findByShowId(showId: String): Iterable<Ticket>
 
-
     @Query(
         """
             SELECT COUNT(DISTINCT tk.user.id) 
@@ -62,11 +61,24 @@ interface TicketRepository : CrudRepository<Ticket, Long> {
         @Param("userId") userId: Long
     ): Iterable<String>
 
+    @Query(
+        """
+            SELECT 
+                SUM(T.price) 
+                FROM Ticket T
+                WHERE T.showId = :showId
+        """
+    )
+    fun totalShowSales(@Param("showId") showId: String): Optional<Double>
+
+    @Query("""
+       SELECT 
+        COUNT(*) AS taken_capacity
+        FROM Ticket TK        
+        WHERE TK.showDateId = :id        
+    """)
+    fun showDateTakenCapacity(@Param("id") id:String): Int
+
 ////    fun findByUserIdAndStatusIs(userId: UUID, status: TicketStatus): Iterable<Ticket>
 //    fun countBySeatAndShowDateId(seat:SeatTypes, showDateId: String) : Int
 }
-
-
-//WHERE
-//pf.user_id = 1
-//);

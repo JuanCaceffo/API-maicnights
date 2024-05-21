@@ -9,6 +9,7 @@ import ar.edu.unsam.phm.magicnightsback.exceptions.BusinessException
 import ar.edu.unsam.phm.magicnightsback.exceptions.CreationError
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 @Service
 class CartService(
@@ -19,12 +20,12 @@ class CartService(
 ) {
     private val cart: HashMap<Long, MutableList<Ticket>> = HashMap()
 
-    @Transactional(Transactional.TxType.NEVER)
+    
     fun getCart(userId: Long): List<Ticket> {
         return cart[userId] ?: emptyList()
     }
 
-    @Transactional(Transactional.TxType.NEVER)
+    @Transactional(Transactional.TxType.REQUIRED)
     fun addAll(userId: Long, ticketsRequested: List<TicketRequestDTO>) {
         val user = userService.findByIdOrError(userId)
         val userCart = cart.getOrPut(userId) { mutableListOf() }
@@ -36,20 +37,34 @@ class CartService(
             validateReservation(showDate!!, seat, tkt.quantity) //TODO: Sacar !! cuando se habilite findByIdOrError
 
             repeat(tkt.quantity) {
-                userCart.add(Ticket(user, showDate, seat))
+                userCart.add(Ticket(user, showDate, seat).apply {
+                    price = showDate.show.currentTicketPrice(seat)
+                })
             }
         }
     }
 
+    @Transactional(Transactional.TxType.REQUIRED)
     fun buyAll(userId: Long) {
+        userService.findByIdOrError(userId).modifyBalance(totalPrice(userId))
+        cart[userId]?.forEach {
+            it.buyDate = LocalDateTime.now()
+        }
+        cart[userId]?.forEach {
+            seatService.updateUsedCapacityById(it.seat.id, 1)
+            ticketService.save(it)
+        }
+        clearAll(userId)
+    }
 
-//
-//        cart[userId]?.forEach {
-//            it.buyDate = LocalDateTime.now()
-//            it.price = it.showDate.currentPrice(it.seat)
-//        }
+    @Transactional(Transactional.TxType.REQUIRED)
+    fun clearAll(userId: Long) {
+        cart[userId]?.clear()
+    }
 
-        cart[userId]?.forEach { ticketService.save(it) }
+    @Transactional(Transactional.TxType.REQUIRED)
+    fun totalPrice(userId: Long): Double {
+        return cart[userId]?.sumOf { it.price } ?: 0.0
     }
 
     private fun seatReservations(seatType: SeatTypes) =
@@ -64,64 +79,3 @@ class CartService(
         }
     }
 }
-
-//
-
-////
-////    fun removeFromCart(userId: Long, ticketId: Long) {
-////        cart[userId]?.removeIf { it.id == ticketId }
-////    }
-////
-
-//
-
-//
-//
-////    @Transactional(Transactional.TxType.NEVER)
-////    fun getCartByUserId(userId:Long) = validateOptionalIsNotNull(cartRepo.findById(userId),"El carrito para el usuario de id ${userId} no fue encontrado")
-////
-////
-////    @Transactional(Transactional.TxType.NEVER)
-////    fun getTicketsCart(userId: Long): List<TicketDTO> {
-////        val user = userService.findById(userId)
-////        val tickets = cartRepo.getReservedTickets(userId)
-////        return  ticketService.getTicketsGroupedByShowDate(user,tickets)
-////    }
-////
-////    @Transactional(Transactional.TxType.REQUIRED)
-////    fun reserveTicket(userId: Long, ticketData: TicketCreateDTO) {
-////        val cart = getCartByUserId(userId)
-////        val show = validateOptionalIsNotNull(showRepo.findById(ticketData.showId))
-////        val showDate = show.getShowDateById(ticketData.showDateId)
-////        val seat = show.facility.getPlaceBySeatName(ticketData.seatTypeName.name).seatType
-////
-////        cart.reserveTicket(Ticket(show, showDate, seat,ticketData.quantity))
-////        cartRepo.save(cart)
-////    }
-////
-////    @Transactional(Transactional.TxType.REQUIRED)
-////    fun removeReserveTickets(userId: Long) {
-////        val cart = getCartByUserId(userId)
-////        cart.removeTickets()
-////        cartRepo.save(cart)
-////    }
-////
-////    @Transactional(Transactional.TxType.REQUIRED)
-////    fun buyReservedTickets(userId: Long) {
-////        val cart = getCartByUserId(userId)
-////        cart.buyReservedTickets()
-////        cartRepo.save(cart)
-////    }
-////
-////    @Transactional(Transactional.TxType.NEVER)
-////    fun reservedTicketsPrice(userId: Long): Double {
-////        val cart = getCartByUserId(userId)
-////        return cart.totalPrice()
-////    }
-////
-////    @Transactional(Transactional.TxType.NEVER)
-////    fun getTicketsSize(userId: Long): Int {
-////        val cart = getCartByUserId(userId)
-////        return cart.ticketsSize()
-////    }
-//}

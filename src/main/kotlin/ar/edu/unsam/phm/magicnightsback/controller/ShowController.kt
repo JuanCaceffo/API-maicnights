@@ -52,12 +52,20 @@ class ShowController(
         }
     }
 
+    @PatchMapping("{id}/add_pending")
+    @Operation(summary = "Adds a pending Attendee to a Show")
+    fun addPendingAttendee(@PathVariable id: Long, @RequestParam userId: Long) {
+        showService.addPendingAttendee(id)
+    }
+
     @GetMapping("{id}/showdates")
     @Operation(summary = "Returns all available show dates for a show")
     fun findShowDatesByShowId(@PathVariable id: String) =
         showDateService.findAllByShowId(id).map { it.toDTO() }
 
-
+    @GetMapping("{id}/kpi")
+    @Operation(summary = "Returns KPIs of a Show")
+    fun getKPIs(@PathVariable id: Long) = showService.getKPIs(id)
 
     data class ShowRequest(
         @RequestParam(required = false) val userId: Long = 0L,
@@ -67,19 +75,8 @@ class ShowController(
     )
 }
 
-////
-////    @GetMapping("/show/{id}")
-////    @Operation(summary = "Devuelve un show según su id")
-////    fun getShowById(
-////        @PathVariable id: Long,
-////        @RequestParam userId: Long = 0
-////    ): ShowDTO {
-////        val commentsStats = commentService.getCommentStadisticsOfShow(id)
-////        return showService.findById(id).toShowDetailsDTO(commentsStats)
-////    }
-////
 
-////
+
 ////    @GetMapping("/admin/show/{id}/stats")
 ////    @Operation(summary = "Devuelve los stats de un show según su id (dashboard Admin)")
 ////    fun getShowStatsById(
@@ -90,13 +87,13 @@ class ShowController(
 ////        val show = showService.findById(id)
 ////        return show.getAllStats(show)
 ////    }
-////
+
 ////    @GetMapping("/admin/show/{showId}")
 ////    @Operation(summary = "Detalles de un show (dashboard Admin)")
 ////    fun getShowByIdForAdmin(@PathVariable showId: String, @RequestParam userId: Long): ShowAdminDetailsDTO {
 ////        return showService.findByIdAdmin(showId, userId).toShowAdminDetailsDTO()
 ////    }
-////
+
 ////    @PostMapping("/admin/show/{showId}/new-show-date")
 ////    @Operation(summary = "Permite agregar una fecha")
 ////    @ApiResponses(
@@ -108,14 +105,3 @@ class ShowController(
 ////    fun createShowDate(@PathVariable showId: String, @RequestParam userId: Long,@RequestBody body: ShowDateDTO) {
 ////       showService.createShowDate(showId, userId, body)
 ////    }
-////
-////    fun userOrNull(id: Long): User? {
-////        return if (id != 0.toLong()) {
-////            userService.findById(id)
-////        } else {
-////            null
-////        }
-////    }
-////
-
-//}

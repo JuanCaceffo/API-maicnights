@@ -5,16 +5,16 @@ import ar.edu.unsam.phm.magicnightsback.domain.ShowDate
 import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
 import ar.edu.unsam.phm.magicnightsback.exceptions.ResponseFindException
 import ar.edu.unsam.phm.magicnightsback.repository.ShowDateRepository
-import jakarta.transaction.Transactional
+import ar.edu.unsam.phm.magicnightsback.repository.TicketRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
 @Service
 class ShowDateService(
     @Autowired
     private val showDateRepository: ShowDateRepository,
+    private val ticketRepository: TicketRepository,
 
     @Autowired
     private val hydrousService: HydrousService
@@ -32,4 +32,11 @@ class ShowDateService(
 
     fun findAllByShowId(showId: String): List<ShowDate> =
         showDateRepository.findAllByShowId(showId)
+
+    //TODO: ver que onda con esto!!
+    fun isSoldOut(showDateId: String): Boolean {
+        val reputo = findByIdOrError(showDateId).show.totalCapacity()
+        val megaputo = ticketRepository.showDateTakenCapacity(showDateId)
+        return reputo.minus(megaputo) <= 0
+    }
 }

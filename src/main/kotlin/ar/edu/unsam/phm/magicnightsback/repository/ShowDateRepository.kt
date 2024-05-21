@@ -3,9 +3,7 @@ package ar.edu.unsam.phm.magicnightsback.repository
 import ar.edu.unsam.phm.magicnightsback.domain.ShowDate
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.data.mongodb.repository.Query
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 import java.util.*
 
 interface ShowDateRepository: MongoRepository<ShowDate, String> {
@@ -17,4 +15,19 @@ interface ShowDateRepository: MongoRepository<ShowDate, String> {
     fun getByDateAndShowId(date: LocalDateTime, nextDay: LocalDateTime, showId: String): Optional<ShowDate>
 
     fun findAllByShowId(showId: String): List<ShowDate>
+
+    //TODO: implementar query
+    fun showDateIdsByShowId(showId: String): List<String>
+
+
+    //TODO: ver como implementar metodos de obtencion de costos de un show con mongo
+//    @Query(
+//        """
+//           SELECT
+//                SUM(SD.show.cost)
+//                FROM ShowDate SD
+//                WHERE SD.show.id = :id
+//        """
+//    )
+//    fun showCost(@Param("id") id:Long): Optional<Double>
 }

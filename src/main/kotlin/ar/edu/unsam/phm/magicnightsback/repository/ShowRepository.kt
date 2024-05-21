@@ -9,6 +9,14 @@ interface ShowRepository : MongoRepository<Show, String> {
     override fun findAll(): MutableList<Show>
     fun findByName(name: String): Optional<Show>
 
+//    @Query("""
+//        SELECT
+//            SD.id
+//        FROM ShowDate SD
+//        WHERE SD.show.id = :id
+//    """)
+//    fun showDateIdsByShowId(@Param("id") id: Long): Iterable<Long>
+
 //
 //    @Query (
 //        """SELECT s.facility.id

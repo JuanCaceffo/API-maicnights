@@ -22,7 +22,7 @@ class TicketService(
     @Autowired
     private val userService: UserService
 ) {
-    @Transactional(Transactional.TxType.NEVER)
+    
     fun findByUserId(userId: Long): List<Ticket> =
         ticketRepository.findByUserId(userId).map { it }
 
@@ -48,34 +48,33 @@ class TicketService(
     fun save(ticket: Ticket) {
         ticketRepository.save(ticket)
     }
-
-
 }
 //
 //    // Read methods
-//    @Transactional(Transactional.TxType.NEVER)
+//    
 //    fun findAll(): List<Ticket> = ticketRepository.findAll().map { it }
 //
-//    @Transactional(Transactional.TxType.NEVER)
+//    
 //    fun findById(id: Long): Ticket? =
 //        ticketRepository.findById(id).getOrNull()
 //
-//    @Transactional(Transactional.TxType.NEVER)
+//    
 //    fun findOrErrorById(id: Long): Ticket =
 //        findById(id) ?: throw ResponseFindException(FindError.NOT_FOUND(id, Ticket::class.stringMe()))
 //
-//    @Transactional(Transactional.TxType.NEVER)
+//    
 //    fun findByDate(date: LocalDateTime): Ticket? = ticketRepository.findByDateIs(date).getOrNull()
 //
 
 //
-////    @Transactional(Transactional.TxType.NEVER)
+////    
 ////    fun findUserReservations(userId: Long): List<Ticket> =
 ////        ticketRepository.findByUserIdAndStatusIs(userId, TicketStatus.RESERVED).map { it }
 //
 //    // Read count methods
 //    @Transactional(Transactional.TxType.NEVER)
 //    fun boughtBy(seatType: SeatTypes, showDateId: String): Int =
+
 //        ticketRepository.countBySeatAndShowDateId(seatType, showDateId)
 //
 //    // Create methods
@@ -116,7 +115,7 @@ class TicketService(
 ////        return reservedTickets.all { updateToPurchased(it).status == TicketStatus.BOUGHT }
 ////    }
 //
-////    @Transactional(Transactional.TxType.NEVER)
+////    
 ////    fun totalToPay(userId: Long) = findUserReservations(userId).sumOf { it.price }
 //
 //    // Delete Methods
@@ -140,7 +139,7 @@ class TicketService(
 ////
 ////
 ////    /*Mapeo todos los tickets en uno solo por showDate juntando el precio total*/
-////    @Transactional(Transactional.TxType.NEVER)
+////    
 ////    fun getTicketsGroupedByShowDate(user: User, ticketList: List<Ticket>): List<TicketDTO> {
 ////
 ////        val distinctTickets = ticketList.distinctBy { it.showDate.id }
@@ -154,7 +153,7 @@ class TicketService(
 ////        }
 ////    }
 ////
-////    @Transactional(Transactional.TxType.NEVER)
+////    
 ////    fun getTickets(user: User,ticketResults: List<TicketResult>): List<TicketDTO> {
 ////        val tickets = ticketResults.map {
 ////                ticketResult ->

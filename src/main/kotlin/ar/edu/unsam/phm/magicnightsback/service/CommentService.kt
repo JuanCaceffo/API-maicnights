@@ -43,11 +43,11 @@ class CommentService {
     fun findById(id: Long): Comment? =
         commentsRepository.findById(id).getOrNull()
 
-    @Transactional(Transactional.TxType.NEVER)
+    
     fun findByIdOrError(id: Long): Comment =
-        findById(id) ?: throw ResponseFindException(FindError.NOT_FOUND(id, Comment::class.stringMe()))
+        findById(id) ?: throw ResponseFindException(FindError.NOT_FOUND(id.toString(), Comment::class.stringMe()))
 
-    @Transactional(Transactional.TxType.NEVER)
+    
     fun findByUserId(id: Long): Set<CommentDTO> =
         commentsRepository.findByUserId(id).map { hydrousService.getHydrousComment(it, ShowFieldsToHydrous.BAND).toUserCommentDTO() }.toSet()
 
@@ -67,20 +67,21 @@ class CommentService {
         commentsRepository.delete(comment)
     }
 
-    //    @Transactional(Transactional.TxType.NEVER)
+    //    
 //    fun findCommentByShowId(id: Long, sid: Long): Comment {
 //        return validateOptionalIsNotNull(commentsRepository.findById(id))
 //    }
 //
     @Transactional(Transactional.TxType.NEVER)
     fun getCommentStadisticsOfShow(id: String): CommentStadisticsDTO {
+
         val totalRating = commentsRepository.averageCommentRatingOfShow(id).getOrNull() ?: 0.0
         val totalComments = commentsRepository.countAllByShowId(id)
         return CommentStadisticsDTO(totalRating.truncate(1), totalComments)
     }
 
 //
-//    @Transactional(Transactional.TxType.NEVER)
+//    
 //    fun findCommentByUserId(id: Long, sid: Long): Comment {
 //        return validateOptionalIsNotNull(commentsRepository.findById(id))
 //    }
