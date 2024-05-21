@@ -65,25 +65,26 @@ class ShowService(
     fun addPendingAttendee(id: String) {
         val show = findByIdOrError(id)
         show.addPendingAttendee()
+        showRepository.save(show)
     }
-
-    fun getKPIs(id: String): StatsDTO {
-        val show = findByIdOrError(id)
-        //TODO: ver si conviene cambiar a query directo y que desventaja tiene (ventaja ya conocida)
-        val showCost = showDateRepository.findAllByShowId(id).sumOf { it.show.baseCost() } ?: 1.0
-        val showSales = ticketRepository.totalShowSales(id).getOrNull() ?: 0.0
-
-        val showDatesSoldOut = showDateRepository.showDateIdsByShowId(id).map{it}.filter { showDateId ->
-            showDateService.isSoldOut(showDateId)
-        }.size
-
-        return StatsDTO(
-            ticketRepository.totalShowSales(id).getOrNull() ?: 0.0,
-            show.pendingAttendees,
-            (showSales / if (showCost == 0.0) 1.0 else showCost) * 100,
-            showDatesSoldOut
-        )
-    }
+//
+//    fun getKPIs(id: String): StatsDTO {
+//        val show = findByIdOrError(id)
+//        //TODO: ver si conviene cambiar a query directo y que desventaja tiene (ventaja ya conocida)
+//        val showCost = showDateRepository.findAllByShowId(id).sumOf { hydrousService.getHydrousShow(it.show).baseCost() } ?: 1.0
+//        val showSales = ticketRepository.totalShowSales(id).getOrNull() ?: 0.0
+//
+//        val showDatesSoldOut = showDateRepository.showDateIdsByShowId(id).map{it}.filter { showDateId ->
+//            showDateService.isSoldOut(showDateId)
+//        }.size
+//
+//        return StatsDTO(
+//            ticketRepository.totalShowSales(id).getOrNull() ?: 0.0,
+//            show.pendingAttendees,
+//            (showSales / if (showCost == 0.0) 1.0 else showCost) * 100,
+//            showDatesSoldOut
+//        )
+//    }
 
     private fun filter(shows: Iterable<Show>, params: ShowRequest): List<Show> {
         val filter = createFilter(params)

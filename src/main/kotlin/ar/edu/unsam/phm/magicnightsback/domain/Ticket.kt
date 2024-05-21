@@ -28,19 +28,19 @@ import java.time.LocalDateTime
 data class Ticket(
     @ManyToOne(fetch = FetchType.LAZY)
     val user: User,
-
-    @Transient
-    val showDate: ShowDate,
-
+    val showDateId: String,
+    val showId: String,
     @ManyToOne(fetch = FetchType.EAGER)
     val seat: Seat
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0
-    val showDateId: String = showDate.id
-    val showId: String = showDate.show.id
+
     var price: Double = 0.0
+    @Transient
+    lateinit var showDate: ShowDate
+
 
     @Enumerated(EnumType.STRING)
     var status: TicketStatus = TicketStatus.AVAILABLE

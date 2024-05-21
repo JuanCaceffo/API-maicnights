@@ -32,10 +32,10 @@ class TestController(
         return facilityRepository.findByNameIsContainingIgnoreCase(name).map{it}
     }
 
-    @GetMapping("/friends_count/{showId}/{userId}")
-    fun getFacility(@PathVariable showId: String, @PathVariable userId: Long): Int {
-        return ticketService.countFriendsAttendingToShow(showId, userId)
-    }
+//    @GetMapping("/friends_count/{showId}/{userId}")
+//    fun getFacility(@PathVariable showId: String, @PathVariable userId: Long): Int {
+//        return ticketService.countFriendsAttendingToShow(showId, userId)
+//    }
 
 
 

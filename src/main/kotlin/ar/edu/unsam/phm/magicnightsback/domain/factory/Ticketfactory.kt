@@ -26,16 +26,22 @@ class NormalTicket(
     override val seat: Seat
 
 ) : FactoryTickey {
-    override fun build() =
-        Ticket(
+    override fun build(): Ticket {
+        val ticket = Ticket(
             user,
-            showDate,
+            showDate.id,
+            showDate.show.id,
             seat
-        ).apply {
+        )
+        ticket.showDate = showDate
+        ticket.apply {
             price = showDate.show.currentTicketPrice(seat)
             buyDate = showDate.date.minusDays(2)
             status = TicketStatus.BOUGHT
         }
+        return ticket
+    }
+
 }
 
 class CheapTicket(
@@ -43,16 +49,21 @@ class CheapTicket(
     override val showDate: ShowDate,
     override val seat: Seat
 ) : FactoryTickey {
-    override fun build() =
-        Ticket(
+    override fun build(): Ticket {
+        val ticket = Ticket(
             user,
-            showDate,
+            showDate.id,
+            showDate.show.id,
             seat
-        ).apply {
+        )
+        ticket.showDate = showDate
+        ticket.apply {
             price = showDate.show.currentTicketPrice(seat)
             buyDate = showDate.date.minusDays(1)
             status = TicketStatus.BOUGHT
         }
+        return ticket
+    }
 }
 
 class ExpensiveTicket(
@@ -60,14 +71,19 @@ class ExpensiveTicket(
     override val showDate: ShowDate,
     override val seat: Seat
 ) : FactoryTickey {
-    override fun build() =
-        Ticket(
+    override fun build(): Ticket {
+        val ticket = Ticket(
             user,
-            showDate,
+            showDate.id,
+            showDate.show.id,
             seat
-        ).apply {
+        )
+        ticket.showDate = showDate
+        ticket.apply {
             price = showDate.show.currentTicketPrice(seat)
             buyDate = showDate.date.minusDays(4)
             status = TicketStatus.BOUGHT
         }
+        return ticket
+    }
 }

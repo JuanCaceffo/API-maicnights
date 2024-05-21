@@ -54,7 +54,7 @@ class ShowController(
 
     @PatchMapping("{id}/add_pending")
     @Operation(summary = "Adds a pending Attendee to a Show")
-    fun addPendingAttendee(@PathVariable id: Long, @RequestParam userId: Long) {
+    fun addPendingAttendee(@PathVariable id: String, @RequestParam userId: Long) {
         showService.addPendingAttendee(id)
     }
 
@@ -63,9 +63,9 @@ class ShowController(
     fun findShowDatesByShowId(@PathVariable id: String) =
         showDateService.findAllByShowId(id).map { it.toDTO() }
 
-    @GetMapping("{id}/kpi")
-    @Operation(summary = "Returns KPIs of a Show")
-    fun getKPIs(@PathVariable id: Long) = showService.getKPIs(id)
+//    @GetMapping("{id}/kpi")
+//    @Operation(summary = "Returns KPIs of a Show")
+//    fun getKPIs(@PathVariable id: String) = showService.getKPIs(id)
 
     data class ShowRequest(
         @RequestParam(required = false) val userId: Long = 0L,

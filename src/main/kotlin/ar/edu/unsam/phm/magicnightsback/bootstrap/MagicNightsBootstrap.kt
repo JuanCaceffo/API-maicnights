@@ -175,8 +175,9 @@ class MagicNightsBootstrap(
 
                 is ShowDate -> {
                     val startOfDay = LocalDateTime.of(it.date.toLocalDate(), LocalTime.MIN)
-                    val endOfDay = LocalDateTime.of(it.date.plusHours(3L).toLocalDate().plusDays(1), LocalTime.MIN)
+                    val endOfDay = LocalDateTime.of(it.date.toLocalDate(), LocalTime.MAX)
 
+                    println("caca")
                     val showDate = showDateRepository.getByDateAndShowId(startOfDay,endOfDay, it.show.id).getOrNull()
                     showDate == null
                 }

@@ -20,11 +20,12 @@ class TicketService(
     @Autowired
     private val ticketRepository: TicketRepository,
     @Autowired
-    private val userService: UserService
+    private val userService: UserService,
+    private val hydrousService: HydrousService
 ) {
-    
+
     fun findByUserId(userId: Long): List<Ticket> =
-        ticketRepository.findByUserId(userId).map { it }
+        ticketRepository.findByUserId(userId).map { hydrousService.getHydrousTicket(it) }
 
     @Transactional(Transactional.TxType.NEVER)
     fun findUsersAttendingToShow(showId: String): Set<Long> =

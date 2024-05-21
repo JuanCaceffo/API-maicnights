@@ -37,7 +37,7 @@ class CartService(
             validateReservation(showDate!!, seat, tkt.quantity) //TODO: Sacar !! cuando se habilite findByIdOrError
 
             repeat(tkt.quantity) {
-                userCart.add(Ticket(user, showDate, seat).apply {
+                userCart.add(Ticket(user, showDate.id,showDate.show.id, seat).apply {
                     price = showDate.show.currentTicketPrice(seat)
                 })
             }

@@ -16,7 +16,7 @@ interface ShowDateRepository: MongoRepository<ShowDate, String> {
 
     fun findAllByShowId(showId: String): List<ShowDate>
 
-    //TODO: implementar query
+    @Query(value =  """{'show.id' : ?0}""", fields =  """{ id: 0 }""")
     fun showDateIdsByShowId(showId: String): List<String>
 
 

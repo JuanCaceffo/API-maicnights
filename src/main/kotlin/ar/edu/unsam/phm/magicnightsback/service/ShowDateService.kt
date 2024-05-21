@@ -28,15 +28,15 @@ class ShowDateService(
         showDateRepository.findById(id).getOrNull()
 
     fun findByIdOrError(id: String): ShowDate =
-        findById(id) ?: throw ResponseFindException("")//ResponseFindException(FindError.NOT_FOUND(id, ShowDate::class.stringMe()))
+        findById(id) ?: throw ResponseFindException(FindError.NOT_FOUND(id, ShowDate::class.stringMe()))
 
     fun findAllByShowId(showId: String): List<ShowDate> =
         showDateRepository.findAllByShowId(showId)
 
     //TODO: ver que onda con esto!!
-    fun isSoldOut(showDateId: String): Boolean {
-        val reputo = findByIdOrError(showDateId).show.totalCapacity()
-        val megaputo = ticketRepository.showDateTakenCapacity(showDateId)
-        return reputo.minus(megaputo) <= 0
-    }
+//    fun isSoldOut(showDateId: String): Boolean {
+//        val reputo = findByIdOrError(showDateId).show.totalCapacity()
+//        val megaputo = ticketRepository.showDateTakenCapacity(showDateId)
+//        return reputo.minus(megaputo) <= 0
+//    }
 }

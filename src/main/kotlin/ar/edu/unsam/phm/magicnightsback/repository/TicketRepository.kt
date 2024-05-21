@@ -9,15 +9,6 @@ import java.util.*
 
 interface TicketRepository : CrudRepository<Ticket, Long> {
     //    fun findByDateIs(date: LocalDateTime): Optional<Ticket>
-    @EntityGraph(
-        attributePaths = [
-            "showDate",
-            "showDate.show",
-            "showDate.show.facility",
-            "showDate.show.facility.seats",
-            "showDate.show.band"
-        ]
-    )
     fun findByUserId(userId: Long): Iterable<Ticket>
 
     fun findByShowId(showId: String): Iterable<Ticket>
