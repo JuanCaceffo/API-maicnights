@@ -70,9 +70,14 @@ class ShowController(
     fun getShowByIdForAdmin(@PathVariable showId: Long, @PathVariable userId: Long): ShowDetailsDTO {
         userService.validateAdminStatus(userId)
 
-        val ticketsSold = ticketService.ticketSalesCountByShowId(showId)
+        val show = showService.findByIdOrError(showId)
+        val ticketsSold = ticketService.ticketCountByShowId(showId)
+        val showSales = ticketService.totalShowSales(showId)
+        val pendingAttendees = show.pendingAttendees
+        val showCost = showDateService.showCost(showId)
         val commentsStats = commentService.getCommentStadisticsOfShow(showId)
         val dates = showDateService.findAllByShowId(showId).map { it.toDTO() }
+        val seats = show.facility.seats
 
         val stats = ShowDetailsExtraDataDTO(
             commentsStats.rating,
@@ -80,10 +85,16 @@ class ShowController(
             dates
         )
 
-        val adminSummary = listOf(
-            AdminSummary("Entradas vendidas:", ticketsSold.toDouble())
-        )
-
+        val adminSummary =
+            listOf(
+                AdminSummary("Entradas vendidas totales:", ticketsSold.toDouble())) +
+            seats.map {
+                AdminSummary("Entradas vendidas " + it.type.name + ":", ticketService.ticketCountByShowIdAndSeatId(showId, it.id).toDouble())
+            } + listOf(
+                AdminSummary("Recaudacion Total:", showSales),
+                AdminSummary("Costo Total:", showCost),
+                AdminSummary("Gente en Espera:", pendingAttendees.toDouble()),
+            )
 
         return showService.findByIdOrError(showId).toShowAdminDetailsDTO(stats, adminSummary)
     }

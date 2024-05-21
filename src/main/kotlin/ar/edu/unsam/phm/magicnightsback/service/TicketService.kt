@@ -44,8 +44,11 @@ class TicketService(
     fun ticketSalesCountByShowDateId(id: Long) =
         ticketRepository.showDateTakenCapacity(id).getOrDefault(0)
 
-    fun ticketSalesCountByShowId(id: Long) =
+    fun ticketCountByShowId(id: Long) =
         ticketRepository.showTakenCapacity(id).getOrDefault(0)
+
+    fun ticketCountByShowIdAndSeatId(showId: Long, seatId: Long) =
+        ticketRepository.showTakenCapacitybySeatId(showId, seatId).getOrDefault(0)
 }
 //
 //    // Read methods

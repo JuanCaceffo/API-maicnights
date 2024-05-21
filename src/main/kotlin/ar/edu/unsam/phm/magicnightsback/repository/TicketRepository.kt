@@ -94,6 +94,14 @@ interface TicketRepository : CrudRepository<Ticket, Long> {
     """)
     fun showTakenCapacity(@Param("id") id:Long): Optional<Int>
 
+    @Query("""
+       SELECT 
+        COUNT(*) AS taken_capacity
+        FROM Ticket TK
+        WHERE TK.showDate.show.id = :showId AND TK.seat.id = :seatId       
+    """)
+    fun showTakenCapacitybySeatId(@Param("showId") showId:Long,@Param("seatId") seatId:Long): Optional<Int>
+
 
 
 ////    fun findByUserIdAndStatusIs(userId: UUID, status: TicketStatus): Iterable<Ticket>
