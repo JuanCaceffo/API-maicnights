@@ -1,4 +1,8 @@
-//package ar.edu.unsam.phm.magicnightsback.dto
+package ar.edu.unsam.phm.magicnightsback.domain.dto
+
+import ar.edu.unsam.phm.magicnightsback.domain.enums.StatColors
+import java.util.UUID
+
 //
 //import ar.edu.unsam.phm.magicnightsback.domain.Show
 //
@@ -11,24 +15,24 @@
 //    val showCost: Double,
 //    val pendingAttendees: Int
 //)
-//
-////data class ShowStatsDTO (
-////    val id: Long,
-////    val value: Double,
-////    val state: States
-////)
-//
+
+data class ShowStatsDTO (
+    val id: UUID,
+    val value: Double,
+    val color: StatColors
+)
+
 //data class TicketsPerSeatType(
 //    val name: String,
 //    val tickets: Int
 //)
 //
-////fun Show.toShowAdminDetailsDTO() = ShowAdminDetailsDTO(
-////    this.toShowDTO(),
-////    this.totalTicketsSold(),
-////    this.getSeatTypes().map { TicketsPerSeatType(it.seatType.name, totalTicketsSoldOf(it.seatType)) },
-////    this.totalSales(),
-////    this.baseCost(),
-////    this.totalPendingAttendees()
-////)
-//
+//fun Show.toShowAdminDetailsDTO() = ShowAdminDetailsDTO(
+//    this.toShowDTO(),
+//    this.totalTicketsSold(),
+//    this.getSeatTypes().map { TicketsPerSeatType(it.seatType.name, totalTicketsSoldOf(it.seatType)) },
+//    this.totalSales(),
+//    this.baseCost(),
+//    this.totalPendingAttendees()
+//)
+

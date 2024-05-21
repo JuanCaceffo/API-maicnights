@@ -1,6 +1,5 @@
 package ar.edu.unsam.phm.magicnightsback.repository
 
-import ar.edu.unsam.phm.magicnightsback.domain.Seat
 import ar.edu.unsam.phm.magicnightsback.domain.ShowDate
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.Query

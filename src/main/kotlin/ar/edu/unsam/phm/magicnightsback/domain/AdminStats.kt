@@ -1,20 +1,45 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-//object AdminStats {
-//    private val stats = mutableListOf<StatProps>(
-//        StatSales(1000000.0, 2000000.0),
-//        StatPending(0.0,50.0),
-//        StatRentability(0.0,50.0),
-//        StatSoldOut(50.0,75.0))
-//    fun newDateAvailable(show: Show) = stats.all { it.newDateCondition(show) }
-//    fun getAllStats(show: Show) = stats.map { it.getStat(show) }
-//}
+import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowStatsDTO
+import ar.edu.unsam.phm.magicnightsback.domain.enums.StatColors
+import java.util.UUID
 
-//object PivotStats {
-//    val stats = mutableListOf(
-//        StatSales(1000000.0, 2000000.0),
-//        StatPending(0.0, 50.0),
-//        StatRentability(0.0, 50.0),
-//        StatSoldOut(50.0, 75.0)
-//    )
-//}
+class AdminStatBuilder {
+    private val stats = mutableListOf<ShowStatsDTO>()
+
+    fun statSales(value: Double, pivots: Pivots): AdminStatBuilder {
+        stats.add(ShowStatsDTO(UUID.randomUUID(), value, calcular(value, pivots)))
+        return this
+    }
+
+    fun statPending(value: Int, pivots: Pivots, show: Show): AdminStatBuilder {
+        val colorValue = show.allTicketPrices().min() * value
+        stats.add(ShowStatsDTO(UUID.randomUUID(), value.toDouble(), calcular(colorValue, pivots)))
+        return this
+    }
+
+    fun statRentability(value: Double, pivots: Pivots): AdminStatBuilder {
+        stats.add(ShowStatsDTO(UUID.randomUUID(), value, calcular(value, pivots)))
+        return this
+    }
+
+    fun statSoldOut(value: Int, pivots: Pivots, totalDates: Int): AdminStatBuilder {
+        val colorValue = value / totalDates * 100.0
+        stats.add(ShowStatsDTO(UUID.randomUUID(), value.toDouble(), calcular(colorValue, pivots)))
+        return this
+    }
+
+    private fun calcular(value: Double, pivots: Pivots): StatColors {
+        return if (value <= pivots.lowPivot) {
+            StatColors.RED
+        } else if (value <= pivots.highPivot) {
+            StatColors.YELLOW
+        } else {
+            StatColors.GREEN
+        }
+    }
+
+    fun build() = stats
+}
+
+data class Pivots(val lowPivot: Double, val highPivot: Double)

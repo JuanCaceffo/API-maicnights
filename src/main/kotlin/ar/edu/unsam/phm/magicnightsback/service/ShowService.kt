@@ -3,6 +3,7 @@ package ar.edu.unsam.phm.magicnightsback.service
 import ar.edu.unsam.phm.magicnightsback.controller.ShowController.ShowRequest
 import ar.edu.unsam.phm.magicnightsback.domain.*
 import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowExtraDataDTO
+import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowStatsDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.StatsDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.toDTO
 import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
@@ -64,21 +65,26 @@ class ShowService(
         show.addPendingAttendee()
     }
 
-    fun getKPIs(id: Long): StatsDTO {
+    fun getKPIs(id: Long): List<ShowStatsDTO> {
         val show = findByIdOrError(id)
         val showCost = showDateRepository.showCost(id).getOrNull() ?: 1.0
         val showSales = ticketRepository.totalShowSales(id).getOrNull() ?: 0.0
+        val totalDates = showRepository.showDateIdsByShowId(id).map{it}
 
-        val showDatesSoldOut = showRepository.showDateIdsByShowId(id).map{it}.filter { showDateId ->
+        val showDatesSoldOut = totalDates.filter { showDateId ->
             showDateService.isSoldOut(showDateId)
         }.size
 
-        return StatsDTO(
-            ticketRepository.totalShowSales(id).getOrNull() ?: 0.0,
-            show.pendingAttendees,
-            (showSales / if (showCost == 0.0) 1.0 else showCost) * 100,
-            showDatesSoldOut
-        )
+        val totalSales = ticketRepository.totalShowSales(id).getOrNull() ?: 0.0
+        val pendingAttendees = show.pendingAttendees
+        val rentability = (showSales / if (showCost == 0.0) 1.0 else (showCost * totalDates.size )) * 100
+
+        return AdminStatBuilder()
+            .statSales(totalSales, Pivots(1000000.0, 2000000.0))
+            .statPending(pendingAttendees, Pivots(0.0, 50.0), show)
+            .statRentability(rentability, Pivots(100.0, 150.0))
+            .statSoldOut(showDatesSoldOut, Pivots(50.0, 75.0), totalDates.size)
+            .build()
     }
 
     private fun filter(shows: Iterable<Show>, params: ShowRequest): List<Show> {
