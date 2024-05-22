@@ -14,8 +14,7 @@ import kotlin.jvm.optionals.getOrNull
 
 @Service
 class ShowDateService(
-    @Autowired private val showDateRepository: ShowDateRepository,
-    @Autowired private val ticketService: TicketService
+    @Autowired private val showDateRepository: ShowDateRepository
 ) {
     fun findById(id: Long): ShowDate? =
         showDateRepository.findById(id).getOrNull()
@@ -27,9 +26,7 @@ class ShowDateService(
         showDateRepository.findAllByShowId(showId).map { it }
 
     fun isSoldOut(id: Long): Boolean {
-        val totalCapacity = findByIdOrError(id).show.totalCapacity()
-        val takenCapacity = ticketService.ticketSalesCountByShowDateId(id)
-        return totalCapacity.minus(takenCapacity) <= 0
+        return findByIdOrError(id).isSoldOut()
     }
 
     fun isShowSoldOut(showId: Long): Boolean {

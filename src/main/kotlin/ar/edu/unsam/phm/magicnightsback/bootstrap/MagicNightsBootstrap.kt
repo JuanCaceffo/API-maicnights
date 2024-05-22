@@ -46,6 +46,7 @@ class MagicNightsBootstrap(
         "sol" to UserFactory().createUser(UserFactoryTypes.NORMAL),
         "ana" to UserFactory().createUser(UserFactoryTypes.POOR),
         "carolina" to UserFactory().createUser(UserFactoryTypes.NOIMAGE),
+        "jaun" to UserFactory().createUser(UserFactoryTypes.RICH),
     )
 
     val initShowDates = mutableListOf(

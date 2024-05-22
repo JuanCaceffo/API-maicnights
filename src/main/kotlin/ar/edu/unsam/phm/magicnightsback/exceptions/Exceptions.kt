@@ -58,7 +58,7 @@ object FindError {
 }
 
 object UpdateError {
-    const val NEGATIVE_BALANCE = "User Balance Can't be negative"
+    const val NEGATIVE_BALANCE = "Not enough credit."
     @Suppress("FunctionName")
     fun CANNOT_MODIFY(id: Long, name: String = "entity") = "Can't modify $name with id: $id"
 }
