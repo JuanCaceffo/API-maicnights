@@ -27,15 +27,10 @@ class UserService(
     fun findByIdOrError(id: Long): User =
         findById(id) ?: throw NotFoundException(FindError.NOT_FOUND(id, User::class.toString()))
 
-    
     fun userExists(id: Long): Boolean = userRepository.existsUserById(id)
 
-    
     fun getBalance(userId: Long): Double = findByIdOrError(userId).balance
 
-//    
-//    fun getUserImageUrls(users: Set<Long>): Set<String> =
-//        userRepository.findImageUrl(users)
 
     
     fun validateUserExists(id: Long) {
@@ -45,7 +40,6 @@ class UserService(
             )
         }
     }
-
     
     fun authenticate(username: String, password: String): User =
         userRepository.findByUsernameAndPassword(username, password).getOrNull()

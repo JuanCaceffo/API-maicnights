@@ -46,7 +46,7 @@ class CartService(
 
     @Transactional(Transactional.TxType.REQUIRED)
     fun buyAll(userId: Long) {
-        userService.findByIdOrError(userId).modifyBalance(totalPrice(userId))
+        userService.updateUserBalance(userId, -totalPrice(userId))
         cart[userId]?.forEach {
             it.buyDate = LocalDateTime.now()
         }
