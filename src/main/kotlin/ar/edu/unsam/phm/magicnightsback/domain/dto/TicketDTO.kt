@@ -22,7 +22,9 @@ data class TicketDTO(
     override val totalFriendsAttending: Int,
     override val dates: List<ShowDateDTO>,
     val seatId: Long,
-    val showDateId: Long
+    val showDateId: Long,
+    val canBeCommented: Boolean,
+    val date: LocalDateTime
 ): ShowData, ShowStats, ShowWithFriends, ShowDates
 
 
@@ -39,7 +41,9 @@ fun Ticket.toDTO(stats: ShowExtraDataDTO): TicketDTO = TicketDTO(
     stats.totalFriendsAttending,
     stats.dates,
     seat.id,
-    showDate.id
+    showDate.id,
+    canBeCommented(),
+    showDate.date
 )
 
 //data class TicketDTO(

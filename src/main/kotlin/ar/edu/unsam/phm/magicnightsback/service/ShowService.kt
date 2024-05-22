@@ -52,7 +52,8 @@ class ShowService(
             totalFriendsAttending,
             commentsStats.rating,
             commentsStats.totalComments,
-            dates
+            dates,
+
         )
     }
 

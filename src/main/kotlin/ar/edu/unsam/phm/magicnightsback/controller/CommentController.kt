@@ -1,5 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.controller
 
+import ar.edu.unsam.phm.magicnightsback.domain.dto.CommentCreateDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.CommentDTO
 import ar.edu.unsam.phm.magicnightsback.service.CommentService
 import io.swagger.v3.oas.annotations.Operation
@@ -26,22 +27,10 @@ class CommentController(
     fun deleteComment(@PathVariable userId: Long, @PathVariable commentId: Long) {
         commentService.removeComment(userId, commentId)
     }
+
+    @PostMapping("/add")
+    @Operation(summary = "Permite que un usuario comente un show")
+    fun addUserComment(@RequestBody commentData: CommentCreateDTO) {
+        commentService.addComment(commentData)
+    }
 }
-
-//
-
-//
-////    @PostMapping("add-user-comment")
-////    @Operation(summary = "Permite que un usuario comente un show")
-////    fun addUserComment(@RequestBody commentData: CommentCreateDTO) {
-////        commentService.addComment(commentData)
-////    }
-//
-//    @GetMapping("show/{showId}")
-//    @Operation(summary = "Devuelve los comentarios de un show")
-//    fun getShowComments(@PathVariable showId: Long): List<CommentDTO> {
-//        return commentService.getShowComments(showId)
-//    }
-//
-
-//}

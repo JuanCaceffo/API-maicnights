@@ -8,7 +8,6 @@ object UserError {
 }
 
 object CommentError {
-    const val IS_NOT_ATTENDEE = "No puede opinar sobre un show al que nunca fue"
     const val INVALID_RATTING = "El rating debe estar entre 1 y 5"
     const val SHOWDATE_NOT_PASSED = "No se puede agregar una opinion a un showdate si este no ocurrió"
     const val INVALID_DELETE = "No se puede borrar un comentario que no le pertenece"
@@ -78,6 +77,7 @@ object CreationError {
     const val NO_CAPACITY = "Not enough seat capacity"
     const val NEGATIVE_PRICE = "Fixed price can't be negative."
     const val NEW_DATE_INVALID_CONDITIONS = "The show does not meet necessary conditions to add a Date."
+    const val IS_NOT_ATTENDEE = "Cannot comment on this Show as you are not an attendee"
 }
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND)

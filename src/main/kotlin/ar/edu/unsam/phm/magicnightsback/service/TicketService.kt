@@ -1,6 +1,9 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
+import ar.edu.unsam.phm.magicnightsback.domain.Show
 import ar.edu.unsam.phm.magicnightsback.domain.Ticket
+import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
+import ar.edu.unsam.phm.magicnightsback.exceptions.NotFoundException
 //import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
 //import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
 //import ar.edu.unsam.phm.magicnightsback.exceptions.ResponseFindException
@@ -16,6 +19,10 @@ class TicketService(
     @Autowired private val ticketRepository: TicketRepository,
     @Autowired private val userService: UserService
 ) {
+    fun findById(id: Long): Ticket? = ticketRepository.findById(id).getOrNull()
+    fun findByIdOrError(id: Long) =
+        findById(id) ?: throw NotFoundException(FindError.NOT_FOUND(id, Ticket::class.toString()))
+
     fun findByUserId(userId: Long): List<Ticket> =
         ticketRepository.findByUserId(userId).map { it }
 

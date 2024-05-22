@@ -46,7 +46,7 @@ class MagicNightsBootstrap(
         "sol" to UserFactory().createUser(UserFactoryTypes.NORMAL),
         "ana" to UserFactory().createUser(UserFactoryTypes.POOR),
         "carolina" to UserFactory().createUser(UserFactoryTypes.NOIMAGE),
-        "jaun" to UserFactory().createUser(UserFactoryTypes.RICH),
+        "juan" to UserFactory().createUser(UserFactoryTypes.RICH),
     )
 
     val initShowDates = mutableListOf(
@@ -74,6 +74,7 @@ class MagicNightsBootstrap(
     fun initTickets(): List<Ticket> {
         val showDates = showDateRepository.findAll().map { it }
         val seatsACDC = showDates[6].show.facility.seats
+        val seatsACDC2 = showDates[2].show.facility.seats
 
         return listOf(
             Ticketfactory().createTicket(
@@ -93,6 +94,12 @@ class MagicNightsBootstrap(
                 initUsers["carolina"]!!,
                 showDateRepository.save(showDates[6].apply { modifyOcupation(seatsACDC[0]) }),
                 seatsACDC[0]
+            ),
+            Ticketfactory().createTicket(
+                TicketFactoryTypes.EXPENSIVE,
+                initUsers["sol"]!!,
+                showDateRepository.save(showDates[2].apply { modifyOcupation(seatsACDC2[2]) }),
+                seatsACDC2[2]
             ),
         )
     }
