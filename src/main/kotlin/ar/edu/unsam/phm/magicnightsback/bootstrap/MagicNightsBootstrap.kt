@@ -10,49 +10,28 @@ import kotlin.jvm.optionals.getOrNull
 
 @Component
 class MagicNightsBootstrap(
-    @Autowired
-    private var showRepository: ShowRepository,
-
-    @Autowired
-    private var showDateRepository: ShowDateRepository,
-
-    @Autowired
-    private var bandRepository: BandRepository,
-
-    @Autowired
-    private var facilityRepository: FacilityRepository,
-
-    @Autowired
-    private var userRepository: UserRepository,
-
-    @Autowired
-    private var seatRepository: SeatRepository,
-
-    @Autowired
-    private var ticketRepository: TicketRepository,
-
-    @Autowired
-    private var commentRepository: CommentRepository,
+    @Autowired private var showRepository: ShowRepository,
+    @Autowired private var showDateRepository: ShowDateRepository,
+    @Autowired private var bandRepository: BandRepository,
+    @Autowired private var facilityRepository: FacilityRepository,
+    @Autowired private var userRepository: UserRepository,
+    @Autowired private var seatRepository: SeatRepository,
+    @Autowired private var ticketRepository: TicketRepository,
+    @Autowired private var commentRepository: CommentRepository,
 ) : InitializingBean {
 
-    val facilityCreator = FacilityFactory()
-    val bandsCreator = BandFactory()
-    val showDatesCreator = ShowDateFactory()
-    val usersCreator = UserFactory()
-    val ticketCreator = Ticketfactory()
-
     val initFacilities = mapOf(
-        "river" to facilityCreator.createFacility(FacilityFactoryTypes.BIGSTADIUM),
-        "boca" to facilityCreator.createFacility(FacilityFactoryTypes.MEDIUMSTADIUM),
-        "colon" to facilityCreator.createFacility(FacilityFactoryTypes.THEATER),
-        "rex" to facilityCreator.createFacility(FacilityFactoryTypes.BADTHEATER),
-        "peque" to facilityCreator.createFacility(FacilityFactoryTypes.SMALLTHEATER)
+        "river" to FacilityFactory().createFacility(FacilityFactoryTypes.BIGSTADIUM),
+        "boca" to FacilityFactory().createFacility(FacilityFactoryTypes.MEDIUMSTADIUM),
+        "colon" to FacilityFactory().createFacility(FacilityFactoryTypes.THEATER),
+        "rex" to FacilityFactory().createFacility(FacilityFactoryTypes.BADTHEATER),
+        "peque" to FacilityFactory().createFacility(FacilityFactoryTypes.SMALLTHEATER)
     )
 
     val initBands = mapOf(
-        "vela" to bandsCreator.createFacility(BandFactoryTypes.CHEAP),
-        "pearl" to bandsCreator.createFacility(BandFactoryTypes.NORMAL),
-        "acdc" to bandsCreator.createFacility(BandFactoryTypes.EXPENSIVE)
+        "vela" to BandFactory().createFacility(BandFactoryTypes.CHEAP),
+        "pearl" to BandFactory().createFacility(BandFactoryTypes.NORMAL),
+        "acdc" to BandFactory().createFacility(BandFactoryTypes.EXPENSIVE)
     )
 
     val initShows = mapOf(
@@ -63,19 +42,19 @@ class MagicNightsBootstrap(
     )
 
     val initUsers = mapOf(
-        "pablo" to usersCreator.createUser(UserFactoryTypes.ADMIN),
-        "sol" to usersCreator.createUser(UserFactoryTypes.NORMAL),
-        "ana" to usersCreator.createUser(UserFactoryTypes.POOR),
-        "carolina" to usersCreator.createUser(UserFactoryTypes.NOIMAGE),
+        "pablo" to UserFactory().createUser(UserFactoryTypes.ADMIN),
+        "sol" to UserFactory().createUser(UserFactoryTypes.NORMAL),
+        "ana" to UserFactory().createUser(UserFactoryTypes.POOR),
+        "carolina" to UserFactory().createUser(UserFactoryTypes.NOIMAGE),
     )
 
     val initShowDates = mutableListOf(
-        showDatesCreator.createShowDate(ShowDateFactoryTypes.MINUS, initShows["cachen"]!!),
-        showDatesCreator.createShowDate(ShowDateFactoryTypes.MINUS, initShows["4you"]!!),
-        showDatesCreator.createShowDate(ShowDateFactoryTypes.MINUS, initShows["demons"]!!),
-        showDatesCreator.createShowDate(ShowDateFactoryTypes.PLUS, initShows["4you"]!!),
-        showDatesCreator.createShowDate(ShowDateFactoryTypes.PLUS, initShows["showcito"]!!),
-    ).apply { addAll(showDatesCreator.createShowDates(ShowDateFactoryTypes.PLUS, initShows["demons"]!!, 3)) }
+        ShowDateFactory().createShowDate(ShowDateFactoryTypes.MINUS, initShows["cachen"]!!),
+        ShowDateFactory().createShowDate(ShowDateFactoryTypes.MINUS, initShows["4you"]!!),
+        ShowDateFactory().createShowDate(ShowDateFactoryTypes.MINUS, initShows["demons"]!!),
+        ShowDateFactory().createShowDate(ShowDateFactoryTypes.PLUS, initShows["4you"]!!),
+        ShowDateFactory().createShowDate(ShowDateFactoryTypes.PLUS, initShows["showcito"]!!),
+    ).apply { addAll(ShowDateFactory().createShowDates(ShowDateFactoryTypes.PLUS, initShows["demons"]!!, 3)) }
 
     val initComments = listOf(
         Comment(
@@ -86,14 +65,9 @@ class MagicNightsBootstrap(
         |energía en el escenario, y cada canción resonaba en lo más profundo de mi ser. La atmósfera estaba cargada
         |de emoción y camaradería, y el público se entregó por completo. 🎸🎶 #LaVela #ConciertoInolvidable""".trimMargin(),
             5.0
-        ),
-        Comment(
-            initUsers["sol"]!!,
-            initShows["cachen"]!!,
-            "Que divertido estuvo, la pase re bien con mis amigos.",
-            4.5
-        ),
-        Comment(initUsers["ana"]!!, initShows["cachen"]!!, "Pésimo. El sonido anduvo mal todo el show", 1.5)
+        ), Comment(
+            initUsers["sol"]!!, initShows["cachen"]!!, "Que divertido estuvo, la pase re bien con mis amigos.", 4.5
+        ), Comment(initUsers["ana"]!!, initShows["cachen"]!!, "Pésimo. El sonido anduvo mal todo el show", 1.5)
     )
 
     fun initTickets(): List<Ticket> {
@@ -101,21 +75,24 @@ class MagicNightsBootstrap(
         val seatsACDC = showDates[6].show.facility.seats
 
         return listOf(
-            ticketCreator.createTicket(
+            Ticketfactory().createTicket(
                 TicketFactoryTypes.NORMAL,
                 initUsers["sol"]!!,
-                showDates[6]!!,
-                seatRepository.save(seatsACDC[0].apply { modifyUsedCapacity(1) })),
-            ticketCreator.createTicket(
+                showDateRepository.save(showDates[6].apply { modifyOcupation(seatsACDC[0]) }),
+                seatsACDC[0]
+            ),
+            Ticketfactory().createTicket(
                 TicketFactoryTypes.NORMAL,
                 initUsers["ana"]!!,
-                showDates[6]!!,
-                seatRepository.save(seatsACDC[1].apply { modifyUsedCapacity(1) })),
-            ticketCreator.createTicket(
+                showDateRepository.save(showDates[6].apply { modifyOcupation(seatsACDC[1]) }),
+                seatsACDC[1]
+            ),
+            Ticketfactory().createTicket(
                 TicketFactoryTypes.NORMAL,
                 initUsers["carolina"]!!,
-                showDates[6]!!,
-                seatRepository.save(seatsACDC[0].apply { modifyUsedCapacity(1) })),
+                showDateRepository.save(showDates[6].apply { modifyOcupation(seatsACDC[0]) }),
+                seatsACDC[0]
+            ),
         )
     }
 
@@ -164,50 +141,47 @@ class MagicNightsBootstrap(
         }
     }
 
-    private fun <T> filterExistingObjects(objects: List<T>) =
-        objects.filter {
-            when (it) {
-                is Seat -> {
-                    val seat = seatRepository.findSeatByTypeIs(it.type)
-                    seat == null
-                }
-
-                is User -> {
-                    val user = userRepository.findByUsername(it.username).getOrNull()
-                    user == null
-                }
-
-                is Facility -> {
-                    val facility = facilityRepository.findByNameEquals(it.name).getOrNull()
-                    facility == null
-                }
-
-                is Show -> {
-                    val facility = showRepository.findByNameEquals(it.name).getOrNull()
-                    facility == null
-                }
-
-                is Band -> {
-                    val band = bandRepository.findByNameEquals(it.name).getOrNull()
-                    band == null
-                }
-
-                is ShowDate -> {
-                    val showDate = showDateRepository.findByDateAndShowId(it.date, it.show.id).getOrNull()
-                    showDate == null
-                }
-
-                is Ticket -> {
-                    true
-                }
-
-                is Comment -> {
-                    true
-                }
-
-                else -> throw IllegalArgumentException("Unsupported Class: ${it!!::class.simpleName}")
-
-
+    private fun <T> filterExistingObjects(objects: List<T>) = objects.filter {
+        when (it) {
+            is Seat -> {
+                val seat = seatRepository.findSeatByTypeIs(it.type)
+                seat == null
             }
+
+            is User -> {
+                val user = userRepository.findByUsername(it.username).getOrNull()
+                user == null
+            }
+
+            is Facility -> {
+                val facility = facilityRepository.findByNameEquals(it.name).getOrNull()
+                facility == null
+            }
+
+            is Show -> {
+                val facility = showRepository.findByNameEquals(it.name).getOrNull()
+                facility == null
+            }
+
+            is Band -> {
+                val band = bandRepository.findByNameEquals(it.name).getOrNull()
+                band == null
+            }
+
+            is ShowDate -> {
+                val showDate = showDateRepository.findByDateAndShowId(it.date, it.show.id).getOrNull()
+                showDate == null
+            }
+
+            is Ticket -> {
+                true
+            }
+
+            is Comment -> {
+                true
+            }
+
+            else -> throw IllegalArgumentException("Unsupported Class: ${it!!::class.simpleName}")
         }
+    }
 }

@@ -26,10 +26,4 @@ class SeatService(
     
     fun findAllSeatByShowDateId(shoDateId: Long): List<Seat> =
         seatRepository.findAllByShowDateId(shoDateId).map { it }
-
-    @Transactional(Transactional.TxType.REQUIRED)
-    fun updateUsedCapacityById(id: Long, qty: Int) {
-        val seat = findByIdOrError(id).apply { modifyUsedCapacity(qty) }
-        seatRepository.save(seat)
-    }
 }

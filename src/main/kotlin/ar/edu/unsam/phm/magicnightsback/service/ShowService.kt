@@ -2,18 +2,21 @@ package ar.edu.unsam.phm.magicnightsback.service
 
 import ar.edu.unsam.phm.magicnightsback.controller.ShowController.ShowRequest
 import ar.edu.unsam.phm.magicnightsback.domain.*
-import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowDateDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowExtraDataDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowStatsDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.toDTO
-import ar.edu.unsam.phm.magicnightsback.domain.enums.StatColors
-import ar.edu.unsam.phm.magicnightsback.exceptions.BadArgumentException
+import ar.edu.unsam.phm.magicnightsback.exceptions.BusinessException
 import ar.edu.unsam.phm.magicnightsback.exceptions.CreationError
 import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
 import ar.edu.unsam.phm.magicnightsback.exceptions.NotFoundException
-import ar.edu.unsam.phm.magicnightsback.repository.*
+import ar.edu.unsam.phm.magicnightsback.repository.BandRepository
+import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
+import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.time.LocalDate
+import java.time.LocalDateTime
 import kotlin.jvm.optionals.getOrNull
 
 @Service
@@ -75,25 +78,33 @@ class ShowService(
         return AdminStatBuilder()
             .statSales(showSales, Pivots(1000000.0, 2000000.0))
             .statPending(pendingAttendees, Pivots(0.0, 50.0), show)
-            .statRentability(rentability, Pivots(100.0, 150.0))
+            .statRentability(rentability, Pivots(0.0, 50.0))
             .statSoldOut(showDatesSoldOut, Pivots(50.0, 75.0), showDatesIds.size)
             .build()
     }
 
     fun isSoldOut(showId: Long) = showDateService.isShowSoldOut(showId)
 
-    fun createShowDate(showId: Long, userId: Long,  body: ShowDateDTO) {
-        userService.validateAdminStatus(userId)
-        validateNewShowDate(showId)
+    @Transactional(Transactional.TxType.REQUIRED)
+    fun newShowDate(showId: Long, date: LocalDateTime) {
+        validateNewShowDate(showId, date.toLocalDate())
         val show = findByIdOrError(showId)
-        val showDate = ShowDate(show,body.date)
-        showDateService.addShowDate(showDate)
+        val showDate = ShowDate(show, date)
+        showDateService.save(showDate)
+        clearPendingAttendees(show)
     }
 
-    private fun validateNewShowDate(showId: Long) {
-        val kpis = getKPIs(showId)
-        val kpisConditions = kpis.all { it.color == StatColors.YELLOW }
-        if (kpisConditions) throw BadArgumentException(CreationError.NEW_DATE_INVALID_CONDITIONS)
+    @Transactional(Transactional.TxType.REQUIRED)
+    fun clearPendingAttendees(show: Show) {
+        showRepository.save(show.apply { clearPendingAttendees() })
+    }
+
+    private fun validateNewShowDate(showId: Long, date: LocalDate) {
+        if (date.isBefore(LocalDate.now())) throw BusinessException(CreationError.DATE_NOT_PASSED)
+        if (showDateService.findAllByShowId(showId).any { it.date.toLocalDate() == date }) throw BusinessException(
+            CreationError.DATE_ALREADY_EXISTS
+        )
+        if (!getKPIs(showId).all { it.newDateConditionMeet }) throw BusinessException(CreationError.NEW_DATE_INVALID_CONDITIONS)
     }
 
     private fun filter(shows: Iterable<Show>, params: ShowRequest): List<Show> {
@@ -113,58 +124,9 @@ class ShowService(
         }
     }
 }
-//    @Autowired
-//    private lateinit var userRepository: UserRepository
-//
-//    @Autowired
-//    private lateinit var facilityRepository: FacilityRepository
-//
-//    @Autowired
-//    lateinit var showRepository: ShowRepository
-//
-//    @Autowired
-//    lateinit var userService: UserService
-//
 
-//
-//    
-//    fun findById(showId: Long): Show {
-//        //  return show.toShowDTO(showService.getAPossibleUserById(userId),comments)
-//        return validateOptionalIsNotNull(showRepository.findById(showId))
-//    }
-//
-////    @Transactional(Transactional.TxType.REQUIRED)
-////    fun createShowDate(showId: Long, userId: Long,  body: ShowDateDTO): ShowDate {
-////        userService.validateAdminStatus(userId)
-////        val show = validateOptionalIsNotNull(showRepository.findById(showId))
-////        return show.addDate(body.date)
-////    }
-//
-//    
 
-//
-//    
-//    fun findByName(name: String): Show = validateOptionalIsNotNull(showRepository.findByNameEquals(name))
-//
 ////    fun getBusyFacilities(): List<Facility> {
 ////        val facilitiesID = showRepository.busyFacilities().map { it }
 ////        return facilityRepository.findAll().filter { it.id in facilitiesID }
 ////    }
-//
-////    private fun filter(shows: Iterable<Show>, params: ShowRequest): List<Show> {
-////        val filter = createFilter(params)
-////        return shows.filter { show -> filter.apply(show) }
-////    }
-//
-////    private fun createFilter(params: ShowRequest): Filter<Show> {
-////        val user = userRepository.findById(params.userId)
-////        return Filter<Show>().apply {
-////            addFilterCondition(BandFilter(params.bandKeyword))
-////            addFilterCondition(FacilityFilter(params.facilityKeyword))
-////            if (user.isPresent) addFilterCondition(WithFriends(params.withFriends, user.get()))
-////        }
-////    }
-////
-////    fun getAPossibleUserById(userId: Long) = if (userId > -1) userRepository.getById(userId) else null
-//}
-//

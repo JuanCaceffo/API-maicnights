@@ -13,7 +13,8 @@ interface ShowDateRepository: CrudRepository<ShowDate, Long> {
         "show",
         "show.band",
         "show.facility",
-        "show.facility.seats"
+        "show.facility.seats",
+        "seatOcupation"
     ])
     override fun findById(id: Long): Optional<ShowDate>
 
@@ -21,7 +22,8 @@ interface ShowDateRepository: CrudRepository<ShowDate, Long> {
         "show",
         "show.band",
         "show.facility",
-        "show.facility.seats"
+        "show.facility.seats",
+        "seatOcupation"
     ])
     override fun findAll(): Iterable<ShowDate>
 

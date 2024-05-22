@@ -3,10 +3,7 @@ package ar.edu.unsam.phm.magicnightsback.domain
 import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
 import ar.edu.unsam.phm.magicnightsback.exceptions.BusinessException
 import ar.edu.unsam.phm.magicnightsback.utils.notNegative
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import jakarta.persistence.*
 
 @Entity
 data class Seat(
@@ -21,9 +18,14 @@ data class Seat(
         require(maxCapacity > 0) { throw BusinessException("maxCapacity must be greater than zero") }
     }
 
-
     val price = type.price
+}
 
+@Embeddable
+class SeatOcupation(
+    @ManyToOne(fetch = FetchType.EAGER)
+    val seat: Seat
+) {
     private var usedCapacity: Int = 0
 
     fun modifyUsedCapacity(value: Int) {
@@ -32,7 +34,7 @@ data class Seat(
         usedCapacity += value
     }
 
-    fun available() = maxCapacity.minus(usedCapacity)
+    fun available():Int = seat.maxCapacity.minus(usedCapacity)
 
     private fun validateMaxCapacity() {
         available().notNegative(BusinessException("Exceeded max capacity"))

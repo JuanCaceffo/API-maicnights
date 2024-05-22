@@ -6,6 +6,7 @@ import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowDateDTO
 import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
 import ar.edu.unsam.phm.magicnightsback.exceptions.ResponseFindException
 import ar.edu.unsam.phm.magicnightsback.repository.ShowDateRepository
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import kotlin.jvm.optionals.getOrDefault
@@ -40,7 +41,8 @@ class ShowDateService(
     fun showCost(id: Long): Double =
         showDateRepository.showCost(id).getOrDefault(0.0)
 
-    fun addShowDate(showDate: ShowDate) {
+    @Transactional(Transactional.TxType.REQUIRED)
+    fun save(showDate: ShowDate) {
         showDateRepository.save(showDate)
     }
 }

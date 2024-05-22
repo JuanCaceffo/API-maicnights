@@ -2,30 +2,58 @@ package ar.edu.unsam.phm.magicnightsback.domain
 
 import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowStatsDTO
 import ar.edu.unsam.phm.magicnightsback.domain.enums.StatColors
-import java.util.UUID
+import java.util.*
 
 class AdminStatBuilder {
     private val stats = mutableListOf<ShowStatsDTO>()
 
     fun statSales(value: Double, pivots: Pivots): AdminStatBuilder {
-        stats.add(ShowStatsDTO(UUID.randomUUID(), value, calcular(value, pivots)))
+        stats.add(
+            ShowStatsDTO(
+                id = UUID.randomUUID(),
+                value = value,
+                color = calcular(value, pivots),
+                newDateConditionMeet = true
+            )
+        )
         return this
     }
 
     fun statPending(value: Int, pivots: Pivots, show: Show): AdminStatBuilder {
         val colorValue = show.allTicketPrices().min() * value
-        stats.add(ShowStatsDTO(UUID.randomUUID(), value.toDouble(), calcular(colorValue, pivots)))
+        stats.add(
+            ShowStatsDTO(
+                id = UUID.randomUUID(),
+                value = value.toDouble(),
+                color = calcular(colorValue, pivots),
+                newDateConditionMeet = calcular(colorValue, pivots) != StatColors.RED
+            )
+        )
         return this
     }
 
     fun statRentability(value: Double, pivots: Pivots): AdminStatBuilder {
-        stats.add(ShowStatsDTO(UUID.randomUUID(), value, calcular(value, pivots)))
+        stats.add(
+            ShowStatsDTO(
+                id = UUID.randomUUID(),
+                value = value,
+                color = calcular(value, pivots),
+                newDateConditionMeet = calcular(value, pivots) != StatColors.RED
+            )
+        )
         return this
     }
 
     fun statSoldOut(value: Int, pivots: Pivots, totalDates: Int): AdminStatBuilder {
         val colorValue = value / totalDates * 100.0
-        stats.add(ShowStatsDTO(UUID.randomUUID(), value.toDouble(), calcular(colorValue, pivots)))
+        stats.add(
+            ShowStatsDTO(
+                id = UUID.randomUUID(),
+                value = value.toDouble(),
+                color = calcular(colorValue, pivots),
+                newDateConditionMeet =  calcular(colorValue, pivots) != StatColors.RED
+            )
+        )
         return this
     }
 

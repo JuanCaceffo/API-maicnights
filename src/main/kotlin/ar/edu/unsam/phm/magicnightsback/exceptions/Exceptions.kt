@@ -1,9 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.exceptions
 
-import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ResponseStatus
-import java.util.*
 
 object UserError {
     const val NONEXISTENT_USER_COMMENT = "El comentario que intenta eliminar no existe"
@@ -24,18 +22,14 @@ object ShowError {
     const val MSG_SETS_UNAVILABLES = "Excedio la cantidad de asientos disponibles"
     const val TICKET_CART_NOT_FOUND = "No se encontró la fecha en el show especificado"
 }
+
 object ShowDateError{
     const val EXCEEDED_CAPACITY = "Excedio la capacidad maxima de asientos para esta ubicacion"
     const val MSG_DATE_NOT_FOUND = "La fecha que intento buscar no existe"
-    const val INVALID_DATE = "La fecha debe ser posterior a la actual"
-    const val DATE_ALREADY_EXISTS = "La fecha que desea agregar ya existe"
+
     const val NEW_SHOW_INVALID_CONDITIONS = "Las condiciones no permiten agregar una nueva fecha para el show"
 }
 
-object RepositoryError {
-    const val ID_NOT_FOUND = "El ID no corresponde con ningún elemento del repositorio"
-    const val ELEMENT_NOT_FOUND = "Elemento no encontrado"
-}
 
 object FacilityError {
     const val INVALID_SEAT_TYPE = "El tipo de asiento ingresado no es valido para este tipo de instalacion"
@@ -79,6 +73,7 @@ object CreationError {
     fun CANNOT_CREATE(name: String = "entity") = "Can't create $name"
 
     const val DATE_NOT_PASSED = "The date has not been passed"
+    const val DATE_ALREADY_EXISTS = "Date already exists"
     const val ALREADY_PASSED = "The date has already been passed"
     const val NO_CAPACITY = "Not enough seat capacity"
     const val NEGATIVE_PRICE = "Fixed price can't be negative."

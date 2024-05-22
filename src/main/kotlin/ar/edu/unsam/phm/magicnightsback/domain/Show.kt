@@ -82,25 +82,18 @@ import jakarta.persistence.*
 //    fun allDatesWithIds() = dates.map { it.toShowDateDTO() }.sortedBy { it.date }
 //    fun allAttendees() = dates.flatMap { it.attendees }.toSet()
 //    fun soldOutDates() = dates.filter { it.isSoldOut() }.size
-//    fun newDateAvailable(show: Show) = PivotStats.stats.all { it.newDateCondition(show) }
-//
-//    //Validations
-//    fun validNewDate(date: LocalDate) {
-//        if (date.isBefore(LocalDate.now())) throw BusinessException(ShowDateError.INVALID_DATE)
-//        if (dates.any { it.date.toLocalDate() == date }) throw BusinessException(ShowDateError.DATE_ALREADY_EXISTS)
-//        if (!newDateAvailable(this)) throw BusinessException(ShowDateError.NEW_SHOW_INVALID_CONDITIONS)
-//    }
-//}
+
+
 
 @Entity
 data class Show(
     @Column(nullable = false, length = ColumnLength.MEDIUM)
     val name: String,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     val band: Band,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     val facility: Facility
 ) {
     @Id
@@ -125,6 +118,10 @@ data class Show(
     fun currentTicketPrice(seat: Seat) = baseSeatCost(seat) * rentability.factor
     fun addPendingAttendee() {
         pendingAttendees += 1
+    }
+
+    fun clearPendingAttendees() {
+        pendingAttendees = 0
     }
 
     private fun baseCostPerSeat() = cost / facility.totalCapacity()

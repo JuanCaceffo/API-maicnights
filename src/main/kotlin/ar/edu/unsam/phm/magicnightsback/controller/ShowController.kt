@@ -91,10 +91,14 @@ class ShowController(
 
         val adminSummary =
             listOf(
-                AdminSummary("Entradas vendidas totales:", ticketsSold.toDouble())) +
-            seats.map {
-                AdminSummary("Entradas vendidas " + it.type.name + ":", ticketService.ticketCountByShowIdAndSeatId(showId, it.id).toDouble())
-            } + listOf(
+                AdminSummary("Entradas vendidas totales:", ticketsSold.toDouble())
+            ) +
+                    seats.map {
+                        AdminSummary(
+                            "Entradas vendidas " + it.type.name + ":",
+                            ticketService.ticketCountByShowIdAndSeatId(showId, it.id).toDouble()
+                        )
+                    } + listOf(
                 AdminSummary("Recaudacion Total:", showSales),
                 AdminSummary("Costo Total:", showCost),
                 AdminSummary("Gente en Espera:", pendingAttendees.toDouble()),
@@ -103,10 +107,11 @@ class ShowController(
         return showService.findByIdOrError(showId).toShowAdminDetailsDTO(stats, adminSummary)
     }
 
-    @PostMapping("{showId}/new-show-date")
-    @Operation(summary = "Permite agregar una fecha")
-    fun createShowDate(@PathVariable showId: Long, @RequestParam userId: Long,@RequestBody body: ShowDateDTO) {
-       showService.createShowDate(showId, userId, body)
+    @PostMapping("/new-show-date")
+    @Operation(summary = "Adds a new show date.")
+    fun createShowDate(@RequestBody body: ShowDateRequest) {
+        userService.validateAdminStatus(body.userId)
+        showService.newShowDate(body.showId, body.date)
     }
 
     data class ShowRequest(

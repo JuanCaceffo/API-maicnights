@@ -20,7 +20,7 @@ class CartService(
 ) {
     private val cart: HashMap<Long, MutableList<Ticket>> = HashMap()
 
-    
+
     fun getCart(userId: Long): List<Ticket> {
         return cart[userId] ?: emptyList()
     }
@@ -51,7 +51,7 @@ class CartService(
             it.buyDate = LocalDateTime.now()
         }
         cart[userId]?.forEach {
-            seatService.updateUsedCapacityById(it.seat.id, 1)
+            showDateService.save(it.showDate.apply { modifyOcupation(it.seat, 1) })
             ticketService.save(it)
         }
         clearAll(userId)
@@ -71,10 +71,12 @@ class CartService(
         cart.values.flatMap { tickets -> tickets.filter { it.seat.type == seatType } }.count()
 
     private fun validateReservation(showDate: ShowDate, seat: Seat, quantityToReservate: Int) {
+        val available = showDate.available()[seat] ?: 0
+
         if (showDate.beenStaged())
             throw BusinessException(CreationError.ALREADY_PASSED)
 
-        if (seat.available().minus(seatReservations(seat.type) + quantityToReservate) < 0) {
+        if (available.minus(seatReservations(seat.type) + quantityToReservate) < 0) {
             throw BusinessException(CreationError.NO_CAPACITY)
         }
     }

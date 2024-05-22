@@ -24,7 +24,8 @@ import java.util.UUID
 data class ShowStatsDTO (
     val id: UUID,
     val value: Double,
-    val color: StatColors
+    val color: StatColors,
+    val newDateConditionMeet: Boolean
 )
 
 //data class TicketsPerSeatType(

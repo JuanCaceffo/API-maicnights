@@ -10,9 +10,9 @@ data class SeatDTO(
     val available: Int,
 )
 
-fun Seat.toDTO(show: Show) = SeatDTO(
+fun Seat.toDTO(show: Show, available: Map<Seat, Int>) = SeatDTO(
     id,
     type.name,
     show.currentTicketPrice(this),
-    available()
+    available[this] ?: 0
 )

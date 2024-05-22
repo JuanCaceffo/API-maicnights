@@ -37,7 +37,6 @@ abstract class Facility(
     fun fixedCostVariant(): Double = 0.0
     fun cost() = fixedPrice + fixedCostVariant()
     fun totalCapacity() = seats.sumOf { it.maxCapacity }
-    fun soldOut() = seats.all { it.available() == 0 }
     abstract fun validSeatTypes(): List<SeatTypes>
     fun validateSeatType(seat: Seat) {
         if (seat.type !in validSeatTypes()) {

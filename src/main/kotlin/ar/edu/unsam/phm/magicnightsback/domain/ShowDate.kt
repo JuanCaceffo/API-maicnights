@@ -1,10 +1,5 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import ar.edu.unsam.phm.magicnightsback.exceptions.BadArgumentException
-import ar.edu.unsam.phm.magicnightsback.exceptions.BusinessException
-import ar.edu.unsam.phm.magicnightsback.exceptions.CreationError
-import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
-import ar.edu.unsam.phm.magicnightsback.utils.notNegative
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -22,8 +17,7 @@ import java.time.LocalDateTime
 //    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
 //    val attendees = mutableSetOf<User>()
 //
-//    @ElementCollection(fetch = FetchType.LAZY)
-//    val reservedSeats = show.facility.validSeatTypes().associateWith { 0 }.toMutableMap()
+
 //
 //    fun addAttendee(user: User) {
 //        attendees.add(user)
@@ -68,6 +62,15 @@ data class ShowDate(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0
 
+    @ElementCollection(fetch = FetchType.LAZY)
+    val seatOcupation = show.facility.seats.map { SeatOcupation(it) }.toSet()
+
     // Availability
+    fun isSoldOut() = seatOcupation.all { it.available() == 0 }
+    fun available(): Map<Seat, Int> = seatOcupation.associate { it.seat to it.available() }
+    fun modifyOcupation(seat: Seat, quantity: Int = 1) {
+        seatOcupation.first { it.seat == seat }.modifyUsedCapacity(quantity)
+    }
+
     fun beenStaged(): Boolean = date.isBefore(LocalDateTime.now())
 }
