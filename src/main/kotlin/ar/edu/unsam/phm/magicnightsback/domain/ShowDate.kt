@@ -67,7 +67,7 @@ data class ShowDate(
 
     // Availability
     fun isSoldOut() = seatOcupation.all { it.available() == 0 }
-    fun available(): Map<Seat, Int> = seatOcupation.associate { it.seat to it.available() }
+    fun available(reservation: Int = 0): Map<Seat, Int> = seatOcupation.associate { it.seat to it.available() - reservation }
     fun modifyOcupation(seat: Seat, quantity: Int = 1) {
         seatOcupation.first { it.seat == seat }.modifyUsedCapacity(quantity)
     }

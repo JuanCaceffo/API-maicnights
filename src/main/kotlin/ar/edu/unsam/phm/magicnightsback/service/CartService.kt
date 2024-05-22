@@ -67,8 +67,8 @@ class CartService(
         return cart[userId]?.sumOf { it.price } ?: 0.0
     }
 
-    private fun seatReservations(seatType: SeatTypes) =
-        cart.values.flatMap { tickets -> tickets.filter { it.seat.type == seatType } }.count()
+    fun seatReservations(seat: Seat) =
+        cart.values.flatMap { tickets -> tickets.filter { it.seat == seat } }.count()
 
     private fun validateReservation(showDate: ShowDate, seat: Seat, quantityToReservate: Int) {
         val available = showDate.available()[seat] ?: 0
@@ -76,7 +76,7 @@ class CartService(
         if (showDate.beenStaged())
             throw BusinessException(CreationError.ALREADY_PASSED)
 
-        if (available.minus(seatReservations(seat.type) + quantityToReservate) < 0) {
+        if (available.minus(seatReservations(seat) + quantityToReservate) < 0) {
             throw BusinessException(CreationError.NO_CAPACITY)
         }
     }
