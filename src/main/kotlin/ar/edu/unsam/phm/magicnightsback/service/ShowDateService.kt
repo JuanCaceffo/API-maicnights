@@ -24,11 +24,23 @@ class ShowDateService(
 
     fun getAllHydrousShowDates() = showDateRepository.findAll().map { showDate ->  getHydrousShowDate(showDate)}
 
-    fun findById(id: String): ShowDate? =
-        showDateRepository.findById(id).getOrNull()
+    fun findById(id: String): ShowDate? {
+        return showDateRepository.findById(id).getOrNull()
+    }
 
-    fun findByIdOrError(id: String): ShowDate =
-        findById(id) ?: throw ResponseFindException(FindError.NOT_FOUND(id, ShowDate::class.stringMe()))
+    fun findHydrousById(id: String): ShowDate? {
+        val showDate = showDateRepository.findById(id).getOrNull()
+        return this.getHydrousShowDate(showDate!!)
+    }
+
+    fun findByIdOrError(id: String): ShowDate {
+        return findById(id) ?: throw ResponseFindException(FindError.NOT_FOUND(id, ShowDate::class.stringMe()))
+    }
+
+    fun findHydrousByIdOrError(id: String): ShowDate {
+        val showDate = findById(id) ?: throw ResponseFindException(FindError.NOT_FOUND(id, ShowDate::class.stringMe()))
+        return this.getHydrousShowDate(showDate)
+    }
 
     fun findAllByShowId(showId: String): List<ShowDate> =
         showDateRepository.findAllByShowId(showId)
