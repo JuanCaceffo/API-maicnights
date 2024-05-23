@@ -21,6 +21,7 @@ data class Show(
     @Transient
     lateinit var facility: Facility
     var pendingAttendees = 0
+    var clicks_quantity: Long = 0L
 
 // Seat methods
     fun haveSeat(seat: Seat) = facility.seats.any { it.id == seat.id }
@@ -37,4 +38,5 @@ data class Show(
     }
 
     fun totalCapacity() = facility.totalCapacity()
+    fun addClick() { clicks_quantity += 1 }
 }

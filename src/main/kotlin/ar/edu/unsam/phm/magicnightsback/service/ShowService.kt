@@ -103,6 +103,12 @@ class ShowService(
         }
     }
 
+    fun addClick(id: String) {
+        val show = findByIdOrError(id)
+        show.addClick()
+        showRepository.save(show)
+    }
+
 
 }
 //    @Autowired

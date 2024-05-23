@@ -40,6 +40,9 @@ class ShowController(
             showComments
         )
 
+        // Se actualizan los clicks en el show
+        showService.addClick(id)
+
         return hydrousService.getHydrousShow(showService.findById(id)!!).toShowDetailsDTO(stats) ?: throw NotFoundException("") //TODO: return showService.findByIdOrError(id).toShowDetailsDTO(stats)
     }
 
