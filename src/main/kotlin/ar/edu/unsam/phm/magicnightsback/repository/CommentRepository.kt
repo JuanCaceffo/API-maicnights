@@ -1,17 +1,23 @@
 package ar.edu.unsam.phm.magicnightsback.repository
 
 import ar.edu.unsam.phm.magicnightsback.domain.Comment
+import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import java.util.*
 
-interface CommentRepository : CrudRepository<Comment, Long>{
-    fun findByShowId(id: String): Iterable<Comment>
-    fun findByUserId(id: Long): Iterable<Comment>
-    fun countByUserIdAndShowId(userId:Long, showId: String): Int
 
-    @Query("""
+interface CommentRepository : CrudRepository<Comment, Long> {
+    @EntityGraph(attributePaths = ["user"])
+    fun findByShowId(id: String): Iterable<Comment>
+
+    @EntityGraph(attributePaths = ["user"])
+    fun findByUserId(id: Long): Iterable<Comment>
+    fun countByUserIdAndShowId(userId: Long, showId: String): Int
+
+    @Query(
+        """
         SELECT AVG(C.rating)
         FROM Comment C
         WHERE C.showId = :showId

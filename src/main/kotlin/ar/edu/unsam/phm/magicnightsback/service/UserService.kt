@@ -3,9 +3,11 @@ package ar.edu.unsam.phm.magicnightsback.service
 import ar.edu.unsam.phm.magicnights.utils.stringMe
 import ar.edu.unsam.phm.magicnightsback.domain.User
 import ar.edu.unsam.phm.magicnightsback.domain.dto.*
+import ar.edu.unsam.phm.magicnightsback.domain.enums.UserRole
 import ar.edu.unsam.phm.magicnightsback.exceptions.AuthenticationException
 import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
 import ar.edu.unsam.phm.magicnightsback.exceptions.NotFoundException
+import ar.edu.unsam.phm.magicnightsback.exceptions.UserError
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,15 +27,10 @@ class UserService(
     fun findByIdOrError(id: Long): User =
         findById(id) ?: throw NotFoundException(FindError.NOT_FOUND(id.toString(), User::class.toString()))
 
-    
     fun userExists(id: Long): Boolean = userRepository.existsUserById(id)
 
-    
     fun getBalance(userId: Long): Double = findByIdOrError(userId).balance
 
-//    
-//    fun getUserImageUrls(users: Set<Long>): Set<String> =
-//        userRepository.findImageUrl(users)
 
     
     fun validateUserExists(id: Long) {
@@ -43,7 +40,6 @@ class UserService(
             )
         }
     }
-
     
     fun authenticate(username: String, password: String): User =
         userRepository.findByUsernameAndPassword(username, password).getOrNull()
@@ -54,6 +50,9 @@ class UserService(
         val user: User = findByIdOrError(id)
         return user.friends.map { it.toFriendDTO() }
     }
+
+    fun validateAdminStatus(id: Long) =
+        require(findByIdOrError(id).role == UserRole.ADMIN) { throw AuthenticationException(FindError.USER_IS_NOT_ADMIN) }
 
     @Transactional(Transactional.TxType.REQUIRED)
     fun deleteUserFriend(userId: Long, friendId: Long): List<FriendDTO> {
@@ -126,8 +125,7 @@ class UserService(
 //        return userRepository.findUsersWithMoreTicketsThan(ticketsQuantity).map { user -> user.toDTO() }
 //    }
 //
-//    fun validateAdminStatus(id: Long) =
-//        require(findOrErrorById(id).isAdmin) { throw AuthenticationException(UserError.USER_IS_NOT_ADMIN) }
+
 //
 
 //

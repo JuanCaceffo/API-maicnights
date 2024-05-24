@@ -7,20 +7,22 @@ import java.time.LocalDateTime
 
 
 data class TicketDTO(
-    override val id: Long,
-    override val showImg: String,
-    override val showName: String,
-    override val bandName: String,
-    override val facilityName: String,
-    override val prices: List<Double>,
+    val id: Long,
+    val showImg: String,
+    val showName: String,
+    val bandName: String,
+    val facilityName: String,
+    val prices: List<Double>,
     override val rating: Double,
     override val totalComments: Int,
     override val friendsImgs: List<String>,
     override val totalFriendsAttending: Int,
     override val dates: List<ShowDateDTO>,
     val seatId: Long,
-    val showDateId: String
-): ShowTicket, ShowStats, ShowWithFriends, ShowDates
+    val showDateId: String,
+    val canBeCommented: Boolean,
+    val date: LocalDateTime
+):  ShowStats, ShowWithFriends, ShowDates
 
 
 fun Ticket.toDTO(stats: ShowExtraDataDTO): TicketDTO = TicketDTO(
@@ -36,7 +38,9 @@ fun Ticket.toDTO(stats: ShowExtraDataDTO): TicketDTO = TicketDTO(
     stats.totalFriendsAttending,
     stats.dates,
     seat.id,
-    showDate.id
+    showDate.id,
+    canBeCommented(),
+    showDate.date
 )
 
 //data class TicketDTO(

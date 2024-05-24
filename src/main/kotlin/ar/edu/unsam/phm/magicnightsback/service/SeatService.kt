@@ -30,14 +30,9 @@ class SeatService(
         findById(id) ?: throw ResponseFindException(FindError.NOT_FOUND(id.toString(), Seat::class.stringMe()))
 
     @Transactional(Transactional.TxType.NEVER)
-    fun findAllSeatByShowDateId(shoDateId: String): List<Seat> {
-        val showdate = showDateRepository.findById(shoDateId).get()
+    fun findAllSeatByShowDateId(showDateId: String): List<Seat> {
+        val showdate = showDateRepository.findById(showDateId).get()
         return seatRepository.findAllByFacilityId(showdate.show.facilityId).toList()
     }
 
-    @Transactional(Transactional.TxType.REQUIRED)
-    fun updateUsedCapacityById(id: Long, qty: Int) {
-        val seat = findByIdOrError(id).apply { modifyUsedCapacity(qty) }
-        seatRepository.save(seat)
-    }
 }

@@ -43,8 +43,7 @@ fun Comment.toShowCommentDTO(): CommentDTO = this.toDTO().apply {
 
 data class CommentCreateDTO(
     val userId: Long,
-    val showId: String,
-    val showDateId: String,
+    val ticketId: Long,
     val text: String,
     val rating: Double,
 )

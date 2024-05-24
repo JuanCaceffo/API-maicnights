@@ -1,15 +1,9 @@
 package ar.edu.unsam.phm.magicnightsback.service
 
 import ar.edu.unsam.phm.magicnights.utils.stringMe
-import ar.edu.unsam.phm.magicnightsback.domain.Comment
-import ar.edu.unsam.phm.magicnightsback.domain.dto.CommentDTO
-import ar.edu.unsam.phm.magicnightsback.domain.dto.CommentStadisticsDTO
-import ar.edu.unsam.phm.magicnightsback.domain.dto.toShowCommentDTO
-import ar.edu.unsam.phm.magicnightsback.domain.dto.toUserCommentDTO
-import ar.edu.unsam.phm.magicnightsback.exceptions.BusinessException
-import ar.edu.unsam.phm.magicnightsback.exceptions.DeleteError
-import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
-import ar.edu.unsam.phm.magicnightsback.exceptions.ResponseFindException
+import ar.edu.unsam.phm.magicnightsback.domain.*
+import ar.edu.unsam.phm.magicnightsback.domain.dto.*
+import ar.edu.unsam.phm.magicnightsback.exceptions.*
 import ar.edu.unsam.phm.magicnightsback.repository.CommentRepository
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import ar.edu.unsam.phm.magicnightsback.repository.UserRepository
@@ -20,21 +14,13 @@ import org.springframework.stereotype.Service
 import kotlin.jvm.optionals.getOrNull
 
 @Service
-class CommentService {
-    @Autowired
-    lateinit var hydrousService: HydrousService
+class CommentService(
+    @Autowired var commentsRepository: CommentRepository,
+    @Autowired var showRepository: ShowRepository,
+    @Autowired var ticketService: TicketService,
+    val hydrousService: HydrousService
 
-    @Autowired
-    lateinit var commentsRepository: CommentRepository
-
-    @Autowired
-    lateinit var showRepository: ShowRepository
-
-    @Autowired
-    lateinit var userRepository: UserRepository
-
-    //@Transactional(Transactional.TxType.NEVER)
-    //fun findAll(): Iterable<Comment> = commentsRepository.findAll()
+) {
 
     @Transactional(Transactional.TxType.NEVER)
     fun getShowComments(id: String): Set<CommentDTO> = commentsRepository.findByShowId(id).map { it.toShowCommentDTO() }.toSet()
@@ -43,11 +29,9 @@ class CommentService {
     fun findById(id: Long): Comment? =
         commentsRepository.findById(id).getOrNull()
 
-    
     fun findByIdOrError(id: Long): Comment =
         findById(id) ?: throw ResponseFindException(FindError.NOT_FOUND(id.toString(), Comment::class.stringMe()))
 
-    
     fun findByUserId(id: Long): Set<CommentDTO> =
         commentsRepository.findByUserId(id).map { hydrousService.getHydrousComment(it, ShowFieldsToHydrous.BAND).toUserCommentDTO() }.toSet()
 
@@ -80,38 +64,27 @@ class CommentService {
         return CommentStadisticsDTO(totalRating.truncate(1), totalComments)
     }
 
-//
-//    
 //    fun findCommentByUserId(id: Long, sid: Long): Comment {
 //        return validateOptionalIsNotNull(commentsRepository.findById(id))
 //    }
-//
+    @Transactional(Transactional.TxType.REQUIRED)
+    fun addComment(commentCreate: CommentCreateDTO) {
+        //TODO: hidratar el showdate en ticket
+        val ticket = ticketService.findByIdOrError(commentCreate.ticketId)
+        validateShowAvaiableToComment(ticket, commentCreate.userId)
+        commentsRepository.save(Comment(ticket.user, ticket.showId, commentCreate.text, commentCreate.rating))
+    }
 
-//
-////    @Transactional(Transactional.TxType.REQUIRED)
-////    fun addComment(commentCreate: CommentCreateDTO) {
-////        val show = validateOptionalIsNotNull(showRepository.findById(commentCreate.showId))
-////        val user = validateOptionalIsNotNull(userRepository.findById(commentCreate.userId))
-////        validateShowAvaiableToComment(commentCreate.showDateId,user,show)
-////        commentsRepository.save(Comment(user, show, commentCreate.text, commentCreate.rating))
-////    }
-//
-
-//
-////    private fun validateShowAvaiableToComment(showDateId: String, user: User, show: Show) {
-////        val showDate = show.getShowDateById(showDateId)
-////        if (!showDate.isAttendee(user)){
-////            throw BusinessException(CommentError.IS_NOT_ATTENDEE)
-////        }
-////        if (!showDate.datePassed()) {
-////            throw BusinessException(CommentError.SHOWDATE_NOT_PASSED)
-////        }
-////        if (isAlreadyCommented(user.id,show.id)){
-////            throw BusinessException(CommentError.SHOW_ALREADY_COMMENTED)
-////        }
-////    }
-//
-//    //fun canBeCommented(showDate: ShowDate, user: User, show: Show) = !isAlreadyCommented(user.id, show.id) && showDate.datePassed() && showDate.isAttendee(user)
-//
-//    fun isAlreadyCommented(userId:Long, showId: String) =  commentsRepository.countByUserIdAndShowId(userId, showId) > 0
+    private fun validateShowAvaiableToComment(ticket: Ticket, userId: Long) {
+        if (ticket.user.id != userId){
+            throw BusinessException(CreationError.IS_NOT_ATTENDEE)
+        }
+        if (!ticket.canBeCommented()) {
+            throw BusinessException(CommentError.SHOWDATE_NOT_PASSED)
+        }
+        if (isAlreadyCommented(userId,ticket.showId)){
+            throw BusinessException(CommentError.SHOW_ALREADY_COMMENTED)
+        }
+    }
+    fun isAlreadyCommented(userId:Long, showId: String) =  commentsRepository.countByUserIdAndShowId(userId, showId) > 0
 }

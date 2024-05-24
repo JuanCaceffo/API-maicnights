@@ -20,14 +20,7 @@ interface ShowDateRepository: MongoRepository<ShowDate, String> {
     fun showDateIdsByShowId(showId: String): List<String>
 
 
-    //TODO: ver como implementar metodos de obtencion de costos de un show con mongo
-//    @Query(
-//        """
-//           SELECT
-//                SUM(SD.show.cost)
-//                FROM ShowDate SD
-//                WHERE SD.show.id = :id
-//        """
-//    )
-//    fun showCost(@Param("id") id:Long): Optional<Double>
+    //TODO: ver como hacer la suma en mongo directo
+    @Query(value = """{'show.id':  ?0}""", fields = """{show.cost : 0}""")
+    fun findAllShowCosts(showId: String): List<Double>
 }

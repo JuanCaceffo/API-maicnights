@@ -28,7 +28,7 @@ class BigStadium(
         name = "River Plate",
         fixedPrice = 1000000.0,
         location = Point(latitude = -34.54612, longitude = -58.45004),
-        seats = setOf(
+        seats = listOf(
             Seat(SeatTypes.UPPERLEVEL, 20000),
             Seat(SeatTypes.FIELD, 35000),
             Seat(SeatTypes.BOX, 15000)
@@ -42,7 +42,7 @@ class MediumStadium(
         name = "La Bombonera",
         fixedPrice = 700000.0,
         location = Point(latitude = -34.63536, longitude = -58.36419),
-        seats = setOf(
+        seats = listOf(
             Seat(SeatTypes.UPPERLEVEL, 10000),
             Seat(SeatTypes.FIELD, 25000),
             Seat(SeatTypes.BOX, 15000)
@@ -55,7 +55,7 @@ class GoodTheater(
     override fun build() = Theater(
         name = "Teatro Colón",
         location = Point(latitude = -34.60188, longitude = -58.38336),
-        seats = setOf(
+        seats = listOf(
             Seat(SeatTypes.LOWERLEVEL, 8000),
             Seat(SeatTypes.PULLMAN, 2000)
         )
@@ -70,7 +70,7 @@ class BadTheater(
     override fun build() = Theater(
         name = "Gran Rex",
         location = Point(latitude = -34.603542, longitude = -58.378856),
-        seats = setOf(
+        seats = listOf(
             Seat(SeatTypes.LOWERLEVEL, 3000),
             Seat(SeatTypes.PULLMAN, 1000)
         )
@@ -82,7 +82,7 @@ class SmallTheater(
     override fun build() = Theater(
         name = "Teatro Peque",
         location = Point(latitude = -34.193847, longitude = -36.144562),
-        seats = setOf(
+        seats = listOf(
             Seat(SeatTypes.LOWERLEVEL, 2)
         )
     )

@@ -1,7 +1,5 @@
 package ar.edu.unsam.phm.magicnightsback.domain.interfaces
 
-import ar.edu.unsam.phm.magicnightsback.domain.Comment
-import ar.edu.unsam.phm.magicnightsback.domain.Point
 import ar.edu.unsam.phm.magicnightsback.domain.dto.CommentDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowDateDTO
 
@@ -20,7 +18,7 @@ interface ShowTicket{ // Igual a ShowData pero con id Long
     val showName: String
     val bandName: String
     val facilityName: String
-    val prices: List<Double>
+    val prices: List<Double>?
 }
 
 interface ShowWithFriends {
@@ -35,7 +33,7 @@ interface ShowStats {
 
 interface ShowDetails {
     val geolocation: String
-    val comments: Set<CommentDTO>
+    val comments: Set<CommentDTO>?
 }
 
 interface ShowDates {

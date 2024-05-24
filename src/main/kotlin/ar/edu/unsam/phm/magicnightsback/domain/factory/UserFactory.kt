@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 import java.time.LocalDate
 
 enum class UserFactoryTypes {
-    ADMIN, NORMAL, POOR, NOIMAGE
+    ADMIN, NORMAL, POOR, NOIMAGE, RICH
 }
 
 @Component
@@ -16,6 +16,7 @@ class UserFactory() {
         UserFactoryTypes.NORMAL -> NormalUser().build()
         UserFactoryTypes.POOR -> PoorUser().build()
         UserFactoryTypes.NOIMAGE -> NoImageUser().build()
+        UserFactoryTypes.RICH -> RichUser().build()
     }
 }
 
@@ -81,5 +82,21 @@ class NoImageUser: FactoryUser {
             balance = 50000.0
             dni = 47435764
             birthday = LocalDate.of(1990, 8, 8)
+        }
+}
+
+class RichUser: FactoryUser {
+    override fun build() =
+        User(
+            firstName = "Juan",
+            lastName = "Caceffo",
+            username = "Juanchitech",
+            password = "notadmin",
+        ).apply {
+            role = UserRole.USER
+            balance = 2000000.0
+            dni = 45836273
+            profileImgUrl = "juan.jpeg"
+            birthday = LocalDate.of(2003, 8, 8)
         }
 }

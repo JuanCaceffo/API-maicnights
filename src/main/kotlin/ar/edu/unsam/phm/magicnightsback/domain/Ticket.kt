@@ -1,8 +1,8 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import ar.edu.unsam.phm.magicnightsback.data.constants.ColumnLength
-import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
 import ar.edu.unsam.phm.magicnightsback.domain.enums.TicketStatus
+import ar.edu.unsam.phm.magicnightsback.exceptions.BadArgumentException
+import ar.edu.unsam.phm.magicnightsback.exceptions.CreationError
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -47,4 +47,6 @@ data class Ticket(
 
     @Column(nullable = true)
     var buyDate: LocalDateTime? = null
+
+    fun canBeCommented() = showDate.date.isBefore(LocalDateTime.now())
 }

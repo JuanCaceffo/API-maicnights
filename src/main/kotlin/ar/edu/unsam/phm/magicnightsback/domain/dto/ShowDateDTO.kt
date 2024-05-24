@@ -6,9 +6,15 @@ import java.time.LocalDateTime
 
 data class ShowDateDTO(
     val id: String,
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     val date: LocalDateTime = LocalDateTime.MIN
+)
+
+data class ShowDateRequest(
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    val date: LocalDateTime,
+    var showId: Long,
+    var userId: Long
 )
 
 fun ShowDate.toDTO() = ShowDateDTO(

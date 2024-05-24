@@ -70,6 +70,23 @@ interface TicketRepository : CrudRepository<Ticket, Long> {
     """)
     fun showDateTakenCapacity(@Param("id") id:String): Int
 
+
+    @Query("""
+       SELECT 
+        COUNT(*) AS taken_capacity
+        FROM Ticket TK        
+        WHERE TK.showId = :id        
+    """)
+    fun showTakenCapacity(@Param("id") id:Long): Optional<Int>
+
+    @Query("""
+       SELECT 
+        COUNT(*) AS taken_capacity
+        FROM Ticket TK
+        WHERE TK.showId = :showId AND TK.seat.id = :seatId       
+    """)
+    fun showTakenCapacitybySeatId(@Param("showId") showId:Long,@Param("seatId") seatId:Long): Optional<Int>
+
 ////    fun findByUserIdAndStatusIs(userId: UUID, status: TicketStatus): Iterable<Ticket>
 //    fun countBySeatAndShowDateId(seat:SeatTypes, showDateId: String) : Int
 }
