@@ -1,0 +1,53 @@
+server:
+  port: 8080
+  error:
+    whitelabel:
+      enabled: false
+    include-message: always
+    include-binding-errors: always
+    include-exception: true
+    include-stacktrace: never
+
+spring:
+  application:
+    name: magicnights
+  jackson:
+    default-property-inclusion: non_null
+  profiles:
+    active: baseBootstrap
+
+  security:
+    user:
+      name: user
+      password: usersinpass
+
+  #   base de datos posta
+  datasource:
+    url: jdbc:postgresql://0.0.0.0:5432/magicnights
+    username: admin
+    password: admin1234
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+
+# Para activar el Trace
+logging:
+  level:
+    root: INFO
+
+# Rutas default para los endpoints
+api:
+  base: /api
+  ticket: ${api.base}/ticket
+  user: ${api.base}/user
+  show: ${api.base}/show
+  cart: ${api.base}/cart
+  showdate: ${api.base}/showdate
+  comment: ${api.base}/comment

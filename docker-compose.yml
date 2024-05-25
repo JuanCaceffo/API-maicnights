@@ -1,6 +1,37 @@
 version: "3.9"
 services:
-  magic-nights:
-    build: .
+  db:
+    image: postgres:16-alpine
+    container_name: magicnights_db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=magicnights
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin1234
     ports:
-      - "8080:8080"
+      - '5432:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+#      - ./init_db.sh:/docker-entrypoint-initdb.d/01_init_db.sh
+
+#  pgadmin:
+#    image: dpage/pgadmin4
+#    container_name: pgadmin4
+#    restart: unless-stopped
+#    ports:
+#      - "8888:80"
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: mad@mail.com
+#      PGADMIN_DEFAULT_PASSWORD: asdf
+#    volumes:
+#      - pgadmin-data:/var/lib/pgadmin
+
+#  magic-nights:
+#    build: .
+#    ports:
+#      - "8080:8080"
+#    depends_on: [db,pgadmin]
+
+volumes:
+  db:
+#  pgadmin-data:
