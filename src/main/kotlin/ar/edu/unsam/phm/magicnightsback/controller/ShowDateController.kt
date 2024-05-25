@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*
 
 @CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
 @RestController
-@RequestMapping("\${api.showdate}")
+@RequestMapping("/api/showdate")
 @Tag(name = "ShowDate", description = "Show date related operations")
 class ShowDateController(
     @Autowired private val seatService: SeatService,
