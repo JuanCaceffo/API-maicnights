@@ -69,8 +69,7 @@ class CommentService(
 //    }
     @Transactional(Transactional.TxType.REQUIRED)
     fun addComment(commentCreate: CommentCreateDTO) {
-        //TODO: hidratar el showdate en ticket
-        val ticket = ticketService.findByIdOrError(commentCreate.ticketId)
+        val ticket = hydrousService.getHydrousTicket(ticketService.findByIdOrError(commentCreate.ticketId))
         validateShowAvaiableToComment(ticket, commentCreate.userId)
         commentsRepository.save(Comment(ticket.user, ticket.showId, commentCreate.text, commentCreate.rating))
     }
