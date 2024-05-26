@@ -24,7 +24,7 @@ class TicketService(
 ) {
     fun findById(id: Long): Ticket? = ticketRepository.findById(id).getOrNull()
     fun findByIdOrError(id: Long) =
-        findById(id) ?: throw NotFoundException(FindError.NOT_FOUND(id, Ticket::class.toString()))
+        findById(id) ?: throw NotFoundException(FindError.NOT_FOUND(id.toString(), Ticket::class.toString()))
 
     fun findByUserId(userId: Long): List<Ticket> =
         ticketRepository.findByUserId(userId).map { hydrousService.getHydrousTicket(it) }
@@ -57,11 +57,11 @@ class TicketService(
 
     //TODO: ver que se necesita hidratar en estos metodos
     fun ticketSalesCountByShowDateId(id: String) =
-        ticketRepository.showDateTakenCapacity(id).getOrDefault(0)
+        ticketRepository.showDateTakenCapacity(id)
 
-    fun ticketCountByShowId(id: Long) =
+    fun ticketCountByShowId(id: String) =
         ticketRepository.showTakenCapacity(id).getOrDefault(0)
 
-    fun ticketCountByShowIdAndSeatId(showId: Long, seatId: Long) =
+    fun ticketCountByShowIdAndSeatId(showId: String, seatId: Long) =
         ticketRepository.showTakenCapacitybySeatId(showId, seatId).getOrDefault(0)
 }

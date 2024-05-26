@@ -45,7 +45,7 @@ fun Show.toShowDetailsDTO(stats: ShowDetailsExtraDataDTO) = ShowDetailsDTO(
 
 fun Show.toShowAdminDetailsDTO(stats: ShowDetailsExtraDataDTO,adminSummary: List<AdminSummary>) = ShowDetailsDTO (
     id,
-    imgUrl,
+    imgUrl(),
     name,
     band.name,
     facility.name,

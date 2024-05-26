@@ -67,14 +67,14 @@ class ShowController(
 
     @GetMapping("{showId}/user/{userId}/kpi")
     @Operation(summary = "Returns KPIs of a Show")
-    fun getKPIs(@PathVariable showId: Long, @PathVariable userId: Long): List<ShowStatsDTO> {
+    fun getKPIs(@PathVariable showId: String, @PathVariable userId: Long): List<ShowStatsDTO> {
         userService.validateAdminStatus(userId)
         return showService.getKPIs(showId)
     }
 
     @GetMapping("{showId}/user/{userId}")
     @Operation(summary = "Show details (Admin)")
-    fun getShowByIdForAdmin(@PathVariable showId: Long, @PathVariable userId: Long): ShowDetailsDTO {
+    fun getShowByIdForAdmin(@PathVariable showId: String, @PathVariable userId: Long): ShowDetailsDTO {
         userService.validateAdminStatus(userId)
 
         val show = showService.findByIdOrError(showId)

@@ -86,12 +86,14 @@ data class Show(
     var pendingAttendees = 0
     var clicks_quantity: Long = 0L
     //TODO: evaluar posibles problemas con actualizacion de costos de banda y facility
-    var cost = (band.cost).plus(facility.cost())
+    var cost: Double = 0.0
 
 // Seat methods
     fun haveSeat(seat: Seat) = facility.seats.any { it.id == seat.id }
     fun currentTicketPrice(seat: Seat) = baseSeatCost(seat) * rentability.factor
-    fun baseCost() = (band.cost).plus(facility.cost())
+    fun initBaseCost() {
+        cost = (band.cost).plus(facility.cost())
+    }
     fun imgUrl() = "${band.name.removeSpaces().lowercase()}.jpg"
     fun addPendingAttendee() { pendingAttendees += 1 }
     private fun baseCostPerSeat() = cost / facility.totalCapacity()

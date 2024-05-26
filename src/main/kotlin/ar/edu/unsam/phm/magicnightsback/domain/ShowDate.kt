@@ -60,7 +60,12 @@ data class ShowDate(
     @Id
     lateinit var id: String
 
-    val seatOcupation = show.facility.seats.map { SeatOcupation(it.id) }.toSet()
+    lateinit var seatOcupation : Set<SeatOcupation>
+
+    //TODO: posible necesidad de inicializar las seats ocupation a mano cuando mongo crea la entidad
+    fun initSeatOcupation(){
+        seatOcupation = show.facility.seats.map { SeatOcupation(it.id) }.toSet()
+    }
 
     // Availability
     fun isSoldOut() = seatOcupation.all { it.available() == 0 }

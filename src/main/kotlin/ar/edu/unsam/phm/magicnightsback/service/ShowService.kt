@@ -69,11 +69,11 @@ class ShowService(
 
     //TODO: ver que metodos necesitan hidratacion
     fun getKPIs(id: String): List<ShowStatsDTO> {
-        val show = findByIdOrError(id)
+        val show = hydrousService.getHydrousShow(findByIdOrError(id))
         val pendingAttendees = show.pendingAttendees
         val showCost = showDateService.showCost(id)
         val showSales = ticketService.totalShowSales(id)
-        val showDatesIds = showDateRepository.showDateIdsByShowId(id).map { it }
+        val showDatesIds = showDateRepository.showDateIdsByShowId(id)
         val showDatesSoldOut = showDatesIds.filter { showDateId ->
             showDateService.isSoldOut(showDateId)
         }.size
@@ -94,7 +94,7 @@ class ShowService(
     @Transactional(Transactional.TxType.REQUIRED)
     fun newShowDate(showId: String, date: LocalDateTime) {
         validateNewShowDate(showId, date.toLocalDate())
-        val show = findByIdOrError(showId)
+        val show = hydrousService.getHydrousShow(findByIdOrError(showId))
         val showDate = ShowDate(show, date)
         showDateService.save(showDate)
         clearPendingAttendees(show)

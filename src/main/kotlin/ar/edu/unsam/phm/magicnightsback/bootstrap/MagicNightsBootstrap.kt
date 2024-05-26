@@ -3,7 +3,9 @@ package ar.edu.unsam.phm.magicnightsback.bootstrap
 import ar.edu.unsam.phm.magicnightsback.domain.*
 import ar.edu.unsam.phm.magicnightsback.domain.factory.*
 import ar.edu.unsam.phm.magicnightsback.repository.*
+import ar.edu.unsam.phm.magicnightsback.service.HydrousService
 import ar.edu.unsam.phm.magicnightsback.service.ShowDateService
+import ar.edu.unsam.phm.magicnightsback.service.ShowFieldsToHydrous
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -22,7 +24,8 @@ class MagicNightsBootstrap(
     @Autowired private var ticketRepository: TicketRepository,
     @Autowired private var commentRepository: CommentRepository,
     private val showDateService: ShowDateService,
-) : InitializingBean {
+    private val hydrousService: HydrousService
+    ) : InitializingBean {
 
     val initFacilities = mapOf(
         "river" to FacilityFactory().createFacility(FacilityFactoryTypes.BIGSTADIUM),
@@ -37,12 +40,28 @@ class MagicNightsBootstrap(
         "pearl" to BandFactory().createBand(BandFactoryTypes.NORMAL),
         "acdc" to BandFactory().createBand(BandFactoryTypes.EXPENSIVE)
     )
-    //TODO: hidartar las facilitys y las bands para que no rompa
+
     fun initShows() = mapOf(
-        "cachen" to Show("Cachengued", bandRepository.findByName("La Vela Puerca").get().id, facilityRepository.findByName("Gran Rex").get().id),
-        "4you" to Show("4 You", bandRepository.findByName("Pearl Jam").get().id, facilityRepository.findByName("La Bombonera").get().id),
-        "demons" to Show("Demons of Hell Rise", bandRepository.findByName("AC/DC").get().id, facilityRepository.findByName("River Plate").get().id),
-        "showcito" to Show("Unipersonal", bandRepository.findByName("AC/DC").get().id, facilityRepository.findByName("Teatro Peque").get().id)
+        "cachen" to Show("Cachengued", bandRepository.findByName("La Vela Puerca").get().id, facilityRepository.findByName("Gran Rex").get().id).apply {
+            band = initBands["vela"]!!
+            facility = initFacilities["rex"]!!
+            initBaseCost()
+            },
+        "4you" to Show("4 You", bandRepository.findByName("Pearl Jam").get().id, facilityRepository.findByName("La Bombonera").get().id).apply {
+            band = initBands["pearl"]!!
+            facility = initFacilities["boca"]!!
+            initBaseCost()
+        },
+        "demons" to Show("Demons of Hell Rise", bandRepository.findByName("AC/DC").get().id, facilityRepository.findByName("River Plate").get().id).apply {
+            band = initBands["acdc"]!!
+            facility = initFacilities["river"]!!
+            initBaseCost()
+        },
+        "showcito" to Show("Unipersonal", bandRepository.findByName("AC/DC").get().id, facilityRepository.findByName("Teatro Peque").get().id).apply {
+            band = initBands["acdc"]!!
+            facility = initFacilities["peque"]!!
+            initBaseCost()
+        }
     )
 
     val initUsers = mapOf(
@@ -53,14 +72,13 @@ class MagicNightsBootstrap(
         "juan" to UserFactory().createUser(UserFactoryTypes.RICH),
     )
 
-    //TODO: traer shows hidratados con facility para que se pueda inicializar el atributo del showdate
     fun initShowDates() = mutableListOf(
-        ShowDateFactory().createShowDate(ShowDateFactoryTypes.MINUS, showRepository.findByName("Cachengued").get()),
-        ShowDateFactory().createShowDate(ShowDateFactoryTypes.MINUS, showRepository.findByName("4 You").get()),
-        ShowDateFactory().createShowDate(ShowDateFactoryTypes.MINUS, showRepository.findByName("Demons of Hell Rise").get()),
-        ShowDateFactory().createShowDate(ShowDateFactoryTypes.PLUS, showRepository.findByName("4 You").get()),
-        ShowDateFactory().createShowDate(ShowDateFactoryTypes.PLUS, showRepository.findByName("Unipersonal").get()),
-    ).apply { addAll(ShowDateFactory().createShowDates(ShowDateFactoryTypes.PLUS, showRepository.findByName("Demons of Hell Rise").get(), 3)) }
+        ShowDateFactory().createShowDate(ShowDateFactoryTypes.MINUS, hydrousService.getHydrousShow(showRepository.findByName("Cachengued").get(), ShowFieldsToHydrous.FACILITY)),
+        ShowDateFactory().createShowDate(ShowDateFactoryTypes.MINUS, hydrousService.getHydrousShow(showRepository.findByName("4 You").get(), ShowFieldsToHydrous.FACILITY)),
+        ShowDateFactory().createShowDate(ShowDateFactoryTypes.MINUS, hydrousService.getHydrousShow(showRepository.findByName("Demons of Hell Rise").get(), ShowFieldsToHydrous.FACILITY)),
+        ShowDateFactory().createShowDate(ShowDateFactoryTypes.PLUS, hydrousService.getHydrousShow(showRepository.findByName("4 You").get(), ShowFieldsToHydrous.FACILITY)),
+        ShowDateFactory().createShowDate(ShowDateFactoryTypes.PLUS, hydrousService.getHydrousShow(showRepository.findByName("Unipersonal").get(), ShowFieldsToHydrous.FACILITY)),
+    ).apply { addAll(ShowDateFactory().createShowDates(ShowDateFactoryTypes.PLUS, hydrousService.getHydrousShow(showRepository.findByName("Demons of Hell Rise").get(), ShowFieldsToHydrous.FACILITY), 3)) }
 
     fun initComments() = listOf(
         Comment(initUsers["pablo"]!!, showRepository.findByName("Cachengued").get().id, """La noche con La vela fue simplemente espectacular. Desde el primer acorde hasta

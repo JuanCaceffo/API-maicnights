@@ -5,6 +5,7 @@ import ar.edu.unsam.phm.magicnightsback.domain.ShowDate
 import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowDateDTO
 import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
 import ar.edu.unsam.phm.magicnightsback.exceptions.ResponseFindException
+import ar.edu.unsam.phm.magicnightsback.repository.SeatRepository
 import ar.edu.unsam.phm.magicnightsback.repository.ShowDateRepository
 import ar.edu.unsam.phm.magicnightsback.repository.TicketRepository
 import jakarta.transaction.Transactional
@@ -16,11 +17,17 @@ import kotlin.jvm.optionals.getOrNull
 @Service
 class ShowDateService(
     private val showDateRepository: ShowDateRepository,
-    private val ticketRepository: TicketRepository,
-    private val hydrousService: HydrousService
+    private val hydrousService: HydrousService,
+    private val seatRepository: SeatRepository
 ) {
 
-    fun getHydrousShowDate(showDate: ShowDate)= showDate.apply { show = hydrousService.getHydrousShow(show) }
+    fun getHydrousShowDate(showDate: ShowDate)= showDate.apply {
+        show = hydrousService.getHydrousShow(show)
+        initSeatOcupation()
+        seatOcupation.forEach {
+            it.seat = seatRepository.findById(it.seatId).get()
+        }
+    }
 
     fun getAllHydrousShowDates() = showDateRepository.findAll().map { showDate ->  getHydrousShowDate(showDate)}
 
@@ -28,12 +35,11 @@ class ShowDateService(
         return showDateRepository.findById(id).getOrNull()
     }
 
-    //TODO: hidratar el seat del seatOcupation
+    //TODO: SEGUIMIENTO DE HIDRATACION (puede que no funcione y se requiera tratar en la entidad la inicializacion de las variables dependeientes de otra froma)
     fun isSoldOut(id: String): Boolean {
-        return findByIdOrError(id).isSoldOut()
+        return getHydrousShowDate(findByIdOrError(id)).isSoldOut()
     }
 
-    //TODO: hidratar el seat del seatOcupation
     fun isShowSoldOut(showId: String): Boolean {
         return findAllByShowId(showId).all {
             isSoldOut(it.id)
