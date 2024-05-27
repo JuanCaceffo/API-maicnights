@@ -16,11 +16,11 @@ interface ShowDateRepository: MongoRepository<ShowDate, String> {
 
     fun findAllByShowId(showId: String): List<ShowDate>
 
-    @Query(value =  """{'show.id' : ?0}""", fields =  """{ id: 0 }""")
-    fun showDateIdsByShowId(showId: String): List<String>
-
-
-    //TODO: ver como hacer la suma en mongo directo
-    @Query(value = """{'show.id':  ?0}""", fields = """{show.cost : 0}""")
-    fun findAllShowCosts(showId: String): List<Double>
+    //TODO: ver si es posible mapear directo la data que sale de esta consulta a otor objeto que no sea show o showdate
+//    @Query(value =  """{'show._id' : ?0}""", fields =  """{ id: 0 }""")
+//    fun showDateIdsByShowId(showId: String): List<String>
+//
+//
+//    @Query(value = """{'show.id':  ?0}""", fields = """{show.cost : 0}""")
+//    fun findAllShowCosts(showId: String): List<Double>
 }

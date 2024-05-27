@@ -71,9 +71,12 @@ class ShowService(
     fun getKPIs(id: String): List<ShowStatsDTO> {
         val show = hydrousService.getHydrousShow(findByIdOrError(id))
         val pendingAttendees = show.pendingAttendees
+        println("--------------- before show sales ----------------")
         val showCost = showDateService.showCost(id)
+        println("showCost: ${showCost}")
         val showSales = ticketService.totalShowSales(id)
-        val showDatesIds = showDateRepository.showDateIdsByShowId(id)
+        println("showSales: ${showSales}")
+        val showDatesIds = showDateRepository.findAllByShowId(id).map { it.id }
         val showDatesSoldOut = showDatesIds.filter { showDateId ->
             showDateService.isSoldOut(showDateId)
         }.size
@@ -96,7 +99,7 @@ class ShowService(
         validateNewShowDate(showId, date.toLocalDate())
         val show = hydrousService.getHydrousShow(findByIdOrError(showId))
         val showDate = ShowDate(show, date)
-        showDateService.save(showDate)
+        showDateRepository.save(showDate)
         clearPendingAttendees(show)
     }
 

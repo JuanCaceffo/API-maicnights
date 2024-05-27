@@ -21,7 +21,7 @@ class ShowDateController(
     @GetMapping("/{id}/seats")
     @Operation(summary = "Returns show date seats")
     fun findAllSeatByShowDateId(@PathVariable id: String): List<SeatDTO> {
-        val showDate = showDateService.findById(id)!! //TODO: tirar error si no se encuentar el showdate
+        val showDate =  showDateService.getHydrousShowDate(showDateService.findById(id)!!) //TODO: tirar error si no se encuentar el showdate
         return seatService.findAllSeatByShowDateId(id)
             .map { it.toDTO(showDate.show, showDate.available(cartService.seatReservations(it))) }
     }

@@ -7,6 +7,7 @@ import ar.edu.unsam.phm.magicnightsback.domain.dto.TicketRequestDTO
 import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
 import ar.edu.unsam.phm.magicnightsback.exceptions.BusinessException
 import ar.edu.unsam.phm.magicnightsback.exceptions.CreationError
+import ar.edu.unsam.phm.magicnightsback.repository.ShowDateRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -14,6 +15,7 @@ import java.time.LocalDateTime
 @Service
 class CartService(
     val showDateService: ShowDateService,
+    val showDateRepository: ShowDateRepository,
     val seatService: SeatService,
     val userService: UserService,
     val ticketService: TicketService
@@ -51,7 +53,7 @@ class CartService(
             it.buyDate = LocalDateTime.now()
         }
         cart[userId]?.forEach {
-            showDateService.save(it.showDate.apply { modifyOcupation(it.seat, 1) })
+            showDateRepository.save(it.showDate.apply { modifyOcupation(it.seat, 1) })
             ticketService.save(it)
         }
         clearAll(userId)

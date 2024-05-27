@@ -2,16 +2,12 @@ package ar.edu.unsam.phm.magicnightsback.service
 
 import ar.edu.unsam.phm.magicnights.utils.stringMe
 import ar.edu.unsam.phm.magicnightsback.domain.ShowDate
-import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowDateDTO
 import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
 import ar.edu.unsam.phm.magicnightsback.exceptions.ResponseFindException
 import ar.edu.unsam.phm.magicnightsback.repository.SeatRepository
 import ar.edu.unsam.phm.magicnightsback.repository.ShowDateRepository
-import ar.edu.unsam.phm.magicnightsback.repository.TicketRepository
 import jakarta.transaction.Transactional
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 @Service
@@ -48,12 +44,8 @@ class ShowDateService(
 
 
     fun showCost(id: String): Double =
-        showDateRepository.findAllShowCosts(id).sum()
+        showDateRepository.findAllByShowId(id).sumOf {  it.show.cost }
 
-    @Transactional(Transactional.TxType.REQUIRED)
-    fun save(showDate: ShowDate) {
-        showDateRepository.save(showDate)
-    }
 
     fun findHydrousById(id: String): ShowDate? {
         val showDate = showDateRepository.findById(id).getOrNull()
