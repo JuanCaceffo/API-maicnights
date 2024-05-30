@@ -170,7 +170,7 @@ class MagicNightsBootstrap(
         objects.filter {
             when (it) {
                 is Seat -> {
-                    val seat = seatRepository.findSeatByTypeIs(it.type)
+                    val seat = seatRepository.findSeatByTypeIs(it.type).getOrNull()
                     seat == null
                 }
 
@@ -198,8 +198,7 @@ class MagicNightsBootstrap(
                     val startOfDay = LocalDateTime.of(it.date.toLocalDate(), LocalTime.MIN)
                     val endOfDay = LocalDateTime.of(it.date.toLocalDate(), LocalTime.MAX)
 
-                    println("caca")
-                    val showDate = showDateRepository.getByDateAndShowId(startOfDay,endOfDay, it.show.id).getOrNull()
+                    val showDate =  showDateRepository.getByDateAndShowId(startOfDay,endOfDay, it.show.id).getOrNull()
                     showDate == null
                 }
 

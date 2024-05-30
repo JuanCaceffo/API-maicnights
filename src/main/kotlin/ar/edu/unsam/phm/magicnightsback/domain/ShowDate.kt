@@ -60,11 +60,21 @@ data class ShowDate(
     @Id
     lateinit var id: String
 
-    lateinit var seatOcupation : Set<SeatOcupation>
+    var seatOcupation : MutableSet<SeatOcupation> = mutableSetOf()
 
-    //TODO: posible necesidad de inicializar las seats ocupation a mano cuando mongo crea la entidad
     fun initSeatOcupation(){
-        seatOcupation = show.facility.seats.map { SeatOcupation(it.id) }.toSet()
+        if (seatOcupation.isNullOrEmpty()){
+            seatOcupation = show.facility.seats.map { SeatOcupation(it.id).apply { seat = it } }.toMutableSet()
+        }
+        else{
+            initSeatsForSeatOcupation()
+        }
+    }
+    private fun initSeatsForSeatOcupation(){
+        show.facility.seats.forEach {
+                facilitySeat ->
+            seatOcupation.find { it.seatId == facilitySeat.id}?.apply { seat = facilitySeat }
+        }
     }
 
     // Availability

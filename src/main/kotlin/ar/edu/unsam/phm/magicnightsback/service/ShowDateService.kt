@@ -13,19 +13,11 @@ import kotlin.jvm.optionals.getOrNull
 @Service
 class ShowDateService(
     private val showDateRepository: ShowDateRepository,
-    private val hydrousService: HydrousService,
-    private val seatRepository: SeatRepository
+    private val getHydrousShowDate: HydrousService,
 ) {
 
-    fun getHydrousShowDate(showDate: ShowDate)= showDate.apply {
-        show = hydrousService.getHydrousShow(show)
-        initSeatOcupation()
-        seatOcupation.forEach {
-            it.seat = seatRepository.findById(it.seatId).get()
-        }
-    }
 
-    fun getAllHydrousShowDates() = showDateRepository.findAll().map { showDate ->  getHydrousShowDate(showDate)}
+    fun getAllHydrousShowDates() = showDateRepository.findAll().map { showDate ->  getHydrousShowDate.getHydrousShowDate(showDate)}
 
     fun findById(id: String): ShowDate? {
         return showDateRepository.findById(id).getOrNull()
@@ -33,7 +25,7 @@ class ShowDateService(
 
     //TODO: SEGUIMIENTO DE HIDRATACION (puede que no funcione y se requiera tratar en la entidad la inicializacion de las variables dependeientes de otra froma)
     fun isSoldOut(id: String): Boolean {
-        return getHydrousShowDate(findByIdOrError(id)).isSoldOut()
+        return getHydrousShowDate.getHydrousShowDate(findByIdOrError(id)).isSoldOut()
     }
 
     fun isShowSoldOut(showId: String): Boolean {
@@ -49,7 +41,7 @@ class ShowDateService(
 
     fun findHydrousById(id: String): ShowDate? {
         val showDate = showDateRepository.findById(id).getOrNull()
-        return this.getHydrousShowDate(showDate!!)
+        return getHydrousShowDate.getHydrousShowDate(showDate!!)
     }
 
     fun findByIdOrError(id: String): ShowDate {
@@ -58,7 +50,7 @@ class ShowDateService(
 
     fun findHydrousByIdOrError(id: String): ShowDate {
         val showDate = findById(id) ?: throw ResponseFindException(FindError.NOT_FOUND(id, ShowDate::class.stringMe()))
-        return this.getHydrousShowDate(showDate)
+        return getHydrousShowDate.getHydrousShowDate(showDate)
     }
 
     fun findAllByShowId(showId: String): List<ShowDate> =

@@ -2,11 +2,9 @@ package ar.edu.unsam.phm.magicnightsback.service
 
 import ar.edu.unsam.phm.magicnightsback.domain.Comment
 import ar.edu.unsam.phm.magicnightsback.domain.Show
+import ar.edu.unsam.phm.magicnightsback.domain.ShowDate
 import ar.edu.unsam.phm.magicnightsback.domain.Ticket
-import ar.edu.unsam.phm.magicnightsback.repository.BandRepository
-import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
-import ar.edu.unsam.phm.magicnightsback.repository.ShowDateRepository
-import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
+import ar.edu.unsam.phm.magicnightsback.repository.*
 import org.springframework.stereotype.Service
 
 enum class ShowFieldsToHydrous{
@@ -19,7 +17,7 @@ class HydrousService(
     private val facilityRepository: FacilityRepository,
     private val bandRepository: BandRepository,
     private val showRepository: ShowRepository,
-    private val showDateRepository: ShowDateRepository
+    private val showDateRepository: ShowDateRepository,
 ) {
 
     fun getHydrousShow(show: Show, vararg fields: ShowFieldsToHydrous = arrayOf(ShowFieldsToHydrous.FACILITY,ShowFieldsToHydrous.BAND)) = show.apply {
@@ -35,9 +33,14 @@ class HydrousService(
         show = getHydrousShow(showRepository.findById(comment.showId).get(), *fields)
     }
 
-    fun getHydrousTicket(ticket: Ticket) = ticket.apply {
+    fun getHydrousTicket(ticket: Ticket,vararg fields: ShowFieldsToHydrous = arrayOf(ShowFieldsToHydrous.FACILITY,ShowFieldsToHydrous.BAND)) = ticket.apply {
         showDate = showDateRepository.findById(ticket.showDateId).get().apply {
-            show = getHydrousShow(show)
+            show = getHydrousShow(show, *fields)
         }
+    }
+
+    fun getHydrousShowDate(showDate: ShowDate,vararg fields: ShowFieldsToHydrous = arrayOf(ShowFieldsToHydrous.FACILITY,ShowFieldsToHydrous.BAND))= showDate.apply {
+        show = getHydrousShow(show, *fields)
+        initSeatOcupation()
     }
 }

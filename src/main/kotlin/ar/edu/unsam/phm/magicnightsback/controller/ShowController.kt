@@ -72,6 +72,7 @@ class ShowController(
         return showService.getKPIs(showId)
     }
 
+    //TODO: hidratar lo necesario
     @GetMapping("{showId}/user/{userId}")
     @Operation(summary = "Show details (Admin)")
     fun getShowByIdForAdmin(@PathVariable showId: String, @PathVariable userId: Long): ShowDetailsDTO {
