@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*
 
 @CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
 @RestController
-@RequestMapping("\${api.cart}/user")
+@RequestMapping("/api/cart/user")
 @Tag(name = "Cart", description = "Cart related operations")
 class CartController(
     @Autowired

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 
 @CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
 @RestController
-@RequestMapping("\${api.show}")
+@RequestMapping("/api/show")
 @Tag(name = "Show", description = "Show related operations")
 class ShowController(
     @Autowired var showService: ShowService,
