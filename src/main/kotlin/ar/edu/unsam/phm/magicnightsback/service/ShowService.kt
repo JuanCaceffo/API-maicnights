@@ -98,7 +98,7 @@ class ShowService(
     fun newShowDate(showId: String, date: LocalDateTime) {
         validateNewShowDate(showId, date.toLocalDate())
         val show = hydrousService.getHydrousShow(findByIdOrError(showId))
-        val showDate = ShowDate(show, date)
+        val showDate = ShowDate(show, date).apply { initSeatOcupation() }
         showDateRepository.save(showDate)
         clearPendingAttendees(show)
     }

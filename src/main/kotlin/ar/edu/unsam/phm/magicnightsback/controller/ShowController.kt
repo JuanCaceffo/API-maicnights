@@ -78,7 +78,7 @@ class ShowController(
     fun getShowByIdForAdmin(@PathVariable showId: String, @PathVariable userId: Long): ShowDetailsDTO {
         userService.validateAdminStatus(userId)
 
-        val show = showService.findByIdOrError(showId)
+        val show = hydrousService.getHydrousShow(showService.findByIdOrError(showId))
         val ticketsSold = ticketService.ticketCountByShowId(showId)
         val showSales = ticketService.totalShowSales(showId)
         val pendingAttendees = show.pendingAttendees
@@ -110,7 +110,7 @@ class ShowController(
                 AdminSummary("Gente en Espera:", pendingAttendees.toDouble()),
             )
 
-        return showService.findByIdOrError(showId).toShowAdminDetailsDTO(stats, adminSummary)
+        return show.toShowAdminDetailsDTO(stats, adminSummary)
     }
 
     @PostMapping("/new-show-date")
