@@ -2,35 +2,32 @@ package ar.edu.unsam.phm.magicnightsback.domain.dto
 
 import ar.edu.unsam.phm.magicnightsback.domain.Ticket
 import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
-import ar.edu.unsam.phm.magicnightsback.domain.interfaces.ShowData
-import ar.edu.unsam.phm.magicnightsback.domain.interfaces.ShowDates
-import ar.edu.unsam.phm.magicnightsback.domain.interfaces.ShowStats
-import ar.edu.unsam.phm.magicnightsback.domain.interfaces.ShowWithFriends
+import ar.edu.unsam.phm.magicnightsback.domain.interfaces.*
 import java.time.LocalDateTime
 
 
 data class TicketDTO(
-    override val id: Long,
-    override val showImg: String,
-    override val showName: String,
-    override val bandName: String,
-    override val facilityName: String,
-    override val prices: List<Double>,
+    val id: Long,
+    val showImg: String,
+    val showName: String,
+    val bandName: String,
+    val facilityName: String,
+    val prices: List<Double>,
     override val rating: Double,
     override val totalComments: Int,
     override val friendsImgs: List<String>,
     override val totalFriendsAttending: Int,
     override val dates: List<ShowDateDTO>,
     val seatId: Long,
-    val showDateId: Long,
+    val showDateId: String,
     val canBeCommented: Boolean,
     val date: LocalDateTime
-): ShowData, ShowStats, ShowWithFriends, ShowDates
+):  ShowStats, ShowWithFriends, ShowDates
 
 
 fun Ticket.toDTO(stats: ShowExtraDataDTO): TicketDTO = TicketDTO(
     id,
-    showDate.show.imgUrl,
+    showDate.show.imgUrl(),
     showDate.show.name,
     showDate.show.band.name,
     showDate.show.facility.name,
@@ -67,8 +64,8 @@ fun Ticket.toDTO(stats: ShowExtraDataDTO): TicketDTO = TicketDTO(
 //)
 
 data class TicketCreateDTO(
-    val showId: Long,
-    val showDateId: Long,
+    val showId: String,
+    val showDateId: String,
     val seatTypeName: SeatTypes,
     val quantity: Int,
 )
@@ -82,7 +79,7 @@ interface TicketResult {
 }
 
 data class TicketRequestDTO(
-    val showDateId: Long,
+    val showDateId: String,
     val seatId: Long,
     val quantity: Int
 )

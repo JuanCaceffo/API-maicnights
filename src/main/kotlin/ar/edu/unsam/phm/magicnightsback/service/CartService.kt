@@ -7,6 +7,8 @@ import ar.edu.unsam.phm.magicnightsback.domain.dto.TicketRequestDTO
 import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
 import ar.edu.unsam.phm.magicnightsback.exceptions.BusinessException
 import ar.edu.unsam.phm.magicnightsback.exceptions.CreationError
+import ar.edu.unsam.phm.magicnightsback.repository.ShowDateRepository
+import ar.edu.unsam.phm.magicnightsback.repository.TicketRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -14,6 +16,8 @@ import java.time.LocalDateTime
 @Service
 class CartService(
     val showDateService: ShowDateService,
+    val showDateRepository: ShowDateRepository,
+    val hydrousService: HydrousService,
     val seatService: SeatService,
     val userService: UserService,
     val ticketService: TicketService
@@ -31,13 +35,13 @@ class CartService(
         val userCart = cart.getOrPut(userId) { mutableListOf() }
 
         ticketsRequested.forEach { tkt ->
-            val showDate = showDateService.findByIdOrError(tkt.showDateId)
+            val showDate = showDateService.findHydrousByIdOrError(tkt.showDateId)
             val seat = seatService.findByIdOrError(tkt.seatId)
 
             validateReservation(showDate, seat, tkt.quantity)
 
             repeat(tkt.quantity) {
-                userCart.add(Ticket(user, showDate, seat).apply {
+                userCart.add(Ticket(user, showDate.id,showDate.show.id, seat).apply {
                     price = showDate.show.currentTicketPrice(seat)
                 })
             }
@@ -51,7 +55,8 @@ class CartService(
             it.buyDate = LocalDateTime.now()
         }
         cart[userId]?.forEach {
-            showDateService.save(it.showDate.apply { modifyOcupation(it.seat, 1) })
+            val showDate = hydrousService.getHydrousShowDate(hydrousService.getHydrousTicket(it).showDate,ShowFieldsToHydrous.FACILITY)
+            showDateRepository.save(showDate.apply { modifyOcupation(it.seat) })
             ticketService.save(it)
         }
         clearAll(userId)

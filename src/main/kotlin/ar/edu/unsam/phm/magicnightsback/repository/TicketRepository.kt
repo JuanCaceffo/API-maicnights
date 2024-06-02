@@ -1,7 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.repository
 
 import ar.edu.unsam.phm.magicnightsback.domain.Ticket
-import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
@@ -10,26 +9,15 @@ import java.util.*
 
 interface TicketRepository : CrudRepository<Ticket, Long> {
     //    fun findByDateIs(date: LocalDateTime): Optional<Ticket>
-    @EntityGraph(
-        attributePaths = [
-            "showDate",
-            "showDate.show",
-            "showDate.show.facility",
-            "showDate.show.facility.seats",
-            "showDate.show.band"
-        ]
-    )
     fun findByUserId(userId: Long): Iterable<Ticket>
 
-    fun findByShowDateShowId(showId: Long): Iterable<Ticket>
-
+    fun findByShowId(showId: String): Iterable<Ticket>
 
     @Query(
         """
             SELECT COUNT(DISTINCT tk.user.id) 
                 FROM Ticket tk
-                INNER JOIN tk.showDate sd
-                WHERE sd.show.id = :showId
+                WHERE tk.showId = :showId
                 AND tk.user.id IN (
                     SELECT f.id
                     FROM User u
@@ -39,7 +27,7 @@ interface TicketRepository : CrudRepository<Ticket, Long> {
         """
     )
     fun countFriendsByShow(
-        @Param("showId") showId: Long,
+        @Param("showId") showId: String,
         @Param("userId") userId: Long
     ): Optional<Int>
 
@@ -48,8 +36,7 @@ interface TicketRepository : CrudRepository<Ticket, Long> {
             SELECT
                 TK.user.profileImgUrl AS user_images
                 FROM Ticket TK
-                INNER JOIN TK.showDate sd
-                WHERE sd.show.id = :showId
+                WHERE TK.showId = :showId
                 AND TK.user.id IN (
                     SELECT f.id
                     FROM User U
@@ -61,7 +48,7 @@ interface TicketRepository : CrudRepository<Ticket, Long> {
         """
     )
     fun getTopFriendsImages(
-        @Param("showId") showId: Long,
+        @Param("showId") showId: String,
         @Param("userId") userId: Long
     ): Iterable<String>
 
@@ -70,40 +57,36 @@ interface TicketRepository : CrudRepository<Ticket, Long> {
             SELECT 
                 SUM(T.price) 
                 FROM Ticket T
-                INNER JOIN ShowDate SD
-                ON SD.id = T.showDate.id
-                WHERE SD.show.id = :showId
+                WHERE T.showId = :showId
         """
     )
-    fun totalShowSales(@Param("showId") showId: Long): Optional<Double>
+    fun totalShowSales(@Param("showId") showId: String): Optional<Double>
 
     @Query("""
        SELECT 
         COUNT(*) AS taken_capacity
         FROM Ticket TK        
-        WHERE TK.showDate.id = :id        
+        WHERE TK.showDateId = :id        
     """)
-    fun showDateTakenCapacity(@Param("id") id:Long): Optional<Int>
+    fun showDateTakenCapacity(@Param("id") id:String): Int
 
 
     @Query("""
        SELECT 
         COUNT(*) AS taken_capacity
         FROM Ticket TK        
-        WHERE TK.showDate.show.id = :id        
+        WHERE TK.showId = :showId        
     """)
-    fun showTakenCapacity(@Param("id") id:Long): Optional<Int>
+    fun showTakenCapacity(@Param("showId") showId:String): Optional<Int>
 
     @Query("""
        SELECT 
         COUNT(*) AS taken_capacity
         FROM Ticket TK
-        WHERE TK.showDate.show.id = :showId AND TK.seat.id = :seatId       
+        WHERE TK.showId = :showId AND TK.seat.id = :seatId       
     """)
-    fun showTakenCapacitybySeatId(@Param("showId") showId:Long,@Param("seatId") seatId:Long): Optional<Int>
-
-
+    fun showTakenCapacitybySeatId(@Param("showId") showId:String,@Param("seatId") seatId:Long): Optional<Int>
 
 ////    fun findByUserIdAndStatusIs(userId: UUID, status: TicketStatus): Iterable<Ticket>
-
+//    fun countBySeatAndShowDateId(seat:SeatTypes, showDateId: String) : Int
 }

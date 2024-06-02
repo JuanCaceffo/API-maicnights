@@ -17,18 +17,26 @@ import kotlin.jvm.optionals.getOrNull
 class CommentService(
     @Autowired var commentsRepository: CommentRepository,
     @Autowired var showRepository: ShowRepository,
-    @Autowired var ticketService: TicketService
+    @Autowired var ticketService: TicketService,
+    val hydrousService: HydrousService
+
 ) {
+
+    @Transactional(Transactional.TxType.NEVER)
+    fun getShowComments(id: String): Set<CommentDTO> = commentsRepository.findByShowId(id).map { it.toShowCommentDTO() }.toSet()
+
+    @Transactional(Transactional.TxType.NEVER)
     fun findById(id: Long): Comment? =
         commentsRepository.findById(id).getOrNull()
 
     fun findByIdOrError(id: Long): Comment =
-        findById(id) ?: throw ResponseFindException(FindError.NOT_FOUND(id, Comment::class.stringMe()))
+        findById(id) ?: throw ResponseFindException(FindError.NOT_FOUND(id.toString(), Comment::class.stringMe()))
 
     fun findByUserId(id: Long): Set<CommentDTO> =
-        commentsRepository.findByUserId(id).map { it.toUserCommentDTO() }.toSet()
+        commentsRepository.findByUserId(id).map { hydrousService.getHydrousComment(it, ShowFieldsToHydrous.BAND).toUserCommentDTO() }.toSet()
 
-    fun findByShowId(id: Long): Set<CommentDTO> =
+    @Transactional(Transactional.TxType.NEVER)
+    fun findByShowId(id: String): Set<CommentDTO> =
         commentsRepository.findByShowId(id).map { it.toShowCommentDTO() }.toSet()
 
     @Transactional(Transactional.TxType.REQUIRED)
@@ -48,8 +56,9 @@ class CommentService(
 //        return validateOptionalIsNotNull(commentsRepository.findById(id))
 //    }
 //
-    
-    fun getCommentStadisticsOfShow(id: Long): CommentStadisticsDTO {
+    @Transactional(Transactional.TxType.NEVER)
+    fun getCommentStadisticsOfShow(id: String): CommentStadisticsDTO {
+
         val totalRating = commentsRepository.averageCommentRatingOfShow(id).getOrNull() ?: 0.0
         val totalComments = commentsRepository.countAllByShowId(id)
         return CommentStadisticsDTO(totalRating.truncate(1), totalComments)
@@ -60,9 +69,9 @@ class CommentService(
 //    }
     @Transactional(Transactional.TxType.REQUIRED)
     fun addComment(commentCreate: CommentCreateDTO) {
-        val ticket = ticketService.findByIdOrError(commentCreate.ticketId)
+        val ticket = hydrousService.getHydrousTicket(ticketService.findByIdOrError(commentCreate.ticketId))
         validateShowAvaiableToComment(ticket, commentCreate.userId)
-        commentsRepository.save(Comment(ticket.user, ticket.showDate.show, commentCreate.text, commentCreate.rating))
+        commentsRepository.save(Comment(ticket.user, ticket.showId, commentCreate.text, commentCreate.rating))
     }
 
     private fun validateShowAvaiableToComment(ticket: Ticket, userId: Long) {
@@ -72,9 +81,9 @@ class CommentService(
         if (!ticket.canBeCommented()) {
             throw BusinessException(CommentError.SHOWDATE_NOT_PASSED)
         }
-        if (isAlreadyCommented(userId,ticket.showDate.show.id)){
+        if (isAlreadyCommented(userId,ticket.showId)){
             throw BusinessException(CommentError.SHOW_ALREADY_COMMENTED)
         }
     }
-    fun isAlreadyCommented(userId:Long, showId: Long) =  commentsRepository.countByUserIdAndShowId(userId, showId) > 0
+    fun isAlreadyCommented(userId:Long, showId: String) =  commentsRepository.countByUserIdAndShowId(userId, showId) > 0
 }

@@ -1,7 +1,6 @@
 package ar.edu.unsam.phm.magicnightsback.domain.factory
 
 import ar.edu.unsam.phm.magicnightsback.domain.Band
-import jakarta.persistence.Column
 import org.springframework.stereotype.Component
 
 enum class BandFactoryTypes {
@@ -10,7 +9,7 @@ enum class BandFactoryTypes {
 
 @Component
 class BandFactory {
-    fun createFacility(type: BandFactoryTypes) = when (type) {
+    fun createBand(type: BandFactoryTypes) = when (type) {
         BandFactoryTypes.CHEAP -> CheapBand().build()
         BandFactoryTypes.NORMAL -> NormalBand().build()
         BandFactoryTypes.EXPENSIVE -> ExpensiveBand().build()

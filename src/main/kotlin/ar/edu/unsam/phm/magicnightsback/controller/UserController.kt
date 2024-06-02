@@ -35,7 +35,7 @@ class UserController(
     @GetMapping("/{id}/bought_tickets")
     @Operation(summary = "Reuturns a list of bought tickets.")
     fun findBoughtTicketsByUserId(@PathVariable id: Long): List<TicketDTO> {
-        return ticketService.findByUserId(id).map { it.toDTO(showService.getShowExtraData(it.showDate.show.id, id)) }
+        return ticketService.findByUserId(id).map { it.toDTO(showService.getShowExtraData(it.showDateId, id)) }
     }
 
     @GetMapping("/{id}/balance")

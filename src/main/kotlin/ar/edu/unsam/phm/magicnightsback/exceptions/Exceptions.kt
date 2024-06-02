@@ -42,7 +42,7 @@ object CartError {
 
 object FindError {
     @Suppress("FunctionName")
-    fun NOT_FOUND(id: Long, name: String = "entity") = "Can't find $name with id: $id."
+    fun NOT_FOUND(id: String, name: String = "entity") = "Can't find $name with id: $id."
 
     @Suppress("FunctionName")
     fun INVALID_SEAT_TYPE(name: String = "facility") = "The seat type is not valid for a $name."

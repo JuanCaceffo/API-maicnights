@@ -1,25 +1,11 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import ar.edu.unsam.phm.magicnightsback.data.constants.ColumnLength
 import ar.edu.unsam.phm.magicnightsback.domain.enums.Rentability
 import ar.edu.unsam.phm.magicnightsback.utils.removeSpaces
-import jakarta.persistence.*
+import org.springframework.data.annotation.Id
+import org.springframework.data.annotation.Transient
+import org.springframework.data.mongodb.core.mapping.Document
 
-//@Entity
-//class Show(
-//    @Column(length = 40)
-//    var name: String,
-//
-//    @ManyToOne
-//    var band: Band,
-//
-//    @ManyToOne
-//    var facility: Facility,
-//) {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    var id: Long = 0
-//
 
 //
 //    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
@@ -84,53 +70,41 @@ import jakarta.persistence.*
 //    fun soldOutDates() = dates.filter { it.isSoldOut() }.size
 
 
-
-@Entity
+@Document("Shows")
 data class Show(
-    @Column(nullable = false, length = ColumnLength.MEDIUM)
     val name: String,
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    val band: Band,
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    val facility: Facility
+    val bandId: Long,
+    val facilityId: Long
 ) {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0
-
-    @Enumerated(EnumType.STRING)
-    @Column(length = ColumnLength.SMALL)
+    lateinit var id: String
     var rentability = Rentability.BASE_PRICE
-
-    @Column(length = 100)
-    var imgUrl = "${band.name.removeSpaces().lowercase()}.jpg"
-
-    @Column(nullable = false)
-    var cost = band.cost.plus(facility.cost())
-
-    @Column(nullable = false)
+    @Transient
+    lateinit var band: Band
+    @Transient
+    lateinit var facility: Facility
     var pendingAttendees = 0
+    var clicks_quantity: Long = 0L
+    //TODO: evaluar posibles problemas con actualizacion de costos de banda y facility
+    var cost: Double = 0.0
 
-    // Seat methods
+// Seat methods
     fun haveSeat(seat: Seat) = facility.seats.any { it.id == seat.id }
     fun currentTicketPrice(seat: Seat) = baseSeatCost(seat) * rentability.factor
-    fun addPendingAttendee() {
-        pendingAttendees += 1
+    fun initBaseCost() {
+        cost = (band.cost).plus(facility.cost())
     }
-
+    fun imgUrl() = "${band.name.removeSpaces().lowercase()}.jpg"
+    fun addPendingAttendee() { pendingAttendees += 1 }
+    private fun baseCostPerSeat() = cost / facility.totalCapacity()
     fun clearPendingAttendees() {
         pendingAttendees = 0
     }
-
-    private fun baseCostPerSeat() = cost / facility.totalCapacity()
     private fun baseSeatCost(seat: Seat) = baseCostPerSeat() + seat.price
     fun allTicketPrices() = facility.seats.map { currentTicketPrice(it) }
     fun changeRentability(newRentability: Rentability) {
         rentability = newRentability
     }
-
     fun totalCapacity() = facility.totalCapacity()
+    fun addClick() { clicks_quantity += 1 }
 }
-

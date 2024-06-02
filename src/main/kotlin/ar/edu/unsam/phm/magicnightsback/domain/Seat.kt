@@ -4,6 +4,8 @@ import ar.edu.unsam.phm.magicnightsback.domain.enums.SeatTypes
 import ar.edu.unsam.phm.magicnightsback.exceptions.BusinessException
 import ar.edu.unsam.phm.magicnightsback.utils.notNegative
 import jakarta.persistence.*
+import org.springframework.data.annotation.Transient
+import org.springframework.data.mongodb.core.mapping.Document
 
 @Entity
 data class Seat(
@@ -21,12 +23,15 @@ data class Seat(
     val price = type.price
 }
 
-@Embeddable
+//TODO: ver si es necesario que sea una documento aparte en la base de mongo
+
+@Document
 class SeatOcupation(
-    @ManyToOne(fetch = FetchType.EAGER)
-    val seat: Seat
+    val seatId: Long
 ) {
     private var usedCapacity: Int = 0
+    @Transient
+    lateinit var seat: Seat
 
     fun modifyUsedCapacity(value: Int) {
         validateMaxCapacity()

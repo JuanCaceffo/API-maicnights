@@ -1,6 +1,7 @@
 package ar.edu.unsam.phm.magicnightsback.domain
 
-import jakarta.persistence.*
+import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDateTime
 
 //@Entity
@@ -51,19 +52,30 @@ import java.time.LocalDateTime
 //    fun isSoldOut() = totalAvailableSeats() == 0
 //}
 
-@Entity
+@Document("ShowDates")
 data class ShowDate(
-    @ManyToOne
-    val show: Show,
-
+    var show: Show,
     val date: LocalDateTime
 ) {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0
+    lateinit var id: String
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    val seatOcupation = show.facility.seats.map { SeatOcupation(it) }.toSet()
+    var seatOcupation : MutableSet<SeatOcupation> = mutableSetOf()
+
+    fun initSeatOcupation(){
+        if (seatOcupation.isNullOrEmpty()){
+            seatOcupation = show.facility.seats.map { SeatOcupation(it.id).apply { seat = it } }.toMutableSet()
+        }
+        else{
+            initSeatsForSeatOcupation()
+        }
+    }
+    private fun initSeatsForSeatOcupation(){
+        show.facility.seats.forEach {
+                facilitySeat ->
+            seatOcupation.find { it.seatId == facilitySeat.id}?.apply { seat = facilitySeat }
+        }
+    }
 
     // Availability
     fun isSoldOut() = seatOcupation.all { it.available() == 0 }

@@ -4,7 +4,7 @@ import ar.edu.unsam.phm.magicnightsback.domain.Show
 import ar.edu.unsam.phm.magicnightsback.domain.interfaces.*
 
 data class ShowDetailsDTO(
-    override val id: Long,
+    override val id: String,
     override val showImg: String,
     override val showName: String,
     override val bandName: String,
@@ -29,7 +29,7 @@ data class ShowDetailsExtraDataDTO(
 
 fun Show.toShowDetailsDTO(stats: ShowDetailsExtraDataDTO) = ShowDetailsDTO(
     id,
-    imgUrl,
+    imgUrl(),
     name,
     band.name,
     facility.name,
@@ -45,7 +45,7 @@ fun Show.toShowDetailsDTO(stats: ShowDetailsExtraDataDTO) = ShowDetailsDTO(
 
 fun Show.toShowAdminDetailsDTO(stats: ShowDetailsExtraDataDTO,adminSummary: List<AdminSummary>) = ShowDetailsDTO (
     id,
-    imgUrl,
+    imgUrl(),
     name,
     band.name,
     facility.name,

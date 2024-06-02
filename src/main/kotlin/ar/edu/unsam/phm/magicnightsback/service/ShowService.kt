@@ -11,6 +11,7 @@ import ar.edu.unsam.phm.magicnightsback.exceptions.FindError
 import ar.edu.unsam.phm.magicnightsback.exceptions.NotFoundException
 import ar.edu.unsam.phm.magicnightsback.repository.BandRepository
 import ar.edu.unsam.phm.magicnightsback.repository.FacilityRepository
+import ar.edu.unsam.phm.magicnightsback.repository.ShowDateRepository
 import ar.edu.unsam.phm.magicnightsback.repository.ShowRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,23 +27,26 @@ class ShowService(
     @Autowired private var bandRepository: BandRepository,
     @Autowired private var userService: UserService,
     @Autowired private var ticketService: TicketService,
-    @Autowired private var showDateService: ShowDateService,
-    @Autowired private var commentService: CommentService
+    @Autowired private var commentService: CommentService,
+    private val hydrousService: HydrousService,
+    private val showDateService: ShowDateService,
+    private val showDateRepository: ShowDateRepository
 ) {
+    fun findById(id: String): Show? = showRepository.findById(id).getOrNull()
 
-    fun findById(id: Long): Show? = showRepository.findById(id).getOrNull()
-
-    fun findByIdOrError(id: Long): Show =
+    fun findByIdOrError(id: String): Show =
         findById(id) ?: throw NotFoundException(FindError.NOT_FOUND(id, Show::class.toString()))
 
+
     fun findAll(params: ShowRequest): List<Show> {
-        val shows = showRepository.findAll()
+        val shows = showRepository.findAll().map { hydrousService.getHydrousShow(it) }
         val filteredShows = filter(shows, params)
-        return filteredShows.map { it }
+        return filteredShows
     }
 
-    fun getShowExtraData(showId: Long, userId: Long): ShowExtraDataDTO {
-        val dates = showDateService.findAllByShowId(showId).map { it.toDTO() }
+    @Transactional(Transactional.TxType.NEVER)
+    fun getShowExtraData(showId: String, userId: Long): ShowExtraDataDTO {
+        val dates = showDateRepository.findAllByShowId(showId).map { it.toDTO() }
         val commentsStats = commentService.getCommentStadisticsOfShow(showId)
         val totalFriendsAttending = ticketService.countFriendsAttendingToShow(showId, userId)
         val images = ticketService.getTopFriendsImages(showId, userId)
@@ -57,18 +61,22 @@ class ShowService(
         )
     }
 
-    fun addPendingAttendee(id: Long) {
+    fun addPendingAttendee(id: String) {
         val show = findByIdOrError(id)
         show.addPendingAttendee()
         showRepository.save(show)
     }
 
-    fun getKPIs(id: Long): List<ShowStatsDTO> {
-        val show = findByIdOrError(id)
+    //TODO: ver que metodos necesitan hidratacion
+    fun getKPIs(id: String): List<ShowStatsDTO> {
+        val show = hydrousService.getHydrousShow(findByIdOrError(id))
         val pendingAttendees = show.pendingAttendees
+        println("--------------- before show sales ----------------")
         val showCost = showDateService.showCost(id)
+        println("showCost: ${showCost}")
         val showSales = ticketService.totalShowSales(id)
-        val showDatesIds = showRepository.showDateIdsByShowId(id).map { it }
+        println("showSales: ${showSales}")
+        val showDatesIds = showDateRepository.findAllByShowId(id).map { it.id }
         val showDatesSoldOut = showDatesIds.filter { showDateId ->
             showDateService.isSoldOut(showDateId)
         }.size
@@ -84,14 +92,14 @@ class ShowService(
             .build()
     }
 
-    fun isSoldOut(showId: Long) = showDateService.isShowSoldOut(showId)
+    fun isSoldOut(showId: String) = showDateService.isShowSoldOut(showId)
 
     @Transactional(Transactional.TxType.REQUIRED)
-    fun newShowDate(showId: Long, date: LocalDateTime) {
+    fun newShowDate(showId: String, date: LocalDateTime) {
         validateNewShowDate(showId, date.toLocalDate())
-        val show = findByIdOrError(showId)
-        val showDate = ShowDate(show, date)
-        showDateService.save(showDate)
+        val show = hydrousService.getHydrousShow(findByIdOrError(showId))
+        val showDate = ShowDate(show, date).apply { initSeatOcupation() }
+        showDateRepository.save(showDate)
         clearPendingAttendees(show)
     }
 
@@ -100,7 +108,7 @@ class ShowService(
         showRepository.save(show.apply { clearPendingAttendees() })
     }
 
-    private fun validateNewShowDate(showId: Long, date: LocalDate) {
+    private fun validateNewShowDate(showId: String, date: LocalDate) {
         if (date.isBefore(LocalDate.now())) throw BusinessException(CreationError.DATE_NOT_PASSED)
         if (showDateService.findAllByShowId(showId).any { it.date.toLocalDate() == date }) throw BusinessException(
             CreationError.DATE_ALREADY_EXISTS
@@ -124,10 +132,11 @@ class ShowService(
             if (user != null && params.withFriends) addFilterCondition(WithFriends(user.id, ticketService))
         }
     }
+
+    fun addClick(id: String) {
+        val show = findByIdOrError(id)
+        show.addClick()
+        showRepository.save(show)
+    }
+
 }
-
-
-////    fun getBusyFacilities(): List<Facility> {
-////        val facilitiesID = showRepository.busyFacilities().map { it }
-////        return facilityRepository.findAll().filter { it.id in facilitiesID }
-////    }
