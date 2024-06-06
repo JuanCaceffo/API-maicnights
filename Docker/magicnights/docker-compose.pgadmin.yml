@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4
+    restart: unless-stopped
+    ports:
+      - "8888:80"
+    networks:
+      default:
+        ipv4_address: 172.16.238.201
+    environment:
+      PGADMIN_DEFAULT_EMAIL: mad@mail.com
+      PGADMIN_DEFAULT_PASSWORD: asdf
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+volumes:
+  pgadmin-data:
+    driver: local
+
+networks:
+  default:
+    name: mn-net
+    external: true
+    ipam:
+      config:
+        - subnet: 172.16.238.0/24
