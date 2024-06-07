@@ -4,10 +4,8 @@ services:
     image: mongo:latest
     container_name: mongo1
     restart: always
-    expose:
-      - "27058"
     ports:
-      - "27058:27017"
+      - "27017:27017"
     networks:
       mn-net:
         ipv4_address: 172.16.238.10
@@ -19,25 +17,25 @@ services:
       - ./scripts/init.js:/scripts/init.js
       - ./scripts/init.js:/docker-entrypoint-initdb.d/01-init-mongo.js:ro
     #environment:
-      #MONGO_INITDB_ROOT_USERNAME: admin
-      #MONGO_INITDB_ROOT_PASSWORD: admin
-      #MONGO_INITDB_DATABASE: magicnights
+    #  MONGO_INITDB_ROOT_USERNAME: admin
+    #  MONGO_INITDB_ROOT_PASSWORD: admin
+    #  MONGO_INITDB_DATABASE: magicnights
     depends_on:
       - mongo2
       - mongo3
+      - mongo4
     links:
       - mongo2
       - mongo3
-    entrypoint: ["sh", "-c", "chmod +x /scripts/rs-init.sh && /usr/bin/mongod --bind_ip_all --replSet mnrs"]
+      - mongo4
+    command: ["mongod", "--bind_ip_all", "--replSet", "mnrs"]
 
   mongo2:
     image: mongo:latest
     container_name: mongo2
     restart: always
-    expose:
-      - "27059"
     ports:
-      - "27059:27017"
+      - "27018:27017"
     networks:
       mn-net:
         ipv4_address: 172.16.238.11
@@ -45,16 +43,14 @@ services:
       - mongo-data2:/data/db
       - mongo-cfg2:/data/configdb
       - mongo-log2:/var/log/mongodb
-    entrypoint: ["/usr/bin/mongod", "--bind_ip_all", "--replSet", "mnrs"]
+    command: ["mongod", "--bind_ip_all", "--replSet", "mnrs"]
 
   mongo3:
     image: mongo:latest
     container_name: mongo3
     restart: always
-    expose:
-      - "27060"
     ports:
-      - "27060:27017"
+      - "27019:27017"
     networks:
       mn-net:
         ipv4_address: 172.16.238.12
@@ -62,7 +58,22 @@ services:
       - mongo-data3:/data/db
       - mongo-cfg3:/data/configdb
       - mongo-log3:/var/log/mongodb
-    entrypoint: ["/usr/bin/mongod", "--bind_ip_all", "--replSet", "mnrs"]
+    command: ["mongod", "--bind_ip_all", "--replSet", "mnrs"]
+
+  mongo4:
+    image: mongo:latest
+    container_name: mongo4
+    restart: always
+    ports:
+      - "27020:27017"
+    networks:
+      mn-net:
+        ipv4_address: 172.16.238.13
+    volumes:
+      - mongo-data4:/data/db
+      - mongo-cfg4:/data/configdb
+      - mongo-log4:/var/log/mongodb
+    command: [ "mongod", "--bind_ip_all", "--replSet", "mnrs" ]
 
 volumes:
   mongo-data1:
@@ -82,6 +93,12 @@ volumes:
   mongo-cfg3:
     driver: local
   mongo-log3:
+    driver: local
+  mongo-data4:
+    driver: local
+  mongo-cfg4:
+    driver: local
+  mongo-log4:
     driver: local
 
 networks:
