@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  magic-nights:
+    build: .
+    ports:
+      - "8080:8080"
+    networks:
+      default:
+        ipv4_address: 172.16.238.200
+
+networks:
+  default:
+    name: mn-net
+    external: true
+    ipam:
+      config:
+        - subnet: 172.16.238.0/24

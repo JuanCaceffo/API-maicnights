@@ -5,7 +5,6 @@ import ar.edu.unsam.phm.magicnightsback.domain.factory.*
 import ar.edu.unsam.phm.magicnightsback.repository.*
 import ar.edu.unsam.phm.magicnightsback.service.HydrousService
 import ar.edu.unsam.phm.magicnightsback.service.ShowDateService
-import ar.edu.unsam.phm.magicnightsback.service.ShowFieldsToHydrous
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -45,21 +44,29 @@ class MagicNightsBootstrap(
         "cachen" to Show("Cachengued", bandRepository.findByName("La Vela Puerca").get().id, facilityRepository.findByName("Gran Rex").get().id).apply {
             band = initBands["vela"]!!
             facility = initFacilities["rex"]!!
+            bandName = initBands["vela"]!!.name
+            facilityName = initFacilities["rex"]!!.name
             initBaseCost()
             },
         "4you" to Show("4 You", bandRepository.findByName("Pearl Jam").get().id, facilityRepository.findByName("La Bombonera").get().id).apply {
             band = initBands["pearl"]!!
             facility = initFacilities["boca"]!!
+            bandName = initBands["pearl"]!!.name
+            facilityName = initFacilities["boca"]!!.name
             initBaseCost()
         },
         "demons" to Show("Demons of Hell Rise", bandRepository.findByName("AC/DC").get().id, facilityRepository.findByName("River Plate").get().id).apply {
             band = initBands["acdc"]!!
             facility = initFacilities["river"]!!
+            bandName = initBands["acdc"]!!.name
+            facilityName = initFacilities["river"]!!.name
             initBaseCost()
         },
         "showcito" to Show("Unipersonal", bandRepository.findByName("AC/DC").get().id, facilityRepository.findByName("Teatro Peque").get().id).apply {
             band = initBands["acdc"]!!
             facility = initFacilities["peque"]!!
+            bandName = initBands["acdc"]!!.name
+            facilityName = initFacilities["peque"]!!.name
             initBaseCost()
         }
     )
@@ -73,12 +80,12 @@ class MagicNightsBootstrap(
     )
 
     fun initShowDates() = mutableListOf(
-        ShowDateFactory().createShowDate(ShowDateFactoryTypes.MINUS, hydrousService.getHydrousShow(showRepository.findByName("Cachengued").get(), ShowFieldsToHydrous.FACILITY)),
-        ShowDateFactory().createShowDate(ShowDateFactoryTypes.MINUS, hydrousService.getHydrousShow(showRepository.findByName("4 You").get(), ShowFieldsToHydrous.FACILITY)),
-        ShowDateFactory().createShowDate(ShowDateFactoryTypes.MINUS, hydrousService.getHydrousShow(showRepository.findByName("Demons of Hell Rise").get(), ShowFieldsToHydrous.FACILITY)),
-        ShowDateFactory().createShowDate(ShowDateFactoryTypes.PLUS, hydrousService.getHydrousShow(showRepository.findByName("4 You").get(), ShowFieldsToHydrous.FACILITY)),
-        ShowDateFactory().createShowDate(ShowDateFactoryTypes.PLUS, hydrousService.getHydrousShow(showRepository.findByName("Unipersonal").get(), ShowFieldsToHydrous.FACILITY)),
-    ).apply { addAll(ShowDateFactory().createShowDates(ShowDateFactoryTypes.PLUS, hydrousService.getHydrousShow(showRepository.findByName("Demons of Hell Rise").get(), ShowFieldsToHydrous.FACILITY), 3)) }
+        ShowDateFactory().createShowDate(ShowDateFactoryTypes.MINUS, hydrousService.getHydrousShow(showRepository.findByName("Cachengued").get())),
+        ShowDateFactory().createShowDate(ShowDateFactoryTypes.MINUS, hydrousService.getHydrousShow(showRepository.findByName("4 You").get())),
+        ShowDateFactory().createShowDate(ShowDateFactoryTypes.MINUS, hydrousService.getHydrousShow(showRepository.findByName("Demons of Hell Rise").get())),
+        ShowDateFactory().createShowDate(ShowDateFactoryTypes.PLUS, hydrousService.getHydrousShow(showRepository.findByName("4 You").get())),
+        ShowDateFactory().createShowDate(ShowDateFactoryTypes.PLUS, hydrousService.getHydrousShow(showRepository.findByName("Unipersonal").get())),
+    ).apply { addAll(ShowDateFactory().createShowDates(ShowDateFactoryTypes.PLUS, hydrousService.getHydrousShow(showRepository.findByName("Demons of Hell Rise").get()), 3)) }
 
     fun initComments() = listOf(
         Comment(initUsers["pablo"]!!, showRepository.findByName("Cachengued").get().id, """La noche con La vela fue simplemente espectacular. Desde el primer acorde hasta

@@ -40,8 +40,9 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://admin:admin@127.0.0.1:27016/magicnights?authSource=admin
-
+      #uri: mongodb://admin:admin@localhost:27017,localhost:27018,localhost:27019/magicnights?readPreference=primary&replicaSet=mnrs&authSource=admin
+      #uri: mongodb://admin:admin@127.0.0.1:27017/magicnights?authSource=admin
+      uri: mongodb://localhost:27117/magicnights
 # Para activar el Trace
 logging:
   level:

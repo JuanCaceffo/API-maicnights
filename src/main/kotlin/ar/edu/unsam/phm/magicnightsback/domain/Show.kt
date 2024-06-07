@@ -79,6 +79,8 @@ data class Show(
     @Id
     lateinit var id: String
     var rentability = Rentability.BASE_PRICE
+    var bandName = ""
+    var facilityName = ""
     @Transient
     lateinit var band: Band
     @Transient
