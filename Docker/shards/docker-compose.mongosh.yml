@@ -13,7 +13,8 @@ services:
       - mongo-router01-data:/data/db
       - mongo-router01-config:/data/configdb
     networks:
-      mn-net:
+      default:
+        ipv4_address: 192.168.2.100
 
   mongo-router02:
     image: mongo:latest
@@ -29,7 +30,8 @@ services:
     links:
       - mongo-router01
     networks:
-      mn-net:
+      default:
+        ipv4_address: 192.168.2.101
 
   ### CONFIG SERVERS ###
   mongo-config01:
@@ -48,7 +50,8 @@ services:
       - mongo-shd02-a
       - mongo-shd03-a
     networks:
-      mn-net:
+      default:
+        ipv4_address: 192.168.2.102
 
   mongo-config02:
     image: mongo:latest
@@ -64,7 +67,8 @@ services:
     links:
       - mongo-config01
     networks:
-      mn-net:
+      default:
+        ipv4_address: 192.168.2.103
 
   mongo-config03:
     image: mongo:latest
@@ -80,7 +84,8 @@ services:
     links:
       - mongo-config02
     networks:
-      mn-net:
+      default:
+        ipv4_address: 192.168.2.104
 
   ### SHARDS ###
   # SHARD 01 #
@@ -99,7 +104,8 @@ services:
       - mongo-shd01-b
       - mongo-shd01-c
     networks:
-      mn-net:
+      default:
+        ipv4_address: 192.168.2.105
   mongo-shd01-b:
     image: mongo:latest
     container_name: mongo-shd01-b
@@ -112,7 +118,8 @@ services:
       - "27123:27017"
     restart: always
     networks:
-      mn-net:
+      default:
+        ipv4_address: 192.168.2.106
   mongo-shd01-c:
     image: mongo:latest
     container_name: mongo-shd01-c
@@ -125,7 +132,8 @@ services:
       - "27124:27017"
     restart: always
     networks:
-      mn-net:
+      default:
+        ipv4_address: 192.168.2.107
   # SHARD 02 #
   mongo-shd02-a:
     image: mongo:latest
@@ -142,7 +150,8 @@ services:
       - mongo-shd02-b
       - mongo-shd02-c
     networks:
-      mn-net:
+      default:
+        ipv4_address: 192.168.2.108
   mongo-shd02-b:
     image: mongo:latest
     container_name: mongo-shd02-b
@@ -155,7 +164,8 @@ services:
       - "27126:27017"
     restart: always
     networks:
-      mn-net:
+      default:
+        ipv4_address: 192.168.2.109
   mongo-shd02-c:
     image: mongo:latest
     container_name: mongo-shd02-c
@@ -168,7 +178,8 @@ services:
       - "27127:27017"
     restart: always
     networks:
-      mn-net:
+      default:
+        ipv4_address: 192.168.2.110
   # SHARD 03 #
   mongo-shd03-a:
     image: mongo:latest
@@ -185,7 +196,8 @@ services:
       - mongo-shd03-b
       - mongo-shd03-c
     networks:
-      mn-net:
+      default:
+        ipv4_address: 192.168.2.111
   mongo-shd03-b:
     image: mongo:latest
     container_name: mongo-shd03-b
@@ -198,7 +210,8 @@ services:
       - "27129:27017"
     restart: always
     networks:
-      mn-net:
+      default:
+        ipv4_address: 192.168.2.112
   mongo-shd03-c:
     image: mongo:latest
     container_name: mongo-shd03-c
@@ -211,8 +224,8 @@ services:
       - "27130:27017"
     restart: always
     networks:
-      mn-net:
-
+      default:
+        ipv4_address: 192.168.2.113
 
 volumes:
   ### ROUTER VOLUMES ###
@@ -277,9 +290,9 @@ volumes:
     driver: local
 
 networks:
-  mn-net:
-    name: mn-net
+  default:
+    name: magicnet
+    external: true
     ipam:
-      driver: default
       config:
-        - subnet: 172.16.238.0/24
+        - subnet: 192.168.2.0/24

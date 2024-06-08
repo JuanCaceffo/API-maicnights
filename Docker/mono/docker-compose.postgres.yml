@@ -8,23 +8,22 @@ services:
       - POSTGRES_DB=magicnights
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
+    networks:
+      magicnet:
+        ipv4_address: 192.168.2.3
     ports:
       - '5432:5432'
-    networks:
-      default:
-        ipv4_address: 172.16.238.202
     volumes:
       - postgres-data:/var/lib/postgresql/data
-  #      - ./init_db.sh:/docker-entrypoint-initdb.d/01_init_db.sh
 
 volumes:
   postgres-data:
     driver: local
 
 networks:
-  default:
-    name: mn-net
-    external: true
+  magicnet:
+    name: magicnet
     ipam:
+      driver: default
       config:
-        - subnet: 172.16.238.0/24
+        - subnet: 192.168.2.0/24

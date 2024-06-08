@@ -10,6 +10,19 @@ Repositorio donde se encuentra la logica de negocio del proyecto Noches Magicas 
 - Sol Lopez
 - Denise Deutsch
 
+#### INICIALIZACION DE LOS DOCKERS EN MODO MONO USAR
+```shell
+./init-compose.sh
+```
+
+#### INICIALIZACION DE LOS DOCKERS EN MODO SHARDING ELIMINAR LA BASE MONGO Y USAR
+```shell
+docker-compose -f ./Docker/shards/docker-compose.mongosh.yml up -d
+# En windows puede ser necesario modificar el archivo de host en c:\windows\system32\drivers\etc
+# e incluir en este todos los nombres de los containers ej.: 127.0.0.1 router1 router2 ... 
+# en principio con incluir los routers debería funcionar, caso contrario incluir cada host. 
+```
+
 #### QUERYS
 
 
