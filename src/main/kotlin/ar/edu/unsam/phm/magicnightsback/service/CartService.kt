@@ -55,7 +55,7 @@ class CartService(
             it.buyDate = LocalDateTime.now()
         }
         cart[userId]?.forEach {
-            val showDate = hydrousService.getHydrousShowDate(hydrousService.getHydrousTicket(it).showDate,ShowFieldsToHydrous.FACILITY)
+            val showDate = hydrousService.getHydrousShowDate(hydrousService.getHydrousTicket(it).showDate)
             showDateRepository.save(showDate.apply { modifyOcupation(it.seat) })
             ticketService.save(it)
         }

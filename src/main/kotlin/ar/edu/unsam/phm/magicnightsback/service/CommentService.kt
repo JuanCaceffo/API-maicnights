@@ -33,7 +33,7 @@ class CommentService(
         findById(id) ?: throw ResponseFindException(FindError.NOT_FOUND(id.toString(), Comment::class.stringMe()))
 
     fun findByUserId(id: Long): Set<CommentDTO> =
-        commentsRepository.findByUserId(id).map { hydrousService.getHydrousComment(it, ShowFieldsToHydrous.BAND).toUserCommentDTO() }.toSet()
+        commentsRepository.findByUserId(id).map { hydrousService.getHydrousComment(it).toUserCommentDTO() }.toSet()
 
     @Transactional(Transactional.TxType.NEVER)
     fun findByShowId(id: String): Set<CommentDTO> =

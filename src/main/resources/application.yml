@@ -40,21 +40,11 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://admin:admin@127.0.0.1:27016/magicnights?authSource=admin
-
+      #uri: mongodb://admin:admin@localhost:27017,localhost:27018,localhost:27019/magicnights?readPreference=primary&replicaSet=mnrs&authSource=admin
+      uri: mongodb://admin:admin@localhost:27017/magicnights?authSource=admin
 # Para activar el Trace
 logging:
   level:
     root: INFO
     org.springframework.data: DEBUG
     org.mongodb.driver.protocol.command: DEBUG
-
-# Rutas default para los endpoints
-api:
-  base: /api
-  ticket: ${api.base}/ticket
-  user: ${api.base}/user
-  show: ${api.base}/show
-  cart: ${api.base}/cart
-  showdate: ${api.base}/showdate
-  comment: ${api.base}/comment
