@@ -3,9 +3,13 @@ package ar.edu.unsam.phm.magicnightsback.bootstrap
 import ar.edu.unsam.phm.magicnightsback.domain.*
 import ar.edu.unsam.phm.magicnightsback.domain.factory.*
 import ar.edu.unsam.phm.magicnightsback.repository.*
+import ar.edu.unsam.phm.magicnightsback.service.HydrousService
+import ar.edu.unsam.phm.magicnightsback.service.ShowDateService
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import java.time.*
+import java.util.Date
 import kotlin.jvm.optionals.getOrNull
 
 @Component
@@ -18,7 +22,9 @@ class MagicNightsBootstrap(
     @Autowired private var seatRepository: SeatRepository,
     @Autowired private var ticketRepository: TicketRepository,
     @Autowired private var commentRepository: CommentRepository,
-) : InitializingBean {
+    private val showDateService: ShowDateService,
+    private val hydrousService: HydrousService
+    ) : InitializingBean {
 
     val initFacilities = mapOf(
         "river" to FacilityFactory().createFacility(FacilityFactoryTypes.BIGSTADIUM),
@@ -29,16 +35,40 @@ class MagicNightsBootstrap(
     )
 
     val initBands = mapOf(
-        "vela" to BandFactory().createFacility(BandFactoryTypes.CHEAP),
-        "pearl" to BandFactory().createFacility(BandFactoryTypes.NORMAL),
-        "acdc" to BandFactory().createFacility(BandFactoryTypes.EXPENSIVE)
+        "vela" to BandFactory().createBand(BandFactoryTypes.CHEAP),
+        "pearl" to BandFactory().createBand(BandFactoryTypes.NORMAL),
+        "acdc" to BandFactory().createBand(BandFactoryTypes.EXPENSIVE)
     )
 
-    val initShows = mapOf(
-        "cachen" to Show("Cachengued", initBands["vela"]!!, initFacilities["rex"]!!),
-        "4you" to Show("4 You", initBands["pearl"]!!, initFacilities["boca"]!!),
-        "demons" to Show("Demons of Hell Rise", initBands["acdc"]!!, initFacilities["river"]!!),
-        "showcito" to Show("Unipersonal", initBands["acdc"]!!, initFacilities["peque"]!!)
+    fun initShows() = mapOf(
+        "cachen" to Show("Cachengued", bandRepository.findByName("La Vela Puerca").get().id, facilityRepository.findByName("Gran Rex").get().id).apply {
+            band = initBands["vela"]!!
+            facility = initFacilities["rex"]!!
+            bandName = initBands["vela"]!!.name
+            facilityName = initFacilities["rex"]!!.name
+            initBaseCost()
+            },
+        "4you" to Show("4 You", bandRepository.findByName("Pearl Jam").get().id, facilityRepository.findByName("La Bombonera").get().id).apply {
+            band = initBands["pearl"]!!
+            facility = initFacilities["boca"]!!
+            bandName = initBands["pearl"]!!.name
+            facilityName = initFacilities["boca"]!!.name
+            initBaseCost()
+        },
+        "demons" to Show("Demons of Hell Rise", bandRepository.findByName("AC/DC").get().id, facilityRepository.findByName("River Plate").get().id).apply {
+            band = initBands["acdc"]!!
+            facility = initFacilities["river"]!!
+            bandName = initBands["acdc"]!!.name
+            facilityName = initFacilities["river"]!!.name
+            initBaseCost()
+        },
+        "showcito" to Show("Unipersonal", bandRepository.findByName("AC/DC").get().id, facilityRepository.findByName("Teatro Peque").get().id).apply {
+            band = initBands["acdc"]!!
+            facility = initFacilities["peque"]!!
+            bandName = initBands["acdc"]!!.name
+            facilityName = initFacilities["peque"]!!.name
+            initBaseCost()
+        }
     )
 
     val initUsers = mapOf(
@@ -49,30 +79,25 @@ class MagicNightsBootstrap(
         "juan" to UserFactory().createUser(UserFactoryTypes.RICH),
     )
 
-    val initShowDates = mutableListOf(
-        ShowDateFactory().createShowDate(ShowDateFactoryTypes.MINUS, initShows["cachen"]!!),
-        ShowDateFactory().createShowDate(ShowDateFactoryTypes.MINUS, initShows["4you"]!!),
-        ShowDateFactory().createShowDate(ShowDateFactoryTypes.MINUS, initShows["demons"]!!),
-        ShowDateFactory().createShowDate(ShowDateFactoryTypes.PLUS, initShows["4you"]!!),
-        ShowDateFactory().createShowDate(ShowDateFactoryTypes.PLUS, initShows["showcito"]!!),
-    ).apply { addAll(ShowDateFactory().createShowDates(ShowDateFactoryTypes.PLUS, initShows["demons"]!!, 3)) }
+    fun initShowDates() = mutableListOf(
+        ShowDateFactory().createShowDate(ShowDateFactoryTypes.MINUS, hydrousService.getHydrousShow(showRepository.findByName("Cachengued").get())),
+        ShowDateFactory().createShowDate(ShowDateFactoryTypes.MINUS, hydrousService.getHydrousShow(showRepository.findByName("4 You").get())),
+        ShowDateFactory().createShowDate(ShowDateFactoryTypes.MINUS, hydrousService.getHydrousShow(showRepository.findByName("Demons of Hell Rise").get())),
+        ShowDateFactory().createShowDate(ShowDateFactoryTypes.PLUS, hydrousService.getHydrousShow(showRepository.findByName("4 You").get())),
+        ShowDateFactory().createShowDate(ShowDateFactoryTypes.PLUS, hydrousService.getHydrousShow(showRepository.findByName("Unipersonal").get())),
+    ).apply { addAll(ShowDateFactory().createShowDates(ShowDateFactoryTypes.PLUS, hydrousService.getHydrousShow(showRepository.findByName("Demons of Hell Rise").get()), 3)) }
 
-    val initComments = listOf(
-        Comment(
-            initUsers["pablo"]!!,
-            initShows["cachen"]!!,
-            """La noche con La vela fue simplemente espectacular. Desde el primer acorde hasta
+    fun initComments() = listOf(
+        Comment(initUsers["pablo"]!!, showRepository.findByName("Cachengued").get().id, """La noche con La vela fue simplemente espectacular. Desde el primer acorde hasta
         |el último, la banda nos llevó en un viaje emocionante a través de su música icónica. Sebas irradiaba
         |energía en el escenario, y cada canción resonaba en lo más profundo de mi ser. La atmósfera estaba cargada
-        |de emoción y camaradería, y el público se entregó por completo. 🎸🎶 #LaVela #ConciertoInolvidable""".trimMargin(),
-            5.0
-        ), Comment(
-            initUsers["sol"]!!, initShows["cachen"]!!, "Que divertido estuvo, la pase re bien con mis amigos.", 4.5
-        ), Comment(initUsers["ana"]!!, initShows["cachen"]!!, "Pésimo. El sonido anduvo mal todo el show", 1.5)
+        |de emoción y camaradería, y el público se entregó por completo. 🎸🎶 #LaVela #ConciertoInolvidable""".trimMargin(), 5.0),
+        Comment(initUsers["sol"]!!, showRepository.findByName("Cachengued").get().id, "Que divertido estuvo, la pase re bien con mis amigos.", 4.5),
+        Comment(initUsers["ana"]!!, showRepository.findByName("Cachengued").get().id, "Pésimo. El sonido anduvo mal todo el show", 1.5)
     )
 
     fun initTickets(): List<Ticket> {
-        val showDates = showDateRepository.findAll().map { it }
+        val showDates = showDateService.getAllHydrousShowDates()
         val seatsACDC = showDates[6].show.facility.seats
         val seatsACDC2 = showDates[2].show.facility.seats
 
@@ -103,7 +128,6 @@ class MagicNightsBootstrap(
             ),
         )
     }
-
     fun setFriends() {
         initUsers["pablo"]?.apply {
             initUsers["sol"]?.let { addFriend(it) }
@@ -121,16 +145,16 @@ class MagicNightsBootstrap(
         println("All facilities have been initialized")
         persist(initBands.values.toList())
         println("All bands have been initialized")
-        persist(initShows.values.toList())
+        persist(initShows().values.toList())
         println("All shows have been initialized")
-        persist(initShowDates)
+        persist(initShowDates())
         println("All showDates have been initialized")
         setFriends()
         persist(initUsers.values.toList())
         println("All users have been initialized")
         persist(initTickets())
         println("All tickets have been initialized")
-        persist(initComments)
+        persist(initComments())
         println("All comments have been initialized")
     }
 
@@ -149,47 +173,53 @@ class MagicNightsBootstrap(
         }
     }
 
-    private fun <T> filterExistingObjects(objects: List<T>) = objects.filter {
-        when (it) {
-            is Seat -> {
-                val seat = seatRepository.findSeatByTypeIs(it.type)
-                seat == null
-            }
+    private fun <T> filterExistingObjects(objects: List<T>) =
+        objects.filter {
+            when (it) {
+                is Seat -> {
+                    val seat = seatRepository.findSeatByTypeIs(it.type).getOrNull()
+                    seat == null
+                }
 
-            is User -> {
-                val user = userRepository.findByUsername(it.username).getOrNull()
-                user == null
-            }
+                is User -> {
+                    val user = userRepository.findByUsername(it.username).getOrNull()
+                    user == null
+                }
 
-            is Facility -> {
-                val facility = facilityRepository.findByNameEquals(it.name).getOrNull()
-                facility == null
-            }
+                is Facility -> {
+                    val facility = facilityRepository.findByName(it.name).getOrNull()
+                    facility == null
+                }
 
-            is Show -> {
-                val facility = showRepository.findByNameEquals(it.name).getOrNull()
-                facility == null
-            }
+                is Show -> {
+                    val show = showRepository.findByName(it.name).getOrNull() ////
+                    show == null
+                }
 
-            is Band -> {
-                val band = bandRepository.findByNameEquals(it.name).getOrNull()
-                band == null
-            }
+                is Band -> {
+                    val band = bandRepository.findByName(it.name).getOrNull()
+                    band == null
+                }
 
-            is ShowDate -> {
-                val showDate = showDateRepository.findByDateAndShowId(it.date, it.show.id).getOrNull()
-                showDate == null
-            }
+                is ShowDate -> {
+                    val startOfDay = LocalDateTime.of(it.date.toLocalDate(), LocalTime.MIN)
+                    val endOfDay = LocalDateTime.of(it.date.toLocalDate(), LocalTime.MAX)
 
-            is Ticket -> {
-                true
-            }
+                    val showDate =  showDateRepository.getByDateAndShowId(startOfDay,endOfDay, it.show.id).getOrNull()
+                    showDate == null
+                }
 
-            is Comment -> {
-                true
-            }
 
-            else -> throw IllegalArgumentException("Unsupported Class: ${it!!::class.simpleName}")
+                is Ticket -> {
+                    true
+                }
+
+                is Comment -> {
+                    true
+                }
+
+                else -> throw IllegalArgumentException("Unsupported Class: ${it!!::class.simpleName}")
+
+            }
         }
     }
-}

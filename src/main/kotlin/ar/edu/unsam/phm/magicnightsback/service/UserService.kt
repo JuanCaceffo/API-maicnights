@@ -25,7 +25,7 @@ class UserService(
 
     @Transactional(Transactional.TxType.REQUIRED)
     fun findByIdOrError(id: Long): User =
-        findById(id) ?: throw NotFoundException(FindError.NOT_FOUND(id, User::class.toString()))
+        findById(id) ?: throw NotFoundException(FindError.NOT_FOUND(id.toString(), User::class.toString()))
 
     fun userExists(id: Long): Boolean = userRepository.existsUserById(id)
 
@@ -36,7 +36,7 @@ class UserService(
     fun validateUserExists(id: Long) {
         if (!userExists(id)) {
             throw NotFoundException(
-                FindError.NOT_FOUND(id, User::class.stringMe())
+                FindError.NOT_FOUND(id.toString(), User::class.stringMe())
             )
         }
     }

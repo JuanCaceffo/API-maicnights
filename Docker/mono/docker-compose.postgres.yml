@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres_db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=magicnights
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+    networks:
+      magicnet:
+        ipv4_address: 192.168.2.3
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
+    driver: local
+
+networks:
+  magicnet:
+    name: magicnet
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.2.0/24

@@ -1,43 +1,26 @@
 package ar.edu.unsam.phm.magicnightsback.repository
 
 import ar.edu.unsam.phm.magicnightsback.domain.ShowDate
-import org.springframework.data.jpa.repository.EntityGraph
-import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.CrudRepository
-import org.springframework.data.repository.query.Param
+import org.springframework.data.mongodb.repository.MongoRepository
+import org.springframework.data.mongodb.repository.Query
 import java.time.LocalDateTime
 import java.util.*
 
-interface ShowDateRepository: CrudRepository<ShowDate, Long> {
-    @EntityGraph(attributePaths = [
-        "show",
-        "show.band",
-        "show.facility",
-        "show.facility.seats",
-        "seatOcupation"
-    ])
-    override fun findById(id: Long): Optional<ShowDate>
+interface ShowDateRepository: MongoRepository<ShowDate, String> {
+    override fun findById(id: String): Optional<ShowDate>
 
-    @EntityGraph(attributePaths = [
-        "show",
-        "show.band",
-        "show.facility",
-        "show.facility.seats",
-        "seatOcupation"
-    ])
-    override fun findAll(): Iterable<ShowDate>
+    override fun findAll(): List<ShowDate>
 
-    fun findByDateAndShowId(date: LocalDateTime, showId: Long): Optional<ShowDate>
+    @Query("{ 'date' : { '\$gte' : ?0, '\$lt' : ?1 }, 'show._id' : ?2 }")
+    fun getByDateAndShowId(date: LocalDateTime, nextDay: LocalDateTime, showId: String): Optional<ShowDate>
 
-    fun findAllByShowId(showId:Long): Iterable<ShowDate>
+    fun findAllByShowId(showId: String): List<ShowDate>
 
-    @Query(
-        """
-           SELECT 
-                SUM(SD.show.cost)
-                FROM ShowDate SD
-                WHERE SD.show.id = :id
-        """
-    )
-    fun showCost(@Param("id") id:Long): Optional<Double>
+    //TODO: ver si es posible mapear directo la data que sale de esta consulta a otor objeto que no sea show o showdate
+//    @Query(value =  """{'show._id' : ?0}""", fields =  """{ id: 0 }""")
+//    fun showDateIdsByShowId(showId: String): List<String>
+//
+//
+//    @Query(value = """{'show.id':  ?0}""", fields = """{show.cost : 0}""")
+//    fun findAllShowCosts(showId: String): List<Double>
 }

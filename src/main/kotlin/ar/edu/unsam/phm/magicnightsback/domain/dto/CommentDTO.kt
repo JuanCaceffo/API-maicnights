@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 data class CommentDTO(
     val id: Long,
     var userId: Long = 0,
-    var showId: Long = 0,
+    var showId: String = "0",
     var imgSrc: String = "",
     var name: String = "",
     val text: String,
@@ -29,13 +29,13 @@ private fun Comment.toDTO(): CommentDTO = CommentDTO(
 
 fun Comment.toUserCommentDTO(): CommentDTO = this.toDTO().apply {
     userId = this@toUserCommentDTO.user.id
-    showId = this@toUserCommentDTO.show.id
-    imgSrc = this@toUserCommentDTO.show.imgUrl
+    showId = this@toUserCommentDTO.showId
+    imgSrc = this@toUserCommentDTO.show.imgUrl()
     name = this@toUserCommentDTO.show.name
 }
 
 fun Comment.toShowCommentDTO(): CommentDTO = this.toDTO().apply {
-    showId = this@toShowCommentDTO.show.id
+    showId = this@toShowCommentDTO.showId
     imgSrc = this@toShowCommentDTO.user.profileImgUrl
     name = this@toShowCommentDTO.user.firstName
 }

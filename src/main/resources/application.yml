@@ -25,7 +25,7 @@ spring:
   datasource:
     url: jdbc:postgresql://0.0.0.0:5432/magicnights
     username: admin
-    password: admin1234
+    password: admin
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -36,18 +36,15 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
+  data:
+    mongodb:
+      #uri: mongodb://admin:admin@localhost:27017,localhost:27018,localhost:27019/magicnights?readPreference=primary&replicaSet=mnrs&authSource=admin
+      uri: mongodb://admin:admin@localhost:27017/magicnights?authSource=admin
 # Para activar el Trace
 logging:
   level:
     root: INFO
-
-# Rutas default para los endpoints
-api:
-  base: /api
-  ticket: ${api.base}/ticket
-  user: ${api.base}/user
-  show: ${api.base}/show
-  cart: ${api.base}/cart
-  showdate: ${api.base}/showdate
-  comment: ${api.base}/comment
+    org.springframework.data: DEBUG
+    org.mongodb.driver.protocol.command: DEBUG

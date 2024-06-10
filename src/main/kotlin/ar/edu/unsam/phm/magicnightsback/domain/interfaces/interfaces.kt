@@ -4,6 +4,15 @@ import ar.edu.unsam.phm.magicnightsback.domain.dto.CommentDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.ShowDateDTO
 
 interface ShowData {
+    val id: String
+    val showImg: String
+    val showName: String
+    val bandName: String
+    val facilityName: String
+    val prices: List<Double>?
+}
+
+interface ShowTicket{ // Igual a ShowData pero con id Long
     val id: Long
     val showImg: String
     val showName: String

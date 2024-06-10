@@ -11,13 +11,9 @@ interface SeatRepository: CrudRepository<Seat, Long> {
 
     @Query("""
         SELECT F.seats
-        FROM ShowDate SD
-        INNER JOIN Show S
-        ON S.id = SD.show.id
-        INNER JOIN Facility F
-        ON F.id = S.facility.id      
-        WHERE SD.id = :showDateId
+        FROM Facility F
+        WHERE F.id = :facilityId
     """
     )
-    fun findAllByShowDateId(showDateId: Long): Iterable<Seat>
+    fun findAllByFacilityId(facilityId: Long): Iterable<Seat>
 }

@@ -7,22 +7,22 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import java.util.*
 
-interface CommentRepository : CrudRepository<Comment, Long> {
-    @EntityGraph(attributePaths = ["show", "user"])
-    fun findByShowId(id: Long): Iterable<Comment>
 
-    @EntityGraph(attributePaths = ["show", "user"])
+interface CommentRepository : CrudRepository<Comment, Long> {
+    @EntityGraph(attributePaths = ["user"])
+    fun findByShowId(id: String): Iterable<Comment>
+
+    @EntityGraph(attributePaths = ["user"])
     fun findByUserId(id: Long): Iterable<Comment>
-    fun countByUserIdAndShowId(userId: Long, showId: Long): Int
+    fun countByUserIdAndShowId(userId: Long, showId: String): Int
 
     @Query(
         """
         SELECT AVG(C.rating)
         FROM Comment C
-        WHERE C.show.id = :showId
-    """
-    )
-    fun averageCommentRatingOfShow(@Param("showId") showId: Long): Optional<Double>
+        WHERE C.showId = :showId
+    """)
+    fun averageCommentRatingOfShow(@Param("showId") showId: String): Optional<Double>
 
-    fun countAllByShowId(showId: Long): Int
+    fun countAllByShowId(showId: String): Int
 }

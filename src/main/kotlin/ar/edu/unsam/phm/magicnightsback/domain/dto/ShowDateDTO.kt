@@ -5,8 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import java.time.LocalDateTime
 
 data class ShowDateDTO(
-    var id: Long = 0,
-
+    val id: String,
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     val date: LocalDateTime = LocalDateTime.MIN
 )
@@ -14,7 +13,7 @@ data class ShowDateDTO(
 data class ShowDateRequest(
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     val date: LocalDateTime,
-    var showId: Long,
+    var showId: String,
     var userId: Long
 )
 

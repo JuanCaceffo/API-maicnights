@@ -4,6 +4,7 @@ import ar.edu.unsam.phm.magicnightsback.domain.dto.TicketDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.TicketRequestDTO
 import ar.edu.unsam.phm.magicnightsback.domain.dto.toDTO
 import ar.edu.unsam.phm.magicnightsback.service.CartService
+import ar.edu.unsam.phm.magicnightsback.service.ShowDateService
 import ar.edu.unsam.phm.magicnightsback.service.ShowService
 import ar.edu.unsam.phm.magicnightsback.service.UserService
 import io.swagger.v3.oas.annotations.Operation
@@ -23,12 +24,20 @@ class CartController(
     val userService: UserService,
 
     @Autowired
-    val showService: ShowService
+    val showService: ShowService,
+
+    @Autowired
+    val showDateService: ShowDateService
+
 ) {
     @GetMapping("/{id}")
     @Operation(summary = "Returns cart by user id.")
     fun getUserCart(@PathVariable id: Long): List<TicketDTO> {
-        return cartService.getCart(id).map { it.toDTO(showService.getShowExtraData(it.showDate.show.id, id)) }
+        return cartService.getCart(id).map {
+            val showDate = showDateService.findHydrousByIdOrError(it.showDateId)
+            it.showDate = showDate
+            println(showDate)
+            it.toDTO(showService.getShowExtraData(showDate.show.id, id)) }
     }
 
     @PostMapping("/{id}/add")

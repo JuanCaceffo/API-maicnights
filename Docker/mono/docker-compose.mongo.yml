@@ -1,0 +1,36 @@
+version: "3.9"
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo_db
+    restart: always
+    ports:
+      - "27017:27017"
+    networks:
+      default:
+        ipv4_address: 192.168.2.4
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: magicnights
+    volumes:
+      - mongo-data:/data/db
+      - mongo-log:/var/log/mongodb
+      - mongo-cfg:/data/configdb
+      - ./scripts/init.js:/docker-entrypoint-initdb.d/01-init-mongo.js:ro
+
+volumes:
+  mongo-data:
+    driver: local
+  mongo-cfg:
+    driver: local
+  mongo-log:
+    driver: local
+
+networks:
+  default:
+    name: magicnet
+    external: true
+    ipam:
+      config:
+        - subnet: 192.168.2.0/24

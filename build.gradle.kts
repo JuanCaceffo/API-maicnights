@@ -42,6 +42,7 @@ dependencies {
     // conexión a la base de datos
     runtimeOnly("org.postgresql:postgresql")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 
     // testing
     testImplementation("com.h2database:h2:2.2.224")

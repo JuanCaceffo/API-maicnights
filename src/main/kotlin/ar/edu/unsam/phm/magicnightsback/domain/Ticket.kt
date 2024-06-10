@@ -28,10 +28,8 @@ import java.time.LocalDateTime
 data class Ticket(
     @ManyToOne(fetch = FetchType.LAZY)
     val user: User,
-
-    @ManyToOne
-    val showDate: ShowDate,
-
+    val showDateId: String,
+    val showId: String,
     @ManyToOne(fetch = FetchType.EAGER)
     val seat: Seat
 ) {
@@ -40,6 +38,9 @@ data class Ticket(
     val id: Long = 0
 
     var price: Double = 0.0
+    @Transient
+    lateinit var showDate: ShowDate
+
 
     @Enumerated(EnumType.STRING)
     var status: TicketStatus = TicketStatus.AVAILABLE
